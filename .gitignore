@@ -1,0 +1,21 @@
+/skyflow
+/skyflow.exe
+
+.DS_Store
+.idea/
+.vscode
+.tmp
+
+*.prof
+*.pid
+*.pid.lock
+*_port
+.coverage.out
+_tmp
+
+# Ignore the following files
+tests
+*.log
+
+.config.*
+*.config.yaml

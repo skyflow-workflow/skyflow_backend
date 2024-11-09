@@ -1,0 +1,755 @@
+{
+ "openapi": "3.0.2",
+ "info": {
+  "title": "skyflow",
+  "description": "The api document of skyflow.proto",
+  "version": "2.0"
+ },
+ "paths": {
+  "/api/v1/CreateActivity": {
+   "post": {
+    "summary": "CreateActivity 创建一个活动",
+    "operationId": "CreateActivity",
+    "responses": {
+     "200": {
+      "description": "CreateActivityResponse 创建一个活动返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/api/v1/CreateNamespace": {
+   "post": {
+    "summary": "CreateNamespace 创建一个命名空间",
+    "operationId": "CreateNamespace",
+    "responses": {
+     "200": {
+      "description": "CreateNamespaceResponse 创建一个命名空间返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateNamespaceResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/api/v1/DescribeActivity": {
+   "post": {
+    "summary": "DescribeActivity 获得一个活动的描述",
+    "operationId": "DescribeActivity",
+    "responses": {
+     "200": {
+      "description": "DescribeActivityResponse 获得活动列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DescribeActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "description": "activity uri",
+      "schema": {
+       "type": "string",
+       "title": "activity_uri",
+       "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/api/v1/ListActivities": {
+   "post": {
+    "summary": "ListActivities 获得活动列表",
+    "operationId": "ListActivities",
+    "responses": {
+     "200": {
+      "description": "ListActivitiesResponse 获得活动列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListActivitiesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/api/v1/ListNamespaces": {
+   "post": {
+    "summary": "ListNamespaces 获得命名空间列表",
+    "operationId": "ListNamespaces",
+    "responses": {
+     "200": {
+      "description": "ListNamespacesResponse",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListNamespacesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/skyflow.Common/HTTP": {
+   "post": {
+    "summary": "HTTPReturn  HTTP API接口返回值格式",
+    "operationId": "HTTP",
+    "responses": {
+     "200": {
+      "description": "HTTPResponseMessage",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.HTTPResponseMessage"
+        }
+       }
+      }
+     }
+    },
+    "tags": [
+     "common.trpc"
+    ]
+   }
+  },
+  "/skyflow.Common/Paging": {
+   "post": {
+    "summary": "Paging 分页格式",
+    "operationId": "Paging",
+    "responses": {
+     "200": {
+      "description": "分页返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.PageResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "common.trpc"
+    ]
+   }
+  },
+  "/skyflow.Skyflow/CreateActivity": {
+   "post": {
+    "summary": "CreateActivity 创建一个活动",
+    "operationId": "CreateActivity2",
+    "responses": {
+     "200": {
+      "description": "CreateActivityResponse 创建一个活动返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/skyflow.Skyflow/CreateNamespace": {
+   "post": {
+    "summary": "CreateNamespace 创建一个命名空间",
+    "operationId": "CreateNamespace2",
+    "responses": {
+     "200": {
+      "description": "CreateNamespaceResponse 创建一个命名空间返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateNamespaceResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/skyflow.Skyflow/DescribeActivity": {
+   "post": {
+    "summary": "DescribeActivity 获得一个活动的描述",
+    "operationId": "DescribeActivity2",
+    "responses": {
+     "200": {
+      "description": "DescribeActivityResponse 获得活动列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DescribeActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "description": "activity uri",
+      "schema": {
+       "type": "string",
+       "title": "activity_uri",
+       "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/skyflow.Skyflow/ListActivities": {
+   "post": {
+    "summary": "ListActivities 获得活动列表",
+    "operationId": "ListActivities2",
+    "responses": {
+     "200": {
+      "description": "ListActivitiesResponse 获得活动列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListActivitiesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  },
+  "/skyflow.Skyflow/ListNamespaces": {
+   "post": {
+    "summary": "ListNamespaces 获得命名空间列表",
+    "operationId": "ListNamespaces2",
+    "responses": {
+     "200": {
+      "description": "ListNamespacesResponse",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListNamespacesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflow.trpc"
+    ]
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "skyflow.ActivityInfo": {
+    "type": "object",
+    "properties": {
+     "activity_uri": {
+      "title": "activity_uri",
+      "type": "string"
+     },
+     "comment": {
+      "title": "comment",
+      "type": "string"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string"
+     },
+     "modify_time": {
+      "title": "modify_time",
+      "type": "string"
+     },
+     "name": {
+      "title": "name",
+      "type": "string"
+     }
+    },
+    "title": "skyflow.ActivityInfo",
+    "description": "ActivityInfo 活动信息"
+   },
+   "skyflow.CreateActivityResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "$ref": "#/components/schemas/skyflow.ActivityInfo"
+     }
+    },
+    "title": "skyflow.CreateActivityResponse",
+    "description": "CreateActivityResponse 创建一个活动返回结构"
+   },
+   "skyflow.CreateNamespaceResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "$ref": "#/components/schemas/skyflow.NamespaceInfo"
+     }
+    },
+    "title": "skyflow.CreateNamespaceResponse",
+    "description": "CreateNamespaceResponse 创建一个命名空间返回结构"
+   },
+   "skyflow.DescribeActivityResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "$ref": "#/components/schemas/skyflow.ActivityInfo"
+     }
+    },
+    "title": "skyflow.DescribeActivityResponse",
+    "description": "DescribeActivityResponse 获得活动列表请求返回"
+   },
+   "skyflow.HTTPResponseMessage": {
+    "type": "object",
+    "properties": {
+     "message": {
+      "title": "message",
+      "type": "string",
+      "description": "异常信息说明"
+     },
+     "retcode": {
+      "title": "retcode",
+      "type": "integer",
+      "format": "int32",
+      "description": "返回码，0为正常，非0为异常"
+     }
+    },
+    "title": "skyflow.HTTPResponseMessage",
+    "description": "HTTPResponseMessage"
+   },
+   "skyflow.ListActivitiesResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "type": "array",
+      "description": " 查询到的执行列表\n",
+      "items": {
+       "$ref": "#/components/schemas/skyflow.ActivityInfo"
+      }
+     },
+     "page_response": {
+      "title": "page_response",
+      "$ref": "#/components/schemas/skyflow.PageResponse",
+      "description": " 分页信息\n"
+     }
+    },
+    "title": "skyflow.ListActivitiesResponse",
+    "description": "ListActivitiesResponse 获得活动列表请求返回"
+   },
+   "skyflow.ListNamespacesResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "type": "array",
+      "description": " 查询到的执行列表\n",
+      "items": {
+       "$ref": "#/components/schemas/skyflow.NamespaceInfo"
+      }
+     },
+     "page_response": {
+      "title": "page_response",
+      "$ref": "#/components/schemas/skyflow.PageResponse",
+      "description": " 分页信息\n"
+     }
+    },
+    "title": "skyflow.ListNamespacesResponse",
+    "description": "ListNamespacesResponse"
+   },
+   "skyflow.NamespaceInfo": {
+    "type": "object",
+    "properties": {
+     "comment": {
+      "title": "comment",
+      "type": "string"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string"
+     },
+     "modify_time": {
+      "title": "modify_time",
+      "type": "string"
+     },
+     "name": {
+      "title": "name",
+      "type": "string"
+     }
+    },
+    "title": "skyflow.NamespaceInfo",
+    "description": "NamespaceInfo 命名空间信息"
+   },
+   "skyflow.PageResponse": {
+    "type": "object",
+    "properties": {
+     "count": {
+      "title": "count",
+      "type": "string",
+      "format": "int64",
+      "description": "总数量"
+     },
+     "page_count": {
+      "title": "page_count",
+      "type": "string",
+      "format": "int64",
+      "description": "总页数"
+     },
+     "page_number": {
+      "title": "page_number",
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     "page_size": {
+      "title": "page_size",
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     }
+    },
+    "title": "skyflow.PageResponse",
+    "description": "分页返回结构"
+   }
+  }
+ }
+}
