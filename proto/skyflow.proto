@@ -97,28 +97,43 @@ service SkyflowService {
 
 }
 
-// ActivityListItem ...
-message ActivityListItem {
+// NamespaceInfo 命名空间信息
+message NamespaceListItem {
+    // name 命名空间名字
     string name = 1;
+    // comment 命名空间描述
     string comment = 2;
-    string activity_uri = 3;
-    string create_time = 11;
-    string modify_time = 12;
-
+    // create_time timestample
+    int64 create_time = 11;
 }
 
-// ExecutionInfo 一个Execution 的描述
-message ExecutionInfo {
+
+// ActivityListItem ...
+message ActivityListItem {
+    // name 活动名字
+    string name = 1;
+    // comment 活动描述
+    string comment = 2;
+    // activity_uri 活动uri
+    string activity_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+}
+
+// ExecutionListItem execution info in ListExecutionsResponse
+message ExecutionListItem {
+    // execution_uuid
     string execution_uuid = 1;
+    // status execution status
     string status = 2 ;
+    // title execution title
     string title = 3 ;
-    string StateMachine_definition = 4 ;
-    string input = 5 ;
-    string output = 6;
-    string flow_type = 7;
-    string create_time = 11;
-    string start_time = 12;
-    string finish_time = 13;
+    // create_time timestample
+    int64 create_time = 11;
+    // start_time timestample
+    int64 start_time = 12;
+    // finish_time timestample
+    int64 finish_time = 13;
 }
 
 // StateInfo 一个State的状态描述
@@ -144,13 +159,6 @@ message ExecutionEventInfo {
     string finish_time = 13;
 }
 
-// NamespaceInfo 命名空间信息
-message NamespaceInfo {
-    string name = 1;
-    string comment = 2;
-    string create_time = 11;
-    string modify_time = 12;
-}
 
 // ActivityInfo 活动信息
 message ActivityInfo {
@@ -415,7 +423,9 @@ message SendStateSkipRequest {
 
 // CreateNamespaceRequest 创建一个命名空间
 message CreateNamespaceRequest {
+    // name 命名空间名字
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // comment 命名空间描述
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
 }
 
