@@ -13,31 +13,31 @@ import (
 	client "trpc.group/trpc-go/trpc-go/client"
 )
 
-// MockCommonService is a mock of CommonService interface.
-type MockCommonService struct {
+// MockCommonServiceService is a mock of CommonServiceService interface.
+type MockCommonServiceService struct {
 	ctrl     *gomock.Controller
-	recorder *MockCommonServiceMockRecorder
+	recorder *MockCommonServiceServiceMockRecorder
 }
 
-// MockCommonServiceMockRecorder is the mock recorder for MockCommonService.
-type MockCommonServiceMockRecorder struct {
-	mock *MockCommonService
+// MockCommonServiceServiceMockRecorder is the mock recorder for MockCommonServiceService.
+type MockCommonServiceServiceMockRecorder struct {
+	mock *MockCommonServiceService
 }
 
-// NewMockCommonService creates a new mock instance.
-func NewMockCommonService(ctrl *gomock.Controller) *MockCommonService {
-	mock := &MockCommonService{ctrl: ctrl}
-	mock.recorder = &MockCommonServiceMockRecorder{mock}
+// NewMockCommonServiceService creates a new mock instance.
+func NewMockCommonServiceService(ctrl *gomock.Controller) *MockCommonServiceService {
+	mock := &MockCommonServiceService{ctrl: ctrl}
+	mock.recorder = &MockCommonServiceServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommonService) EXPECT() *MockCommonServiceMockRecorder {
+func (m *MockCommonServiceService) EXPECT() *MockCommonServiceServiceMockRecorder {
 	return m.recorder
 }
 
 // HTTP mocks base method.
-func (m *MockCommonService) HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error) {
+func (m *MockCommonServiceService) HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "HTTP", ctx, req)
 	ret0, _ := ret[0].(*HTTPResponseMessage)
@@ -46,13 +46,13 @@ func (m *MockCommonService) HTTP(ctx context.Context, req *emptypb.Empty) (*HTTP
 }
 
 // HTTP indicates an expected call of HTTP.
-func (mr *MockCommonServiceMockRecorder) HTTP(ctx, req interface{}) *gomock.Call {
+func (mr *MockCommonServiceServiceMockRecorder) HTTP(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HTTP", reflect.TypeOf((*MockCommonService)(nil).HTTP), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HTTP", reflect.TypeOf((*MockCommonServiceService)(nil).HTTP), ctx, req)
 }
 
 // Paging mocks base method.
-func (m *MockCommonService) Paging(ctx context.Context, req *PageRequest) (*PageResponse, error) {
+func (m *MockCommonServiceService) Paging(ctx context.Context, req *PageRequest) (*PageResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Paging", ctx, req)
 	ret0, _ := ret[0].(*PageResponse)
@@ -61,36 +61,51 @@ func (m *MockCommonService) Paging(ctx context.Context, req *PageRequest) (*Page
 }
 
 // Paging indicates an expected call of Paging.
-func (mr *MockCommonServiceMockRecorder) Paging(ctx, req interface{}) *gomock.Call {
+func (mr *MockCommonServiceServiceMockRecorder) Paging(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Paging", reflect.TypeOf((*MockCommonService)(nil).Paging), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Paging", reflect.TypeOf((*MockCommonServiceService)(nil).Paging), ctx, req)
 }
 
-// MockSkyflowService is a mock of SkyflowService interface.
-type MockSkyflowService struct {
+// Ping mocks base method.
+func (m *MockCommonServiceService) Ping(ctx context.Context, req *emptypb.Empty) (*PingResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Ping", ctx, req)
+	ret0, _ := ret[0].(*PingResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Ping indicates an expected call of Ping.
+func (mr *MockCommonServiceServiceMockRecorder) Ping(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockCommonServiceService)(nil).Ping), ctx, req)
+}
+
+// MockSkyflowServiceService is a mock of SkyflowServiceService interface.
+type MockSkyflowServiceService struct {
 	ctrl     *gomock.Controller
-	recorder *MockSkyflowServiceMockRecorder
+	recorder *MockSkyflowServiceServiceMockRecorder
 }
 
-// MockSkyflowServiceMockRecorder is the mock recorder for MockSkyflowService.
-type MockSkyflowServiceMockRecorder struct {
-	mock *MockSkyflowService
+// MockSkyflowServiceServiceMockRecorder is the mock recorder for MockSkyflowServiceService.
+type MockSkyflowServiceServiceMockRecorder struct {
+	mock *MockSkyflowServiceService
 }
 
-// NewMockSkyflowService creates a new mock instance.
-func NewMockSkyflowService(ctrl *gomock.Controller) *MockSkyflowService {
-	mock := &MockSkyflowService{ctrl: ctrl}
-	mock.recorder = &MockSkyflowServiceMockRecorder{mock}
+// NewMockSkyflowServiceService creates a new mock instance.
+func NewMockSkyflowServiceService(ctrl *gomock.Controller) *MockSkyflowServiceService {
+	mock := &MockSkyflowServiceService{ctrl: ctrl}
+	mock.recorder = &MockSkyflowServiceServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSkyflowService) EXPECT() *MockSkyflowServiceMockRecorder {
+func (m *MockSkyflowServiceService) EXPECT() *MockSkyflowServiceServiceMockRecorder {
 	return m.recorder
 }
 
 // CreateActivity mocks base method.
-func (m *MockSkyflowService) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
+func (m *MockSkyflowServiceService) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateActivity", ctx, req)
 	ret0, _ := ret[0].(*CreateActivityResponse)
@@ -99,13 +114,13 @@ func (m *MockSkyflowService) CreateActivity(ctx context.Context, req *CreateActi
 }
 
 // CreateActivity indicates an expected call of CreateActivity.
-func (mr *MockSkyflowServiceMockRecorder) CreateActivity(ctx, req interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceServiceMockRecorder) CreateActivity(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateActivity", reflect.TypeOf((*MockSkyflowService)(nil).CreateActivity), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateActivity", reflect.TypeOf((*MockSkyflowServiceService)(nil).CreateActivity), ctx, req)
 }
 
 // CreateNamespace mocks base method.
-func (m *MockSkyflowService) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
+func (m *MockSkyflowServiceService) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateNamespace", ctx, req)
 	ret0, _ := ret[0].(*CreateNamespaceResponse)
@@ -114,13 +129,13 @@ func (m *MockSkyflowService) CreateNamespace(ctx context.Context, req *CreateNam
 }
 
 // CreateNamespace indicates an expected call of CreateNamespace.
-func (mr *MockSkyflowServiceMockRecorder) CreateNamespace(ctx, req interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceServiceMockRecorder) CreateNamespace(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNamespace", reflect.TypeOf((*MockSkyflowService)(nil).CreateNamespace), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNamespace", reflect.TypeOf((*MockSkyflowServiceService)(nil).CreateNamespace), ctx, req)
 }
 
 // DescribeActivity mocks base method.
-func (m *MockSkyflowService) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
+func (m *MockSkyflowServiceService) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeActivity", ctx, req)
 	ret0, _ := ret[0].(*DescribeActivityResponse)
@@ -129,13 +144,13 @@ func (m *MockSkyflowService) DescribeActivity(ctx context.Context, req *Describe
 }
 
 // DescribeActivity indicates an expected call of DescribeActivity.
-func (mr *MockSkyflowServiceMockRecorder) DescribeActivity(ctx, req interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceServiceMockRecorder) DescribeActivity(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowService)(nil).DescribeActivity), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowServiceService)(nil).DescribeActivity), ctx, req)
 }
 
 // ListActivities mocks base method.
-func (m *MockSkyflowService) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
+func (m *MockSkyflowServiceService) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListActivities", ctx, req)
 	ret0, _ := ret[0].(*ListActivitiesResponse)
@@ -144,13 +159,13 @@ func (m *MockSkyflowService) ListActivities(ctx context.Context, req *ListActivi
 }
 
 // ListActivities indicates an expected call of ListActivities.
-func (mr *MockSkyflowServiceMockRecorder) ListActivities(ctx, req interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceServiceMockRecorder) ListActivities(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActivities", reflect.TypeOf((*MockSkyflowService)(nil).ListActivities), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActivities", reflect.TypeOf((*MockSkyflowServiceService)(nil).ListActivities), ctx, req)
 }
 
 // ListNamespaces mocks base method.
-func (m *MockSkyflowService) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
+func (m *MockSkyflowServiceService) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListNamespaces", ctx, req)
 	ret0, _ := ret[0].(*ListNamespacesResponse)
@@ -159,36 +174,36 @@ func (m *MockSkyflowService) ListNamespaces(ctx context.Context, req *ListNamesp
 }
 
 // ListNamespaces indicates an expected call of ListNamespaces.
-func (mr *MockSkyflowServiceMockRecorder) ListNamespaces(ctx, req interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceServiceMockRecorder) ListNamespaces(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowService)(nil).ListNamespaces), ctx, req)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowServiceService)(nil).ListNamespaces), ctx, req)
 }
 
-// MockCommonClientProxy is a mock of CommonClientProxy interface.
-type MockCommonClientProxy struct {
+// MockCommonServiceClientProxy is a mock of CommonServiceClientProxy interface.
+type MockCommonServiceClientProxy struct {
 	ctrl     *gomock.Controller
-	recorder *MockCommonClientProxyMockRecorder
+	recorder *MockCommonServiceClientProxyMockRecorder
 }
 
-// MockCommonClientProxyMockRecorder is the mock recorder for MockCommonClientProxy.
-type MockCommonClientProxyMockRecorder struct {
-	mock *MockCommonClientProxy
+// MockCommonServiceClientProxyMockRecorder is the mock recorder for MockCommonServiceClientProxy.
+type MockCommonServiceClientProxyMockRecorder struct {
+	mock *MockCommonServiceClientProxy
 }
 
-// NewMockCommonClientProxy creates a new mock instance.
-func NewMockCommonClientProxy(ctrl *gomock.Controller) *MockCommonClientProxy {
-	mock := &MockCommonClientProxy{ctrl: ctrl}
-	mock.recorder = &MockCommonClientProxyMockRecorder{mock}
+// NewMockCommonServiceClientProxy creates a new mock instance.
+func NewMockCommonServiceClientProxy(ctrl *gomock.Controller) *MockCommonServiceClientProxy {
+	mock := &MockCommonServiceClientProxy{ctrl: ctrl}
+	mock.recorder = &MockCommonServiceClientProxyMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockCommonClientProxy) EXPECT() *MockCommonClientProxyMockRecorder {
+func (m *MockCommonServiceClientProxy) EXPECT() *MockCommonServiceClientProxyMockRecorder {
 	return m.recorder
 }
 
 // HTTP mocks base method.
-func (m *MockCommonClientProxy) HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*HTTPResponseMessage, error) {
+func (m *MockCommonServiceClientProxy) HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*HTTPResponseMessage, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -201,14 +216,14 @@ func (m *MockCommonClientProxy) HTTP(ctx context.Context, req *emptypb.Empty, op
 }
 
 // HTTP indicates an expected call of HTTP.
-func (mr *MockCommonClientProxyMockRecorder) HTTP(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockCommonServiceClientProxyMockRecorder) HTTP(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HTTP", reflect.TypeOf((*MockCommonClientProxy)(nil).HTTP), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HTTP", reflect.TypeOf((*MockCommonServiceClientProxy)(nil).HTTP), varargs...)
 }
 
 // Paging mocks base method.
-func (m *MockCommonClientProxy) Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (*PageResponse, error) {
+func (m *MockCommonServiceClientProxy) Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (*PageResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -221,37 +236,57 @@ func (m *MockCommonClientProxy) Paging(ctx context.Context, req *PageRequest, op
 }
 
 // Paging indicates an expected call of Paging.
-func (mr *MockCommonClientProxyMockRecorder) Paging(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockCommonServiceClientProxyMockRecorder) Paging(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Paging", reflect.TypeOf((*MockCommonClientProxy)(nil).Paging), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Paging", reflect.TypeOf((*MockCommonServiceClientProxy)(nil).Paging), varargs...)
 }
 
-// MockSkyflowClientProxy is a mock of SkyflowClientProxy interface.
-type MockSkyflowClientProxy struct {
+// Ping mocks base method.
+func (m *MockCommonServiceClientProxy) Ping(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*PingResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Ping", varargs...)
+	ret0, _ := ret[0].(*PingResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Ping indicates an expected call of Ping.
+func (mr *MockCommonServiceClientProxyMockRecorder) Ping(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ping", reflect.TypeOf((*MockCommonServiceClientProxy)(nil).Ping), varargs...)
+}
+
+// MockSkyflowServiceClientProxy is a mock of SkyflowServiceClientProxy interface.
+type MockSkyflowServiceClientProxy struct {
 	ctrl     *gomock.Controller
-	recorder *MockSkyflowClientProxyMockRecorder
+	recorder *MockSkyflowServiceClientProxyMockRecorder
 }
 
-// MockSkyflowClientProxyMockRecorder is the mock recorder for MockSkyflowClientProxy.
-type MockSkyflowClientProxyMockRecorder struct {
-	mock *MockSkyflowClientProxy
+// MockSkyflowServiceClientProxyMockRecorder is the mock recorder for MockSkyflowServiceClientProxy.
+type MockSkyflowServiceClientProxyMockRecorder struct {
+	mock *MockSkyflowServiceClientProxy
 }
 
-// NewMockSkyflowClientProxy creates a new mock instance.
-func NewMockSkyflowClientProxy(ctrl *gomock.Controller) *MockSkyflowClientProxy {
-	mock := &MockSkyflowClientProxy{ctrl: ctrl}
-	mock.recorder = &MockSkyflowClientProxyMockRecorder{mock}
+// NewMockSkyflowServiceClientProxy creates a new mock instance.
+func NewMockSkyflowServiceClientProxy(ctrl *gomock.Controller) *MockSkyflowServiceClientProxy {
+	mock := &MockSkyflowServiceClientProxy{ctrl: ctrl}
+	mock.recorder = &MockSkyflowServiceClientProxyMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSkyflowClientProxy) EXPECT() *MockSkyflowClientProxyMockRecorder {
+func (m *MockSkyflowServiceClientProxy) EXPECT() *MockSkyflowServiceClientProxyMockRecorder {
 	return m.recorder
 }
 
 // CreateActivity mocks base method.
-func (m *MockSkyflowClientProxy) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
+func (m *MockSkyflowServiceClientProxy) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -264,14 +299,14 @@ func (m *MockSkyflowClientProxy) CreateActivity(ctx context.Context, req *Create
 }
 
 // CreateActivity indicates an expected call of CreateActivity.
-func (mr *MockSkyflowClientProxyMockRecorder) CreateActivity(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceClientProxyMockRecorder) CreateActivity(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateActivity", reflect.TypeOf((*MockSkyflowClientProxy)(nil).CreateActivity), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateActivity", reflect.TypeOf((*MockSkyflowServiceClientProxy)(nil).CreateActivity), varargs...)
 }
 
 // CreateNamespace mocks base method.
-func (m *MockSkyflowClientProxy) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
+func (m *MockSkyflowServiceClientProxy) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -284,14 +319,14 @@ func (m *MockSkyflowClientProxy) CreateNamespace(ctx context.Context, req *Creat
 }
 
 // CreateNamespace indicates an expected call of CreateNamespace.
-func (mr *MockSkyflowClientProxyMockRecorder) CreateNamespace(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceClientProxyMockRecorder) CreateNamespace(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNamespace", reflect.TypeOf((*MockSkyflowClientProxy)(nil).CreateNamespace), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNamespace", reflect.TypeOf((*MockSkyflowServiceClientProxy)(nil).CreateNamespace), varargs...)
 }
 
 // DescribeActivity mocks base method.
-func (m *MockSkyflowClientProxy) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
+func (m *MockSkyflowServiceClientProxy) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -304,14 +339,14 @@ func (m *MockSkyflowClientProxy) DescribeActivity(ctx context.Context, req *Desc
 }
 
 // DescribeActivity indicates an expected call of DescribeActivity.
-func (mr *MockSkyflowClientProxyMockRecorder) DescribeActivity(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceClientProxyMockRecorder) DescribeActivity(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowClientProxy)(nil).DescribeActivity), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowServiceClientProxy)(nil).DescribeActivity), varargs...)
 }
 
 // ListActivities mocks base method.
-func (m *MockSkyflowClientProxy) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
+func (m *MockSkyflowServiceClientProxy) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -324,14 +359,14 @@ func (m *MockSkyflowClientProxy) ListActivities(ctx context.Context, req *ListAc
 }
 
 // ListActivities indicates an expected call of ListActivities.
-func (mr *MockSkyflowClientProxyMockRecorder) ListActivities(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceClientProxyMockRecorder) ListActivities(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActivities", reflect.TypeOf((*MockSkyflowClientProxy)(nil).ListActivities), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListActivities", reflect.TypeOf((*MockSkyflowServiceClientProxy)(nil).ListActivities), varargs...)
 }
 
 // ListNamespaces mocks base method.
-func (m *MockSkyflowClientProxy) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
+func (m *MockSkyflowServiceClientProxy) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, req}
 	for _, a := range opts {
@@ -344,8 +379,8 @@ func (m *MockSkyflowClientProxy) ListNamespaces(ctx context.Context, req *ListNa
 }
 
 // ListNamespaces indicates an expected call of ListNamespaces.
-func (mr *MockSkyflowClientProxyMockRecorder) ListNamespaces(ctx, req interface{}, opts ...interface{}) *gomock.Call {
+func (mr *MockSkyflowServiceClientProxyMockRecorder) ListNamespaces(ctx, req interface{}, opts ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{ctx, req}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowClientProxy)(nil).ListNamespaces), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowServiceClientProxy)(nil).ListNamespaces), varargs...)
 }

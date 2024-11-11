@@ -18,6 +18,10 @@ service CommonService {
     rpc Paging(PageRequest) returns (PageResponse);
     // HTTPReturn  HTTP API接口返回值格式
     rpc HTTP(google.protobuf.Empty) returns(HTTPResponseMessage);
+    // Ping ping servvice
+    rpc Ping(google.protobuf.Empty) returns(PingResponse){
+        option (trpc.alias) = "/Ping";
+    };
 }
 
 // 分页请求结构
@@ -39,6 +43,14 @@ message PageResponse{
     int64 page_number = 3;
     // 总页数
     int64 page_count = 4;
+}
+
+// PingResponse ping返回
+message PingResponse {
+    // 返回码，0为正常，非0为异常
+    int32 retcode = 1;
+    // 异常信息说明
+    string message = 2;
 }
 
 // HTTPResponseMessage HTTP API接口返回值格式
@@ -231,7 +243,7 @@ message DescribeExecutionRequest {
 
 // 获得一个执行的描述d的返回结构
 message DescribeExecutionResponse {
-    ExecutionInfo execution = 1 ;
+    // ExecutionInfo execution = 1 ;
 }
 
 // 获得一个执行的执行的Bone请求结构
@@ -244,7 +256,7 @@ message DescribeExecutionBoneRequest {
 
 // 获得一个执行的描述d的返回结构
 message DescribeExecutionBoneResponse {
-    ExecutionInfo execution = 1 ;
+    // ExecutionInfo execution = 1 ;
     string bone  = 2 ;
 }
 
@@ -275,7 +287,7 @@ message ListExecutionsRequest {
 // ListExecutionsResponse 获得execution列表返回值
 message ListExecutionsResponse {
     // 查询到的执行列表
-    repeated ExecutionInfo data = 1 ;
+    // repeated ExecutionInfo data = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }
@@ -431,7 +443,7 @@ message CreateNamespaceRequest {
 
 // CreateNamespaceResponse 创建一个命名空间返回结构
 message CreateNamespaceResponse {
-    NamespaceInfo data = 1 ;
+    // NamespaceInfo data = 1 ;
 }
 
 // ListNamespacesRequest 获得命名空间列表
@@ -445,7 +457,7 @@ message ListNamespacesRequest {
 message ListNamespacesResponse {
 
     // 查询到的执行列表
-    repeated NamespaceInfo data = 1 ;
+    // repeated NamespaceInfo data = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }

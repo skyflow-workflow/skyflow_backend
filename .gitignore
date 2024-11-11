@@ -1,6 +1,8 @@
 /skyflow
 /skyflow.exe
 
+bin
+
 .DS_Store
 .idea/
 .vscode

@@ -87,4 +87,9 @@ test:
 .PHONY: build
 build:
 	@echo "building........"
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build
+	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build  -o bin/skyflow $(FLAGS) ./cmd/skyflow/*.go
+
+.PHONY: run
+run: build
+	@echo "running........"
+	@./bin/skyflow -conf trpc_go.yaml

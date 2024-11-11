@@ -1,4 +1,4 @@
-module github.com/skyflow-workflow/skyflow_backbend/gen/pb
+module github.com/skyflow-StateMachine/skyflow_backbend/gen/pb
 
 go 1.21
 

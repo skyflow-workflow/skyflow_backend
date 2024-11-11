@@ -18,22 +18,24 @@ import (
 
 // START ======================================= Server Service Definition ======================================= START
 
-// CommonService defines service.
-type CommonService interface {
+// CommonServiceService defines service.
+type CommonServiceService interface {
 	// Paging Paging 分页格式
 	Paging(ctx context.Context, req *PageRequest) (*PageResponse, error)
 	// HTTP HTTPReturn  HTTP API接口返回值格式
 	HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error)
+	// Ping Ping ping servvice
+	Ping(ctx context.Context, req *emptypb.Empty) (*PingResponse, error)
 }
 
-func CommonService_Paging_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func CommonServiceService_Paging_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &PageRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(CommonService).Paging(ctx, reqbody.(*PageRequest))
+		return svr.(CommonServiceService).Paging(ctx, reqbody.(*PageRequest))
 	}
 
 	var rsp interface{}
@@ -44,14 +46,14 @@ func CommonService_Paging_Handler(svr interface{}, ctx context.Context, f server
 	return rsp, nil
 }
 
-func CommonService_HTTP_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func CommonServiceService_HTTP_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &emptypb.Empty{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(CommonService).HTTP(ctx, reqbody.(*emptypb.Empty))
+		return svr.(CommonServiceService).HTTP(ctx, reqbody.(*emptypb.Empty))
 	}
 
 	var rsp interface{}
@@ -62,31 +64,57 @@ func CommonService_HTTP_Handler(svr interface{}, ctx context.Context, f server.F
 	return rsp, nil
 }
 
-// CommonServer_ServiceDesc descriptor for server.RegisterService.
-var CommonServer_ServiceDesc = server.ServiceDesc{
-	ServiceName: "skyflow.Common",
-	HandlerType: ((*CommonService)(nil)),
+func CommonServiceService_Ping_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &emptypb.Empty{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(CommonServiceService).Ping(ctx, reqbody.(*emptypb.Empty))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// CommonServiceServer_ServiceDesc descriptor for server.RegisterService.
+var CommonServiceServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "skyflow.CommonService",
+	HandlerType: ((*CommonServiceService)(nil)),
 	Methods: []server.Method{
 		{
-			Name: "/skyflow.Common/Paging",
-			Func: CommonService_Paging_Handler,
+			Name: "/skyflow.CommonService/Paging",
+			Func: CommonServiceService_Paging_Handler,
 		},
 		{
-			Name: "/skyflow.Common/HTTP",
-			Func: CommonService_HTTP_Handler,
+			Name: "/skyflow.CommonService/HTTP",
+			Func: CommonServiceService_HTTP_Handler,
+		},
+		{
+			Name: "/Ping",
+			Func: CommonServiceService_Ping_Handler,
+		},
+		{
+			Name: "/skyflow.CommonService/Ping",
+			Func: CommonServiceService_Ping_Handler,
 		},
 	},
 }
 
-// RegisterCommonService registers service.
-func RegisterCommonService(s server.Service, svr CommonService) {
-	if err := s.Register(&CommonServer_ServiceDesc, svr); err != nil {
-		panic(fmt.Sprintf("Common register error:%v", err))
+// RegisterCommonServiceService registers service.
+func RegisterCommonServiceService(s server.Service, svr CommonServiceService) {
+	if err := s.Register(&CommonServiceServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("CommonService register error:%v", err))
 	}
 }
 
-// SkyflowService defines service.
-type SkyflowService interface {
+// SkyflowServiceService defines service.
+type SkyflowServiceService interface {
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
@@ -99,14 +127,14 @@ type SkyflowService interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error)
 }
 
-func SkyflowService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowServiceService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateNamespaceRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowService).CreateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
+		return svr.(SkyflowServiceService).CreateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
 	}
 
 	var rsp interface{}
@@ -117,14 +145,14 @@ func SkyflowService_CreateNamespace_Handler(svr interface{}, ctx context.Context
 	return rsp, nil
 }
 
-func SkyflowService_ListNamespaces_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowServiceService_ListNamespaces_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &ListNamespacesRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
+		return svr.(SkyflowServiceService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
 	}
 
 	var rsp interface{}
@@ -135,14 +163,14 @@ func SkyflowService_ListNamespaces_Handler(svr interface{}, ctx context.Context,
 	return rsp, nil
 }
 
-func SkyflowService_CreateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowServiceService_CreateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateActivityRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowService).CreateActivity(ctx, reqbody.(*CreateActivityRequest))
+		return svr.(SkyflowServiceService).CreateActivity(ctx, reqbody.(*CreateActivityRequest))
 	}
 
 	var rsp interface{}
@@ -153,14 +181,14 @@ func SkyflowService_CreateActivity_Handler(svr interface{}, ctx context.Context,
 	return rsp, nil
 }
 
-func SkyflowService_ListActivities_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowServiceService_ListActivities_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &ListActivitiesRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowService).ListActivities(ctx, reqbody.(*ListActivitiesRequest))
+		return svr.(SkyflowServiceService).ListActivities(ctx, reqbody.(*ListActivitiesRequest))
 	}
 
 	var rsp interface{}
@@ -171,14 +199,14 @@ func SkyflowService_ListActivities_Handler(svr interface{}, ctx context.Context,
 	return rsp, nil
 }
 
-func SkyflowService_DescribeActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowServiceService_DescribeActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &DescribeActivityRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowService).DescribeActivity(ctx, reqbody.(*DescribeActivityRequest))
+		return svr.(SkyflowServiceService).DescribeActivity(ctx, reqbody.(*DescribeActivityRequest))
 	}
 
 	var rsp interface{}
@@ -189,100 +217,105 @@ func SkyflowService_DescribeActivity_Handler(svr interface{}, ctx context.Contex
 	return rsp, nil
 }
 
-// SkyflowServer_ServiceDesc descriptor for server.RegisterService.
-var SkyflowServer_ServiceDesc = server.ServiceDesc{
-	ServiceName: "skyflow.Skyflow",
-	HandlerType: ((*SkyflowService)(nil)),
+// SkyflowServiceServer_ServiceDesc descriptor for server.RegisterService.
+var SkyflowServiceServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "skyflow.SkyflowService",
+	HandlerType: ((*SkyflowServiceService)(nil)),
 	Methods: []server.Method{
 		{
 			Name: "/api/v1/CreateNamespace",
-			Func: SkyflowService_CreateNamespace_Handler,
+			Func: SkyflowServiceService_CreateNamespace_Handler,
 		},
 		{
 			Name: "/api/v1/ListNamespaces",
-			Func: SkyflowService_ListNamespaces_Handler,
+			Func: SkyflowServiceService_ListNamespaces_Handler,
 		},
 		{
 			Name: "/api/v1/CreateActivity",
-			Func: SkyflowService_CreateActivity_Handler,
+			Func: SkyflowServiceService_CreateActivity_Handler,
 		},
 		{
 			Name: "/api/v1/ListActivities",
-			Func: SkyflowService_ListActivities_Handler,
+			Func: SkyflowServiceService_ListActivities_Handler,
 		},
 		{
 			Name: "/api/v1/DescribeActivity",
-			Func: SkyflowService_DescribeActivity_Handler,
+			Func: SkyflowServiceService_DescribeActivity_Handler,
 		},
 		{
-			Name: "/skyflow.Skyflow/CreateNamespace",
-			Func: SkyflowService_CreateNamespace_Handler,
+			Name: "/skyflow.SkyflowService/CreateNamespace",
+			Func: SkyflowServiceService_CreateNamespace_Handler,
 		},
 		{
-			Name: "/skyflow.Skyflow/ListNamespaces",
-			Func: SkyflowService_ListNamespaces_Handler,
+			Name: "/skyflow.SkyflowService/ListNamespaces",
+			Func: SkyflowServiceService_ListNamespaces_Handler,
 		},
 		{
-			Name: "/skyflow.Skyflow/CreateActivity",
-			Func: SkyflowService_CreateActivity_Handler,
+			Name: "/skyflow.SkyflowService/CreateActivity",
+			Func: SkyflowServiceService_CreateActivity_Handler,
 		},
 		{
-			Name: "/skyflow.Skyflow/ListActivities",
-			Func: SkyflowService_ListActivities_Handler,
+			Name: "/skyflow.SkyflowService/ListActivities",
+			Func: SkyflowServiceService_ListActivities_Handler,
 		},
 		{
-			Name: "/skyflow.Skyflow/DescribeActivity",
-			Func: SkyflowService_DescribeActivity_Handler,
+			Name: "/skyflow.SkyflowService/DescribeActivity",
+			Func: SkyflowServiceService_DescribeActivity_Handler,
 		},
 	},
 }
 
-// RegisterSkyflowService registers service.
-func RegisterSkyflowService(s server.Service, svr SkyflowService) {
-	if err := s.Register(&SkyflowServer_ServiceDesc, svr); err != nil {
-		panic(fmt.Sprintf("Skyflow register error:%v", err))
+// RegisterSkyflowServiceService registers service.
+func RegisterSkyflowServiceService(s server.Service, svr SkyflowServiceService) {
+	if err := s.Register(&SkyflowServiceServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("SkyflowService register error:%v", err))
 	}
 }
 
 // START --------------------------------- Default Unimplemented Server Service --------------------------------- START
 
-type UnimplementedCommon struct{}
+type UnimplementedCommonService struct{}
 
 // Paging Paging 分页格式
-func (s *UnimplementedCommon) Paging(ctx context.Context, req *PageRequest) (*PageResponse, error) {
-	return nil, errors.New("rpc Paging of service Common is not implemented")
+func (s *UnimplementedCommonService) Paging(ctx context.Context, req *PageRequest) (*PageResponse, error) {
+	return nil, errors.New("rpc Paging of service CommonService is not implemented")
 }
 
 // HTTP HTTPReturn  HTTP API接口返回值格式
-func (s *UnimplementedCommon) HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error) {
-	return nil, errors.New("rpc HTTP of service Common is not implemented")
+func (s *UnimplementedCommonService) HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error) {
+	return nil, errors.New("rpc HTTP of service CommonService is not implemented")
 }
 
-type UnimplementedSkyflow struct{}
+// Ping Ping ping servvice
+func (s *UnimplementedCommonService) Ping(ctx context.Context, req *emptypb.Empty) (*PingResponse, error) {
+	return nil, errors.New("rpc Ping of service CommonService is not implemented")
+}
+
+type UnimplementedSkyflowService struct{}
 
 // CreateNamespace CreateNamespace 创建一个命名空间
-func (s *UnimplementedSkyflow) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
-	return nil, errors.New("rpc CreateNamespace of service Skyflow is not implemented")
+func (s *UnimplementedSkyflowService) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
+	return nil, errors.New("rpc CreateNamespace of service SkyflowService is not implemented")
 }
 
 // ListNamespaces ListNamespaces 获得命名空间列表
-func (s *UnimplementedSkyflow) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
-	return nil, errors.New("rpc ListNamespaces of service Skyflow is not implemented")
+func (s *UnimplementedSkyflowService) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
+	return nil, errors.New("rpc ListNamespaces of service SkyflowService is not implemented")
 }
 
 // CreateActivity CreateActivity 创建一个活动
-func (s *UnimplementedSkyflow) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
-	return nil, errors.New("rpc CreateActivity of service Skyflow is not implemented")
+func (s *UnimplementedSkyflowService) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
+	return nil, errors.New("rpc CreateActivity of service SkyflowService is not implemented")
 }
 
 // ListActivities ListActivities 获得活动列表
-func (s *UnimplementedSkyflow) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
-	return nil, errors.New("rpc ListActivities of service Skyflow is not implemented")
+func (s *UnimplementedSkyflowService) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
+	return nil, errors.New("rpc ListActivities of service SkyflowService is not implemented")
 }
 
 // DescribeActivity DescribeActivity 获得一个活动的描述
-func (s *UnimplementedSkyflow) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
-	return nil, errors.New("rpc DescribeActivity of service Skyflow is not implemented")
+func (s *UnimplementedSkyflowService) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
+	return nil, errors.New("rpc DescribeActivity of service SkyflowService is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -291,31 +324,33 @@ func (s *UnimplementedSkyflow) DescribeActivity(ctx context.Context, req *Descri
 
 // START ======================================= Client Service Definition ======================================= START
 
-// CommonClientProxy defines service client proxy
-type CommonClientProxy interface {
+// CommonServiceClientProxy defines service client proxy
+type CommonServiceClientProxy interface {
 	// Paging Paging 分页格式
 	Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (rsp *PageResponse, err error)
 	// HTTP HTTPReturn  HTTP API接口返回值格式
 	HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (rsp *HTTPResponseMessage, err error)
+	// Ping Ping ping servvice
+	Ping(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (rsp *PingResponse, err error)
 }
 
-type CommonClientProxyImpl struct {
+type CommonServiceClientProxyImpl struct {
 	client client.Client
 	opts   []client.Option
 }
 
-var NewCommonClientProxy = func(opts ...client.Option) CommonClientProxy {
-	return &CommonClientProxyImpl{client: client.DefaultClient, opts: opts}
+var NewCommonServiceClientProxy = func(opts ...client.Option) CommonServiceClientProxy {
+	return &CommonServiceClientProxyImpl{client: client.DefaultClient, opts: opts}
 }
 
-func (c *CommonClientProxyImpl) Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (*PageResponse, error) {
+func (c *CommonServiceClientProxyImpl) Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (*PageResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
-	msg.WithClientRPCName("/skyflow.Common/Paging")
-	msg.WithCalleeServiceName(CommonServer_ServiceDesc.ServiceName)
+	msg.WithClientRPCName("/skyflow.CommonService/Paging")
+	msg.WithCalleeServiceName(CommonServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Common")
+	msg.WithCalleeService("CommonService")
 	msg.WithCalleeMethod("Paging")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -328,14 +363,14 @@ func (c *CommonClientProxyImpl) Paging(ctx context.Context, req *PageRequest, op
 	return rsp, nil
 }
 
-func (c *CommonClientProxyImpl) HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*HTTPResponseMessage, error) {
+func (c *CommonServiceClientProxyImpl) HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*HTTPResponseMessage, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
-	msg.WithClientRPCName("/skyflow.Common/HTTP")
-	msg.WithCalleeServiceName(CommonServer_ServiceDesc.ServiceName)
+	msg.WithClientRPCName("/skyflow.CommonService/HTTP")
+	msg.WithCalleeServiceName(CommonServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Common")
+	msg.WithCalleeService("CommonService")
 	msg.WithCalleeMethod("HTTP")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -348,8 +383,28 @@ func (c *CommonClientProxyImpl) HTTP(ctx context.Context, req *emptypb.Empty, op
 	return rsp, nil
 }
 
-// SkyflowClientProxy defines service client proxy
-type SkyflowClientProxy interface {
+func (c *CommonServiceClientProxyImpl) Ping(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (*PingResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/Ping")
+	msg.WithCalleeServiceName(CommonServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("CommonService")
+	msg.WithCalleeMethod("Ping")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &PingResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// SkyflowServiceClientProxy defines service client proxy
+type SkyflowServiceClientProxy interface {
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (rsp *CreateNamespaceResponse, err error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
@@ -362,23 +417,23 @@ type SkyflowClientProxy interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (rsp *DescribeActivityResponse, err error)
 }
 
-type SkyflowClientProxyImpl struct {
+type SkyflowServiceClientProxyImpl struct {
 	client client.Client
 	opts   []client.Option
 }
 
-var NewSkyflowClientProxy = func(opts ...client.Option) SkyflowClientProxy {
-	return &SkyflowClientProxyImpl{client: client.DefaultClient, opts: opts}
+var NewSkyflowServiceClientProxy = func(opts ...client.Option) SkyflowServiceClientProxy {
+	return &SkyflowServiceClientProxyImpl{client: client.DefaultClient, opts: opts}
 }
 
-func (c *SkyflowClientProxyImpl) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
+func (c *SkyflowServiceClientProxyImpl) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateNamespace")
-	msg.WithCalleeServiceName(SkyflowServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Skyflow")
+	msg.WithCalleeService("SkyflowService")
 	msg.WithCalleeMethod("CreateNamespace")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -391,14 +446,14 @@ func (c *SkyflowClientProxyImpl) CreateNamespace(ctx context.Context, req *Creat
 	return rsp, nil
 }
 
-func (c *SkyflowClientProxyImpl) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
+func (c *SkyflowServiceClientProxyImpl) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/ListNamespaces")
-	msg.WithCalleeServiceName(SkyflowServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Skyflow")
+	msg.WithCalleeService("SkyflowService")
 	msg.WithCalleeMethod("ListNamespaces")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -411,14 +466,14 @@ func (c *SkyflowClientProxyImpl) ListNamespaces(ctx context.Context, req *ListNa
 	return rsp, nil
 }
 
-func (c *SkyflowClientProxyImpl) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
+func (c *SkyflowServiceClientProxyImpl) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateActivity")
-	msg.WithCalleeServiceName(SkyflowServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Skyflow")
+	msg.WithCalleeService("SkyflowService")
 	msg.WithCalleeMethod("CreateActivity")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -431,14 +486,14 @@ func (c *SkyflowClientProxyImpl) CreateActivity(ctx context.Context, req *Create
 	return rsp, nil
 }
 
-func (c *SkyflowClientProxyImpl) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
+func (c *SkyflowServiceClientProxyImpl) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/ListActivities")
-	msg.WithCalleeServiceName(SkyflowServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Skyflow")
+	msg.WithCalleeService("SkyflowService")
 	msg.WithCalleeMethod("ListActivities")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -451,14 +506,14 @@ func (c *SkyflowClientProxyImpl) ListActivities(ctx context.Context, req *ListAc
 	return rsp, nil
 }
 
-func (c *SkyflowClientProxyImpl) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
+func (c *SkyflowServiceClientProxyImpl) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/DescribeActivity")
-	msg.WithCalleeServiceName(SkyflowServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("Skyflow")
+	msg.WithCalleeService("SkyflowService")
 	msg.WithCalleeMethod("DescribeActivity")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
