@@ -26,15 +26,33 @@ skyflow is a workflow based on AWS  Amazon States Language (ASL)
 + examples          // example test file
 ```
 
-调用流程图
+调用依赖图
 
 ```mermaid
-gantt
-    section Section
-    Completed :done,    des1, 2014-01-06,2014-01-08
-    Active        :active,  des2, 2014-01-07, 3d
-    Parallel 1   :         des3, after des1, 1d
-    Parallel 2   :         des4, after des1, 1d
-    Parallel 3   :         des5, after des3, 1d
-    Parallel 4   :         des6, after des4, 1d
+flowchart TD
+    A1[cmd.skyflow_server]
+    A2[cmd.skyflow_cli]
+    B1(server.apiserver)
+    B2(server.dispatcher)
+    A1 --> B1
+    A1 --> B2
+    C1(workflow.parser)
+    C2(workflow.template)
+    C3(workflow.executor)
+    B1 --> C2
+    B1 --> C1
+    B1 --> C3
+    B2 --> C1
+    B2 --> C3
+    D1(workflow.repository)
+    C1 --> D1
+    C2 --> D1
+    C3 --> D1
+    F1(pkg)
+    C1 --> F1
+    C2 --> F1
+    C3 --> F1
+    D1 --> F1
+    P1(proto.gen)
+    A2 --> P1
 ```
