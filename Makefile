@@ -8,7 +8,7 @@ FLAGS := -ldflags="-s -w"
 
 .PHONY: help
 
-target=build
+all: build
 
 .PHONY: help
 help:

@@ -25,8 +25,8 @@ func GetEventTables() []interface{} {
 // GetTemplateTables get tables for workflow template
 func GetTemplateTables() []interface{} {
 	return []interface{}{
-		new(Activity),
 		new(Namespace),
+		new(Function),
 		new(StateMachine),
 	}
 }
@@ -35,6 +35,5 @@ func GetTemplateTables() []interface{} {
 func GetMQTables() []interface{} {
 	return []interface{}{
 		new(MessageQueue),
-		new(AsyncTaskQueue),
 	}
 }

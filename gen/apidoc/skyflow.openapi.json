@@ -48,27 +48,44 @@
       "name": "comment",
       "in": "query",
       "required": false,
+      "description": "comment activity comment",
       "schema": {
        "type": "string",
-       "title": "comment"
+       "title": "comment",
+       "description": "comment activity comment"
+      }
+     },
+     {
+      "name": "enable_update",
+      "in": "query",
+      "required": false,
+      "description": "enable_update update when name existed, default is true",
+      "schema": {
+       "type": "boolean",
+       "title": "enable_update",
+       "description": "enable_update update when name existed, default is true"
       }
      },
      {
       "name": "name",
       "in": "query",
       "required": false,
+      "description": "name activity name",
       "schema": {
        "type": "string",
-       "title": "name"
+       "title": "name",
+       "description": "name activity name"
       }
      },
      {
       "name": "namespace",
       "in": "query",
       "required": false,
+      "description": "namespace activity namespace",
       "schema": {
        "type": "string",
-       "title": "namespace"
+       "title": "namespace",
+       "description": "namespace activity namespace"
       }
      }
     ],
@@ -103,6 +120,17 @@
        "type": "string",
        "title": "comment",
        "description": "comment 命名空间描述"
+      }
+     },
+     {
+      "name": "enable_update",
+      "in": "query",
+      "required": false,
+      "description": "enable_update update when name existed, default is true",
+      "schema": {
+       "type": "boolean",
+       "title": "enable_update",
+       "description": "enable_update update when name existed, default is true"
       }
      },
      {
@@ -177,9 +205,11 @@
       "name": "namespace",
       "in": "query",
       "required": false,
+      "description": "namespace 活动命名空间",
       "schema": {
        "type": "string",
-       "title": "namespace"
+       "title": "namespace",
+       "description": "namespace 活动命名空间"
       }
      },
      {
@@ -396,27 +426,44 @@
       "name": "comment",
       "in": "query",
       "required": false,
+      "description": "comment activity comment",
       "schema": {
        "type": "string",
-       "title": "comment"
+       "title": "comment",
+       "description": "comment activity comment"
+      }
+     },
+     {
+      "name": "enable_update",
+      "in": "query",
+      "required": false,
+      "description": "enable_update update when name existed, default is true",
+      "schema": {
+       "type": "boolean",
+       "title": "enable_update",
+       "description": "enable_update update when name existed, default is true"
       }
      },
      {
       "name": "name",
       "in": "query",
       "required": false,
+      "description": "name activity name",
       "schema": {
        "type": "string",
-       "title": "name"
+       "title": "name",
+       "description": "name activity name"
       }
      },
      {
       "name": "namespace",
       "in": "query",
       "required": false,
+      "description": "namespace activity namespace",
       "schema": {
        "type": "string",
-       "title": "namespace"
+       "title": "namespace",
+       "description": "namespace activity namespace"
       }
      }
     ],
@@ -451,6 +498,17 @@
        "type": "string",
        "title": "comment",
        "description": "comment 命名空间描述"
+      }
+     },
+     {
+      "name": "enable_update",
+      "in": "query",
+      "required": false,
+      "description": "enable_update update when name existed, default is true",
+      "schema": {
+       "type": "boolean",
+       "title": "enable_update",
+       "description": "enable_update update when name existed, default is true"
       }
      },
      {
@@ -525,9 +583,11 @@
       "name": "namespace",
       "in": "query",
       "required": false,
+      "description": "namespace 活动命名空间",
       "schema": {
        "type": "string",
-       "title": "namespace"
+       "title": "namespace",
+       "description": "namespace 活动命名空间"
       }
      },
      {
@@ -628,39 +688,59 @@
  },
  "components": {
   "schemas": {
-   "skyflow.ActivityInfo": {
+   "skyflow.ActivityListItem": {
     "type": "object",
     "properties": {
      "activity_uri": {
       "title": "activity_uri",
-      "type": "string"
+      "type": "string",
+      "description": "activity_uri 活动uri"
      },
      "comment": {
       "title": "comment",
-      "type": "string"
+      "type": "string",
+      "description": "comment 活动描述"
      },
      "create_time": {
       "title": "create_time",
-      "type": "string"
-     },
-     "modify_time": {
-      "title": "modify_time",
-      "type": "string"
+      "type": "string",
+      "format": "int64",
+      "description": "create_time timestample"
      },
      "name": {
       "title": "name",
-      "type": "string"
+      "type": "string",
+      "description": "name 活动名字"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time timestample"
      }
     },
-    "title": "skyflow.ActivityInfo",
-    "description": "ActivityInfo 活动信息"
+    "title": "skyflow.ActivityListItem",
+    "description": "ActivityListItem ..."
    },
    "skyflow.CreateActivityResponse": {
     "type": "object",
     "properties": {
-     "data": {
-      "title": "data",
-      "$ref": "#/components/schemas/skyflow.ActivityInfo"
+     "activity_uri": {
+      "title": "activity_uri",
+      "type": "string",
+      "description": "activity uri"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time create time timestample"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time  update time timestample"
      }
     },
     "title": "skyflow.CreateActivityResponse",
@@ -668,15 +748,57 @@
    },
    "skyflow.CreateNamespaceResponse": {
     "type": "object",
+    "properties": {
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time timestample"
+     },
+     "name": {
+      "title": "name",
+      "type": "string",
+      "description": "name namespace name"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time  update time timestample"
+     }
+    },
     "title": "skyflow.CreateNamespaceResponse",
     "description": "CreateNamespaceResponse 创建一个命名空间返回结构"
    },
    "skyflow.DescribeActivityResponse": {
     "type": "object",
     "properties": {
-     "data": {
-      "title": "data",
-      "$ref": "#/components/schemas/skyflow.ActivityInfo"
+     "activity_uri": {
+      "title": "activity_uri",
+      "type": "string",
+      "description": "activity_uri activity uri"
+     },
+     "comment": {
+      "title": "comment",
+      "type": "string",
+      "description": "comment activity comment"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time create time timestample"
+     },
+     "name": {
+      "title": "name",
+      "type": "string",
+      "description": "name activity name"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time  update time timestample"
      }
     },
     "title": "skyflow.DescribeActivityResponse",
@@ -703,12 +825,12 @@
    "skyflow.ListActivitiesResponse": {
     "type": "object",
     "properties": {
-     "data": {
-      "title": "data",
+     "activities": {
+      "title": "activities",
       "type": "array",
       "description": " 查询到的执行列表\n",
       "items": {
-       "$ref": "#/components/schemas/skyflow.ActivityInfo"
+       "$ref": "#/components/schemas/skyflow.ActivityListItem"
       }
      },
      "page_response": {
@@ -723,14 +845,51 @@
    "skyflow.ListNamespacesResponse": {
     "type": "object",
     "properties": {
+     "namespaces": {
+      "title": "namespaces",
+      "type": "array",
+      "description": " data  查询到的执行列表\n",
+      "items": {
+       "$ref": "#/components/schemas/skyflow.NamespaceListItem"
+      }
+     },
      "page_response": {
       "title": "page_response",
       "$ref": "#/components/schemas/skyflow.PageResponse",
-      "description": " 查询到的执行列表\n repeated NamespaceInfo data = 1 ;\n 分页信息\n"
+      "description": " 分页信息\n"
      }
     },
     "title": "skyflow.ListNamespacesResponse",
     "description": "ListNamespacesResponse 获得命名空间列表返回"
+   },
+   "skyflow.NamespaceListItem": {
+    "type": "object",
+    "properties": {
+     "comment": {
+      "title": "comment",
+      "type": "string",
+      "description": "comment 命名空间描述"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time timestample"
+     },
+     "name": {
+      "title": "name",
+      "type": "string",
+      "description": "name 命名空间名字"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time timestample"
+     }
+    },
+    "title": "skyflow.NamespaceListItem",
+    "description": "NamespaceInfo 命名空间信息"
    },
    "skyflow.PageResponse": {
     "type": "object",

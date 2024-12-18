@@ -117,6 +117,44 @@ message NamespaceListItem {
     string comment = 2;
     // create_time timestample
     int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// CreateNamespaceRequest 创建一个命名空间
+message CreateNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // comment 命名空间描述
+    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    // enable_update update when name existed, default is true
+    bool enable_update = 3;
+}
+
+// CreateNamespaceResponse 创建一个命名空间返回结构
+message CreateNamespaceResponse {
+    // name namespace name
+    string name = 1;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time  update time timestample
+    int64 update_time = 12;
+}
+
+// ListNamespacesRequest 获得命名空间列表
+message ListNamespacesRequest {
+
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 1;
+}
+
+// ListNamespacesResponse 获得命名空间列表返回
+message ListNamespacesResponse {
+
+    // data  查询到的执行列表
+    repeated NamespaceListItem namespaces = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
 }
 
 
@@ -130,7 +168,68 @@ message ActivityListItem {
     string activity_uri = 3;
     // create_time timestample
     int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
 }
+
+
+// CreateActivityRequest 创建一个活动请求结构
+message CreateActivityRequest {
+    // name activity name
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // comment activity comment
+    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    // namespace activity namespace
+    string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // enable_update update when name existed, default is true
+    bool enable_update = 4;
+}
+
+//CreateActivityResponse 创建一个活动返回结构
+message CreateActivityResponse {
+    // activity uri
+    string activity_uri = 1;
+    // create_time create time timestample
+    int64 create_time = 11;
+    // update_time  update time timestample
+    int64 update_time = 12;
+}
+// DescribeActivityRequest 获得活动详情
+message DescribeActivityRequest {
+    // activity uri
+    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// DescribeActivityResponse 获得活动列表请求返回
+message DescribeActivityResponse {
+    // name activity name
+    string name = 1;
+    // comment activity comment
+    string comment = 2;
+    // activity_uri activity uri
+    string activity_uri = 3;
+    // create_time create time timestample
+    int64 create_time = 11;
+    // update_time  update time timestample
+    int64 update_time = 12;
+}
+
+// ListActivitiesRequest 获得活动列表请求结构
+message ListActivitiesRequest {
+    // namespace 活动命名空间
+    string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 2;
+}
+
+// ListActivitiesResponse 获得活动列表请求返回
+message ListActivitiesResponse {
+    // 查询到的执行列表
+    repeated ActivityListItem activities = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
 
 // ExecutionListItem execution info in ListExecutionsResponse
 message ExecutionListItem {
@@ -433,72 +532,6 @@ message SendStateSkipRequest {
     string output = 3;
 }
 
-// CreateNamespaceRequest 创建一个命名空间
-message CreateNamespaceRequest {
-    // name 命名空间名字
-    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    // comment 命名空间描述
-    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
-}
-
-// CreateNamespaceResponse 创建一个命名空间返回结构
-message CreateNamespaceResponse {
-    // NamespaceInfo data = 1 ;
-}
-
-// ListNamespacesRequest 获得命名空间列表
-message ListNamespacesRequest {
-
-    // 分页请求，默认 每分页大小 = 50条
-    PageRequest page_request = 1;
-}
-
-// ListNamespacesResponse 获得命名空间列表返回
-message ListNamespacesResponse {
-
-    // 查询到的执行列表
-    // repeated NamespaceInfo data = 1 ;
-    // 分页信息
-    PageResponse page_response = 2;
-}
-
-// CreateActivityRequest 创建一个活动请求结构
-message CreateActivityRequest {
-    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
-    string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-}
-
-//CreateActivityResponse 创建一个活动返回结构
-message CreateActivityResponse {
-    ActivityInfo data = 1 ;
-}
-// DescribeActivityRequest 获得活动详情
-message DescribeActivityRequest {
-    // activity uri
-    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
-}
-
-// DescribeActivityResponse 获得活动列表请求返回
-message DescribeActivityResponse {
-    ActivityInfo data = 1;
-}
-
-// ListActivitiesRequest 获得活动列表请求结构
-message ListActivitiesRequest {
-    string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    // 分页请求，默认 每分页大小 = 50条
-    PageRequest page_request = 2;
-}
-
-// ListActivitiesResponse 获得活动列表请求返回
-message ListActivitiesResponse {
-
-    // 查询到的执行列表
-    repeated ActivityInfo data = 1 ;
-    // 分页信息
-    PageResponse page_response = 2;
-}
 
 // CreateStateMachineRequest 创建一个工作流请求结构
 message CreateStateMachineRequest {

@@ -1,6 +1,5 @@
-# skyflow_backbend
-skyflow is a workflow based on AWS  Amazon States Language (ASL)
-
+# Skyflow
+Skyflow is a workflow based on AWS Amazon States Language (ASL), aonther implementation of AWS StepFunction.
 
 
 # repository code struct
@@ -34,8 +33,11 @@ flowchart TD
     A2[cmd.skyflow_cli]
     B1(server.apiserver)
     B2(server.dispatcher)
+    B2(server.dispatcher)
+    B3(server.exporter)
     A1 --> B1
     A1 --> B2
+    A1 --> B3
     C1(workflow.parser)
     C2(workflow.template)
     C3(workflow.executor)
@@ -44,6 +46,7 @@ flowchart TD
     B1 --> C3
     B2 --> C1
     B2 --> C3
+    B3 --> C3
     D1(workflow.repository)
     C1 --> D1
     C2 --> D1

@@ -1,9 +1,8 @@
 package vo
 
 import (
-	"gopkg.mihoyo.com/plat/cloudflow/pkg/paging"
-	"gopkg.mihoyo.com/plat/cloudflow/workflow/po"
-	"gopkg.mihoyo.com/plat/cloudflow/workflow/repository/queue"
+	"github.com/mmtbak/microlibrary/paging"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
 // StartExecutionRequest 新建Execution 的请求
@@ -23,9 +22,8 @@ type ExecutionData struct {
 
 // ResponseCreateExecution  createexecution 返回的struct
 type StartExecutionResponse struct {
-	Data     po.Execution
-	Events   []ExecutionEvent
-	Messages []queue.InnerMessage
+	Data   po.Execution
+	Events []ExecutionEvent
 }
 
 // RestartExecutionRequest 重新创建 Execution
@@ -61,7 +59,7 @@ type GetActivityTaskRequest struct {
 }
 
 type GetActivityTaskResponse struct {
-	Step             *po.Step
+	Step             *po.State
 	Execution        *po.Execution
 	Input            string
 	TaskToken        string

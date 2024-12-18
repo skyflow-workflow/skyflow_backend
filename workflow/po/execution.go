@@ -118,17 +118,3 @@ type ActivityTask struct {
 	// GmtCreated time.Time `json:"gmt_created" gorm:"autoCreateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP"`
 	GmtCreated time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
-
-// EmbedAccessToken 内嵌类型的实现
-type EmbedAccessToken struct {
-	ID            int64     `json:"id" gorm:"primaryKey;autoIncrement;type:BIGINT"`
-	AccountID     int       `json:"account_id" gorm:"type:INT(10);not null"`        //账号ID
-	Token         string    `json:"token" gorm:"not null;unqiue;type:VARCHAR(200)"` // access token
-	User          string    `json:"user" gorm:"not null;type:VARCHAR(200)"`         // token的用户
-	ExecutionUUID string    `json:"execution_uuid" gorm:"type:VARCHAR(200);index;not null"`
-	Type          string    `json:"type" gorm:"type:VARCHAR(255);not null"`              // access type : ExecutionDetail/ExecutionClasify
-	Level         string    `json:"level" gorm:"type:VARCHAR(255);not null"`             // access level :访问权限
-	ExpireTime    time.Time `json:"expire_time" gorm:"type:TIMESTAMP NULL;default:NULL"` //过期时间
-	GmtModified   time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated    time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
-}

@@ -1,8 +1,8 @@
 package vo
 
 import (
-	"gopkg.mihoyo.com/plat/cloudflow/pkg/paging"
-	"gopkg.mihoyo.com/plat/cloudflow/workflow/po"
+	"github.com/mmtbak/microlibrary/paging"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
 // ParseFlowRequest request
@@ -37,7 +37,7 @@ type ListActivitiesRequest struct {
 }
 
 type ListActivitiesResponse struct {
-	Activities   []po.Activity
+	Activities   []po.Function
 	PageResponse paging.PageResponse
 }
 
@@ -46,11 +46,11 @@ type ListWofkflowsRequest struct {
 }
 
 type ListWorkflowsResponse struct {
-	Workflows    []po.Workflow
+	Workflows    []po.StateMachine
 	PageResponse paging.PageResponse
 }
 
 type DescribeStepResponse struct {
 	ExecutionUUID string
-	Step          po.Step
+	Step          po.State
 }
