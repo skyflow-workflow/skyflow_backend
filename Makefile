@@ -1,6 +1,8 @@
 SHELL := /bin/bash
 GO := go
 GOOS ?= $(shell uname -s | tr [:upper:] [:lower:])
+# GOTEST ?= ${GO} test
+GOTEST ?= richgo test
 GOARCH ?= $(shell go env GOARCH)
 GOPATH ?= $(shell go env GOPATH)
 PROTOFILE := proto/skyflow.proto
@@ -81,8 +83,8 @@ pb:
 
 .PHONY: test
 test:
-	@echo "testing........"
-	@go test -v ./...
+	@echo "start unittest........"
+	${GOTEST} -v ./...
 
 .PHONY: build
 build:

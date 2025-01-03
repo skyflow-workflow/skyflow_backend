@@ -3,6 +3,8 @@ module github.com/skyflow-workflow/skyflow_backbend
 go 1.21.6
 
 require (
+	github.com/go-playground/assert/v2 v2.0.1
+	github.com/golangplus/testing v1.0.0
 	github.com/mmtbak/microlibrary v0.0.0-20241204083925-d1663539d017
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
 	google.golang.org/protobuf v1.35.1

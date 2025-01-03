@@ -1,5 +1,5 @@
 // AWS State Functions API Reference
-// https://docs.amazonaws.cn/en_us/State-functions/latest/apireference/Welcome.html
+// https://docs.amazonaws.cn/en_us/step-functions/latest/apireference/Welcome.html
 syntax = "proto3";
 
 package skyflow;
