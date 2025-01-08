@@ -1,12 +1,13 @@
 package states
 
-type Task struct {
-	Name     string
-	Resource string
+type TaskBody struct {
+	Resource       string `json:"Resource"`
+	TimeoutSeconds int    `json:"TimeoutSeconds"`
 }
 
-func (t *Task) GetName() string {
-	return t.Name
+type Task struct {
+	*BaseState
+	TaskBody
 }
 
 func (t *Task) Validate() string {

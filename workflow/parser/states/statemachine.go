@@ -2,7 +2,7 @@ package states
 
 type StateMachine struct {
 	*StateMachineHeader
-	States map[string]State
+	*StateMachineBody
 }
 
 func (s *StateMachine) Validate() string {
