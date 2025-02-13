@@ -14,6 +14,7 @@ import (
 
 var myvalidate = validator.New()
 
+// doc: https://states-language.net/spec.html#state-type-table-jsonpath
 // 						Pass		Task		Choice		Wait		Succeed		Fail		Parallel    Map
 // Type					Required	Required	Required	Required	Required	Required	Required	Required
 // Comment				Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed
@@ -23,19 +24,22 @@ var myvalidate = validator.New()
 // One of: Next/End		Required	Required				Required							Required	Required
 // Retry, Catch						Allowed														Allowed  	Allowed
 
-// StateType constant State type define here
-var StateType = struct {
-	Task     string
-	Choice   string
-	Fail     string
-	Succeed  string
-	Wait     string
-	Pass     string
-	Parallel string
-	Map      string
-	Suspend  string
+// StateType ...
+type StateType string
+
+// StateTypes constant State type define here
+var StateTypes = struct {
+	Task     StateType
+	Choice   StateType
+	Fail     StateType
+	Succeed  StateType
+	Wait     StateType
+	Pass     StateType
+	Parallel StateType
+	Map      StateType
+	Suspend  StateType
 	// 子流程类型, Parallel/Map 生成的中间步骤
-	StateGroup string
+	StateGroup StateType
 }{
 	Task:       "Task",
 	Choice:     "Choice",
@@ -49,102 +53,120 @@ var StateType = struct {
 	StateGroup: "StateGroup",
 }
 
-var requiredlevel = struct {
-	Required int
+// FiledRequiredLevel ...
+var FiledRequiredLevel = struct {
 	Allowed  int
+	Required int
 	Deny     int
 }{
-	Required: 0,
-	Allowed:  1,
+	// default is allowed
+	Allowed:  0,
+	Required: 1,
 	Deny:     2,
 }
 
-// ElementRequiredMap  元素依赖需求字段映射
-var ElementRequiredMap = map[string]map[string]int{
-	StateType.Pass: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Allowed,
-		"ResultPath": requiredlevel.Allowed,
-		"NextEnd":    requiredlevel.Required,
+// StateFieldRequired ...
+type StateFieldRequired struct {
+	Comment    int
+	Type       int
+	InputPath  int
+	OutputPath int
+	Parameters int
+	ResultPath int
+	NextEnd    int
+	Retry      int
+	Catch      int
+}
+
+// StateFeildRequiredMap  字段依赖需求字段映射
+var StateFeildRequiredMap = map[StateType]StateFieldRequired{
+
+	StateTypes.Task: {
+		// default is allowed
+		// Comment, InputPath, OutputPath, Parameters, ResultPath,
+		Type:    FiledRequiredLevel.Required,
+		NextEnd: FiledRequiredLevel.Required,
 	},
-	StateType.Task: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Allowed,
-		"ResultPath": requiredlevel.Allowed,
-		"NextEnd":    requiredlevel.Required,
+	StateTypes.Parallel: {
+		// default is allowed
+		// Comment, InputPath, OutputPath, Parameters, ResultPath,
+		Type:    FiledRequiredLevel.Required,
+		NextEnd: FiledRequiredLevel.Required,
 	},
-	StateType.Choice: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Deny,
-		"ResultPath": requiredlevel.Deny,
-		"NextEnd":    requiredlevel.Deny,
+
+	StateTypes.Map: {
+		// default is allowed
+		// Comment, InputPath, OutputPath, Parameters, ResultPath,
+		Type:    FiledRequiredLevel.Required,
+		NextEnd: FiledRequiredLevel.Required,
 	},
-	StateType.Wait: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Deny,
-		"ResultPath": requiredlevel.Deny,
-		"NextEnd":    requiredlevel.Required,
+	StateTypes.Pass: {
+		// default is allowed
+		// Comment, InputPath, OutputPath, Parameters, ResultPath
+		Type:    FiledRequiredLevel.Required,
+		NextEnd: FiledRequiredLevel.Required,
+		// Pass 不支持 Retry, Catch
+		Retry: FiledRequiredLevel.Deny,
+		Catch: FiledRequiredLevel.Deny,
 	},
-	StateType.Succeed: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Deny,
-		"ResultPath": requiredlevel.Deny,
-		"NextEnd":    requiredlevel.Deny,
+	StateTypes.Wait: {
+		// default  Comment, InputPath, OutputPath is allowed
+		Type:       FiledRequiredLevel.Required,
+		NextEnd:    FiledRequiredLevel.Required,
+		ResultPath: FiledRequiredLevel.Deny,
+		Parameters: FiledRequiredLevel.Deny,
+		Retry:      FiledRequiredLevel.Deny,
+		Catch:      FiledRequiredLevel.Deny,
 	},
-	StateType.Fail: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Deny,
-		"OutputPath": requiredlevel.Deny,
-		"Parameters": requiredlevel.Deny,
-		"ResultPath": requiredlevel.Deny,
-		"NextEnd":    requiredlevel.Deny,
+	StateTypes.Choice: {
+		// default  Comment, InputPath, OutputPath is allowed
+		Type:       FiledRequiredLevel.Required,
+		NextEnd:    FiledRequiredLevel.Deny,
+		ResultPath: FiledRequiredLevel.Deny,
+		Parameters: FiledRequiredLevel.Deny,
+		Retry:      FiledRequiredLevel.Deny,
+		Catch:      FiledRequiredLevel.Deny,
 	},
-	StateType.Parallel: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Allowed,
-		"ResultPath": requiredlevel.Allowed,
-		"NextEnd":    requiredlevel.Required,
+
+	StateTypes.Succeed: {
+		// default  Comment, InputPath, OutputPath is allowed
+		Type:       FiledRequiredLevel.Required,
+		NextEnd:    FiledRequiredLevel.Deny,
+		ResultPath: FiledRequiredLevel.Deny,
+		Parameters: FiledRequiredLevel.Deny,
+		Retry:      FiledRequiredLevel.Deny,
+		Catch:      FiledRequiredLevel.Deny,
 	},
-	StateType.Map: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Allowed,
-		"ResultPath": requiredlevel.Allowed,
-		"NextEnd":    requiredlevel.Required,
+	StateTypes.Fail: {
+		// default  Comment is allowed
+		Type:       FiledRequiredLevel.Required,
+		InputPath:  FiledRequiredLevel.Deny,
+		OutputPath: FiledRequiredLevel.Deny,
+		NextEnd:    FiledRequiredLevel.Deny,
+		ResultPath: FiledRequiredLevel.Deny,
+		Parameters: FiledRequiredLevel.Deny,
+		Retry:      FiledRequiredLevel.Deny,
+		Catch:      FiledRequiredLevel.Deny,
 	},
-	StateType.Suspend: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Deny,
-		"Parameters": requiredlevel.Deny,
-		"ResultPath": requiredlevel.Deny,
-		"NextEnd":    requiredlevel.Required,
+
+	StateTypes.Suspend: {
+		// default  Comment is allowed
+		Type:       FiledRequiredLevel.Required,
+		InputPath:  FiledRequiredLevel.Deny,
+		OutputPath: FiledRequiredLevel.Deny,
+		NextEnd:    FiledRequiredLevel.Deny,
+		ResultPath: FiledRequiredLevel.Deny,
+		Parameters: FiledRequiredLevel.Deny,
+		Retry:      FiledRequiredLevel.Deny,
+		Catch:      FiledRequiredLevel.Deny,
 	},
-	StateType.StateGroup: {
-		"Comment":    requiredlevel.Allowed,
-		"InputPath":  requiredlevel.Allowed,
-		"OutputPath": requiredlevel.Allowed,
-		"Parameters": requiredlevel.Allowed,
-		"ResultPath": requiredlevel.Allowed,
-		"NextEnd":    requiredlevel.Allowed,
+	StateTypes.StateGroup: {
+		// default  Comment is allowed
 	},
 }
 
-// Fields Comment Field
-var Fields = struct {
+// StateFields Comment Field
+var StateFields = struct {
 	Type             string
 	Comment          string
 	InputPath        string
@@ -153,7 +175,6 @@ var Fields = struct {
 	ResultPath       string
 	Next             string
 	End              string
-	NextEnd          string
 	Resource         string
 	Retry            string
 	Catch            string
@@ -168,7 +189,6 @@ var Fields = struct {
 	ResultPath:       "ResultPath",
 	Next:             "Next",
 	End:              "End",
-	NextEnd:          "NextEnd",
 	Resource:         "Resource",
 	Retry:            "Retry",
 	Catch:            "Catch",
@@ -177,20 +197,42 @@ var Fields = struct {
 }
 
 // CommonFields 常用字段
-var CommonFields = []string{Fields.Comment, Fields.InputPath, Fields.OutputPath,
-	Fields.Parameters, Fields.ResultPath, Fields.Next, Fields.End}
+var CommonFields = []string{
+	StateFields.Comment,
+	StateFields.InputPath,
+	StateFields.OutputPath,
+	StateFields.Parameters,
+	StateFields.ResultPath,
+	StateFields.Next,
+	StateFields.End,
+}
 
-// 变量字段的前缀
+// VariablePrefex 变量字段的前缀
 var VariablePrefex = "$."
 
+// StateMachineType ...
 var StateMachineType = "statemachine"
 
 // IsExecutableStateType 是否是可执行的步骤类型
 func IsExecutableStateType(stype string) bool {
-	return stype == StateType.Task ||
-		stype == StateType.Wait ||
-		stype == StateType.Succeed ||
-		stype == StateType.Fail ||
-		stype == StateType.Suspend ||
-		stype == StateType.Choice
+	sttype := StateType(stype)
+	isexecuteable := sttype == StateTypes.Task ||
+		sttype == StateTypes.Wait ||
+		sttype == StateTypes.Succeed ||
+		sttype == StateTypes.Fail ||
+		sttype == StateTypes.Suspend ||
+		sttype == StateTypes.Choice
+	return isexecuteable
+}
+
+// QueryLanguageType 查询语言类型
+type QueryLanguageType string
+
+// QueryLanguages ...
+var QueryLanguages = struct {
+	JSONPath QueryLanguageType
+	JSONata  QueryLanguageType
+}{
+	JSONPath: "JSONPath",
+	JSONata:  "JSONata",
 }

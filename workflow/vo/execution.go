@@ -20,7 +20,7 @@ type ExecutionData struct {
 	TaskData string `json:"task_data"` // Task Data
 }
 
-// ResponseCreateExecution  createexecution 返回的struct
+// StartExecutionResponse ResponseCreateExecution  createexecution 返回的struct
 type StartExecutionResponse struct {
 	Data   po.Execution
 	Events []ExecutionEvent
@@ -36,7 +36,7 @@ type RestartExecutionRequest struct {
 	Abort bool `json:"abort" jpath:"cause"`
 }
 
-// StopExecution 终止 Execution 请求结构
+// StopExecutionRequest StopExecution 终止 Execution 请求结构
 type StopExecutionRequest struct {
 	ExecutionUUID string `json:"execution_uuid" jpath:"uuid" post:"required notzero"`
 	Cause         string `json:"cause" jpath:"cause"`
@@ -54,10 +54,12 @@ type StateWakeupMessage struct {
 	Token   string `json:"token"`
 }
 
+// GetActivityTaskRequest ...
 type GetActivityTaskRequest struct {
 	ActivityURI string
 }
 
+// GetActivityTaskResponse ...
 type GetActivityTaskResponse struct {
 	Step             *po.State
 	Execution        *po.Execution
@@ -67,45 +69,56 @@ type GetActivityTaskResponse struct {
 	HeartbeatSeconds int
 }
 
+// SendTaskSuccessRequest ...
 type SendTaskSuccessRequest struct {
 	TaskToken string
 	Output    string
 }
 
+// SendTaskFailureRequest ...
 type SendTaskFailureRequest struct {
 	TaskToken string
 	Error     string
 	Cause     string
 }
 
+// SendTaskHeartbeatRequest ...
 type SendTaskHeartbeatRequest struct {
 	TaskToken string
 	Message   string
 }
+
+// SendTaskReferenceRequest ...
 type SendTaskReferenceRequest struct {
 	TaskToken string
 	Title     string
 	URL       string
 }
 
+// SendStepSkipRequest ...
 type SendStepSkipRequest struct {
 	StepID       int
 	NextStepName string
 	Output       string
 }
 
+// DescribeExecutionReqeust ...
 type DescribeExecutionReqeust struct {
 	ExecutionUUID string
 }
+
+// DescribeExecutionBoneResponse ...
 type DescribeExecutionBoneResponse struct {
 	Data po.Execution
 	Bone interface{}
 }
 
+// DescribeStepReqeust ...
 type DescribeStepReqeust struct {
 	StepID int64
 }
 
+// ExecutionName ...
 type ExecutionName struct {
 	URI   string
 	Name  string
@@ -127,27 +140,32 @@ type ListExecutionsResponse struct {
 	PageResponse paging.PageResponse
 }
 
+// ListExecutionEventsRequest ...
 type ListExecutionEventsRequest struct {
 	ExecutionUUID string
 	ExecutionID   int
 	PageRequest   paging.PageRequest
 }
 
+// ListStepEventsRequest ...
 type ListStepEventsRequest struct {
 	StepID      int
 	PageRequest paging.PageRequest
 }
 
+// ListExecutionEventsResponse ...
 type ListExecutionEventsResponse struct {
 	Events       []po.ExecutionEvent
 	PageResponse paging.PageResponse
 }
 
+// Reference ...
 type Reference struct {
 	Title string
 	URL   string
 }
 
+// StoreTaskDataRequest ...
 type StoreTaskDataRequest struct {
 	TaskToken string
 	Data      string
@@ -160,12 +178,15 @@ type DescribeExecutionBoneRequest struct {
 	PipelineMode  bool
 }
 
+// SkipBlokcedTaskRequest ...
 type SkipBlokcedTaskRequest struct {
 	StepID int
 }
 
+// UnblockTaskRequest ...
 type UnblockTaskRequest struct {
 	StepID int
 }
 
+// IdentifyUser ...
 type IdentifyUser struct{}

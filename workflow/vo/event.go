@@ -2,7 +2,7 @@ package vo
 
 import "time"
 
-// ExecutionEvent
+// ExecutionEvent ...
 type ExecutionEvent struct {
 	ExecutionID   int
 	ExecutionUUID string

@@ -2,6 +2,7 @@ package vo
 
 import "fmt"
 
+// ErrorExecutionUUIDExisted ...
 var (
 	// ErrorExecutionUUIDExisted  常用错误类型 之一， uuid已经存在
 	ErrorExecutionUUIDExisted = fmt.Errorf("execution uuid  has been existed")

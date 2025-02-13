@@ -1,24 +1,41 @@
 package states
 
-var (
-	DefaultStateMachineHeader = StateMachineHeader{
-		Version: "1.0",
-		Type:    "stepfunction",
-	}
-)
-
-type StateMachineHeader struct {
-	Version string
-	Type    string
-	Comment string
+// HeaderFieldNames ...
+var HeaderFieldNames = struct {
+	Version       string
+	Type          string
+	Comment       string
+	QueryLanguage string
+}{
+	Version:       "Version",
+	Type:          "Type",
+	Comment:       "Comment",
+	QueryLanguage: "QueryLanguage",
 }
 
+// StateMachineHeader ...
+type StateMachineHeader struct {
+	Version       string
+	Type          string
+	Comment       string
+	QueryLanguage string
+}
+
+// Init ...
 func (header *StateMachineHeader) Init() error {
+	var err error
 	if header.Version == "" {
-		header.Version = DefaultStateMachineHeader.Version
+		err = NewFieldPathError(ErrorInvalidFiledContent, HeaderFieldNames.Version)
+		return err
 	}
 	if header.Type == "" {
-		header.Type = DefaultStateMachineHeader.Type
+		err = NewFieldPathError(ErrorInvalidFiledContent, HeaderFieldNames.Type)
+		return err
 	}
+	// TODO  validate QueryLanguage later
+	// if header.QueryLanguage == "" {
+	// 	err = NewFieldError(ErrorInvalidFiledContent, HeaderFieldNames.QueryLanguage)
+	// 	return err
+	// }
 	return nil
 }

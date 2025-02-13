@@ -77,9 +77,9 @@ lint_proto:
 pb:
 	@echo "generating pb files........"
 	@mkdir -p gen/pb gen/apidoc
-	@trpc create -p $(PROTOFILE) -o gen/pb --validate=true --lang=go --rpconly --mock=true --nogomod=false
+	@trpc create -p $(PROTOFILE) -o gen/pb --validate=true --protocol=trpc --lang=go --rpconly --mock=true --nogomod=false
 	@trpc apidocs -p $(PROTOFILE) --swagger --swagger-out=gen/apidoc/skyflow.swagger.json
-	@trpc apidocs -p $(PROTOFILE) --openapi --openapi-out=gen/apidoc/skyflow.openapi.json
+	@trpc apidocs -p $(PROTOFILE) --openapi --swagger=false --openapi-out=gen/apidoc/skyflow.openapi.json
 
 .PHONY: test
 test:

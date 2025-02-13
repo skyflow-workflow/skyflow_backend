@@ -1,5 +1,6 @@
 package decoder
 
+// ParserConfig ...
 type ParserConfig struct {
 	// AllowActivity specifies whether to allow activity Task.
 	AllowActivity bool
@@ -19,4 +20,17 @@ type ParserConfig struct {
 	AllowSucceed bool
 	// AllowPass specifies whether to allow Pass State.
 	AllowPass bool
+}
+
+// StandardParserConfig standard model workflow
+var StandardParserConfig = ParserConfig{
+	AllowActivity: true,
+	AllowWait:     true,
+	AllowSuspend:  true,
+	AllowParallel: true,
+	AllowMap:      true,
+	AllowChoice:   true,
+	AllowFail:     true,
+	AllowSucceed:  true,
+	AllowPass:     true,
 }

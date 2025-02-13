@@ -2,6 +2,7 @@ package po
 
 import "time"
 
+// ExecutionEvent ...
 type ExecutionEvent struct {
 	ID             int64     `json:"id" gorm:"primaryKey;autoIncrement;type:INT(11)"`
 	ExecutionID    int       `json:"execution_id" gorm:"index;not null;type:INT(11)"` //所在的Executeion

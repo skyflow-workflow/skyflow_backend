@@ -16,7 +16,7 @@ type Parser struct {
 	Quota  quota.Quota
 }
 
-// ParserConfig parser configuration
+// NewParser ParserConfig parser configuration
 func NewParser(config decoder.ParserConfig, quotaconfig quota.Quota) *Parser {
 	return &Parser{
 		Config: config,
@@ -24,11 +24,13 @@ func NewParser(config decoder.ParserConfig, quotaconfig quota.Quota) *Parser {
 	}
 }
 
+// ValdateStateMachine ...
 func ValdateStateMachine(definition string) error {
 	// Validate the state machine
 	return nil
 }
 
+// ParseStateMachine ...
 func (parser *Parser) ParseStateMachine(definition string) (*states.StateMachine, error) {
 	decoder := stepfunction.NewStepfuncionDecoder(&parser.Config, &parser.Quota)
 	// Parse the state machine

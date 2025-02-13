@@ -17,13 +17,13 @@ func TestParserStateMachine(t *testing.T) {
 	assert.Equal(t, err, nil)
 	for _, direntry := range direntries {
 		if !direntry.Type().IsRegular() {
-			print("'%s' is not regular file ,Pass ", direntry.Name())
+			println(direntry.Name(), " is not regular file ,Pass")
 			continue
 		}
 		filename := direntry.Name()
 		ext := filepath.Ext(direntry.Name())
 		if ext != ".json" {
-			print("'%s' is not a JSON file, Pass ", direntry.Name())
+			println(direntry.Name(), " is not a JSON file, Pass ")
 			continue
 		}
 		t.Run(fmt.Sprintf("Test_%s", filename), func(t *testing.T) {
@@ -39,12 +39,15 @@ func TestParserStateMachine(t *testing.T) {
 			// or if the state machine is not valid
 			//
 			filepath := filepath.Join(statemachinepath, filename)
-			println("Parsing file ", filepath)
+			t.Log("Parsing File:", filepath)
 			filecontent, err := os.ReadFile(filepath)
 			assert.Equal(t, err, nil)
 			decoder := NewStepfuncionDecoder(nil, nil)
 			_, err = decoder.Decode(string(filecontent))
-			assert.Equal(t, err, nil)
+			if err != nil {
+				t.Log(err)
+			}
+			assert.Equal(t, err == nil, true)
 		},
 		)
 	}

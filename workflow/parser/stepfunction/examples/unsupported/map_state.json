@@ -1,9 +1,9 @@
 {
-    "Comment": "test map  ",
+    "Comment": "test map",
     "Type":"statemachine",
     "Version": "1.0",
-    "StartAt": "M1",
     "Default":{},
+    "StartAt": "M1",
     "States": {
         "M1": {
             "Type": "Map",

@@ -56,17 +56,6 @@
       }
      },
      {
-      "name": "enable_update",
-      "in": "query",
-      "required": false,
-      "description": "enable_update update when name existed, default is true",
-      "schema": {
-       "type": "boolean",
-       "title": "enable_update",
-       "description": "enable_update update when name existed, default is true"
-      }
-     },
-     {
       "name": "name",
       "in": "query",
       "required": false,
@@ -123,14 +112,104 @@
       }
      },
      {
-      "name": "enable_update",
+      "name": "name",
       "in": "query",
       "required": false,
-      "description": "enable_update update when name existed, default is true",
+      "description": "name 命名空间名字",
       "schema": {
-       "type": "boolean",
-       "title": "enable_update",
-       "description": "enable_update update when name existed, default is true"
+       "type": "string",
+       "title": "name",
+       "description": "name 命名空间名字"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowservice.trpc"
+    ]
+   }
+  },
+  "/api/v1/CreateOrUpdateActivity": {
+   "post": {
+    "summary": "CreateOrUpdateActivity 创建/更新一个活动",
+    "operationId": "CreateOrUpdateActivity",
+    "responses": {
+     "200": {
+      "description": "CreateActivityResponse 创建一个活动返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "description": "comment activity comment",
+      "schema": {
+       "type": "string",
+       "title": "comment",
+       "description": "comment activity comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "description": "name activity name",
+      "schema": {
+       "type": "string",
+       "title": "name",
+       "description": "name activity name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "description": "namespace activity namespace",
+      "schema": {
+       "type": "string",
+       "title": "namespace",
+       "description": "namespace activity namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowservice.trpc"
+    ]
+   }
+  },
+  "/api/v1/CreateOrUpdateNamespace": {
+   "post": {
+    "summary": "CreateOrUpdateNamespace 创建/更新一个命名空间",
+    "operationId": "CreateOrUpdateNamespace",
+    "responses": {
+     "200": {
+      "description": "CreateNamespaceResponse 创建一个命名空间返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateNamespaceResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "description": "comment 命名空间描述",
+      "schema": {
+       "type": "string",
+       "title": "comment",
+       "description": "comment 命名空间描述"
       }
      },
      {
@@ -434,17 +513,6 @@
       }
      },
      {
-      "name": "enable_update",
-      "in": "query",
-      "required": false,
-      "description": "enable_update update when name existed, default is true",
-      "schema": {
-       "type": "boolean",
-       "title": "enable_update",
-       "description": "enable_update update when name existed, default is true"
-      }
-     },
-     {
       "name": "name",
       "in": "query",
       "required": false,
@@ -501,14 +569,104 @@
       }
      },
      {
-      "name": "enable_update",
+      "name": "name",
       "in": "query",
       "required": false,
-      "description": "enable_update update when name existed, default is true",
+      "description": "name 命名空间名字",
       "schema": {
-       "type": "boolean",
-       "title": "enable_update",
-       "description": "enable_update update when name existed, default is true"
+       "type": "string",
+       "title": "name",
+       "description": "name 命名空间名字"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowservice.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowService/CreateOrUpdateActivity": {
+   "post": {
+    "summary": "CreateOrUpdateActivity 创建/更新一个活动",
+    "operationId": "CreateOrUpdateActivity2",
+    "responses": {
+     "200": {
+      "description": "CreateActivityResponse 创建一个活动返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "description": "comment activity comment",
+      "schema": {
+       "type": "string",
+       "title": "comment",
+       "description": "comment activity comment"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "description": "name activity name",
+      "schema": {
+       "type": "string",
+       "title": "name",
+       "description": "name activity name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "description": "namespace activity namespace",
+      "schema": {
+       "type": "string",
+       "title": "namespace",
+       "description": "namespace activity namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowservice.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowService/CreateOrUpdateNamespace": {
+   "post": {
+    "summary": "CreateOrUpdateNamespace 创建/更新一个命名空间",
+    "operationId": "CreateOrUpdateNamespace2",
+    "responses": {
+     "200": {
+      "description": "CreateNamespaceResponse 创建一个命名空间返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateNamespaceResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "description": "comment 命名空间描述",
+      "schema": {
+       "type": "string",
+       "title": "comment",
+       "description": "comment 命名空间描述"
       }
      },
      {
@@ -740,7 +898,7 @@
       "title": "update_time",
       "type": "string",
       "format": "int64",
-      "description": "update_time  update time timestample"
+      "description": "update_time timestample"
      }
     },
     "title": "skyflow.CreateActivityResponse",

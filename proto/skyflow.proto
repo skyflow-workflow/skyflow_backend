@@ -66,44 +66,31 @@ service SkyflowService {
 
     // CreateNamespace 创建一个命名空间
     rpc CreateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
-        // option (google.api.http) = {
-        //   post : "/api/v1/CreateNamespace"
-        //   body: "*"
-        // };
         option (trpc.alias) = "/api/v1/CreateNamespace";
+    }
+    // CreateOrUpdateNamespace 创建/更新一个命名空间
+    rpc CreateOrUpdateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
+        option (trpc.alias) = "/api/v1/CreateOrUpdateNamespace";
     }
     // ListNamespaces 获得命名空间列表
     rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {
-        // option (google.api.http) = {
-        //   post : "/api/v1/ListNamespaces"
-        //   body: "*"
-        // };
         option (trpc.alias) = "/api/v1/ListNamespaces";
     }
     // CreateActivity 创建一个活动
     rpc CreateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
-        // option (google.api.http) = {
-        //   post : "/api/v1/CreateActivity"
-        //   body: "*"
-        // };
         option (trpc.alias) = "/api/v1/CreateActivity";
+    }
+    // CreateOrUpdateActivity 创建/更新一个活动
+    rpc CreateOrUpdateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
+        option (trpc.alias) = "/api/v1/CreateOrUpdateActivity";
     }
 
     // ListActivities 获得活动列表
     rpc ListActivities(ListActivitiesRequest) returns (ListActivitiesResponse) {
-        // option (google.api.http) = {
-        //     post : "/api/v1/ListActivities"
-        //     body: "*"
-        // };
-
         option (trpc.alias) = "/api/v1/ListActivities";
     }
     // DescribeActivity 获得一个活动的描述
     rpc DescribeActivity(DescribeActivityRequest) returns (DescribeActivityResponse) {
-        // option (google.api.http) = {
-        //     post : "/api/v1/DescribeActivity"
-        //     body: "*"
-        // };
         option (trpc.alias) = "/api/v1/DescribeActivity";
     }
 
@@ -127,8 +114,6 @@ message CreateNamespaceRequest {
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // comment 命名空间描述
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
-    // enable_update update when name existed, default is true
-    bool enable_update = 3;
 }
 
 // CreateNamespaceResponse 创建一个命名空间返回结构
@@ -157,22 +142,6 @@ message ListNamespacesResponse {
     PageResponse page_response = 2;
 }
 
-
-// ActivityListItem ...
-message ActivityListItem {
-    // name 活动名字
-    string name = 1;
-    // comment 活动描述
-    string comment = 2;
-    // activity_uri 活动uri
-    string activity_uri = 3;
-    // create_time timestample
-    int64 create_time = 11;
-    // update_time timestample
-    int64 update_time = 12;
-}
-
-
 // CreateActivityRequest 创建一个活动请求结构
 message CreateActivityRequest {
     // name activity name
@@ -181,8 +150,6 @@ message CreateActivityRequest {
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     // namespace activity namespace
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    // enable_update update when name existed, default is true
-    bool enable_update = 4;
 }
 
 //CreateActivityResponse 创建一个活动返回结构
@@ -191,9 +158,10 @@ message CreateActivityResponse {
     string activity_uri = 1;
     // create_time create time timestample
     int64 create_time = 11;
-    // update_time  update time timestample
+    // update_time timestample
     int64 update_time = 12;
 }
+
 // DescribeActivityRequest 获得活动详情
 message DescribeActivityRequest {
     // activity uri
@@ -220,6 +188,20 @@ message ListActivitiesRequest {
     string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // 分页请求，默认 每分页大小 = 50条
     PageRequest page_request = 2;
+}
+
+// ActivityListItem ...
+message ActivityListItem {
+    // name 活动名字
+    string name = 1;
+    // comment 活动描述
+    string comment = 2;
+    // activity_uri 活动uri
+    string activity_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
 }
 
 // ListActivitiesResponse 获得活动列表请求返回

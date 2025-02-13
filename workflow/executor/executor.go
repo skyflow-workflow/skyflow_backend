@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// ExecutorConfig ...
 type ExecutorConfig struct {
 	Timeout time.Duration
 }

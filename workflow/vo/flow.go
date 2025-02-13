@@ -10,21 +10,25 @@ type ParseFlowRequest struct {
 	WorkflowDefinition string
 }
 
+// ListNamespacesRequest ...
 type ListNamespacesRequest struct {
 	PageRequest paging.PageRequest
 }
 
+// ListNamespacesResponse ...
 type ListNamespacesResponse struct {
 	Namespaces   []po.Namespace
 	PageResponse paging.PageResponse
 }
 
+// CreateActivityRequest ...
 type CreateActivityRequest struct {
 	ActivityName string
 	Comment      string
 	Namespace    string
 }
 
+// CreateWorkflowRequest ...
 type CreateWorkflowRequest struct {
 	WorkflowName string
 	Comment      string
@@ -32,24 +36,29 @@ type CreateWorkflowRequest struct {
 	Definition   string
 }
 
+// ListActivitiesRequest ...
 type ListActivitiesRequest struct {
 	PageRequest paging.PageRequest
 }
 
+// ListActivitiesResponse ...
 type ListActivitiesResponse struct {
 	Activities   []po.Function
 	PageResponse paging.PageResponse
 }
 
+// ListWofkflowsRequest ...
 type ListWofkflowsRequest struct {
 	PageRequest paging.PageRequest
 }
 
+// ListWorkflowsResponse ...
 type ListWorkflowsResponse struct {
 	Workflows    []po.StateMachine
 	PageResponse paging.PageResponse
 }
 
+// DescribeStepResponse ...
 type DescribeStepResponse struct {
 	ExecutionUUID string
 	Step          po.State

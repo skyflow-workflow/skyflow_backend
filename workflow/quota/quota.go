@@ -1,6 +1,7 @@
 // package quota  defined cloudflow quota here
 package quota
 
+// Quota ...
 type Quota struct {
 	// MaxStateNameSize specifies the maximum size of the state name.
 	MaxStateNameSize int
@@ -49,6 +50,7 @@ type Quota struct {
 
 // hard limit
 
+// DefaultQuota ...
 var DefaultQuota = Quota{
 	MaxStateNameSize:           200,
 	MaxStateNumber:             1000,

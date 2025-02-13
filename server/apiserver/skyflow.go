@@ -6,7 +6,18 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
 )
 
+// SkyflowService ...
 type SkyflowService struct{}
+
+// CreateOrUpdateActivity implements pb.SkyflowServiceService.
+func (s *SkyflowService) CreateOrUpdateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
+	panic("unimplemented")
+}
+
+// CreateOrUpdateNamespace implements pb.SkyflowServiceService.
+func (s *SkyflowService) CreateOrUpdateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
+	panic("unimplemented")
+}
 
 // CreateActivity implements pb.SkyflowService.
 func (s *SkyflowService) CreateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
