@@ -113,8 +113,8 @@ func RegisterCommonServiceService(s server.Service, svr CommonServiceService) {
 	}
 }
 
-// SkyflowServiceService defines service.
-type SkyflowServiceService interface {
+// SkyflowV1ServiceService defines service.
+type SkyflowV1ServiceService interface {
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
 	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
@@ -131,14 +131,14 @@ type SkyflowServiceService interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error)
 }
 
-func SkyflowServiceService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateNamespaceRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).CreateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
+		return svr.(SkyflowV1ServiceService).CreateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
 	}
 
 	var rsp interface{}
@@ -149,14 +149,14 @@ func SkyflowServiceService_CreateNamespace_Handler(svr interface{}, ctx context.
 	return rsp, nil
 }
 
-func SkyflowServiceService_CreateOrUpdateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_CreateOrUpdateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateNamespaceRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).CreateOrUpdateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
+		return svr.(SkyflowV1ServiceService).CreateOrUpdateNamespace(ctx, reqbody.(*CreateNamespaceRequest))
 	}
 
 	var rsp interface{}
@@ -167,14 +167,14 @@ func SkyflowServiceService_CreateOrUpdateNamespace_Handler(svr interface{}, ctx 
 	return rsp, nil
 }
 
-func SkyflowServiceService_ListNamespaces_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_ListNamespaces_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &ListNamespacesRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
+		return svr.(SkyflowV1ServiceService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
 	}
 
 	var rsp interface{}
@@ -185,14 +185,14 @@ func SkyflowServiceService_ListNamespaces_Handler(svr interface{}, ctx context.C
 	return rsp, nil
 }
 
-func SkyflowServiceService_CreateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_CreateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateActivityRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).CreateActivity(ctx, reqbody.(*CreateActivityRequest))
+		return svr.(SkyflowV1ServiceService).CreateActivity(ctx, reqbody.(*CreateActivityRequest))
 	}
 
 	var rsp interface{}
@@ -203,14 +203,14 @@ func SkyflowServiceService_CreateActivity_Handler(svr interface{}, ctx context.C
 	return rsp, nil
 }
 
-func SkyflowServiceService_CreateOrUpdateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_CreateOrUpdateActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &CreateActivityRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).CreateOrUpdateActivity(ctx, reqbody.(*CreateActivityRequest))
+		return svr.(SkyflowV1ServiceService).CreateOrUpdateActivity(ctx, reqbody.(*CreateActivityRequest))
 	}
 
 	var rsp interface{}
@@ -221,14 +221,14 @@ func SkyflowServiceService_CreateOrUpdateActivity_Handler(svr interface{}, ctx c
 	return rsp, nil
 }
 
-func SkyflowServiceService_ListActivities_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_ListActivities_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &ListActivitiesRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).ListActivities(ctx, reqbody.(*ListActivitiesRequest))
+		return svr.(SkyflowV1ServiceService).ListActivities(ctx, reqbody.(*ListActivitiesRequest))
 	}
 
 	var rsp interface{}
@@ -239,14 +239,14 @@ func SkyflowServiceService_ListActivities_Handler(svr interface{}, ctx context.C
 	return rsp, nil
 }
 
-func SkyflowServiceService_DescribeActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+func SkyflowV1ServiceService_DescribeActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &DescribeActivityRequest{}
 	filters, err := f(req)
 	if err != nil {
 		return nil, err
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(SkyflowServiceService).DescribeActivity(ctx, reqbody.(*DescribeActivityRequest))
+		return svr.(SkyflowV1ServiceService).DescribeActivity(ctx, reqbody.(*DescribeActivityRequest))
 	}
 
 	var rsp interface{}
@@ -257,74 +257,74 @@ func SkyflowServiceService_DescribeActivity_Handler(svr interface{}, ctx context
 	return rsp, nil
 }
 
-// SkyflowServiceServer_ServiceDesc descriptor for server.RegisterService.
-var SkyflowServiceServer_ServiceDesc = server.ServiceDesc{
-	ServiceName: "skyflow.SkyflowService",
-	HandlerType: ((*SkyflowServiceService)(nil)),
+// SkyflowV1ServiceServer_ServiceDesc descriptor for server.RegisterService.
+var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "skyflow.SkyflowV1Service",
+	HandlerType: ((*SkyflowV1ServiceService)(nil)),
 	Methods: []server.Method{
 		{
 			Name: "/api/v1/CreateNamespace",
-			Func: SkyflowServiceService_CreateNamespace_Handler,
+			Func: SkyflowV1ServiceService_CreateNamespace_Handler,
 		},
 		{
 			Name: "/api/v1/CreateOrUpdateNamespace",
-			Func: SkyflowServiceService_CreateOrUpdateNamespace_Handler,
+			Func: SkyflowV1ServiceService_CreateOrUpdateNamespace_Handler,
 		},
 		{
 			Name: "/api/v1/ListNamespaces",
-			Func: SkyflowServiceService_ListNamespaces_Handler,
+			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
 		},
 		{
 			Name: "/api/v1/CreateActivity",
-			Func: SkyflowServiceService_CreateActivity_Handler,
+			Func: SkyflowV1ServiceService_CreateActivity_Handler,
 		},
 		{
 			Name: "/api/v1/CreateOrUpdateActivity",
-			Func: SkyflowServiceService_CreateOrUpdateActivity_Handler,
+			Func: SkyflowV1ServiceService_CreateOrUpdateActivity_Handler,
 		},
 		{
 			Name: "/api/v1/ListActivities",
-			Func: SkyflowServiceService_ListActivities_Handler,
+			Func: SkyflowV1ServiceService_ListActivities_Handler,
 		},
 		{
 			Name: "/api/v1/DescribeActivity",
-			Func: SkyflowServiceService_DescribeActivity_Handler,
+			Func: SkyflowV1ServiceService_DescribeActivity_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/CreateNamespace",
-			Func: SkyflowServiceService_CreateNamespace_Handler,
+			Name: "/skyflow.SkyflowV1Service/CreateNamespace",
+			Func: SkyflowV1ServiceService_CreateNamespace_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/CreateOrUpdateNamespace",
-			Func: SkyflowServiceService_CreateOrUpdateNamespace_Handler,
+			Name: "/skyflow.SkyflowV1Service/CreateOrUpdateNamespace",
+			Func: SkyflowV1ServiceService_CreateOrUpdateNamespace_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/ListNamespaces",
-			Func: SkyflowServiceService_ListNamespaces_Handler,
+			Name: "/skyflow.SkyflowV1Service/ListNamespaces",
+			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/CreateActivity",
-			Func: SkyflowServiceService_CreateActivity_Handler,
+			Name: "/skyflow.SkyflowV1Service/CreateActivity",
+			Func: SkyflowV1ServiceService_CreateActivity_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/CreateOrUpdateActivity",
-			Func: SkyflowServiceService_CreateOrUpdateActivity_Handler,
+			Name: "/skyflow.SkyflowV1Service/CreateOrUpdateActivity",
+			Func: SkyflowV1ServiceService_CreateOrUpdateActivity_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/ListActivities",
-			Func: SkyflowServiceService_ListActivities_Handler,
+			Name: "/skyflow.SkyflowV1Service/ListActivities",
+			Func: SkyflowV1ServiceService_ListActivities_Handler,
 		},
 		{
-			Name: "/skyflow.SkyflowService/DescribeActivity",
-			Func: SkyflowServiceService_DescribeActivity_Handler,
+			Name: "/skyflow.SkyflowV1Service/DescribeActivity",
+			Func: SkyflowV1ServiceService_DescribeActivity_Handler,
 		},
 	},
 }
 
-// RegisterSkyflowServiceService registers service.
-func RegisterSkyflowServiceService(s server.Service, svr SkyflowServiceService) {
-	if err := s.Register(&SkyflowServiceServer_ServiceDesc, svr); err != nil {
-		panic(fmt.Sprintf("SkyflowService register error:%v", err))
+// RegisterSkyflowV1ServiceService registers service.
+func RegisterSkyflowV1ServiceService(s server.Service, svr SkyflowV1ServiceService) {
+	if err := s.Register(&SkyflowV1ServiceServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("SkyflowV1Service register error:%v", err))
 	}
 }
 
@@ -347,41 +347,41 @@ func (s *UnimplementedCommonService) Ping(ctx context.Context, req *emptypb.Empt
 	return nil, errors.New("rpc Ping of service CommonService is not implemented")
 }
 
-type UnimplementedSkyflowService struct{}
+type UnimplementedSkyflowV1Service struct{}
 
 // CreateNamespace CreateNamespace 创建一个命名空间
-func (s *UnimplementedSkyflowService) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
-	return nil, errors.New("rpc CreateNamespace of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
+	return nil, errors.New("rpc CreateNamespace of service SkyflowV1Service is not implemented")
 }
 
 // CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
-func (s *UnimplementedSkyflowService) CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
-	return nil, errors.New("rpc CreateOrUpdateNamespace of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error) {
+	return nil, errors.New("rpc CreateOrUpdateNamespace of service SkyflowV1Service is not implemented")
 }
 
 // ListNamespaces ListNamespaces 获得命名空间列表
-func (s *UnimplementedSkyflowService) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
-	return nil, errors.New("rpc ListNamespaces of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
+	return nil, errors.New("rpc ListNamespaces of service SkyflowV1Service is not implemented")
 }
 
 // CreateActivity CreateActivity 创建一个活动
-func (s *UnimplementedSkyflowService) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
-	return nil, errors.New("rpc CreateActivity of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
+	return nil, errors.New("rpc CreateActivity of service SkyflowV1Service is not implemented")
 }
 
 // CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
-func (s *UnimplementedSkyflowService) CreateOrUpdateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
-	return nil, errors.New("rpc CreateOrUpdateActivity of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) CreateOrUpdateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
+	return nil, errors.New("rpc CreateOrUpdateActivity of service SkyflowV1Service is not implemented")
 }
 
 // ListActivities ListActivities 获得活动列表
-func (s *UnimplementedSkyflowService) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
-	return nil, errors.New("rpc ListActivities of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error) {
+	return nil, errors.New("rpc ListActivities of service SkyflowV1Service is not implemented")
 }
 
 // DescribeActivity DescribeActivity 获得一个活动的描述
-func (s *UnimplementedSkyflowService) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
-	return nil, errors.New("rpc DescribeActivity of service SkyflowService is not implemented")
+func (s *UnimplementedSkyflowV1Service) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
+	return nil, errors.New("rpc DescribeActivity of service SkyflowV1Service is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -469,8 +469,8 @@ func (c *CommonServiceClientProxyImpl) Ping(ctx context.Context, req *emptypb.Em
 	return rsp, nil
 }
 
-// SkyflowServiceClientProxy defines service client proxy
-type SkyflowServiceClientProxy interface {
+// SkyflowV1ServiceClientProxy defines service client proxy
+type SkyflowV1ServiceClientProxy interface {
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (rsp *CreateNamespaceResponse, err error)
 	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
@@ -487,23 +487,23 @@ type SkyflowServiceClientProxy interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (rsp *DescribeActivityResponse, err error)
 }
 
-type SkyflowServiceClientProxyImpl struct {
+type SkyflowV1ServiceClientProxyImpl struct {
 	client client.Client
 	opts   []client.Option
 }
 
-var NewSkyflowServiceClientProxy = func(opts ...client.Option) SkyflowServiceClientProxy {
-	return &SkyflowServiceClientProxyImpl{client: client.DefaultClient, opts: opts}
+var NewSkyflowV1ServiceClientProxy = func(opts ...client.Option) SkyflowV1ServiceClientProxy {
+	return &SkyflowV1ServiceClientProxyImpl{client: client.DefaultClient, opts: opts}
 }
 
-func (c *SkyflowServiceClientProxyImpl) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateNamespace")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("CreateNamespace")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -516,14 +516,14 @@ func (c *SkyflowServiceClientProxyImpl) CreateNamespace(ctx context.Context, req
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (*CreateNamespaceResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateOrUpdateNamespace")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("CreateOrUpdateNamespace")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -536,14 +536,14 @@ func (c *SkyflowServiceClientProxyImpl) CreateOrUpdateNamespace(ctx context.Cont
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (*ListNamespacesResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/ListNamespaces")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("ListNamespaces")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -556,14 +556,14 @@ func (c *SkyflowServiceClientProxyImpl) ListNamespaces(ctx context.Context, req 
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateActivity")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("CreateActivity")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -576,14 +576,14 @@ func (c *SkyflowServiceClientProxyImpl) CreateActivity(ctx context.Context, req 
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) CreateOrUpdateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) CreateOrUpdateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (*CreateActivityResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/CreateOrUpdateActivity")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("CreateOrUpdateActivity")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -596,14 +596,14 @@ func (c *SkyflowServiceClientProxyImpl) CreateOrUpdateActivity(ctx context.Conte
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (*ListActivitiesResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/ListActivities")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("ListActivities")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
@@ -616,14 +616,14 @@ func (c *SkyflowServiceClientProxyImpl) ListActivities(ctx context.Context, req 
 	return rsp, nil
 }
 
-func (c *SkyflowServiceClientProxyImpl) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
+func (c *SkyflowV1ServiceClientProxyImpl) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
 	msg.WithClientRPCName("/api/v1/DescribeActivity")
-	msg.WithCalleeServiceName(SkyflowServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
 	msg.WithCalleeApp("")
 	msg.WithCalleeServer("")
-	msg.WithCalleeService("SkyflowService")
+	msg.WithCalleeService("SkyflowV1Service")
 	msg.WithCalleeMethod("DescribeActivity")
 	msg.WithSerializationType(codec.SerializationTypePB)
 	callopts := make([]client.Option, 0, len(c.opts)+len(opts))

@@ -6,7 +6,6 @@ func GetExecutionTables() []interface{} {
 
 	return []interface{}{
 		new(Execution),
-		new(ExecutionShade),
 		new(State),
 		new(ActivityTask),
 		new(ExecutionEvent),
@@ -26,7 +25,7 @@ func GetEventTables() []interface{} {
 func GetTemplateTables() []interface{} {
 	return []interface{}{
 		new(Namespace),
-		new(Function),
+		new(Activity),
 		new(StateMachine),
 	}
 }

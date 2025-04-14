@@ -45,3 +45,7 @@ func (parser *Parser) ParseStateMachine(definition string) (*states.StateMachine
 	}
 	return sm, nil
 }
+
+func ParseStateMachine(definition string) (*states.StateMachine, error) {
+	return StandardParser.ParseStateMachine(definition)
+}

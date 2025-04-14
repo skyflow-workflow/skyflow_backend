@@ -14,5 +14,5 @@ type ExecutionEvent struct {
 	StartTime      time.Time `json:"start_time" gorm:"type:TIMESTAMP NULL;default:NULL" `  //开始时间
 	FinishTime     time.Time `json:"finish_time"  gorm:"type:TIMESTAMP NULL;default:NULL"` // 结束时间
 	DispatcherName string    `json:"dispatcher_name" gorm:"size:128"`                      //dispatcher name
-	GmtCreated     time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP" `
+	CreateTime     time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP" `
 }

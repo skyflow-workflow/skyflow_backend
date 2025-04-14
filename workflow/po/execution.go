@@ -6,31 +6,24 @@ import (
 
 // Execution  一个workflow的一个执行实例
 type Execution struct {
-	ID                 int        `json:"id" gorm:"primaryKey;autoIncrement"`
-	UUID               string     `json:"uuid" gorm:"not null; type:VARCHAR(255);unique; comment:UUID"` //execution uuid
-	URI                string     `json:"uri" gorm:"not null; index; size:255; comment:flow uri"`       //flow uri
-	WorkflowFlowType   string     `json:"workflow_type" gorm:"not null; size:255"`                      //workflow type
-	Status             string     `json:"status" gorm:"not null; type:VARCHAR(100)"`                    //状态
-	Title              string     `json:"title" gorm:"not null; size:255"`                              // execution title
-	MaxExecuteIndex    int        `json:"max_execute_index" gorm:"type:INT(10);not null; default 0; comment:max execute index"`
-	WorkflowDefinition string     `json:"workflow_definition"  gorm:"type:MEDIUMTEXT;not null"` // workflow  content
-	Header             string     `json:"header" gorm:"not null; type:JSON"`                    // Execution 头信息
-	Data               string     `json:"data" gorm:"type:MEDIUMTEXT"`                          // 执行数据
-	Input              string     `json:"input" gorm:"type:MEDIUMTEXT"`                         //输入
-	Output             string     `json:"ouput" gorm:"type:MEDIUMTEXT"`                         // 输出
-	Exception          string     `json:"exception" gorm:"type:MEDIUMTEXT"`                     //异常信息
-	StartTime          *time.Time `json:"start_time" gorm:"type:TIMESTAMP null; default:null"`  //开始时间
-	FinishTime         *time.Time `json:"finish_time" gorm:"type:TIMESTAMP null; default:null"` // 结束时间
-	ExpireTime         *time.Time `json:"expire_time" gorm:"type:TIMESTAMP null; default:null"` //超时时间
-	ExecuteCount       int        `json:"execute_count" gorm:"type:INT(10);default:0"`          //执行次数
-	GmtModified        time.Time  `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated         time.Time  `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
-}
-
-// ExecutionShade shade table for execution , for lock execution
-type ExecutionShade struct {
-	ID   int    `json:"id" gorm:"primaryKey;autoIncrement"`
-	UUID string `json:"uuid" gorm:"not null; type:VARCHAR(255);unique; comment:UUID"` //execution uuid
+	ID              int        `json:"id" gorm:"primaryKey;autoIncrement"`
+	UUID            string     `json:"uuid" gorm:"not null; type:VARCHAR(255);unique; comment:UUID"` //execution uuid
+	URI             string     `json:"uri" gorm:"not null; index; size:255; comment:flow uri"`       //flow uri
+	Status          string     `json:"status" gorm:"not null; type:VARCHAR(100)"`                    //状态
+	Title           string     `json:"title" gorm:"not null; size:255"`                              // execution title
+	MaxExecuteIndex int        `json:"max_execute_index" gorm:"type:INT(10);not null; default 0; comment:max execute index"`
+	Definition      string     `json:"definition"  gorm:"type:MEDIUMTEXT;not null"`          // workflow  content
+	Header          string     `json:"header" gorm:"not null; type:JSON"`                    // Execution 头信息
+	Data            string     `json:"data" gorm:"type:MEDIUMTEXT"`                          // 执行数据
+	Input           string     `json:"input" gorm:"type:MEDIUMTEXT"`                         //输入
+	Output          string     `json:"ouput" gorm:"type:MEDIUMTEXT"`                         // 输出
+	Exception       string     `json:"exception" gorm:"type:MEDIUMTEXT"`                     //异常信息
+	StartTime       *time.Time `json:"start_time" gorm:"type:TIMESTAMP null; default:null"`  //开始时间
+	FinishTime      *time.Time `json:"finish_time" gorm:"type:TIMESTAMP null; default:null"` // 结束时间
+	ExpireTime      *time.Time `json:"expire_time" gorm:"type:TIMESTAMP null; default:null"` //超时时间
+	ExecuteCount    int        `json:"execute_count" gorm:"type:INT(10);default:0"`          //执行次数
+	ModifyTime      time.Time  `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime      time.Time  `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // State  一个具体 State 实例
@@ -58,8 +51,8 @@ type State struct {
 	FinishTime   *time.Time `json:"finish_time" gorm:"type:TIMESTAMP null; DEFAULT:null"`                // 结束时间
 	ExpireTime   *time.Time `json:"expire_time" gorm:"type:TIMESTAMP null; DEFAULT:null"`                //超时时间
 	ExecuteCount int        `json:"execute_count" gorm:"not null;type:INT(10); default:0;comment:执行次数 "` //执行次数
-	GmtModified  time.Time  `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated   time.Time  `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	ModifyTime   time.Time  `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime   time.Time  `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // StateGroup , 存储State归属Group组之间的关系， 仅仅表示归属关系
@@ -80,8 +73,8 @@ type StateGroup struct {
 	//结束节点 组内结束节点的名字
 	LastAt string `json:"last_at" gorm:"not null;type:VARCHAR(255)"`
 
-	GmtModified time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	ModifyTime time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // ExecutionEvent execution 执行日志事件
@@ -94,10 +87,10 @@ type TaskToken struct {
 	// 关联的 State_id, 每个State 只能关联一个 take_token,只能有一个正在运行的任务
 	StateID   int  `json:"State_id" gorm:"not null;unique;type:INT(11)"`
 	IsDeleted bool `json:"is_deleted" gorm:"not null;type:bool"`
-	// GmtModified time.Time `json:"gmt_modified" gorm:"autoUpdateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
-	// GmtCreated  time.Time `json:"gmt_created" gorm:"autoCreateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP"`
-	GmtModified time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	// ModifyTime time.Time `json:"gmt_modified" gorm:"autoUpdateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
+	// CreateTime  time.Time `json:"gmt_created" gorm:"autoCreateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP"`
+	ModifyTime time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // ActivityTask  暂存活动使用的数据结构
@@ -115,6 +108,6 @@ type ActivityTask struct {
 	Token string `json:"token" gorm:"not null;unique; type:VARCHAR(255)"` // task token
 	// task extra data
 	Data string `json:"data" gorm:"type:MEDIUMTEXT"`
-	// GmtCreated time.Time `json:"gmt_created" gorm:"autoCreateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP"`
-	GmtCreated time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	// CreateTime time.Time `json:"gmt_created" gorm:"autoCreateTime;type:TIMESTAMP;DEFAULT:CURRENT_TIMESTAMP"`
+	CreateTime time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }

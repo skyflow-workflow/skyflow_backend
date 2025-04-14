@@ -15,21 +15,19 @@ all: build
 .PHONY: help
 help:
 	@echo "help                             show usage"
-	@echo ""
-	@echo "init"
+	@echo "init	                            initialize go mod"
 	@echo "install                          install dependency"
-	@echo "clean                            clean *.pyc, *.pyo ..."
+	@echo "clean                            clean tmp files"
 	@echo "shell                            run neo shell"
 	@echo "lint                             lint code"
-	@echo ""
-	@echo "pip_compile                      lock package versions"
-	@echo "test                             run unit test"
+	@echo "lint_proto                       lint proto files"
+	@echo "test                             run unittest"
 
 .PHONY: clean
 clean:
 	@echo "cleaning........"
 	@rm -rf dist
-	@rm -rf build
+	@rm -rf .build
 	@rm -rf .pytest_cache
 	@rm -rf .mypy_cache
 	@rm -rf .coverage
@@ -56,7 +54,7 @@ init:
 .PHONY: install
 install:
 	@echo "installing........"
-	${SHELL} +x ./install_dependencies.sh
+	${SHELL} +x ./build/install_dependencies.sh
 
 .PHONY: lint
 lint:
@@ -78,6 +76,7 @@ pb:
 	@echo "generating pb files........"
 	@mkdir -p gen/pb gen/apidoc
 	@trpc create -p $(PROTOFILE) -o gen/pb --validate=true --protocol=trpc --lang=go --rpconly --mock=true --nogomod=false
+	# @trpc create -p $(PROTOFILE) -o gen/pb --validate=true --protocol=trpc --lang=go --rpconly --mock=true --nogomod=true
 	@trpc apidocs -p $(PROTOFILE) --swagger --swagger-out=gen/apidoc/skyflow.swagger.json
 	@trpc apidocs -p $(PROTOFILE) --openapi --swagger=false --openapi-out=gen/apidoc/skyflow.openapi.json
 

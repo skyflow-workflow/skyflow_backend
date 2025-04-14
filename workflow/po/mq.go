@@ -13,6 +13,6 @@ type MessageQueue struct {
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"`          // message type
 	Info        string    `json:"info" gorm:"not null; type:VARCHAR(255)"`           // message processinfomation
 	SendTime    time.Time `json:"send_time" gorm:"not null;index;type:TIMESTAMP"`    // 消息发送时间，表示队列中发送消息的时间
-	GmtModified time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	GmtCreated  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	ModifyTime  time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }

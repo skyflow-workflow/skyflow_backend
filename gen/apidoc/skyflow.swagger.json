@@ -66,7 +66,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -99,7 +99,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -139,7 +139,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -172,7 +172,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -198,7 +198,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -247,7 +247,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -289,7 +289,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
@@ -371,7 +371,7 @@
     ]
    }
   },
-  "/skyflow.SkyflowService/CreateActivity": {
+  "/skyflow.SkyflowV1Service/CreateActivity": {
    "post": {
     "summary": "CreateActivity 创建一个活动",
     "operationId": "CreateActivity2",
@@ -407,11 +407,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/CreateNamespace": {
+  "/skyflow.SkyflowV1Service/CreateNamespace": {
    "post": {
     "summary": "CreateNamespace 创建一个命名空间",
     "operationId": "CreateNamespace2",
@@ -440,11 +440,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/CreateOrUpdateActivity": {
+  "/skyflow.SkyflowV1Service/CreateOrUpdateActivity": {
    "post": {
     "summary": "CreateOrUpdateActivity 创建/更新一个活动",
     "operationId": "CreateOrUpdateActivity2",
@@ -480,11 +480,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/CreateOrUpdateNamespace": {
+  "/skyflow.SkyflowV1Service/CreateOrUpdateNamespace": {
    "post": {
     "summary": "CreateOrUpdateNamespace 创建/更新一个命名空间",
     "operationId": "CreateOrUpdateNamespace2",
@@ -513,11 +513,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/DescribeActivity": {
+  "/skyflow.SkyflowV1Service/DescribeActivity": {
    "post": {
     "summary": "DescribeActivity 获得一个活动的描述",
     "operationId": "DescribeActivity2",
@@ -539,11 +539,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/ListActivities": {
+  "/skyflow.SkyflowV1Service/ListActivities": {
    "post": {
     "summary": "ListActivities 获得活动列表",
     "operationId": "ListActivities2",
@@ -588,11 +588,11 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   },
-  "/skyflow.SkyflowService/ListNamespaces": {
+  "/skyflow.SkyflowV1Service/ListNamespaces": {
    "post": {
     "summary": "ListNamespaces 获得命名空间列表",
     "operationId": "ListNamespaces2",
@@ -630,7 +630,7 @@
      }
     ],
     "tags": [
-     "skyflowservice.trpc"
+     "skyflowv1service.trpc"
     ]
    }
   }

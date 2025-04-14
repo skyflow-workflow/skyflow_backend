@@ -61,8 +61,8 @@ message HTTPResponseMessage {
     string message = 2;
 }
 
-// SkyflowService workflow Service
-service SkyflowService {
+// SkyflowV1Service workflow Service
+service SkyflowV1Service {
 
     // CreateNamespace 创建一个命名空间
     rpc CreateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
@@ -233,7 +233,7 @@ message ExecutionListItem {
 message StateInfo {
     int64 id = 1;
     string status = 2 ;
-    string State_definition = 4 ;
+    string state_definition = 4 ;
     string input = 5 ;
     string output = 6;
     string create_time = 11;
@@ -243,8 +243,8 @@ message StateInfo {
 
 // ExecutionEventInfo 执行事件
 message ExecutionEventInfo {
-    int64 State_id = 2 ;
-    string State_name = 3;
+    int64 state_id = 2 ;
+    string state_name = 3;
     string event_type = 4;
     string data = 5;
     string create_time = 11;
@@ -266,10 +266,10 @@ message ActivityInfo {
 message StateMachineInfo {
     string name = 1;
     string comment = 2;
-    string StateMachine_uri = 3;
-    string StateMachine_definition = 4;
-    // StateMachine类型; pipeline/statemachine
-    string StateMachine_type = 5 ;
+    string statemachine_uri = 3;
+    string statemachine_definition = 4;
+    // stateMachine_type; pipeline/statemachine
+    string statemachine_type = 5 ;
     string create_time = 11;
     string modify_time = 12;
 }
@@ -277,28 +277,28 @@ message StateMachineInfo {
 // ParseStateMachineRequest 解析一个工作流请求结构`
 message ParseStateMachineRequest{
     // flow定义
-    string StateMachine_definition = 1;
+    string statemachine_definition = 1;
 }
 
 // ParseStateMachineResponse 解析一个工作流返回结构
 message ParseStateMachineResponse{
     // flow 类型
-    string StateMachine_type = 1 ;
+    string statemachine_type = 1 ;
     // flow 详细定义
-    string StateMachine_detail =2 ;
+    string statemachine_detail =2 ;
 }
 
 // 创建一个执行的请求体
 // 参数约束：
-// StateMachine_uri 是指注册到 skyflowflow的 模板引用路径，
-// StateMachine_definition是自定义的StateMachine定义,jons/yaml格式
-// StateMachine_uri与StateMachine_definition 二选一。
+// statemachine_uri 是指注册到 skyflowflow的 模板引用路径，
+// statemachine_definition是自定义的StateMachine定义,jons/yaml格式
+// statemachine_uri与statemachine_definition 二选一。
 // execution_name：用户自定义的执行唯一名称，可选， 如果指定，自动生成一个新的uuid .
 message StartExecutionRequest {
-    // 工作流模板URI，可选，StateMachine_uri 与StateMachine_definition 必须指定一个
-    string StateMachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}] ;
+    // 工作流模板URI，可选，statemachine_uri 与statemachine_definition 必须指定一个
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}] ;
     // 流程模板定义，JSON/YAML格式的流程模板定义，可选
-    string StateMachine_definition = 2 ;
+    string statemachine_definition = 2 ;
     // 工作流执行的标题，可为空
     string title = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
     // 工作流执行的输入，json格式的输入 ，可选，默认是空 '{}'
@@ -354,7 +354,7 @@ message StopExecutionRequest {
 // ListExecutionsRequest 获得execution列表请求结构
 message ListExecutionsRequest {
     // 流程名字, 按照名字查询， 可选
-    string StateMachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
     // uuid 列表，指定的uuid列表查询， 可选, 最大100个
     repeated string execution_uuids = 2 [(validate.rules).repeated = {min_items: 0, max_items: 100}];
     // 状态，按照状态查询， 可选
@@ -390,7 +390,7 @@ message ListExecutionEventsResponse {
 // DescribeStateRequest 获得一个State的信息请求结构
 message DescribeStateRequest {
     // State id
-    int64 State_id = 1 [(validate.rules).int64 = {gt: 0}];
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 // DescribeStateRequest 获得一个State的信息返回结构
 message DescribeStateResponse {
@@ -403,7 +403,7 @@ message DescribeStateResponse {
 // ListStateEventsRequest 获得一个State的执行事件列表请求机构
 message ListStateEventsRequest {
     // State id
-    int64 State_id = 1 [(validate.rules).int64 = {gt: 0}];
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
     // 分页信息
     PageRequest page_request = 2;
 
@@ -420,7 +420,7 @@ message GetActivityTaskResponse {
     // ExtraInfo 附加信息
     message ExtraInfo {
         // State id
-        int64 State_id = 1;
+        int64 state_id = 1;
         // execution uuid
         string execution_uuid = 2;
     }
@@ -493,7 +493,7 @@ message StoreTaskDataRequest {
 // LoadTaskDataRequest 获得task 临时数据
 message LoadTaskDataRequest {
     // State id
-    int64 State_id = 1 [(validate.rules).int64 = {gt: 0}];
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 
 
@@ -507,9 +507,9 @@ message LoadTaskDataResponse {
 // SendStateSuccessRequest 发送State 成功
 message SendStateSkipRequest {
     // State id
-    int64 State_id = 1 [(validate.rules).int64 = {gt: 0}];;
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];;
     // 下一个步骤名
-    string next_State = 2;
+    string next_state = 2;
     // output 当天步骤的输出
     string output = 3;
 }
@@ -520,7 +520,7 @@ message CreateStateMachineRequest {
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    string StateMachine_definition = 4 [(validate.rules).string = {min_bytes: 1}];
+    string statemachine_definition = 4 [(validate.rules).string = {min_bytes: 1}];
 }
 //CreateStateMachineResponse 创建一个工作流返回结构
 message CreateStateMachineResponse {
@@ -529,7 +529,7 @@ message CreateStateMachineResponse {
 
 // DescribeActivityRequest 获得工作流详情返回结构
 message DescribeStateMachineRequest {
-    string StateMachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
 }
 
 // DescribeStateMachineResponse 获得活动列表请求返回结构
@@ -554,45 +554,51 @@ message ListStateMachinesResponse {
 }
 
 // ErrorCode 错误码定义
+//  11XXX  system error
+//  12XXX   template error
+//  13XXX   exection error
 enum ErrorCode {
-    // 正常
+    // OK 正常
     OK  = 0;
-    //未知错误
-    UnknownError = 1000;
-    //内部错误
-    InternelError = 1001;
-    // execution 不存在
-    ExecutionNotFound = 1002;
-    // State 不存在
+    // UnknownError 未知错误
+    UnknownError = 11000;
+    // InternelError 内部错误
+    InternelError = 11001;
+    // ResourceLimitExceeded 资源限制超出
+    ResourceLimitExceeded = 11002;
+    //
+    ActivityAlreadyExists = 12001;
+    // ExecutionNotFound execution 不存在
+    ExecutionNotFound = 13002;
+    // StateNotFound State 不存在
     StateNotFound = 1003;
-    // Stategroup 不存在
+    // StateGroupNotFound Stategroup 不存在
     StateGroupNotFound = 1004;
-    // TaskToken 不存在
+    // TaskTokenNotFound TaskToken 不存在
     TaskTokenNotFound = 1005;
     // NamespaceNotFound 不存在
     NamespaceNotFound = 1006;
-    // activity 不存在
+    // ActivityNotFound activity 不存在
     ActivityNotFound = 1007;
-    // StateMachine 不存在
+    // StateMachineNotFound StateMachine 不存在
     StateMachineNotFound = 1008;
-    // Execution UUID 已经存在
+    // ExecutionUUIDExisted Execution UUID 已经存在
     ExecutionUUIDExisted = 1009;
-    // activity  task 不存在
+    // ActivityTaskNotFound activity  task 不存在
     ActivityTaskNotFound = 1010;
-    // State 状态错误
+    // StateStatusError State 状态错误
     StateStatusError = 1011;
-    // execution 状态错误
+    // ExecutionStatusError execution 状态错误
     ExecutionStatusError = 1012;
-    // parameter is vaild
+    // ParameterIsVaild parameter is vaild
     ParameterIsVaild = 1013;
-    // parameter limit exceeded
+    // ParameterLimitExceeded parameter limit exceeded
     ParameterLimitExceeded = 1014;
-    // input limit exceeded
+    // InputLimitExceeded input limit exceeded
     InputLimitExceeded = 1015;
-    // output limit exceed
+    // OutputLimitExceeded output limit exceed
     OutputLimitExceeded = 1016;
-    // StateMachine definition invalid
+    // StateMachineDeinitionInvalid StateMachine definition invalid
     StateMachineDeinitionInvalid = 1017;
-    //ResourceLimitExceeded 资源限制超出
-    ResourceLimitExceeded = 2000;
+
 }

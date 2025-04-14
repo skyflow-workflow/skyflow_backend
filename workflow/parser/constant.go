@@ -31,8 +31,15 @@ var ExpressParserConfig = decoder.ParserConfig{
 	AllowPass:     true,
 }
 
-// StandardParser ...
-var StandardParser = NewParser(StandardParserConfig, quota.DefaultQuota)
+// StandardParser
+var StandardParser *Parser
 
 // ExpressParser ...
-var ExpressParser = NewParser(ExpressParserConfig, quota.DefaultQuota)
+var ExpressParser *Parser
+
+func init() {
+
+	StandardParser = NewParser(StandardParserConfig, quota.DefaultQuota)
+	ExpressParser = NewParser(ExpressParserConfig, quota.DefaultQuota)
+
+}

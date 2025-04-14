@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "installing golang dependence tools"
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.60.2
+# curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.62.2
 go install github.com/bufbuild/buf/cmd/buf@latest
 go install github.com/yoheimuta/protolint/cmd/protolint@latest
 go install github.com/kyoh86/richgo@latest

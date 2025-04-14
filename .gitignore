@@ -21,3 +21,4 @@ tests
 
 .config.*
 *.config.yaml
+trpc_go.yaml

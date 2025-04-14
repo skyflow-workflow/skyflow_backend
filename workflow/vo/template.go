@@ -10,6 +10,15 @@ type ParseFlowRequest struct {
 	WorkflowDefinition string
 }
 
+type CreateNamespaceRequest struct {
+	Name    string
+	Comment string
+}
+
+type CreateNamespaceResponse struct {
+	po.Namespace
+}
+
 // ListNamespacesRequest ...
 type ListNamespacesRequest struct {
 	PageRequest paging.PageRequest
@@ -28,6 +37,10 @@ type CreateActivityRequest struct {
 	Namespace    string
 }
 
+type CreateActivityResponse struct {
+	po.Activity
+}
+
 // CreateWorkflowRequest ...
 type CreateWorkflowRequest struct {
 	WorkflowName string
@@ -43,7 +56,7 @@ type ListActivitiesRequest struct {
 
 // ListActivitiesResponse ...
 type ListActivitiesResponse struct {
-	Activities   []po.Function
+	Activities   []po.Activity
 	PageResponse paging.PageResponse
 }
 
