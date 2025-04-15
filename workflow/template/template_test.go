@@ -38,12 +38,15 @@ func TestCreateWorkflow(t *testing.T) {
 	assert.Equal(t, err, nil)
 	client := (&rdb.DBClient{}).WithDB(gormdb)
 	myTemplateService = NewTemplateService(client)
-	ns, err := myTemplateService.CreateNamespace(ctx, "unittest", "", nil)
+	ns, err := myTemplateService.CreateNamespace(ctx, vo.CreateNamespaceRequest{
+		Name:    "unittest",
+		Comment: "unittest",
+	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, ns.Name, "")
+	assert.Equal(t, ns.Data.Name, "")
 	activity, err := myTemplateService.CreateActivity(ctx, vo.CreateActivityRequest{
 		ActivityName: "add",
 		Namespace:    "unittest",
@@ -55,10 +58,10 @@ func TestCreateWorkflow(t *testing.T) {
 	}
 	fmt.Println(activity)
 	//
-	workflow, err := myTemplateService.CreateWorkflow(ctx, vo.CreateWorkflowRequest{
-		WorkflowName: "pass_task",
-		Namespace:    "unittest",
-		Comment:      "add for add ",
+	workflow, err := myTemplateService.CreateStateMachine(ctx, vo.CreateStateMachineRequest{
+		StateMachineName: "pass_task",
+		Namespace:        "unittest",
+		Comment:          "add for add ",
 		// Definition:   definition,
 	}, nil)
 	if err != nil {
@@ -67,7 +70,7 @@ func TestCreateWorkflow(t *testing.T) {
 	}
 	fmt.Println(workflow)
 
-	activityquery, err := myTemplateService.DescribeActivity(ctx, activity.URI, nil)
+	activityquery, err := myTemplateService.DescribeActivity(ctx, activity.Data.URI, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return

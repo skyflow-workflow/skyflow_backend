@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/mmtbak/microlibrary v0.0.0-20250402133427-d63d0f3e4552
+	github.com/mmtbak/microlibrary v0.0.0-20250414063307-9f68dd355779
 	github.com/ohler55/ojg v1.26.1
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
 	google.golang.org/protobuf v1.36.6
@@ -56,7 +56,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
-	github.com/spf13/cast v1.3.1 // indirect
+	github.com/spf13/cast v1.5.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.43.0 // indirect
 	go.opentelemetry.io/otel v1.19.0 // indirect

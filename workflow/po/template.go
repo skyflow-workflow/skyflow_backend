@@ -7,8 +7,8 @@ type Namespace struct {
 	ID         int       `json:"id" gorm:"primaryKey;autoIncrement"`
 	Name       string    `json:"name" gorm:"not null; type:VARCHAR(255);unique; comment:name"` //namespace name
 	Comment    string    `json:"comment" gorm:"type:MEDIUMTEXT"`
-	ModifyTime time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	CreateTime time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	UpdateTime time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // Activity  每一个函数功能被称为一个 Activity,有自己唯一的URI
@@ -22,8 +22,8 @@ type Activity struct {
 	Comment     string    `json:"comment" gorm:"type:TEXT"`
 	Parameters  string    `json:"parameters" gorm:"type:JSON"`              // paramters descritpion
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"` // active |disable
-	ModifyTime  time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	CreateTime  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime  time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // StateMachine 描述一个工作流的状态转化图
@@ -36,6 +36,6 @@ type StateMachine struct {
 	Definition  string    `json:"definition" gorm:"not null;type:MEDIUMTEXT"`
 	Comment     string    `json:"comment" gorm:"type:MEDIUMTEXT"`
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"`
-	ModifyTime  time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	CreateTime  time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime  time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }

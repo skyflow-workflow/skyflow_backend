@@ -1,4 +1,4 @@
-// package quota  defined cloudflow quota here
+// package quota  defined skyflow quota here
 package quota
 
 // Quota ...

@@ -7,7 +7,7 @@ import (
 
 // ParseFlowRequest request
 type ParseFlowRequest struct {
-	WorkflowDefinition string
+	StateMachineDefinition string
 }
 
 type CreateNamespaceRequest struct {
@@ -16,7 +16,7 @@ type CreateNamespaceRequest struct {
 }
 
 type CreateNamespaceResponse struct {
-	po.Namespace
+	Data po.Namespace
 }
 
 // ListNamespacesRequest ...
@@ -30,6 +30,10 @@ type ListNamespacesResponse struct {
 	PageResponse paging.PageResponse
 }
 
+type DeleteNamespaceRequest struct {
+	Name string
+}
+
 // CreateActivityRequest ...
 type CreateActivityRequest struct {
 	ActivityName string
@@ -38,15 +42,19 @@ type CreateActivityRequest struct {
 }
 
 type CreateActivityResponse struct {
-	po.Activity
+	Data po.Activity
 }
 
-// CreateWorkflowRequest ...
-type CreateWorkflowRequest struct {
-	WorkflowName string
-	Comment      string
-	Namespace    string
-	Definition   string
+// CreateStateMachineRequest ...
+type CreateStateMachineRequest struct {
+	StateMachineName string
+	Comment          string
+	Namespace        string
+	Definition       string
+}
+
+type CreateStateMachineResponse struct {
+	Data po.StateMachine
 }
 
 // ListActivitiesRequest ...
@@ -60,15 +68,32 @@ type ListActivitiesResponse struct {
 	PageResponse paging.PageResponse
 }
 
-// ListWofkflowsRequest ...
-type ListWofkflowsRequest struct {
+// DescribeActivityRequest ...
+type DescribeActivityRequest struct {
+	ActivityURI string
+}
+
+type DescribeActivityResponse struct {
+	ActivityURI string
+	Name        string
+	Comment     string
+	CreateTime  int64
+	UpdateTime  int64
+}
+
+type DeleteActivityRequest struct {
+	ActivityURI string
+}
+
+// ListStateMachinesRequest ...
+type ListStateMachinesRequest struct {
 	PageRequest paging.PageRequest
 }
 
-// ListWorkflowsResponse ...
-type ListWorkflowsResponse struct {
-	Workflows    []po.StateMachine
-	PageResponse paging.PageResponse
+// ListStateMachinesResponse ...
+type ListStateMachinesResponse struct {
+	StateMachines []po.StateMachine
+	PageResponse  paging.PageResponse
 }
 
 // DescribeStepResponse ...

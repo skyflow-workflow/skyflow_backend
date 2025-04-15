@@ -212,7 +212,6 @@ message ListActivitiesResponse {
     PageResponse page_response = 2;
 }
 
-
 // ExecutionListItem execution info in ListExecutionsResponse
 message ExecutionListItem {
     // execution_uuid
@@ -221,6 +220,7 @@ message ExecutionListItem {
     string status = 2 ;
     // title execution title
     string title = 3 ;
+    string definition = 4 ;
     // create_time timestample
     int64 create_time = 11;
     // start_time timestample
@@ -368,7 +368,7 @@ message ListExecutionsRequest {
 // ListExecutionsResponse 获得execution列表返回值
 message ListExecutionsResponse {
     // 查询到的执行列表
-    // repeated ExecutionInfo data = 1 ;
+    repeated ExecutionListItem executions = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }
@@ -546,12 +546,25 @@ message ListStateMachinesRequest {
 
 // ListStateMachinesResponse 获得工作流列表请求返回
 message ListStateMachinesResponse {
-
     // 查询到的执行列表
-    repeated StateMachineInfo data = 1 ;
+    repeated StateMachineListItem statemachines = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }
+
+message StateMachineListItem {
+    // name 工作流名字
+    string name = 1;
+    // comment 工作流描述
+    string comment = 2;
+    // statemachine_uri 工作流uri
+    string statemachine_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
 
 // ErrorCode 错误码定义
 //  11XXX  system error
@@ -566,10 +579,20 @@ enum ErrorCode {
     InternelError = 11001;
     // ResourceLimitExceeded 资源限制超出
     ResourceLimitExceeded = 11002;
-    //
+    // The provided URI is not valid.
+    InvalidURI = 11003;
+
+    //template error
     ActivityAlreadyExists = 12001;
-    // ExecutionNotFound execution 不存在
-    ExecutionNotFound = 13002;
+    ActivityDoesNotExist = 12002;
+    StateMachineAlreadyExists = 12003;
+    StateMachineDoesNotExist = 12004;
+    NameSpaceAlreadyExists = 12005;
+    NameSpaceDoesNotExist = 12006;
+
+    // execution error
+    ExecutionAlreadyExists = 13001;
+    ExecutionDoesNotExist = 13002;
     // StateNotFound State 不存在
     StateNotFound = 1003;
     // StateGroupNotFound Stategroup 不存在
