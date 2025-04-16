@@ -3,16 +3,13 @@ package template
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"testing"
-	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	sqle "github.com/dolthub/go-mysql-server"
 	"github.com/dolthub/go-mysql-server/memory"
 	"github.com/dolthub/go-mysql-server/server"
-	"github.com/dolthub/go-mysql-server/sql"
-	"github.com/dolthub/go-mysql-server/sql/types"
-	"github.com/dolthub/vitess/go/vt/proto/query"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
@@ -23,97 +20,55 @@ import (
 )
 
 var (
-	dbName    = "mydb"
-	tableName = "mytable"
-	address   = "localhost"
-	port      = 3306
+	dbName  = "testdb"
+	address = "127.0.0.1"
+	port    = 3306
+	dsn     = "root:@tcp(localhost:3306)/testdb?charset=utf8&parseTime=True&loc=Local"
 )
 
-func TestWithGoMySQLServer(t *testing.T) {
-	// 1. 创建内存数据库
-	db := memory.NewDatabase("testdb")
+func CreateMemoryMySQLServer() (*server.Server, error) {
+	db := memory.NewDatabase(dbName)
+	db.BaseDatabase.EnablePrimaryKeyIndexes()
+	provider := memory.NewDBProvider(db)
 
-	pro := memory.NewDBProvider(db)
-	session := memory.NewSession(sql.NewBaseSession(), pro)
-	ctx := sql.NewContext(context.Background(), sql.WithSession(session))
-	// 2. 创建表结构
-	table := memory.NewTable(db, tableName, sql.NewPrimaryKeySchema(sql.Schema{
-		{Name: "name", Type: types.Text, Nullable: false, Source: tableName, PrimaryKey: true},
-		{Name: "email", Type: types.Text, Nullable: false, Source: tableName, PrimaryKey: true},
-		{Name: "phone_numbers", Type: types.JSON, Nullable: false, Source: tableName},
-		{Name: "created_at", Type: types.MustCreateDatetimeType(query.Type_DATETIME, 6), Nullable: false, Source: tableName},
-	}), db.GetForeignKeyCollection())
-	db.AddTable(tableName, table)
+	engine := sqle.NewDefault(provider)
+	// session := memory.NewSession(sql.NewBaseSession(), pro)
+	// ctx := sql.NewContext(context.Background(), sql.WithSession(session))
+	// ctx.SetCurrentDatabase(dbName)
 
-	creationTime := time.Unix(0, 1667304000000001000).UTC()
-	_ = table.Insert(ctx, sql.NewRow("Jane Deo", "janedeo@gmail.com", types.MustJSON(`["556-565-566", "777-777-777"]`), creationTime))
-	_ = table.Insert(ctx, sql.NewRow("Jane Doe", "jane@doe.com", types.MustJSON(`[]`), creationTime))
-	_ = table.Insert(ctx, sql.NewRow("John Doe", "john@doe.com", types.MustJSON(`["555-555-555"]`), creationTime))
-	_ = table.Insert(ctx, sql.NewRow("John Doe", "johnalt@doe.com", types.MustJSON(`[]`), creationTime))
-
-	// 3. 创建引擎
-	engine := sqle.NewDefault(memory.NewDBProvider(db))
-	ctx = sql.NewContext(context.Background(), sql.WithSession(session))
-	ctx.SetCurrentDatabase(dbName)
-
-	// 4. 配置服务器
 	config := server.Config{
 		Protocol: "tcp",
 		Address:  fmt.Sprintf("%s:%d", address, port),
 	}
-
-	// 5. 启动服务器
-	srv, err := server.NewServer(config, engine, nil, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	go func() {
-		if err := srv.Start(); err != nil {
-			t.Logf("Server error: %v", err)
-		}
-	}()
-	defer srv.Close()
-
-	// 6. 等待服务器启动
-	time.Sleep(500 * time.Millisecond)
-	select {}
-
-	// // 7. 连接测试
-	// dsn := "root:@tcp(localhost:3306)/testdb"
-	// dbConn, err := sql.Open("mysql", dsn)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-	// defer dbConn.Close()
-
-	// // 8. 执行测试查询
-	// _, err = dbConn.Exec("INSERT INTO users (id, name, email) VALUES (1, 'John', 'john@example.com')")
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-
-	// var name string
-	// err = dbConn.QueryRow("SELECT name FROM users WHERE id = 1").Scan(&name)
-	// if err != nil {
-	// 	t.Fatal(err)
-	// }
-	// if name != "John" {
-	// 	t.Errorf("Expected John, got %s", name)
-	// }
+	s, err := server.NewServer(config, engine, memory.NewSessionBuilder(provider), nil)
+	return s, err
 }
 
 var myTemplateService TemplateService
 
-func CreateMySQLServer(t *testing.T) {
-
-}
-
-func TestTiDBMemoryMode(t *testing.T) {
-
-}
-
 func TestCreateNamespace(t *testing.T) {
+
+	mysqlsever, err := CreateMemoryMySQLServer()
+	assert.Equal(t, err, nil)
+	go func() {
+		slog.Info("start server ")
+		if err = mysqlsever.Start(); err != nil {
+			panic(err)
+		}
+	}()
+	defer mysqlsever.Close()
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	assert.Equal(t, err, nil)
+
+	client := (&rdb.DBClient{}).WithDB(db)
+	myTemplateService := NewTemplateService(client)
+	ns, err := myTemplateService.CreateNamespace(context.Background(), vo.CreateNamespaceRequest{
+		Name:    "unittest",
+		Comment: "unittest",
+	}, nil)
+	assert.Equal(t, err, nil)
+	assert.Equal(t, ns.Data.Name, "unittest")
 
 }
 

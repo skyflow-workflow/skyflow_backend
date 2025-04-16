@@ -1,8 +1,8 @@
 module github.com/skyflow-workflow/skyflow_backbend
 
-go 1.23.3
+go 1.23.6
 
-toolchain go1.23.8
+// toolchain go1.23.6
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
