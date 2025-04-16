@@ -26,6 +26,22 @@ func NewTemplateService(dbclient *rdb.DBClient) TemplateService {
 	return svc
 }
 
+func (svc *templateService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
+
+	var err error
+
+	tx, maker := svc.dbclient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	err = tx.AutoMigrate(po.GetTemplateTables()...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNamespaceRequest, tx rdb.Tx) (vo.CreateNamespaceResponse, error) {
 
 	var ns po.Namespace
