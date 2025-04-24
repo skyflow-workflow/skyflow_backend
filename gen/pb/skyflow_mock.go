@@ -171,6 +171,66 @@ func (mr *MockSkyflowV1ServiceServiceMockRecorder) CreateOrUpdateNamespace(ctx, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateNamespace", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).CreateOrUpdateNamespace), ctx, req)
 }
 
+// CreateOrUpdateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceService) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateOrUpdateStateMachine", ctx, req)
+	ret0, _ := ret[0].(*CreateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrUpdateStateMachine indicates an expected call of CreateOrUpdateStateMachine.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) CreateOrUpdateStateMachine(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).CreateOrUpdateStateMachine), ctx, req)
+}
+
+// CreateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceService) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateStateMachine", ctx, req)
+	ret0, _ := ret[0].(*CreateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateStateMachine indicates an expected call of CreateStateMachine.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) CreateStateMachine(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).CreateStateMachine), ctx, req)
+}
+
+// DeleteActivity mocks base method.
+func (m *MockSkyflowV1ServiceService) DeleteActivity(ctx context.Context, req *DeleteActivityRequest) (*DeleteActivityResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteActivity", ctx, req)
+	ret0, _ := ret[0].(*DeleteActivityResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteActivity indicates an expected call of DeleteActivity.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) DeleteActivity(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteActivity", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DeleteActivity), ctx, req)
+}
+
+// DeleteStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceService) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteStateMachine", ctx, req)
+	ret0, _ := ret[0].(*DeleteStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteStateMachine indicates an expected call of DeleteStateMachine.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) DeleteStateMachine(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DeleteStateMachine), ctx, req)
+}
+
 // DescribeActivity mocks base method.
 func (m *MockSkyflowV1ServiceService) DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error) {
 	m.ctrl.T.Helper()
@@ -184,6 +244,21 @@ func (m *MockSkyflowV1ServiceService) DescribeActivity(ctx context.Context, req 
 func (mr *MockSkyflowV1ServiceServiceMockRecorder) DescribeActivity(ctx, req any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DescribeActivity), ctx, req)
+}
+
+// DescribeStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceService) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeStateMachine", ctx, req)
+	ret0, _ := ret[0].(*DescribeStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeStateMachine indicates an expected call of DescribeStateMachine.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) DescribeStateMachine(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DescribeStateMachine), ctx, req)
 }
 
 // ListActivities mocks base method.
@@ -214,6 +289,36 @@ func (m *MockSkyflowV1ServiceService) ListNamespaces(ctx context.Context, req *L
 func (mr *MockSkyflowV1ServiceServiceMockRecorder) ListNamespaces(ctx, req any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).ListNamespaces), ctx, req)
+}
+
+// ListStateMachines mocks base method.
+func (m *MockSkyflowV1ServiceService) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListStateMachines", ctx, req)
+	ret0, _ := ret[0].(*ListStateMachinesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListStateMachines indicates an expected call of ListStateMachines.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) ListStateMachines(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListStateMachines", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).ListStateMachines), ctx, req)
+}
+
+// UpdateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceService) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStateMachine", ctx, req)
+	ret0, _ := ret[0].(*UpdateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateStateMachine indicates an expected call of UpdateStateMachine.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) UpdateStateMachine(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).UpdateStateMachine), ctx, req)
 }
 
 // MockCommonServiceClientProxy is a mock of CommonServiceClientProxy interface.
@@ -404,6 +509,86 @@ func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) CreateOrUpdateNamespace(c
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateNamespace", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).CreateOrUpdateNamespace), varargs...)
 }
 
+// CreateOrUpdateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (*CreateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateOrUpdateStateMachine", varargs...)
+	ret0, _ := ret[0].(*CreateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrUpdateStateMachine indicates an expected call of CreateOrUpdateStateMachine.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) CreateOrUpdateStateMachine(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrUpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).CreateOrUpdateStateMachine), varargs...)
+}
+
+// CreateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (*CreateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateStateMachine", varargs...)
+	ret0, _ := ret[0].(*CreateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateStateMachine indicates an expected call of CreateStateMachine.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) CreateStateMachine(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).CreateStateMachine), varargs...)
+}
+
+// DeleteActivity mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...client.Option) (*DeleteActivityResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteActivity", varargs...)
+	ret0, _ := ret[0].(*DeleteActivityResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteActivity indicates an expected call of DeleteActivity.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DeleteActivity(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteActivity", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DeleteActivity), varargs...)
+}
+
+// DeleteStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...client.Option) (*DeleteStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteStateMachine", varargs...)
+	ret0, _ := ret[0].(*DeleteStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteStateMachine indicates an expected call of DeleteStateMachine.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DeleteStateMachine(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DeleteStateMachine), varargs...)
+}
+
 // DescribeActivity mocks base method.
 func (m *MockSkyflowV1ServiceClientProxy) DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (*DescribeActivityResponse, error) {
 	m.ctrl.T.Helper()
@@ -422,6 +607,26 @@ func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DescribeActivity(ctx, req
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, req}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeActivity", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DescribeActivity), varargs...)
+}
+
+// DescribeStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (*DescribeStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DescribeStateMachine", varargs...)
+	ret0, _ := ret[0].(*DescribeStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeStateMachine indicates an expected call of DescribeStateMachine.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DescribeStateMachine(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DescribeStateMachine), varargs...)
 }
 
 // ListActivities mocks base method.
@@ -462,4 +667,44 @@ func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) ListNamespaces(ctx, req a
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, req}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListNamespaces", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).ListNamespaces), varargs...)
+}
+
+// ListStateMachines mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...client.Option) (*ListStateMachinesResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListStateMachines", varargs...)
+	ret0, _ := ret[0].(*ListStateMachinesResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListStateMachines indicates an expected call of ListStateMachines.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) ListStateMachines(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListStateMachines", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).ListStateMachines), varargs...)
+}
+
+// UpdateStateMachine mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (*UpdateStateMachineResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateStateMachine", varargs...)
+	ret0, _ := ret[0].(*UpdateStateMachineResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateStateMachine indicates an expected call of UpdateStateMachine.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) UpdateStateMachine(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).UpdateStateMachine), varargs...)
 }

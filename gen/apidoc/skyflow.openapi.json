@@ -8,7 +8,7 @@
  "paths": {
   "/Ping": {
    "post": {
-    "summary": "Ping ping servvice",
+    "summary": "Ping ping service",
     "operationId": "Ping",
     "responses": {
      "200": {
@@ -75,6 +75,17 @@
        "type": "string",
        "title": "namespace",
        "description": "namespace activity namespace"
+      }
+     },
+     {
+      "name": "parameters",
+      "in": "query",
+      "required": false,
+      "description": "parameters activity parameters",
+      "schema": {
+       "type": "string",
+       "title": "parameters",
+       "description": "parameters activity parameters"
       }
      }
     ],
@@ -177,6 +188,17 @@
        "title": "namespace",
        "description": "namespace activity namespace"
       }
+     },
+     {
+      "name": "parameters",
+      "in": "query",
+      "required": false,
+      "description": "parameters activity parameters",
+      "schema": {
+       "type": "string",
+       "title": "parameters",
+       "description": "parameters activity parameters"
+      }
      }
     ],
     "tags": [
@@ -229,6 +251,190 @@
     ]
    }
   },
+  "/api/v1/CreateOrUpdateStateMachine": {
+   "post": {
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "operationId": "CreateOrUpdateStateMachine",
+    "responses": {
+     "200": {
+      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/CreateStateMachine": {
+   "post": {
+    "summary": "CreateStateMachine 创建一个工作流",
+    "operationId": "CreateStateMachine",
+    "responses": {
+     "200": {
+      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/DeleteActivity": {
+   "post": {
+    "summary": "DeleteActivity 删除一个活动",
+    "operationId": "DeleteActivity",
+    "responses": {
+     "200": {
+      "description": "删除活动请求返回， 占位符",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DeleteActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "description": "activity uri",
+      "schema": {
+       "type": "string",
+       "title": "activity_uri",
+       "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/DeleteStateMachine": {
+   "post": {
+    "summary": "DeleteStateMachine 删除一个工作流",
+    "operationId": "DeleteStateMachine",
+    "responses": {
+     "200": {
+      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DeleteStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/api/v1/DescribeActivity": {
    "post": {
     "summary": "DescribeActivity 获得一个活动的描述",
@@ -255,6 +461,38 @@
        "type": "string",
        "title": "activity_uri",
        "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/DescribeStateMachine": {
+   "post": {
+    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "operationId": "DescribeStateMachine",
+    "responses": {
+     "200": {
+      "description": "DescribeStateMachineResponse 获得活动列表请求返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DescribeStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
       }
      }
     ],
@@ -386,6 +624,130 @@
     ]
    }
   },
+  "/api/v1/ListStateMachines": {
+   "post": {
+    "summary": "ListStateMachines 获得工作流列表",
+    "operationId": "ListStateMachines",
+    "responses": {
+     "200": {
+      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListStateMachinesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/UpdateStateMachine": {
+   "post": {
+    "summary": "UpdateStateMachine 更新一个工作流",
+    "operationId": "UpdateStateMachine",
+    "responses": {
+     "200": {
+      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.UpdateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/skyflow.CommonService/HTTP": {
    "post": {
     "summary": "HTTPReturn  HTTP API接口返回值格式",
@@ -465,7 +827,7 @@
   },
   "/skyflow.CommonService/Ping": {
    "post": {
-    "summary": "Ping ping servvice",
+    "summary": "Ping ping service",
     "operationId": "Ping2",
     "responses": {
      "200": {
@@ -532,6 +894,17 @@
        "type": "string",
        "title": "namespace",
        "description": "namespace activity namespace"
+      }
+     },
+     {
+      "name": "parameters",
+      "in": "query",
+      "required": false,
+      "description": "parameters activity parameters",
+      "schema": {
+       "type": "string",
+       "title": "parameters",
+       "description": "parameters activity parameters"
       }
      }
     ],
@@ -634,6 +1007,17 @@
        "title": "namespace",
        "description": "namespace activity namespace"
       }
+     },
+     {
+      "name": "parameters",
+      "in": "query",
+      "required": false,
+      "description": "parameters activity parameters",
+      "schema": {
+       "type": "string",
+       "title": "parameters",
+       "description": "parameters activity parameters"
+      }
      }
     ],
     "tags": [
@@ -686,6 +1070,190 @@
     ]
    }
   },
+  "/skyflow.SkyflowV1Service/CreateOrUpdateStateMachine": {
+   "post": {
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "operationId": "CreateOrUpdateStateMachine2",
+    "responses": {
+     "200": {
+      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/CreateStateMachine": {
+   "post": {
+    "summary": "CreateStateMachine 创建一个工作流",
+    "operationId": "CreateStateMachine2",
+    "responses": {
+     "200": {
+      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.CreateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/DeleteActivity": {
+   "post": {
+    "summary": "DeleteActivity 删除一个活动",
+    "operationId": "DeleteActivity2",
+    "responses": {
+     "200": {
+      "description": "删除活动请求返回， 占位符",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DeleteActivityResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "description": "activity uri",
+      "schema": {
+       "type": "string",
+       "title": "activity_uri",
+       "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/DeleteStateMachine": {
+   "post": {
+    "summary": "DeleteStateMachine 删除一个工作流",
+    "operationId": "DeleteStateMachine2",
+    "responses": {
+     "200": {
+      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DeleteStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/skyflow.SkyflowV1Service/DescribeActivity": {
    "post": {
     "summary": "DescribeActivity 获得一个活动的描述",
@@ -712,6 +1280,38 @@
        "type": "string",
        "title": "activity_uri",
        "description": "activity uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/DescribeStateMachine": {
+   "post": {
+    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "operationId": "DescribeStateMachine2",
+    "responses": {
+     "200": {
+      "description": "DescribeStateMachineResponse 获得活动列表请求返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.DescribeStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
       }
      }
     ],
@@ -842,6 +1442,130 @@
      "skyflowv1service.trpc"
     ]
    }
+  },
+  "/skyflow.SkyflowV1Service/ListStateMachines": {
+   "post": {
+    "summary": "ListStateMachines 获得工作流列表",
+    "operationId": "ListStateMachines2",
+    "responses": {
+     "200": {
+      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ListStateMachinesResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "namespace",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "namespace"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "description": "请求排序字段",
+      "schema": {
+       "type": "string",
+       "title": "page_request.order_by",
+       "description": "请求排序字段"
+      }
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "description": "请求页号",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_number",
+       "description": "请求页号"
+      }
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "description": "请求分页大小",
+      "schema": {
+       "type": "string",
+       "title": "page_request.page_size",
+       "description": "请求分页大小"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/UpdateStateMachine": {
+   "post": {
+    "summary": "UpdateStateMachine 更新一个工作流",
+    "operationId": "UpdateStateMachine2",
+    "responses": {
+     "200": {
+      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.UpdateStateMachineResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "comment",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "comment"
+      }
+     },
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "definition"
+      }
+     },
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "name"
+      }
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
   }
  },
  "components": {
@@ -928,6 +1652,27 @@
     "title": "skyflow.CreateNamespaceResponse",
     "description": "CreateNamespaceResponse 创建一个命名空间返回结构"
    },
+   "skyflow.CreateStateMachineResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "$ref": "#/components/schemas/skyflow.StateMachineInfo"
+     }
+    },
+    "title": "skyflow.CreateStateMachineResponse",
+    "description": "CreateStateMachineResponse 创建一个工作流返回结构"
+   },
+   "skyflow.DeleteActivityResponse": {
+    "type": "object",
+    "title": "skyflow.DeleteActivityResponse",
+    "description": "删除活动请求返回， 占位符"
+   },
+   "skyflow.DeleteStateMachineResponse": {
+    "type": "object",
+    "title": "skyflow.DeleteStateMachineResponse",
+    "description": "DeleteStateMachineResponse 删除一个工作流返回结构"
+   },
    "skyflow.DescribeActivityResponse": {
     "type": "object",
     "properties": {
@@ -961,6 +1706,17 @@
     },
     "title": "skyflow.DescribeActivityResponse",
     "description": "DescribeActivityResponse 获得活动列表请求返回"
+   },
+   "skyflow.DescribeStateMachineResponse": {
+    "type": "object",
+    "properties": {
+     "data": {
+      "title": "data",
+      "$ref": "#/components/schemas/skyflow.StateMachineInfo"
+     }
+    },
+    "title": "skyflow.DescribeStateMachineResponse",
+    "description": "DescribeStateMachineResponse 获得活动列表请求返回结构"
    },
    "skyflow.HTTPResponseMessage": {
     "type": "object",
@@ -1019,6 +1775,26 @@
     },
     "title": "skyflow.ListNamespacesResponse",
     "description": "ListNamespacesResponse 获得命名空间列表返回"
+   },
+   "skyflow.ListStateMachinesResponse": {
+    "type": "object",
+    "properties": {
+     "page_response": {
+      "title": "page_response",
+      "$ref": "#/components/schemas/skyflow.PageResponse",
+      "description": " 分页信息\n"
+     },
+     "statemachines": {
+      "title": "statemachines",
+      "type": "array",
+      "description": " 查询到的执行列表\n",
+      "items": {
+       "$ref": "#/components/schemas/skyflow.StateMachineListItem"
+      }
+     }
+    },
+    "title": "skyflow.ListStateMachinesResponse",
+    "description": "ListStateMachinesResponse 获得工作流列表请求返回"
    },
    "skyflow.NamespaceListItem": {
     "type": "object",
@@ -1097,6 +1873,81 @@
     },
     "title": "skyflow.PingResponse",
     "description": "PingResponse ping返回"
+   },
+   "skyflow.StateMachineInfo": {
+    "type": "object",
+    "properties": {
+     "comment": {
+      "title": "comment",
+      "type": "string"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string"
+     },
+     "modify_time": {
+      "title": "modify_time",
+      "type": "string"
+     },
+     "name": {
+      "title": "name",
+      "type": "string"
+     },
+     "statemachine_definition": {
+      "title": "statemachine_definition",
+      "type": "string"
+     },
+     "statemachine_type": {
+      "title": "statemachine_type",
+      "type": "string",
+      "description": "stateMachine_type; pipeline/statemachine"
+     },
+     "statemachine_uri": {
+      "title": "statemachine_uri",
+      "type": "string"
+     }
+    },
+    "title": "skyflow.StateMachineInfo",
+    "description": "StateMachineInfo 工作流信息"
+   },
+   "skyflow.StateMachineListItem": {
+    "type": "object",
+    "properties": {
+     "comment": {
+      "title": "comment",
+      "type": "string",
+      "description": "comment 工作流描述"
+     },
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time timestample"
+     },
+     "name": {
+      "title": "name",
+      "type": "string",
+      "description": "name 工作流名字"
+     },
+     "statemachine_uri": {
+      "title": "statemachine_uri",
+      "type": "string",
+      "description": "statemachine_uri 工作流uri"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time timestample"
+     }
+    },
+    "title": "skyflow.StateMachineListItem",
+    "description": "StateMachineListItem"
+   },
+   "skyflow.UpdateStateMachineResponse": {
+    "type": "object",
+    "title": "skyflow.UpdateStateMachineResponse",
+    "description": "UpdateStateMachineResponse 更新一个工作流返回结构"
    }
   }
  }

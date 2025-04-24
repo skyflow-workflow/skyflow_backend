@@ -24,7 +24,7 @@ type CommonServiceService interface {
 	Paging(ctx context.Context, req *PageRequest) (*PageResponse, error)
 	// HTTP HTTPReturn  HTTP API接口返回值格式
 	HTTP(ctx context.Context, req *emptypb.Empty) (*HTTPResponseMessage, error)
-	// Ping Ping ping servvice
+	// Ping Ping ping service
 	Ping(ctx context.Context, req *emptypb.Empty) (*PingResponse, error)
 }
 
@@ -129,6 +129,20 @@ type SkyflowV1ServiceService interface {
 	ListActivities(ctx context.Context, req *ListActivitiesRequest) (*ListActivitiesResponse, error)
 	// DescribeActivity DescribeActivity 获得一个活动的描述
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error)
+	// DeleteActivity DeleteActivity 删除一个活动
+	DeleteActivity(ctx context.Context, req *DeleteActivityRequest) (*DeleteActivityResponse, error)
+	// CreateStateMachine CreateStateMachine 创建一个工作流
+	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
+	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error)
+	// ListStateMachines ListStateMachines 获得工作流列表
+	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error)
+	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
+	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error)
 }
 
 func SkyflowV1ServiceService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -257,6 +271,132 @@ func SkyflowV1ServiceService_DescribeActivity_Handler(svr interface{}, ctx conte
 	return rsp, nil
 }
 
+func SkyflowV1ServiceService_DeleteActivity_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DeleteActivityRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DeleteActivity(ctx, reqbody.(*DeleteActivityRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_CreateStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &CreateStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).CreateStateMachine(ctx, reqbody.(*CreateStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_CreateOrUpdateStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &CreateStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).CreateOrUpdateStateMachine(ctx, reqbody.(*CreateStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DeleteStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DeleteStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DeleteStateMachine(ctx, reqbody.(*DeleteStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_ListStateMachines_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ListStateMachinesRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ListStateMachines(ctx, reqbody.(*ListStateMachinesRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DescribeStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DescribeStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DescribeStateMachine(ctx, reqbody.(*DescribeStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_UpdateStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &UpdateStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).UpdateStateMachine(ctx, reqbody.(*UpdateStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // SkyflowV1ServiceServer_ServiceDesc descriptor for server.RegisterService.
 var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "skyflow.SkyflowV1Service",
@@ -291,6 +431,34 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Func: SkyflowV1ServiceService_DescribeActivity_Handler,
 		},
 		{
+			Name: "/api/v1/DeleteActivity",
+			Func: SkyflowV1ServiceService_DeleteActivity_Handler,
+		},
+		{
+			Name: "/api/v1/CreateStateMachine",
+			Func: SkyflowV1ServiceService_CreateStateMachine_Handler,
+		},
+		{
+			Name: "/api/v1/CreateOrUpdateStateMachine",
+			Func: SkyflowV1ServiceService_CreateOrUpdateStateMachine_Handler,
+		},
+		{
+			Name: "/api/v1/DeleteStateMachine",
+			Func: SkyflowV1ServiceService_DeleteStateMachine_Handler,
+		},
+		{
+			Name: "/api/v1/ListStateMachines",
+			Func: SkyflowV1ServiceService_ListStateMachines_Handler,
+		},
+		{
+			Name: "/api/v1/DescribeStateMachine",
+			Func: SkyflowV1ServiceService_DescribeStateMachine_Handler,
+		},
+		{
+			Name: "/api/v1/UpdateStateMachine",
+			Func: SkyflowV1ServiceService_UpdateStateMachine_Handler,
+		},
+		{
 			Name: "/skyflow.SkyflowV1Service/CreateNamespace",
 			Func: SkyflowV1ServiceService_CreateNamespace_Handler,
 		},
@@ -318,6 +486,34 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Name: "/skyflow.SkyflowV1Service/DescribeActivity",
 			Func: SkyflowV1ServiceService_DescribeActivity_Handler,
 		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DeleteActivity",
+			Func: SkyflowV1ServiceService_DeleteActivity_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/CreateStateMachine",
+			Func: SkyflowV1ServiceService_CreateStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/CreateOrUpdateStateMachine",
+			Func: SkyflowV1ServiceService_CreateOrUpdateStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DeleteStateMachine",
+			Func: SkyflowV1ServiceService_DeleteStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ListStateMachines",
+			Func: SkyflowV1ServiceService_ListStateMachines_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DescribeStateMachine",
+			Func: SkyflowV1ServiceService_DescribeStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/UpdateStateMachine",
+			Func: SkyflowV1ServiceService_UpdateStateMachine_Handler,
+		},
 	},
 }
 
@@ -342,7 +538,7 @@ func (s *UnimplementedCommonService) HTTP(ctx context.Context, req *emptypb.Empt
 	return nil, errors.New("rpc HTTP of service CommonService is not implemented")
 }
 
-// Ping Ping ping servvice
+// Ping Ping ping service
 func (s *UnimplementedCommonService) Ping(ctx context.Context, req *emptypb.Empty) (*PingResponse, error) {
 	return nil, errors.New("rpc Ping of service CommonService is not implemented")
 }
@@ -384,6 +580,41 @@ func (s *UnimplementedSkyflowV1Service) DescribeActivity(ctx context.Context, re
 	return nil, errors.New("rpc DescribeActivity of service SkyflowV1Service is not implemented")
 }
 
+// DeleteActivity DeleteActivity 删除一个活动
+func (s *UnimplementedSkyflowV1Service) DeleteActivity(ctx context.Context, req *DeleteActivityRequest) (*DeleteActivityResponse, error) {
+	return nil, errors.New("rpc DeleteActivity of service SkyflowV1Service is not implemented")
+}
+
+// CreateStateMachine CreateStateMachine 创建一个工作流
+func (s *UnimplementedSkyflowV1Service) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
+	return nil, errors.New("rpc CreateStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+func (s *UnimplementedSkyflowV1Service) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
+	return nil, errors.New("rpc CreateOrUpdateStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// DeleteStateMachine DeleteStateMachine 删除一个工作流
+func (s *UnimplementedSkyflowV1Service) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error) {
+	return nil, errors.New("rpc DeleteStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// ListStateMachines ListStateMachines 获得工作流列表
+func (s *UnimplementedSkyflowV1Service) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error) {
+	return nil, errors.New("rpc ListStateMachines of service SkyflowV1Service is not implemented")
+}
+
+// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+func (s *UnimplementedSkyflowV1Service) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error) {
+	return nil, errors.New("rpc DescribeStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// UpdateStateMachine UpdateStateMachine 更新一个工作流
+func (s *UnimplementedSkyflowV1Service) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error) {
+	return nil, errors.New("rpc UpdateStateMachine of service SkyflowV1Service is not implemented")
+}
+
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
 
 // END ======================================= Server Service Definition ======================================= END
@@ -396,7 +627,7 @@ type CommonServiceClientProxy interface {
 	Paging(ctx context.Context, req *PageRequest, opts ...client.Option) (rsp *PageResponse, err error)
 	// HTTP HTTPReturn  HTTP API接口返回值格式
 	HTTP(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (rsp *HTTPResponseMessage, err error)
-	// Ping Ping ping servvice
+	// Ping Ping ping service
 	Ping(ctx context.Context, req *emptypb.Empty, opts ...client.Option) (rsp *PingResponse, err error)
 }
 
@@ -485,6 +716,20 @@ type SkyflowV1ServiceClientProxy interface {
 	ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...client.Option) (rsp *ListActivitiesResponse, err error)
 	// DescribeActivity DescribeActivity 获得一个活动的描述
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (rsp *DescribeActivityResponse, err error)
+	// DeleteActivity DeleteActivity 删除一个活动
+	DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...client.Option) (rsp *DeleteActivityResponse, err error)
+	// CreateStateMachine CreateStateMachine 创建一个工作流
+	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
+	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...client.Option) (rsp *DeleteStateMachineResponse, err error)
+	// ListStateMachines ListStateMachines 获得工作流列表
+	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...client.Option) (rsp *ListStateMachinesResponse, err error)
+	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (rsp *DescribeStateMachineResponse, err error)
+	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (rsp *UpdateStateMachineResponse, err error)
 }
 
 type SkyflowV1ServiceClientProxyImpl struct {
@@ -630,6 +875,146 @@ func (c *SkyflowV1ServiceClientProxyImpl) DescribeActivity(ctx context.Context, 
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &DescribeActivityResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...client.Option) (*DeleteActivityResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DeleteActivity")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DeleteActivity")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DeleteActivityResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (*CreateStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/CreateStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("CreateStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &CreateStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (*CreateStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/CreateOrUpdateStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("CreateOrUpdateStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &CreateStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...client.Option) (*DeleteStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DeleteStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DeleteStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DeleteStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...client.Option) (*ListStateMachinesResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ListStateMachines")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ListStateMachines")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ListStateMachinesResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (*DescribeStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DescribeStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DescribeStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DescribeStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (*UpdateStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/UpdateStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("UpdateStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &UpdateStateMachineResponse{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}
