@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/template"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
@@ -12,6 +11,41 @@ import (
 // SkyflowService skyflow service handler
 type SkyflowService struct {
 	templateService template.TemplateService
+}
+
+// CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) CreateOrUpdateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
+	panic("unimplemented")
+}
+
+// CreateStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) CreateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
+	panic("unimplemented")
+}
+
+// DeleteActivity implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) DeleteActivity(ctx context.Context, req *pb.DeleteActivityRequest) (*pb.DeleteActivityResponse, error) {
+	panic("unimplemented")
+}
+
+// DeleteStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) DeleteStateMachine(ctx context.Context, req *pb.DeleteStateMachineRequest) (*pb.DeleteStateMachineResponse, error) {
+	panic("unimplemented")
+}
+
+// DescribeStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) DescribeStateMachine(ctx context.Context, req *pb.DescribeStateMachineRequest) (*pb.DescribeStateMachineResponse, error) {
+	panic("unimplemented")
+}
+
+// ListStateMachines implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) ListStateMachines(ctx context.Context, req *pb.ListStateMachinesRequest) (*pb.ListStateMachinesResponse, error) {
+	panic("unimplemented")
+}
+
+// UpdateStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowService) UpdateStateMachine(ctx context.Context, req *pb.UpdateStateMachineRequest) (*pb.UpdateStateMachineResponse, error) {
+	panic("unimplemented")
 }
 
 // CreateOrUpdateActivity implements pb.SkyflowServiceService.
@@ -116,7 +150,7 @@ func (s *SkyflowService) ListActivities(ctx context.Context, req *pb.ListActivit
 	if err != nil {
 		return nil, err
 	}
-	respdata := DataTransferArray[po.Activity, *pb.ActivityListItem](voresp.Activities, ToPBActivity)
+	respdata := DataTransferArray(voresp.Activities, ToPBActivity)
 
 	resp := &pb.ListActivitiesResponse{
 		Activities:   respdata,
@@ -137,7 +171,7 @@ func (s *SkyflowService) ListNamespaces(ctx context.Context, req *pb.ListNamespa
 	if err != nil {
 		return nil, err
 	}
-	respdata := DataTransferArray[po.Namespace, *pb.NamespaceListItem](voresp.Namespaces, ToPBNamespace)
+	respdata := DataTransferArray(voresp.Namespaces, ToPBNamespace)
 
 	resp := &pb.ListNamespacesResponse{
 		Namespaces:   respdata,
