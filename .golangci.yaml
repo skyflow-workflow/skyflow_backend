@@ -20,8 +20,7 @@ linters:
     - gocritic
     # gosimple: Linter for Go source code that specializes in simplifying code.
     - gosimple
-    # exportloopref: Checks for pointers to enclosing loop variables.
-    - exportloopref
+    - copyloopvar
     # nilerr: Finds the code that returns nil even if it checks that the error is not nil.
     - nilerr
 issues:

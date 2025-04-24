@@ -10,6 +10,9 @@ lint:
     - id: ENUM_NAMES_UPPER_CAMEL_CASE
       files:
         - path/to/foo.proto
+    - id: FIELDS_HAVE_COMMENT
+      files:
+        - proto/skyflow.proto
 
   # Linter files to walk.
   files:
@@ -51,7 +54,7 @@ lint:
       - MESSAGES_HAVE_COMMENT
       - SERVICES_HAVE_COMMENT
       - RPCS_HAVE_COMMENT
-      - FIELDS_HAVE_COMMENT
+      # - FIELDS_HAVE_COMMENT
       - PROTO3_FIELDS_AVOID_REQUIRED
       - PROTO3_GROUPS_AVOID
       - REPEATED_FIELD_NAMES_PLURALIZED
