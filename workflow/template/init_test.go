@@ -90,9 +90,6 @@ func CreateMemoryMySQLServer() (*server.Server, error) {
 	provider := memory.NewDBProvider(db)
 
 	engine := sqle.NewDefault(provider)
-	// session := memory.NewSession(sql.NewBaseSession(), pro)
-	// ctx := sql.NewContext(context.Background(), sql.WithSession(session))
-	// ctx.SetCurrentDatabase(dbName)
 
 	config := server.Config{
 		Protocol: "tcp",

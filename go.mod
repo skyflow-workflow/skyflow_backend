@@ -1,11 +1,8 @@
 module github.com/skyflow-workflow/skyflow_backbend
 
-go 1.23.6
-
-// toolchain go1.23.6
+go 1.23.8
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/dolthub/go-mysql-server v0.19.0
 	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-playground/validator/v10 v10.26.0
@@ -13,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/mmtbak/microlibrary v0.0.0-20250414063307-9f68dd355779
+	github.com/mmtbak/microlibrary v0.0.0-20250418075755-a79743d298aa
 	github.com/ohler55/ojg v1.26.1
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
 	google.golang.org/protobuf v1.36.6

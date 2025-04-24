@@ -18,7 +18,7 @@ service CommonService {
     rpc Paging(PageRequest) returns (PageResponse);
     // HTTPReturn  HTTP API接口返回值格式
     rpc HTTP(google.protobuf.Empty) returns(HTTPResponseMessage);
-    // Ping ping servvice
+    // Ping ping service
     rpc Ping(google.protobuf.Empty) returns(PingResponse){
         option (trpc.alias) = "/Ping";
     };
@@ -93,9 +93,35 @@ service SkyflowV1Service {
     rpc DescribeActivity(DescribeActivityRequest) returns (DescribeActivityResponse) {
         option (trpc.alias) = "/api/v1/DescribeActivity";
     }
-
+    // DeleteActivity 删除一个活动
+    rpc DeleteActivity(DeleteActivityRequest) returns (DeleteActivityResponse) {
+        option (trpc.alias) = "/api/v1/DeleteActivity";
+    }
+    // CreateStateMachine 创建一个工作流
+    rpc CreateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/CreateStateMachine";
+    }
+    // CreateOrUpdateStateMachine 创建/更新一个工作流
+    rpc CreateOrUpdateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/CreateOrUpdateStateMachine";
+    }
+    // DeleteStateMachine 删除一个工作流
+    rpc DeleteStateMachine(DeleteStateMachineRequest) returns (DeleteStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/DeleteStateMachine";
+    }
+    // ListStateMachines 获得工作流列表
+    rpc ListStateMachines(ListStateMachinesRequest) returns (ListStateMachinesResponse) {
+        option (trpc.alias) = "/api/v1/ListStateMachines";
+    }
+    // DescribeStateMachine 获得一个工作流的描述
+    rpc DescribeStateMachine(DescribeStateMachineRequest) returns (DescribeStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/DescribeStateMachine";
+    }
+    // UpdateStateMachine 更新一个工作流
+    rpc UpdateStateMachine(UpdateStateMachineRequest) returns (UpdateStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/UpdateStateMachine";
+    }
 }
-
 // NamespaceInfo 命名空间信息
 message NamespaceListItem {
     // name 命名空间名字
@@ -150,6 +176,8 @@ message CreateActivityRequest {
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     // namespace activity namespace
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // parameters activity parameters
+    string parameters = 4 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
 }
 
 //CreateActivityResponse 创建一个活动返回结构
@@ -180,6 +208,15 @@ message DescribeActivityResponse {
     int64 create_time = 11;
     // update_time  update time timestample
     int64 update_time = 12;
+}
+
+message DeleteActivityRequest {
+    // activity uri
+    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// 删除活动请求返回， 占位符
+message DeleteActivityResponse {
 }
 
 // ListActivitiesRequest 获得活动列表请求结构
@@ -520,7 +557,7 @@ message CreateStateMachineRequest {
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    string statemachine_definition = 4 [(validate.rules).string = {min_bytes: 1}];
+    string definition = 4 [(validate.rules).string = {min_bytes: 1}];
 }
 //CreateStateMachineResponse 创建一个工作流返回结构
 message CreateStateMachineResponse {
@@ -535,6 +572,27 @@ message DescribeStateMachineRequest {
 // DescribeStateMachineResponse 获得活动列表请求返回结构
 message DescribeStateMachineResponse {
     StateMachineInfo data = 1;
+}
+
+// DeleteStateMachineRequest 删除一个工作流请求结构
+message DeleteStateMachineRequest {
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// DeleteStateMachineResponse 删除一个工作流返回结构
+message DeleteStateMachineResponse {
+}
+
+// UpdateStateMachineRequest 更新一个工作流请求结构
+message UpdateStateMachineRequest {
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    string name = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    string comment = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string definition = 4 [(validate.rules).string = {min_bytes: 1}];
+}
+
+// UpdateStateMachineResponse 更新一个工作流返回结构
+message UpdateStateMachineResponse {
 }
 
 // ListStateMachinesRequest 获得工作流列表请求结构

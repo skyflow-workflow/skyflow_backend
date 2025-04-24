@@ -10,6 +10,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/pberror"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"gorm.io/gorm/clause"
 )
 
 // TemplateService template management service
@@ -50,7 +51,7 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 	tx, maker := svc.dbclient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
-	err = tx.Where("name = ?", req.Name).First(&ns).Error
+	err = tx.Select("id").Where("name = ?", req.Name).First(&ns).Error
 	if err != nil && !rdb.IsErrRecordNotFound(err) {
 		return vo.CreateNamespaceResponse{}, err
 	}
@@ -124,37 +125,23 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 }
 
 func (svc *templateService) CreateOrUpdateNamespace(ctx context.Context, req vo.CreateNamespaceRequest, tx rdb.Tx) (vo.CreateNamespaceResponse, error) {
-	var ns po.Namespace
 	var err error
 
 	tx, maker := svc.dbclient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
-	// 先查询是否存在
-	err = tx.Where("name = ?", req.Name).First(&ns).Error
-	if err != nil && !rdb.IsErrRecordNotFound(err) {
-		return vo.CreateNamespaceResponse{}, err
-	}
-
-	newns := po.Namespace{
+	newNS := po.Namespace{
 		Name:    req.Name,
 		Comment: req.Comment,
 	}
-	// 如果存在则更新，否则创建,
-	if ns.ID != 0 {
-		// 为什么不用Save， Save会更新所有字段，而我们只需要更新部分字段
-		err = tx.Where(po.Namespace{ID: ns.ID}).Updates(&newns).Error
-		return vo.CreateNamespaceResponse{
-			Data: newns,
-		}, err
-	}
-	err = tx.Create(&newns).Error
-	if err != nil && rdb.IsErrRecordNotFound(err) {
-		return vo.CreateNamespaceResponse{}, err
-	}
+
+	err = tx.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "name"}},
+		DoUpdates: clause.AssignmentColumns([]string{"comment", "update_time"}),
+	}).Create(&newNS).Error
 
 	return vo.CreateNamespaceResponse{
-		Data: newns,
+		Data: newNS,
 	}, err
 }
 
@@ -190,6 +177,10 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 
 	var activity po.Activity
 	var err error
+	// 如果参数为空，则设置为空对象
+	if req.Parameters == "" {
+		req.Parameters = `{}`
+	}
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
 
@@ -200,7 +191,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 		URI: activity_uri,
 	}
 
-	err = tx.Model(new(po.Activity)).Where(queryActivity).Select("id").First(&activity).Error
+	err = tx.Model(new(po.Activity)).Select("id").Where(queryActivity).First(&activity).Error
 	if err != nil && !rdb.IsErrRecordNotFound(err) {
 		return vo.CreateActivityResponse{}, err
 	}
@@ -216,6 +207,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 		Comment:     req.Comment,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
+		Parameters:  req.Parameters,
 	}
 
 	if activity.ID != 0 {
@@ -258,12 +250,10 @@ func (svc *templateService) ListActivities(ctx context.Context, req vo.ListActiv
 	resp.Activities = activitys
 	resp.PageResponse = req.PageRequest.Response(count)
 	return resp, err
-
 }
 
 func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.CreateActivityRequest, tx rdb.Tx) (vo.CreateActivityResponse, error) {
 
-	var activity po.Activity
 	var err error
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
@@ -271,40 +261,27 @@ func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.C
 	tx, maker := svc.dbclient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
-	queryActivity := po.Activity{
-		URI: activity_uri,
-	}
-
-	err = tx.Model(new(po.Activity)).Where(queryActivity).Select("id").First(&activity).Error
-	if err != nil && !rdb.IsErrRecordNotFound(err) {
-		return vo.CreateActivityResponse{}, err
-	}
-
-	namespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
+	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
 	if err != nil {
 		return vo.CreateActivityResponse{}, err
 	}
-
 	newActivity := po.Activity{
-		NamespaceID: namespace.ID,
+		NamespaceID: dbNamespace.ID,
 		Name:        req.ActivityName,
 		Comment:     req.Comment,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
+		Parameters:  req.Parameters,
 	}
 
-	if activity.ID != 0 {
-		err = tx.Where(po.Activity{ID: activity.ID}).Updates(&newActivity).Error
-	} else {
-		err = tx.Create(&newActivity).Error
-	}
+	err = tx.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "uri"}},
+		DoUpdates: clause.AssignmentColumns([]string{"name", "comment", "parameters", "status", "update_time"}),
+	}).Create(&newActivity).Error
 
-	if err != nil {
-		return vo.CreateActivityResponse{}, err
-	}
 	return vo.CreateActivityResponse{
 		Data: newActivity,
-	}, nil
+	}, err
 }
 
 // DeleteActivity implements skyflow.SkyflowServer.
@@ -341,10 +318,6 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 
 	var err error
 	var sm po.StateMachine
-	flow, err := parser.ParseStateMachine(req.Definition)
-	if err != nil {
-		return vo.CreateStateMachineResponse{}, err
-	}
 
 	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
 
@@ -368,7 +341,6 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 	newsm := po.StateMachine{
 		NamespaceID: namespace.ID,
 		Name:        req.StateMachineName,
-		Type:        flow.Type,
 		Comment:     req.Comment,
 		URI:         workflowUri,
 		Definition:  req.Definition,
@@ -439,4 +411,39 @@ func (svc *templateService) ListStateMachines(ctx context.Context, req vo.ListSt
 	resp.StateMachines = sms
 	resp.PageResponse = req.PageRequest.Response(count)
 	return resp, err
+}
+
+// CreateOrUpdateStateMachine implements skyflow.SkyflowServer.
+func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req vo.CreateStateMachineRequest, tx rdb.Tx) (vo.CreateStateMachineResponse, error) {
+
+	var err error
+
+	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
+
+	tx, maker := svc.dbclient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
+	if err != nil {
+		return vo.CreateStateMachineResponse{}, err
+	}
+
+	newStateMachine := po.StateMachine{
+		NamespaceID: dbNamespace.ID,
+		Name:        req.StateMachineName,
+		Comment:     req.Comment,
+		URI:         statemachineUri,
+		Definition:  req.Definition,
+		Status:      ActivityStatus.Enable,
+	}
+
+	err = tx.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "uri"}},
+		DoUpdates: clause.AssignmentColumns([]string{"name", "comment", "definition", "status", "update_time"}),
+	}).Create(&newStateMachine).Error
+	tx.Commit()
+
+	return vo.CreateStateMachineResponse{
+		Data: newStateMachine,
+	}, err
 }

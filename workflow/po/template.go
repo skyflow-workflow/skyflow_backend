@@ -18,9 +18,8 @@ type Activity struct {
 	Name        string    `json:"name" gorm:"not null; uniqueIndex:uni_namespace_activity;type:VARCHAR(128)"`
 	Type        string    `json:"type" gorm:"not null;type:VARCHAR(100)"`        // function type, activity/builtin/...
 	URI         string    `json:"uri" gorm:"not null; unique;type:VARCHAR(256)"` // function uri
-	Group       string    `json:"group" gorm:"not null;type:VARCHAR(128)"`       // function group
 	Comment     string    `json:"comment" gorm:"type:TEXT"`
-	Parameters  string    `json:"parameters" gorm:"type:JSON"`              // paramters descritpion
+	Parameters  string    `json:"parameters" gorm:"type:TEXT"`              // paramters descritpion
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"` // active |disable
 	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
 	CreateTime  time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
@@ -30,7 +29,6 @@ type Activity struct {
 type StateMachine struct {
 	ID          int       `json:"id" gorm:"primaryKey;autoIncrement"`
 	NamespaceID int       `json:"namespace_id" gorm:"not null; uniqueIndex:uni_namespace_statemachine;INT(11)"`
-	Type        string    `json:"type" gorm:"not null;type:VARCHAR(100)"`
 	Name        string    `json:"name" gorm:"not nul; uniqueIndex:uni_namespace_statemachine;type:VARCHAR(128)"`
 	URI         string    `json:"uri" gorm:"not null; unique;type:VARCHAR(256)"`
 	Definition  string    `json:"definition" gorm:"not null;type:MEDIUMTEXT"`

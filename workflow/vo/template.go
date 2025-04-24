@@ -39,6 +39,8 @@ type CreateActivityRequest struct {
 	ActivityName string
 	Comment      string
 	Namespace    string
+	// Parameters is the parameters description of the activity, it is a json string
+	Parameters string
 }
 
 type CreateActivityResponse struct {
