@@ -33,21 +33,21 @@ func TestCreateWorkflow(t *testing.T) {
 
 	myTemplateService := NewTemplateService(getTestClient())
 	ns, err := myTemplateService.CreateNamespace(ctx, vo.CreateNamespaceRequest{
-		Name:    "unittest",
-		Comment: "unittest",
+		Name:    "testing_create_namespace",
+		Comment: "testing_create_namespace",
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
 
-	assert.Equal(t, ns.Data.Name, "unittest")
-	assert.Equal(t, ns.Data.Comment, "unittest")
+	assert.Equal(t, ns.Data.Name, "testing_create_namespace")
+	assert.Equal(t, ns.Data.Comment, "testing_create_namespace")
 
 	activity, err := myTemplateService.CreateActivity(ctx, vo.CreateActivityRequest{
 		ActivityName: "add",
-		Namespace:    "unittest",
-		Comment:      "add for add ",
+		Namespace:    "testing_create_namespace",
+		Comment:      "testing_create_activity_add_description",
 		Parameters:   `{"a": "int", "b": "int"}`,
 	}, nil)
 	if err != nil {
@@ -56,8 +56,8 @@ func TestCreateWorkflow(t *testing.T) {
 	}
 	expectedActivity := po.Activity{
 		Name:        "add",
-		URI:         "activity:unittest/add",
-		Comment:     "add for add ",
+		URI:         "activity:testing_create_namespace/add",
+		Comment:     "testing_create_activity_add_description",
 		Parameters:  `{"a": "int", "b": "int"}`,
 		Status:      "Enable",
 		NamespaceID: ns.Data.ID,
@@ -72,17 +72,17 @@ func TestCreateWorkflow(t *testing.T) {
 	// 如果参数为空，则设置为空对象
 	workflow, err := myTemplateService.CreateStateMachine(ctx, vo.CreateStateMachineRequest{
 		StateMachineName: "pass_task",
-		Namespace:        "unittest",
-		Comment:          "add for add",
+		Namespace:        "testing_create_namespace",
+		Comment:          "pass_task description",
 		// Definition:   definition,
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, workflow.Data.URI, "statemachine:unittest/pass_task")
+	assert.Equal(t, workflow.Data.URI, "statemachine:testing_create_namespace/pass_task")
 	assert.Equal(t, workflow.Data.Name, "pass_task")
-	assert.Equal(t, workflow.Data.Comment, "add for add")
+	assert.Equal(t, workflow.Data.Comment, "pass_task description")
 	assert.Equal(t, workflow.Data.Status, "Enable")
 	assert.Equal(t, workflow.Data.NamespaceID, ns.Data.ID)
 
@@ -94,7 +94,7 @@ func TestCreateWorkflow(t *testing.T) {
 	assert.Equal(t, activityquery.Parameters, `{"a": "int", "b": "int"}`)
 
 	assert.Equal(t, activityquery.Name, "add")
-	assert.Equal(t, activityquery.Comment, "add for add")
+	assert.Equal(t, activityquery.Comment, "testing_create_activity_add_description")
 
 }
 
@@ -106,31 +106,31 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	myTemplateService := NewTemplateService(getTestClient())
 	// 创建
 	ns, err := myTemplateService.CreateOrUpdateNamespace(ctx, vo.CreateNamespaceRequest{
-		Name:    "unittest",
-		Comment: "unittest",
+		Name:    "testing_create_or_update_namespace",
+		Comment: "testing_create_or_update_namespace",
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, ns.Data.Name, "unittest")
-	assert.Equal(t, ns.Data.Comment, "unittest")
+	assert.Equal(t, ns.Data.Name, "testing_create_or_update_namespace")
+	assert.Equal(t, ns.Data.Comment, "testing_create_or_update_namespace")
 
 	// 更新
 	ns, err = myTemplateService.CreateOrUpdateNamespace(ctx, vo.CreateNamespaceRequest{
-		Name:    "unittest",
-		Comment: "unittest update",
+		Name:    "testing_create_or_update_namespace",
+		Comment: "testing_create_or_update_namespace update",
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, ns.Data.Name, "unittest")
-	assert.Equal(t, ns.Data.Comment, "unittest update")
+	assert.Equal(t, ns.Data.Name, "testing_create_or_update_namespace")
+	assert.Equal(t, ns.Data.Comment, "testing_create_or_update_namespace update")
 
 	activity, err := myTemplateService.CreateOrUpdateActivity(ctx, vo.CreateActivityRequest{
 		ActivityName: "add",
-		Namespace:    "unittest",
+		Namespace:    "testing_create_or_update_namespace",
 		Comment:      "usage for activity add",
 		Parameters:   `{"a": "int", "b": "int"}`,
 	}, nil)
@@ -140,7 +140,7 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	}
 	expectedActivity := po.Activity{
 		Name:        "add",
-		URI:         "activity:unittest/add",
+		URI:         "activity:testing_create_or_update_namespace/add",
 		Comment:     "usage for activity add",
 		Parameters:  `{"a": "int", "b": "int"}`,
 		Status:      "Enable",
@@ -155,7 +155,7 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 
 	activity, err = myTemplateService.CreateOrUpdateActivity(ctx, vo.CreateActivityRequest{
 		ActivityName: "add",
-		Namespace:    "unittest",
+		Namespace:    "testing_create_or_update_namespace",
 		Comment:      "usage for activity add update",
 		Parameters:   `{"a": "int", "b": "int"}`,
 	}, nil)
@@ -165,7 +165,7 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	}
 	expectedActivity = po.Activity{
 		Name:        "add",
-		URI:         "activity:unittest/add",
+		URI:         "activity:testing_create_or_update_namespace/add",
 		Comment:     "usage for activity add update",
 		Parameters:  `{"a": "int", "b": "int"}`,
 		Status:      "Enable",
@@ -181,14 +181,14 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	// 创建
 	workflow, err := myTemplateService.CreateOrUpdateStateMachine(ctx, vo.CreateStateMachineRequest{
 		StateMachineName: "pass_task",
-		Namespace:        "unittest",
+		Namespace:        "testing_create_or_update_namespace",
 		Comment:          "usage for workflow pass_task",
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, workflow.Data.URI, "statemachine:unittest/pass_task")
+	assert.Equal(t, workflow.Data.URI, "statemachine:testing_create_or_update_namespace/pass_task")
 	assert.Equal(t, workflow.Data.Name, "pass_task")
 	assert.Equal(t, workflow.Data.Comment, "usage for workflow pass_task")
 	assert.Equal(t, workflow.Data.Status, "Enable")
@@ -196,14 +196,14 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	// 更新
 	workflow, err = myTemplateService.CreateOrUpdateStateMachine(ctx, vo.CreateStateMachineRequest{
 		StateMachineName: "pass_task",
-		Namespace:        "unittest",
+		Namespace:        "testing_create_or_update_namespace",
 		Comment:          "usage for workflow pass_task update",
 	}, nil)
 	if err != nil {
 		t.Error(err.Error())
 		return
 	}
-	assert.Equal(t, workflow.Data.URI, "statemachine:unittest/pass_task")
+	assert.Equal(t, workflow.Data.URI, "statemachine:testing_create_or_update_namespace/pass_task")
 	assert.Equal(t, workflow.Data.Name, "pass_task")
 	assert.Equal(t, workflow.Data.Comment, "usage for workflow pass_task update")
 	assert.Equal(t, workflow.Data.Status, "Enable")

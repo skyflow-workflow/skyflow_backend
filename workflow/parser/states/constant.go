@@ -2,7 +2,7 @@ package states
 
 /*
 # @Date    : Thu Mar 14 2019
-# @Author  : mumangtao(mumangtao@gmail.com)
+# @Author  : mmtbak(mumangtao@gmail.com)
 # @Link    : link
 # @Version : 1.0.0
 # @Function: file for
@@ -12,7 +12,8 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var myvalidate = validator.New()
+// myValidate self define validator
+var myValidate = validator.New()
 
 // doc: https://states-language.net/spec.html#state-type-table-jsonpath
 // 						Pass		Task		Choice		Wait		Succeed		Fail		Parallel    Map
@@ -24,7 +25,7 @@ var myvalidate = validator.New()
 // One of: Next/End		Required	Required				Required							Required	Required
 // Retry, Catch						Allowed														Allowed  	Allowed
 
-// StateType ...
+// StateType state type
 type StateType string
 
 // StateTypes constant State type define here
@@ -53,7 +54,7 @@ var StateTypes = struct {
 	StateGroup: "StateGroup",
 }
 
-// FiledRequiredLevel ...
+// FiledRequiredLevel field required level
 var FiledRequiredLevel = struct {
 	Allowed  int
 	Required int
@@ -65,7 +66,16 @@ var FiledRequiredLevel = struct {
 	Deny:     2,
 }
 
-// StateFieldRequired ...
+// CommonFields common fields
+var CommonFields = []string{
+	StateFieldNames.Comment,
+	StateFieldNames.InputPath,
+	StateFieldNames.OutputPath,
+	StateFieldNames.Parameters,
+	StateFieldNames.ResultPath,
+}
+
+// StateFieldRequired state field required
 type StateFieldRequired struct {
 	Comment    int
 	Type       int
@@ -78,8 +88,8 @@ type StateFieldRequired struct {
 	Catch      int
 }
 
-// StateFeildRequiredMap  字段依赖需求字段映射
-var StateFeildRequiredMap = map[StateType]StateFieldRequired{
+// StateFieldRequiredMap field required map
+var StateFieldRequiredMap = map[StateType]StateFieldRequired{
 
 	StateTypes.Task: {
 		// default is allowed
@@ -165,8 +175,8 @@ var StateFeildRequiredMap = map[StateType]StateFieldRequired{
 	},
 }
 
-// StateFields Comment Field
-var StateFields = struct {
+// StateFieldNames common field names
+var StateFieldNames = struct {
 	Type             string
 	Comment          string
 	InputPath        string
@@ -196,19 +206,16 @@ var StateFields = struct {
 	HeartbeatSeconds: "HeartbeatSeconds",
 }
 
-// CommonFields 常用字段
-var CommonFields = []string{
-	StateFields.Comment,
-	StateFields.InputPath,
-	StateFields.OutputPath,
-	StateFields.Parameters,
-	StateFields.ResultPath,
-	StateFields.Next,
-	StateFields.End,
+var StateMachineFieldNames = struct {
+	StartAt string
+	States  string
+}{
+	StartAt: "StartAt",
+	States:  "States",
 }
 
-// VariablePrefex 变量字段的前缀
-var VariablePrefex = "$."
+// VariablePrefix 变量字段的前缀
+var VariablePrefix = "$."
 
 // StateMachineType ...
 var StateMachineType = "statemachine"
@@ -216,13 +223,13 @@ var StateMachineType = "statemachine"
 // IsExecutableStateType 是否是可执行的步骤类型
 func IsExecutableStateType(stype string) bool {
 	sttype := StateType(stype)
-	isexecuteable := sttype == StateTypes.Task ||
+	isExecuteable := sttype == StateTypes.Task ||
 		sttype == StateTypes.Wait ||
 		sttype == StateTypes.Succeed ||
 		sttype == StateTypes.Fail ||
 		sttype == StateTypes.Suspend ||
 		sttype == StateTypes.Choice
-	return isexecuteable
+	return isExecuteable
 }
 
 // QueryLanguageType 查询语言类型

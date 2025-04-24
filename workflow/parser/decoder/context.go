@@ -19,14 +19,14 @@ func AddPath(ctx context.Context, paths ...string) context.Context {
 
 // GetPath ...
 func GetPath(ctx context.Context) []string {
-	defautpath := []string{}
+	defaultPath := []string{}
 	if ctx == nil {
-		return defautpath
+		return defaultPath
 	}
 	if val := ctx.Value(DecoderPath{}); val != nil {
 		return val.([]string)
 	}
-	return defautpath
+	return defaultPath
 }
 
 // MergeError ...
@@ -42,4 +42,12 @@ func MergeError(ctx context.Context, err error) error {
 		return newerr
 	}
 	return err
+}
+
+// NewFieldPathError ...
+func NewFieldPathError(ctx context.Context, err error) error {
+	return &states.FieldError{
+		RawError: err,
+		Paths:    GetPath(ctx),
+	}
 }

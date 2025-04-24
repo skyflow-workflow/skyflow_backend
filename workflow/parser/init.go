@@ -2,7 +2,6 @@ package parser
 
 import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/quota"
 )
 
 // StandardParserConfig standard model workflow
@@ -39,7 +38,7 @@ var ExpressParser *Parser
 
 func init() {
 
-	StandardParser = NewParser(StandardParserConfig, quota.DefaultQuota)
-	ExpressParser = NewParser(ExpressParserConfig, quota.DefaultQuota)
+	StandardParser = NewParser(StandardParserConfig, decoder.DefaultQuota)
+	ExpressParser = NewParser(ExpressParserConfig, decoder.DefaultQuota)
 
 }

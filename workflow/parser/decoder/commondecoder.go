@@ -1,6 +1,7 @@
 package decoder
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/mitchellh/mapstructure"
@@ -9,10 +10,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var myjson jsoniter.API
+var myJson jsoniter.API
 
 func init() {
-	myjson = jsoniter.Config{
+	myJson = jsoniter.Config{
 		EscapeHTML:             true,
 		CaseSensitive:          true, // 配置大小写敏感
 		SortMapKeys:            true,
@@ -34,9 +35,9 @@ func (decoder *CommonDecoder) Decode(definition string) (*states.StateMachine, e
 	return nil, nil
 }
 
-// JSONUnmashall ...
-func (decoder *CommonDecoder) JSONUnmashall(data string, v any) error {
-	err := myjson.Unmarshal([]byte(data), v)
+// JSONUnmarshall unmarshal the json string to the target object
+func (decoder *CommonDecoder) JSONUnmarshall(data string, v any) error {
+	err := myJson.Unmarshal([]byte(data), v)
 	if err != nil {
 		if jsonerr, ok := err.(*json.SyntaxError); ok {
 			newerr := &states.FieldError{
@@ -50,8 +51,23 @@ func (decoder *CommonDecoder) JSONUnmashall(data string, v any) error {
 	return nil
 }
 
-// MapDecode ...
-func (decoder *CommonDecoder) MapDecode(input interface{}, output interface{}) error {
+// MapDecode decode the map to the target object
+func (decoder *CommonDecoder) MapDecode(input any, output any) error {
 	err := mapstructure.Decode(input, output)
 	return err
+}
+
+// GetCtxDecodePath ...
+func (decoder *CommonDecoder) GetCtxDecodePath(ctx context.Context) []string {
+	return GetPath(ctx)
+}
+
+// AddCtxDecodePath ...
+func (decoder *CommonDecoder) AddCtxDecodePath(ctx context.Context, paths ...string) context.Context {
+	return AddPath(ctx, paths...)
+}
+
+// NewFieldPathError ...
+func (decoder *CommonDecoder) NewFieldPathError(ctx context.Context, err error) error {
+	return NewFieldPathError(ctx, err)
 }

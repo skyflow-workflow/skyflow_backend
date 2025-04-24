@@ -5,6 +5,7 @@ GOOS ?= $(shell uname -s | tr [:upper:] [:lower:])
 GOTEST ?= richgo test
 GOARCH ?= $(shell go env GOARCH)
 GOPATH ?= $(shell go env GOPATH)
+GOPROJECT := github.com/skyflow-workflow/skyflow_backbend
 PROTOFILE := proto/skyflow.proto
 FLAGS := -ldflags="-s -w"
 
@@ -18,7 +19,6 @@ help:
 	@echo "init	                            initialize go mod"
 	@echo "install                          install dependency"
 	@echo "clean                            clean tmp files"
-	@echo "shell                            run neo shell"
 	@echo "lint                             lint code"
 	@echo "lint_proto                       lint proto files"
 	@echo "test                             run unittest"
@@ -27,18 +27,6 @@ help:
 clean:
 	@echo "cleaning........"
 	@rm -rf dist
-	@rm -rf .build
-	@rm -rf .pytest_cache
-	@rm -rf .mypy_cache
-	@rm -rf .coverage
-	@rm -rf .tox
-	@rm -rf .eggs
-	@rm -rf *.egg-info
-
-.PHONY: shell
-shell:
-	@echo "running neo shell........"
-	@neo
 
 .PHONY: init
 init:
@@ -47,7 +35,7 @@ init:
 	then \
 		echo "go.mod already exists"; \
 	else \
-		${GO} mod init github.com/skyflow-workflow/skyflow_backbend; \
+		${GO} mod init ${GOPROJECT}; \
 	fi
 	${GO} mod tidy
 
@@ -58,18 +46,12 @@ install:
 
 .PHONY: lint
 lint:
-	@if golangci-lint config path > /dev/null 2>&1; \
-	then \
-		golangci-lint run --allow-parallel-runners; \
-	else \
-		echo ".golangci.yml file not found, use golangci-lint with selected linters. Please add .golangci.yml if needed"; \
-		golangci-lint run --allow-parallel-runners --disable-all --enable=govet,ineffassign,staticcheck,typecheck; \
-	fi
+	golangci-lint run --allow-parallel-runners
 
 .PHONY: lint_proto
 lint_proto:
 	@echo "linting proto files........"
-	@protolint lint proto/skyflow.proto
+	@protolint lint ${PROTOFILE}
 
 .PHONY: pb
 pb:

@@ -1,5 +1,8 @@
 package states
 
+// Bone is the framework structure of the workflow, common used for draw the workflow graph.
+// It is also used for api to understand the workflow. and fetch the workflow execution status.
+
 // BaseBone   common state type bone
 type BaseBone struct {
 	Type    string   `json:"Type"`

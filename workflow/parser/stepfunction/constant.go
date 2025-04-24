@@ -15,10 +15,11 @@ var StateMachineFields = struct {
 	States:  "States",
 }
 
-// DefaultBaseState default basestate
+// DefaultBaseState default state fields config
+// default value from  https://states-language.net/spec.html#Default
 var DefaultBaseState = states.BaseState{
 	MaxExecuteTimes: 1000,
 	InputPath:       "$",
 	OutputPath:      "$",
-	ResultPath:      "",
+	ResultPath:      "$",
 }

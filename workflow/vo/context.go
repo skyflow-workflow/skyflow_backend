@@ -40,7 +40,5 @@ type RequestInfo struct {
 
 // String format string
 func (req RequestInfo) String() string {
-	var res string
-	res = fmt.Sprintf("RemoteAdress: %s, RequestType: %s ", req.RemoteAddress, req.RequestType)
-	return res
+	return fmt.Sprintf("RemoteAddress: %s, RequestType: %s ", req.RemoteAddress, req.RequestType)
 }
