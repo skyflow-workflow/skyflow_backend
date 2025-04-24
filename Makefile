@@ -1,6 +1,8 @@
 SHELL := /bin/bash
 GO := go
 GOOS ?= $(shell uname -s | tr [:upper:] [:lower:])
+# GOTEST ?= ${GO} test
+GOTEST ?= richgo test
 GOARCH ?= $(shell go env GOARCH)
 GOPATH ?= $(shell go env GOPATH)
 PROTOFILE := proto/skyflow.proto
@@ -8,26 +10,24 @@ FLAGS := -ldflags="-s -w"
 
 .PHONY: help
 
-target=build
+all: build
 
 .PHONY: help
 help:
 	@echo "help                             show usage"
-	@echo ""
-	@echo "init"
+	@echo "init	                            initialize go mod"
 	@echo "install                          install dependency"
-	@echo "clean                            clean *.pyc, *.pyo ..."
+	@echo "clean                            clean tmp files"
 	@echo "shell                            run neo shell"
 	@echo "lint                             lint code"
-	@echo ""
-	@echo "pip_compile                      lock package versions"
-	@echo "test                             run unit test"
+	@echo "lint_proto                       lint proto files"
+	@echo "test                             run unittest"
 
 .PHONY: clean
 clean:
 	@echo "cleaning........"
 	@rm -rf dist
-	@rm -rf build
+	@rm -rf .build
 	@rm -rf .pytest_cache
 	@rm -rf .mypy_cache
 	@rm -rf .coverage
@@ -54,7 +54,7 @@ init:
 .PHONY: install
 install:
 	@echo "installing........"
-	${SHELL} +x ./install_dependencies.sh
+	${SHELL} +x ./build/install_dependencies.sh
 
 .PHONY: lint
 lint:
@@ -75,16 +75,22 @@ lint_proto:
 pb:
 	@echo "generating pb files........"
 	@mkdir -p gen/pb gen/apidoc
-	@trpc create -p $(PROTOFILE) -o gen/pb --validate=true --lang=go --rpconly --mock=true --nogomod=false
+	@trpc create -p $(PROTOFILE) -o gen/pb --validate=true --protocol=trpc --lang=go --rpconly --mock=true --nogomod=false
+	# @trpc create -p $(PROTOFILE) -o gen/pb --validate=true --protocol=trpc --lang=go --rpconly --mock=true --nogomod=true
 	@trpc apidocs -p $(PROTOFILE) --swagger --swagger-out=gen/apidoc/skyflow.swagger.json
-	@trpc apidocs -p $(PROTOFILE) --openapi --openapi-out=gen/apidoc/skyflow.openapi.json
+	@trpc apidocs -p $(PROTOFILE) --openapi --swagger=false --openapi-out=gen/apidoc/skyflow.openapi.json
 
 .PHONY: test
 test:
-	@echo "testing........"
-	@go test -v ./...
+	@echo "start unittest........"
+	${GOTEST} -v ./...
 
 .PHONY: build
 build:
 	@echo "building........"
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build
+	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build  -o bin/skyflow $(FLAGS) ./cmd/skyflow/*.go
+
+.PHONY: run
+run: build
+	@echo "running........"
+	@./bin/skyflow -conf trpc_go.yaml
