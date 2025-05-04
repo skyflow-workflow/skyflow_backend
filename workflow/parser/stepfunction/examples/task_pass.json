@@ -35,7 +35,10 @@
         },
         "S4": {
             "Type": "Pass",
-            "Resource": "activity:unittest/TestaddActivity2",
+            "Parameters": {
+                "x.$": "$.x",
+                "y.$": "$.z"
+            },
             "End": true
         }
     }

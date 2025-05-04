@@ -30,7 +30,7 @@ func (sfdecoder *StepfuncionDecoder) DecodeStateMachineHeaderDefintion(definitio
 
 	var err error
 	datamap := make(map[string]interface{})
-	err = sfdecoder.JSONUnmashall(definition, &datamap)
+	err = sfdecoder.JSONUnmarshall(definition, &datamap)
 	if err != nil {
 		return nil, err
 	}

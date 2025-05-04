@@ -1,7 +1,6 @@
 package stepfunction
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/go-playground/assert/v2"
@@ -12,16 +11,18 @@ import (
 
 func TestDecodeTask(t *testing.T) {
 	var testcases = []struct {
+		name       string
 		definition string
 		expected   *states.Task
+		wantError  error
 	}{
 		{
+			name: "task",
 			definition: `{
 				"Type":"Task",
 				"Comment": "add task",
 				"Resource": "activity:unittest/add",
-				"Next": "",
-				"End": false
+				"Next": ""
 			}
 			`,
 			expected: &states.Task{
@@ -31,7 +32,7 @@ func TestDecodeTask(t *testing.T) {
 					MaxExecuteTimes: 1000,
 					InputPath:       "$",
 					OutputPath:      "$",
-					ResultPath:      "",
+					ResultPath:      "$",
 					End:             false,
 					Next:            "",
 				},
@@ -39,19 +40,20 @@ func TestDecodeTask(t *testing.T) {
 					Resource:         "activity:unittest/add",
 					HeartbeatSeconds: 0,
 					TimeoutSeconds:   0,
-					Catch:            []states.CatchNode{},
-					Retry:            []states.RetryNode{},
+					Catch:            []states.TaskCatchNode{},
+					Retry:            []states.TaskRetryNode{},
 				},
 			},
 		},
 		{
+			name: "task with parameters",
 			definition: `{
 				"Type": "Task",
 				"Parameters": {
 					"x.$": "$.x",
 					"y.$": "$.y"
 				},
-				"Resource": "activity:unittest/Testadd",
+				"Resource": "activity:unittest/add",
 				"ResultPath": "$.z",
 				"Next": "S2"
 			}
@@ -72,11 +74,11 @@ func TestDecodeTask(t *testing.T) {
 					Next:            "S2",
 				},
 				TaskBody: &states.TaskBody{
-					Resource:         "activity:unittest/Testadd",
+					Resource:         "activity:unittest/add",
 					HeartbeatSeconds: 0,
 					TimeoutSeconds:   0,
-					Catch:            []states.CatchNode{},
-					Retry:            []states.RetryNode{},
+					Catch:            []states.TaskCatchNode{},
+					Retry:            []states.TaskRetryNode{},
 				},
 			},
 		},
@@ -84,18 +86,15 @@ func TestDecodeTask(t *testing.T) {
 
 	decoder := NewStepfuncionDecoder(nil, nil)
 
-	for i, tt := range testcases {
-		t.Run(fmt.Sprintf("index_%d", i), func(t *testing.T) {
+	for _, tt := range testcases {
+		t.Run(tt.name, func(t *testing.T) {
 			var err error
-			err = tt.expected.BaseState.Init()
-			assert.Equal(t, err, nil)
-			err = tt.expected.TaskBody.Init()
-			assert.Equal(t, err, nil)
-
-			err = tt.expected.Init()
-			assert.Equal(t, err, nil)
 			state, err := decoder.DecodeStateDefintion(tt.definition)
-			assert.Equal(t, err, nil)
+			if err != nil {
+				assert.Equal(t, tt.wantError != nil, true)
+				assert.Equal(t, err.Error(), tt.wantError.Error())
+				return
+			}
 			opts := cmp.Options{cmpopts.IgnoreUnexported(states.BaseState{}), cmpopts.IgnoreUnexported(states.TaskBody{})}
 			diff := cmp.Diff(state, tt.expected, opts...)
 			assert.Equal(t, "", diff)

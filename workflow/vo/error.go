@@ -13,22 +13,22 @@ var (
 	// ErrorStepGroupNotFound  常用错误类型 之一， StepGroup没找到
 	ErrorStepGroupNotFound = fmt.Errorf("StepgroupNotFound ")
 	// ErrorExecutionNotFound  常用错误类型 之一， Execution没找到
-	ErrorExecutionNotFound = fmt.Errorf("ExecutionNotFound ")
-	ErrorUUIDExisted       = fmt.Errorf("uuid  has been existed")
-	ErrorGenUUIDFailed     = fmt.Errorf("generate UUID failed")
-	ErrUnrecognizeEvent    = fmt.Errorf("event type  unrecognize ")
+	ErrorExecutionNotFound     = fmt.Errorf("ExecutionNotFound ")
+	ErrorUUIDExisted           = fmt.Errorf("uuid  has been existed")
+	ErrorGenUUIDFailed         = fmt.Errorf("generate UUID failed")
+	ErrorUnrecognizedEventType = fmt.Errorf("event type  unrecognized ")
 
-	ErrorStepStatus           = fmt.Errorf("StepStatusError")
-	ErrorExecutionStatus      = fmt.Errorf("execution status is incorrect")
-	ErrorNotAllStepGoupFinish = fmt.Errorf("not all step group succeed")
+	ErrorStepStatus            = fmt.Errorf("StepStatusError")
+	ErrorExecutionStatus       = fmt.Errorf("execution status is incorrect")
+	ErrorNotAllStepGroupFinish = fmt.Errorf("not all step group succeed")
 	// activity not found error
 	ErrorActivityTaskNotFound = fmt.Errorf("ActivityTaskNotFound")
-	//unsupport operation for step
-	ErrorUnsupportOperationForStep = fmt.Errorf("unsupport operation for step")
+	//unsupported operation for step
+	ErrorUnsupportedOperationForStep = fmt.Errorf("unsupported operation for step")
 
-	ErrorParamterInvalid             = fmt.Errorf("parameter is invalild")
-	ErrorParseWorkflow               = fmt.Errorf("parse workflow failed")
-	ErrorUnrecognizeStatemachineType = fmt.Errorf("unrecognize statemachine type")
+	ErrorParameterInvalid             = fmt.Errorf("parameter is invalid")
+	ErrorParseWorkflow                = fmt.Errorf("parse workflow failed")
+	ErrorUnrecognizedStatemachineType = fmt.Errorf("unrecognized statemachine type")
 
 	// ErrorOutputSizeLimitExceeded Output超过限额
 	ErrorOutputSizeLimitExceeded = fmt.Errorf("output size limit exceeded")
@@ -40,34 +40,35 @@ var (
 	ErrorTaskInputSizeLimitExceeded = fmt.Errorf("task input size limit exceeded")
 
 	// ErrorParameterExceedLimit 请求参数超过限额
-	ErrorParamterLimitExceeded = fmt.Errorf("parameter limit exceeded")
+	ErrorParameterExceedLimit = fmt.Errorf("parameter limit exceeded")
 
-	// ErrorStartExecutionInputSizeLimitExceeded StartExecution输入超过限额, 基于ErrorParamterExceedLimit
-	ErrorStartExecutionInputSizeLimitExceeded = fmt.Errorf("%w: input size limit exceeded", ErrorParamterLimitExceeded)
+	// ErrorStartExecutionInputSizeLimitExceeded StartExecution输入超过限额, 基于ErrorParameterExceedLimit
+	ErrorStartExecutionInputSizeLimitExceeded = fmt.Errorf("%w: input size limit exceeded", ErrorParameterExceedLimit)
 
-	// ErrorWorkflowSizeLimitExceeded Workflow超过限额, 基于ErrorParamterExceedLimit
-	ErrorWorkflowSizeLimitExceeded = fmt.Errorf("%w:workflow size limit exceeded", ErrorParamterLimitExceeded)
+	// ErrorWorkflowSizeLimitExceeded Workflow超过限额, 基于ErrorParameterExceedLimit
+	ErrorWorkflowSizeLimitExceeded = fmt.Errorf("%w:workflow size limit exceeded", ErrorParameterExceedLimit)
 
-	// ErrorMapBranchNumberLimitExceeded Map分支数超过限额, 基于ErrorParamterExceedLimit
-	ErrorMapBranchNumberLimitExceeded = fmt.Errorf("%w:map branch number limit exceeded", ErrorParamterLimitExceeded)
+	// ErrorMapBranchNumberLimitExceeded Map分支数超过限额, 基于ErrorParameterExceedLimit
+	ErrorMapBranchNumberLimitExceeded = fmt.Errorf("%w:map branch number limit exceeded", ErrorParameterExceedLimit)
 
-	// ErrorTitleSizeLimitExceeded Title超过限额, 基于ErrorParamterExceedLimit
-	ErrorTitleSizeLimitExceeded = fmt.Errorf("%w:title size limit exceeded", ErrorParamterLimitExceeded)
+	// ErrorTitleSizeLimitExceeded Title超过限额, 基于ErrorParameterExceedLimit
+	ErrorTitleSizeLimitExceeded = fmt.Errorf("%w:title size limit exceeded", ErrorParameterExceedLimit)
 
-	// ErrorDescriptionSizeExceedLimit uuid 超过限额, 基于ErrorParamterExceedLimit
-	ErrorExecutionUUIDSizeLimitExceed = fmt.Errorf("%w:execution uuid size limit exceeded", ErrorParamterLimitExceeded)
+	// ErrorExecutionUUIDSizeLimitExceed uuid 超过限额, 基于ErrorParameterExceedLimit
+	ErrorExecutionUUIDSizeLimitExceed = fmt.Errorf("%w:execution uuid size limit exceeded", ErrorParameterExceedLimit)
 
 	// workflow definition
 	// ErrorWorkflowDefinitionInvalid Workflow定义不合法
 	ErrorWorkflowDefinitionInvalid = fmt.Errorf("workflow definition is invalid")
-	// ErrorMapConncurrencyLimitExceeded Map并发数超过限额, 基于ErrorParamterExceedLimit
+	// ErrorMapConncurrencyLimitExceeded Map并发数超过限额, 基于ErrorParameterExceedLimit
 	ErrorMapConncurrencyLimitExceeded = fmt.Errorf("%w:map conncurrency limit exceeded", ErrorWorkflowDefinitionInvalid)
 
-	// ErrorParallelBranchNumberLimitExceeded 并行分支数超过限额, 基于ErrorParamterExceedLimit
+	// ErrorParallelBranchNumberLimitExceeded 并行分支数超过限额, 基于ErrorParameterExceedLimit
 	ErrorParallelBranchNumberLimitExceeded = fmt.Errorf("%w:parallel branch number limit exceeded", ErrorWorkflowDefinitionInvalid)
 
-	// ErrorUnspportedOperationForExecution 不支持的操作
-	ErrorUnspportedOperationForExecution = fmt.Errorf("unsupport operation for execution")
+	// ErrorUnsupportedOperationForExecution 不支持的操作
+	ErrorUnsupportedOperationForExecution = fmt.Errorf("unsupported operation for execution")
 
+	// ErrorAKSKInvalid AKSK 不合法
 	ErrorAKSKInvalid = fmt.Errorf("aksk is invalid")
 )

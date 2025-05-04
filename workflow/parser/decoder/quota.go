@@ -1,7 +1,7 @@
 // package quota  defined skyflow quota here
-package quota
+package decoder
 
-// Quota ...
+// Quota defines the quota for the workflow parser
 type Quota struct {
 	// MaxStateNameSize specifies the maximum size of the state name.
 	MaxStateNameSize int
@@ -48,9 +48,7 @@ type Quota struct {
 	MaxTaskOutputSize int
 }
 
-// hard limit
-
-// DefaultQuota ...
+// DefaultQuota default quota
 var DefaultQuota = Quota{
 	MaxStateNameSize:           200,
 	MaxStateNumber:             1000,

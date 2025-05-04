@@ -10,8 +10,10 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
+	github.com/mmtbak/jsonpath_writer v0.1.2
 	github.com/mmtbak/microlibrary v0.0.0-20250418075755-a79743d298aa
 	github.com/ohler55/ojg v1.26.1
+	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/go-playground/assert.v1 v1.2.1

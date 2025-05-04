@@ -760,6 +760,8 @@ github.com/mitchellh/osext v0.0.0-20151018003038-5e2d6d41470f/go.mod h1:OkQIRizQ
 github.com/mkevac/debugcharts v0.0.0-20191222103121-ae1c48aa8615/go.mod h1:Ad7oeElCZqA1Ufj0U9/liOF4BtVepxRcTvr2ey7zTvM=
 github.com/mmtbak/dsnparser v0.0.0-20240220012319-a0bde160948e h1:GICr/lG3QZGV+fePSfzSmU5+ajq1T39ABgcQyqnjI+I=
 github.com/mmtbak/dsnparser v0.0.0-20240220012319-a0bde160948e/go.mod h1:E0kenA3wKDzSHop/9Wt9q2HgioLkkHySHueNsqAR9uo=
+github.com/mmtbak/jsonpath_writer v0.1.2 h1:crVUXkuGPxwQekt7N8ZWBX+tFKy+YUG4gFH3CR6EGOQ=
+github.com/mmtbak/jsonpath_writer v0.1.2/go.mod h1:P3KJ0bbgtnCVm+dX0dou2OPopLLb1EP7AaEp080xUM4=
 github.com/mmtbak/microlibrary v0.0.0-20250418075755-a79743d298aa h1:30RIFPPQ8Z3CNU/jwRtCvAs27y47nA56290hlDtz7q0=
 github.com/mmtbak/microlibrary v0.0.0-20250418075755-a79743d298aa/go.mod h1:4TDVWEgnYQmGsFvHUcoLJM3MnWfy5zdEnDudB6Kg5pg=
 github.com/moby/locker v1.0.1/go.mod h1:S7SDdo5zpBK84bzzVlKr2V0hz+7x9hWbYC/kq7oQppc=
@@ -808,6 +810,8 @@ github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtb
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
 github.com/olekukonko/tablewriter v0.0.0-20170122224234-a0225b3f23b5/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXWMclvtLoiIKAKIo=
+github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852 h1:Yl0tPBa8QPjGmesFh1D0rDy+q1Twx6FyU7VWHi8wZbI=
+github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852/go.mod h1:eqOVx5Vwu4gd2mmMZvVZsgIqNSaW3xxRThUJ0k/TPk4=
 github.com/onsi/ginkgo v0.0.0-20151202141238-7f8ab55aaf3b/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v0.0.0-20170829012221-11459a886d9c/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=

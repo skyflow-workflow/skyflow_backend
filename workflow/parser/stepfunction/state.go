@@ -10,11 +10,11 @@ import (
 )
 
 // DecodeBaseState ...
-func (sfdecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data map[string]interface{}) (states.State, error) {
+func (sfDecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data map[string]any) (states.State, error) {
 
 	var err error
 	basestate := states.BaseState{}
-	err = sfdecoder.MapDecode(data, &basestate)
+	err = sfDecoder.MapDecode(data, &basestate)
 	if err != nil {
 		return nil, err
 	}
@@ -25,9 +25,9 @@ func (sfdecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data m
 	var state states.State
 	switch basestate.Type {
 	case string(states.StateTypes.Task):
-		state, err = sfdecoder.DecodeTaskState(&basestate, data)
+		state, err = sfDecoder.DecodeTaskState(ctx, &basestate, data)
 	default:
-		curpath := append(decoder.GetPath(ctx), states.StateFields.Type)
+		curpath := append(decoder.GetPath(ctx), states.StateFieldNames.Type)
 		err = states.NewFieldPathError(
 			fmt.Errorf("%w: %s", states.ErrorInvalidStateType, basestate.Type),
 			curpath...)
@@ -39,14 +39,14 @@ func (sfdecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data m
 }
 
 // DecodeStateDefintion ...
-func (sfdecoder *StepfuncionDecoder) DecodeStateDefintion(definition string) (states.State, error) {
+func (sfDecoder *StepfuncionDecoder) DecodeStateDefintion(definition string) (states.State, error) {
 	var err error
-	datamap := make(map[string]interface{})
-	err = sfdecoder.JSONUnmashall(definition, &datamap)
+	datamap := make(map[string]any)
+	err = sfDecoder.JSONUnmarshall(definition, &datamap)
 	if err != nil {
 		return nil, err
 	}
-	state, err := sfdecoder.DecodeState(context.Background(), datamap)
+	state, err := sfDecoder.DecodeState(context.Background(), datamap)
 	if err != nil {
 		return nil, err
 	}
@@ -55,23 +55,17 @@ func (sfdecoder *StepfuncionDecoder) DecodeStateDefintion(definition string) (st
 }
 
 // DecodeState ...
-func (sfdecoder *StepfuncionDecoder) DecodeState(ctx context.Context, data map[string]interface{}) (states.State, error) {
+func (decoder *StepfuncionDecoder) DecodeState(ctx context.Context, data map[string]any) (states.State, error) {
 
 	var err error
-	// validate field requirment
-	fieldrequired := states.BaseStateFieldRequired{}
 
-	err = sfdecoder.MapDecode(data, &fieldrequired)
-	if err != nil {
-		return nil, err
-	}
-	err = fieldrequired.Validate()
+	err = states.ValidateStateFieldOptional(data)
 	if err != nil {
 		return nil, err
 	}
 
 	basestate := DefaultBaseState
-	err = sfdecoder.MapDecode(data, &basestate)
+	err = decoder.MapDecode(data, &basestate)
 	if err != nil {
 		return nil, err
 	}
@@ -82,13 +76,17 @@ func (sfdecoder *StepfuncionDecoder) DecodeState(ctx context.Context, data map[s
 	var state states.State
 	switch basestate.Type {
 	case string(states.StateTypes.Task):
-		state, err = sfdecoder.DecodeTaskState(&basestate, data)
+		state, err = decoder.DecodeTaskState(ctx, &basestate, data)
 	case string(states.StateTypes.Choice):
-		state, err = sfdecoder.DecodeChoiceState(&basestate, data)
+		state, err = decoder.DecodeChoiceState(ctx, &basestate, data)
 	case string(states.StateTypes.Pass):
-		state, err = sfdecoder.DecodePassState(&basestate, data)
+		state, err = decoder.DecodePassState(ctx, &basestate, data)
+	case string(states.StateTypes.Wait):
+		state, err = decoder.DecodeWaitState(ctx, &basestate, data)
 	default:
-		err = states.NewFieldPathError(fmt.Errorf("%w: %s", states.ErrorInvalidStateType, basestate.Type), states.StateFields.Type)
+		rawerr := fmt.Errorf("%w: %s", states.ErrorInvalidStateType, basestate.Type)
+		ctx = decoder.AddCtxDecodePath(ctx, states.StateFieldNames.Type)
+		err = decoder.NewFieldPathError(ctx, rawerr)
 	}
 	if err != nil {
 		return nil, err
@@ -96,32 +94,13 @@ func (sfdecoder *StepfuncionDecoder) DecodeState(ctx context.Context, data map[s
 	return state, err
 }
 
-// DecodeChoiceState ...
-func (sfdecoder *StepfuncionDecoder) DecodeChoiceState(basestate *states.BaseState, data map[string]interface{}) (
-	states.State, error) {
-	var err error
-	choicelbody := states.ChoiceBody{}
-	err = mapstructure.Decode(data, &choicelbody)
-	if err != nil {
-		return nil, err
-	}
-	choicestate := &states.Choice{
-		BaseState:  basestate,
-		ChoiceBody: choicelbody,
-	}
-	err = choicestate.Init()
-	if err != nil {
-		return nil, err
-	}
-	return choicestate, nil
-}
-
 // DecodeWaitState ...
-func (sfdecoder *StepfuncionDecoder) DecodeWaitState(basestate *states.BaseState, data map[string]interface{}) (
+func (sfDecoder *StepfuncionDecoder) DecodeWaitState(ctx context.Context,
+	basestate *states.BaseState, data map[string]any) (
 	states.State, error) {
 	var err error
-	waitbody := states.WaitBody{}
-	err = mapstructure.Decode(data, &waitbody)
+	waitbody := &states.WaitBody{}
+	err = mapstructure.Decode(data, waitbody)
 	if err != nil {
 		return nil, err
 	}
@@ -137,21 +116,22 @@ func (sfdecoder *StepfuncionDecoder) DecodeWaitState(basestate *states.BaseState
 }
 
 // DecodePassState ...
-func (sfdecoder *StepfuncionDecoder) DecodePassState(basestate *states.BaseState, data map[string]interface{}) (
+func (sfDecoder *StepfuncionDecoder) DecodePassState(ctx context.Context,
+	basestate *states.BaseState, data map[string]any) (
 	states.State, error) {
 	var err error
-	waitbody := states.WaitBody{}
-	err = mapstructure.Decode(data, &waitbody)
+	passbody := &states.PassBody{}
+	err = mapstructure.Decode(data, &passbody)
 	if err != nil {
 		return nil, err
 	}
-	waitstate := &states.Wait{
+	passstate := &states.Pass{
 		BaseState: basestate,
-		WaitBody:  waitbody,
+		PassBody:  passbody,
 	}
-	err = waitstate.Init()
+	err = passstate.Validate()
 	if err != nil {
 		return nil, err
 	}
-	return waitstate, nil
+	return passstate, nil
 }

@@ -13,6 +13,8 @@ var (
 	ErrorInvalidFiledContent = errors.New("field content is invalid")
 	ErrorFiledDenied         = errors.New("field is dentied")
 	ErrorFiledRequired       = errors.New("field is required")
+	ErrorInvalidData         = errors.New("invalid data")
+	ErrorInvalidField        = errors.New("invalid field")
 )
 
 // FieldError is an error that occurred

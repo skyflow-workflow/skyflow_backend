@@ -11,22 +11,22 @@ import (
 
 func TestParserStateMachine(t *testing.T) {
 
-	println("Scanning examples directory")
+	t.Log("Scanning examples directory")
 	statemachinepath := "./examples/"
 	direntries, err := os.ReadDir(statemachinepath)
 	assert.Equal(t, err, nil)
 	for _, direntry := range direntries {
-		if !direntry.Type().IsRegular() {
-			println(direntry.Name(), " is not regular file ,Pass")
-			continue
-		}
-		filename := direntry.Name()
-		ext := filepath.Ext(direntry.Name())
-		if ext != ".json" {
-			println(direntry.Name(), " is not a JSON file, Pass ")
-			continue
-		}
-		t.Run(fmt.Sprintf("Test_%s", filename), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Test_%s", direntry.Name()), func(t *testing.T) {
+			if !direntry.Type().IsRegular() {
+				t.Logf("'%s' is not regular file\n", direntry.Name())
+				return
+			}
+			filename := direntry.Name()
+			ext := filepath.Ext(direntry.Name())
+			if ext != ".json" {
+				t.Logf("'%s' is not a JSON file", direntry.Name())
+				return
+			}
 			// TestParserStateMachine test the parsing of a state machine
 			// from a JSON definition
 			//
@@ -45,7 +45,9 @@ func TestParserStateMachine(t *testing.T) {
 			decoder := NewStepfuncionDecoder(nil, nil)
 			_, err = decoder.Decode(string(filecontent))
 			if err != nil {
-				t.Log(err)
+				t.Logf("Error parsing file: %s", err)
+				t.Fail()
+				return
 			}
 			assert.Equal(t, err == nil, true)
 		},
