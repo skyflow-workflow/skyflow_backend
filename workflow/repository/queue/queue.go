@@ -58,7 +58,6 @@ type TaskMessage interface {
 
 // InnerMessage 工作流内部的消息类型
 type InnerMessageBody struct {
-	ID          string
 	ExecutionID int    //message execution id
 	StepID      int    // message state id
 	Class       string // class Execution、State

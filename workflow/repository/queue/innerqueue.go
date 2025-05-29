@@ -11,10 +11,8 @@ import (
 // NewInnerMessageQueueFromConfig create new inner message queue
 func NewInnerMessageQueueFromConfig(conf config.AccessPoint) (InnerMessageQueue, error) {
 
-	dsnData, err := conf.Decode(nil)
-	if err != nil {
-		return nil, err
-	}
+	var err error
+	dsnData := conf.Decode()
 	switch dsnData.Scheme {
 	case "kafka":
 		basequeue, err := mq.NewKafkaMessageQueue(conf)
@@ -22,9 +20,7 @@ func NewInnerMessageQueueFromConfig(conf config.AccessPoint) (InnerMessageQueue,
 			return nil, err
 		}
 		innermq := NewMQInnerMessageQueue(basequeue)
-		if err != nil {
-			return nil, err
-		}
+
 		return innermq, nil
 	case "mysql":
 		dbopt, err := ParseDBQueueOption(dsnData.Params)

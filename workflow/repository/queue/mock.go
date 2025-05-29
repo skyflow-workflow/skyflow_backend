@@ -15,13 +15,17 @@ func (mock MockInnerQueue) GetName() string {
 }
 
 // SendInnerMessage SendInnerMessage
-func (mock MockInnerQueue) SendInnerMessage(msg InnerMessage, desttime time.Time) error {
+func (mock MockInnerQueue) SendInnerMessage(msg InnerMessage, sendtime *time.Time) error {
 
+	if sendtime == nil {
+		sendtime = &time.Time{}
+		*sendtime = time.Now()
+	}
 	s, err := json.Marshal(msg)
 	if err != nil {
 		return err
 	}
-	msgstr := fmt.Sprintf("mock queue send message : send time : %s, message : %s\n", desttime.String(), s)
+	msgstr := fmt.Sprintf("mock queue send message : send time : %s, message : %s\n", sendtime.String(), s)
 	slog.Info(msgstr)
 	return nil
 }
@@ -43,38 +47,5 @@ func (mock MockInnerQueue) CleanExecutionMessage(int) error {
 }
 
 func (mock MockInnerQueue) SyncSchema() error {
-	return nil
-}
-
-// MockTaskQueueGroup mock task queue group
-type MockTaskQueueGroup struct{}
-
-// CreateQueue CreateQueue
-func (v MockTaskQueueGroup) CreateQueue(string) (TaskMessageQueue, error) {
-	return nil, nil
-}
-
-// SendTaskMessage SendTaskMessage
-func (v MockTaskQueueGroup) SendTaskMessage(name string, msg TaskMessageBody) error {
-	s, err := json.Marshal(msg)
-	if err != nil {
-		return err
-	}
-	msgstr := fmt.Sprintf("mock queue send message, send time : %s, message : %s\n", time.Now().String(), s)
-	slog.Info(msgstr)
-	return nil
-}
-
-// ReceiveTaskMessage ReceiveTaskMessage
-func (v MockTaskQueueGroup) ReceiveTaskMessage(string) (<-chan TaskMessage, error) {
-	return nil, nil
-}
-
-// Close Close
-func (v MockTaskQueueGroup) Close() error {
-	return nil
-}
-
-func (v MockTaskQueueGroup) SyncSchema() error {
 	return nil
 }

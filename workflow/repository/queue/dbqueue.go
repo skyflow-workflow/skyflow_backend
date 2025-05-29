@@ -53,13 +53,15 @@ var DBMessageStatus = struct {
 
 // DBDelayMessageQueue DB delay message queue
 type DBMessageQueue struct {
-	dbclient *rdb.DBClient
-	wg       sync.WaitGroup
-	option   DBQueueOption
-	logger   *slog.Logger
-	ctx      context.Context
-	cancel   context.CancelFunc
-	msgchan  chan InnerMessage
+	dbClient     *rdb.DBClient
+	wg           sync.WaitGroup
+	option       DBQueueOption
+	logger       *slog.Logger
+	ctx          context.Context
+	cancel       context.CancelFunc
+	msgChan      chan InnerMessage
+	forwardQueue InnerMessageQueue
+	once         sync.Once
 }
 
 // NewDBMessageQueue Create New Inner DBMessage
@@ -68,12 +70,14 @@ func NewDBMessageQueue(client *rdb.DBClient, option DBQueueOption) *DBMessageQue
 	ctx, cancel := context.WithCancel(context.Background())
 
 	dbmq := &DBMessageQueue{
-		dbclient: client,
+		dbClient: client,
 		wg:       sync.WaitGroup{},
 		ctx:      ctx,
 		cancel:   cancel,
 		option:   option,
-		msgchan:  make(chan InnerMessage),
+		msgChan:  make(chan InnerMessage),
+		logger:   slog.Default(),
+		once:     sync.Once{},
 	}
 
 	return dbmq
@@ -85,7 +89,7 @@ func (dbmq *DBMessageQueue) SyncSchema() error {
 	tables := []interface{}{
 		new(po.MessageQueue),
 	}
-	err = dbmq.dbclient.SyncTables(tables)
+	err = dbmq.dbClient.SyncTables(tables)
 	return err
 }
 
@@ -97,7 +101,7 @@ func (dbmq *DBMessageQueue) SetLogger(logger *slog.Logger) {
 func (dbmq *DBMessageQueue) CleanExecutionMessage(execution_id int) error {
 
 	var err error
-	tx, maker := dbmq.dbclient.NewTxMaker(nil)
+	tx, maker := dbmq.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	tx = tx.Where("execution_id = ?", execution_id).Delete(new(po.MessageQueue))
 	err = tx.Error
@@ -114,7 +118,7 @@ func (mq *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *t
 
 	var err error
 
-	tx, maker := mq.dbclient.NewTxMaker(nil)
+	tx, maker := mq.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	var dbMessage = po.MessageQueue{
 		ExecutionID: message.ExecutionID,
@@ -136,7 +140,6 @@ func (mq *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *t
 		return err
 	}
 	tx.Commit()
-	mq.logger.Debug(fmt.Sprintf("db messagequeue send message : %d ", dbMessage.ID))
 
 	return nil
 }
@@ -144,14 +147,14 @@ func (mq *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *t
 // ReceiveInnerMessage return  chan with type InnerMessage
 func (dbmq *DBMessageQueue) ReceiveInnerMessage() (<-chan InnerMessage, error) {
 
-	return dbmq.msgchan, nil
+	return dbmq.msgChan, nil
 }
 
 // GetUnreadMessageIDsOnce 获得所有未处理的消息列表
 func (mq *DBMessageQueue) GetUnreadMessageIDsOnce() ([]int, error) {
 
 	var err error
-	tx, maker := mq.dbclient.NewTxMaker(nil)
+	tx, maker := mq.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	var MsgIDs []int
@@ -167,29 +170,35 @@ func (mq *DBMessageQueue) GetUnreadMessageIDsOnce() ([]int, error) {
 	return MsgIDs, nil
 }
 
-// dispatchInnerMessage 投递消息 到通道
-func (mq *DBMessageQueue) dispatchInnerMessage(msgID int, innerqueue InnerMessageQueue) error {
+// DispatchInnerMessage dispatch message to forward queue
+func (mq *DBMessageQueue) DispatchInnerMessage(msgID int) error {
 	var err error
 	freshMsg := po.MessageQueue{}
 
-	tx, maker := mq.dbclient.NewTxMaker(nil)
-	defer maker.Close(&err)
-	// 加排它锁， 处理activity task
-	txf := rdb.ForUpdate(tx)
-	err = txf.Take(&freshMsg, msgID).Error
+	tx := mq.dbClient.DB()
+	// user non-blocking transaction
+	conditionMessage := po.MessageQueue{
+		ID:     int64(msgID),
+		Status: DBMessageStatus.Created,
+	}
+	updateMessage := po.MessageQueue{
+		Status: DBMessageStatus.Processed,
+	}
+	utx := tx.Where(conditionMessage).Updates(&updateMessage)
+	if utx.Error != nil {
+		return tx.Error
+	}
+	if utx.RowsAffected == 0 {
+		err = fmt.Errorf("db message not found, id : %d", msgID)
+		return err
+	}
+	err = tx.Model(&po.MessageQueue{}).Where("id = ?", msgID).First(&freshMsg).Error
 	if err != nil {
-		tx.Rollback()
-		return err
+		return fmt.Errorf("get message by id %d failed, error: %s", msgID, err.Error())
 	}
 
-	if freshMsg.Status != DBMessageStatus.Created {
-		tx.Rollback()
-		err = fmt.Errorf("db message status is invalid, id : %d, status: %s", msgID, freshMsg.Status)
-		return err
-	}
-
-	// forward message to master queue
-	newmsg := InnerMessageBody{
+	// forward message to forward queue
+	newMsg := InnerMessageBody{
 		ExecutionID: freshMsg.ExecutionID,
 		StepID:      freshMsg.StepID,
 		Class:       freshMsg.Topic,
@@ -197,14 +206,23 @@ func (mq *DBMessageQueue) dispatchInnerMessage(msgID int, innerqueue InnerMessag
 		Data:        freshMsg.Data,
 	}
 
-	err = innerqueue.SendInnerMessage(newmsg, nil)
-	if err != nil {
-		tx.Rollback()
-		return err
+	if mq.forwardQueue != nil {
+		err = mq.forwardQueue.SendInnerMessage(newMsg, nil)
+		if err != nil {
+			return err
+		}
+	} else {
+		// if forwardQueue is nil, send message to msgChan
+		// this is for testing purpose, in production, forwardQueue should not be nil
+		mq.msgChan <- &DBQueueMessage{
+			id:   int(freshMsg.ID),
+			body: &newMsg,
+		}
 	}
 
+	tx, maker := mq.dbClient.NewTxMaker(nil)
+	defer maker.Close(&err)
 	// 处理成功， 更新状态
-
 	tx = tx.Model(po.MessageQueue{ID: freshMsg.ID}).Delete(&po.MessageQueue{})
 	err = tx.Error
 
@@ -217,19 +235,21 @@ func (mq *DBMessageQueue) dispatchInnerMessage(msgID int, innerqueue InnerMessag
 	return nil
 }
 
-func (mq *DBMessageQueue) StartPolling(masterqueue InnerMessageQueue) {
-	mq.wg.Add(1)
-	go mq.PollingInnerMessage(masterqueue)
+func (mq *DBMessageQueue) SetForwardQueue(forwardQueue InnerMessageQueue) {
+	mq.forwardQueue = forwardQueue
+}
+
+func (mq *DBMessageQueue) StartPolling() {
+	go mq.once.Do(mq.RunPollingInnerMessage)
 }
 
 // PollingInnerMessage polling inner message from db and send to channel
-// masterqueue is the queue that will receive the message
+// masterQueue is the queue that will receive the message
 
-func (mq *DBMessageQueue) PollingInnerMessage(masterqueue InnerMessageQueue) {
+func (mq *DBMessageQueue) RunPollingInnerMessage() {
 	mq.logger.Info("PollingInnerMessage Started.")
 
 	var fetchmsg = func() {
-		defer mq.wg.Done()
 
 		msgids, err := mq.GetUnreadMessageIDsOnce()
 		if err != nil {
@@ -237,14 +257,9 @@ func (mq *DBMessageQueue) PollingInnerMessage(masterqueue InnerMessageQueue) {
 			return
 		}
 		for _, msgID := range msgids {
-			select {
-			case <-mq.ctx.Done():
-				return
-			default:
-				err = mq.dispatchInnerMessage(msgID, masterqueue)
-				if err != nil {
-					mq.logger.Error("dispatch innermessage failed", "error", err.Error())
-				}
+			err = mq.DispatchInnerMessage(msgID)
+			if err != nil {
+				mq.logger.Error("dispatch innermessage failed", "error", err.Error())
 			}
 		}
 	}
@@ -257,7 +272,6 @@ func (mq *DBMessageQueue) PollingInnerMessage(masterqueue InnerMessageQueue) {
 		case <-mq.ctx.Done():
 			return
 		case <-ticker.C:
-			mq.wg.Add(1)
 			fetchmsg()
 		}
 	}
@@ -265,9 +279,8 @@ func (mq *DBMessageQueue) PollingInnerMessage(masterqueue InnerMessageQueue) {
 
 // Close stop async task message queue
 func (mq *DBMessageQueue) Close() error {
-
+	close(mq.msgChan)
 	mq.cancel()
-	mq.wg.Wait()
 	return nil
 }
 
@@ -294,4 +307,25 @@ func ParseDBQueueOption(data map[string]string) (DBQueueOption, error) {
 		return DBQueueOption{}, err
 	}
 	return option, nil
+}
+
+type DBQueueMessage struct {
+	id   int
+	body *InnerMessageBody
+}
+
+func (t *DBQueueMessage) ID() string {
+	return strconv.Itoa(t.id)
+}
+func (t *DBQueueMessage) Body() InnerMessageBody {
+	return *t.body
+}
+
+func (t *DBQueueMessage) Ack() error {
+	// DBQueueMessage does not need to ack, because it is already processed in DispatchInnerMessage
+	return nil
+}
+func (t *DBQueueMessage) Nack() error {
+	// DBQueueMessage does not need to nack, because it is already processed in DispatchInnerMessage
+	return nil
 }

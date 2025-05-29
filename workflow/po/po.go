@@ -1,10 +1,10 @@
-// persistance object for workflow
+// persistent object for workflow
 package po
 
 // GetExecutionTables get tables for execution
-func GetExecutionTables() []interface{} {
+func GetExecutionTables() []any {
 
-	return []interface{}{
+	return []any{
 		new(Execution),
 		new(State),
 		new(ActivityTask),
@@ -15,15 +15,15 @@ func GetExecutionTables() []interface{} {
 }
 
 // GetEventTables get tables for exporter event
-func GetEventTables() []interface{} {
-	return []interface{}{
+func GetEventTables() []any {
+	return []any{
 		new(ExecutionEvent),
 	}
 }
 
 // GetTemplateTables get tables for workflow template
-func GetTemplateTables() []interface{} {
-	return []interface{}{
+func GetTemplateTables() []any {
+	return []any{
 		new(Namespace),
 		new(Activity),
 		new(StateMachine),
@@ -31,8 +31,8 @@ func GetTemplateTables() []interface{} {
 }
 
 // GetMQTables get tables for message queue
-func GetMQTables() []interface{} {
-	return []interface{}{
+func GetMQTables() []any {
+	return []any{
 		new(MessageQueue),
 	}
 }
