@@ -7,12 +7,11 @@ import (
 	"github.com/mmtbak/microlibrary/config"
 )
 
-// InnerQueueGroup 内部消息队列组
-// 包含正常队列与延时队列
+// InnerQueueGroup inner queue group
 type InnerQueueGroup struct {
-	// Normal InnerMessage Queue  普通的内部消息队列
+	// Normal InnerMessage Queue
 	_NormalQueue InnerMessageQueue
-	// Deplay InnerMessage Queue  需要延时的内部消息队列
+	// Deplay InnerMessage Queue
 	_DelayQueue InnerMessageQueue
 }
 
@@ -51,7 +50,8 @@ func NewInnerQueueGroup(masterqueue InnerMessageQueue, delayqueue InnerMessageQu
 
 	if delayqueue != nil {
 		if dbqueue, ok := delayqueue.(*DBMessageQueue); ok {
-			dbqueue.StartPolling(masterqueue)
+			dbqueue.SetForwardQueue(masterqueue)
+			dbqueue.StartPolling()
 		}
 	}
 

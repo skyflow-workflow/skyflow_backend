@@ -1,26 +1,15 @@
 package queue
 
 import (
-	"fmt"
+	"log/slog"
 	"testing"
 
-	"github.com/mmtbak/microlibrary/config"
+	"github.com/skyflow-workflow/skyflow_backbend/mock"
 )
 
 func TestCreateInnerQueueGroup(t *testing.T) {
 
-	nornalqueueconfig := config.AccessPoint{
-		Source: "kafka://10.22.24.3:9092/?topics=cloudflow_dev&consumergroup=my-event-group&numpartition=1&numreplica=1&version=2.8.1&inital=oldest",
-	}
-
-	delayqueueconfig := config.AccessPoint{
-		Source: "mysql://neo:Neo!@#123@tcp(10.234.42.154:3306)/cloudflow_dev?charset=utf8mb4&parseTime=True&loc=Local",
-		Options: map[string]interface{}{
-			"sqllevel": "info",
-		},
-	}
-
-	queuegroup, err := NewInnerQueueGroupFromConfig(nornalqueueconfig, delayqueueconfig)
+	queuegroup, err := NewInnerQueueGroupFromConfig(mock.LocalUnitTestKafka, mock.LocalUnitTestMySQLConfig)
 	if err != nil {
 		t.Error(err)
 		return
@@ -87,7 +76,7 @@ func TestCreateInnerQueueGroup(t *testing.T) {
 
 	for idx, tt := range testcases {
 
-		fmt.Println("send message idx - ", idx)
+		slog.Info("send message idx - ", "index", idx)
 		err = queuegroup.SendInnerMessage(tt.Message, nil)
 		if err != nil {
 			t.Error(err)

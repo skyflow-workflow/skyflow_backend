@@ -22,9 +22,7 @@ func NewInnerMessageQueueFromConfig(conf config.AccessPoint) (InnerMessageQueue,
 			return nil, err
 		}
 		innermq := NewMQInnerMessageQueue(basequeue)
-		if err != nil {
-			return nil, err
-		}
+
 		return innermq, nil
 	case "mysql":
 		dbopt, err := ParseDBQueueOption(dsnData.Params)

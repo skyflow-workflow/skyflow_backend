@@ -14,7 +14,7 @@ import (
 func TestCreateNamespace(t *testing.T) {
 
 	var err error
-	myTemplateService := NewTemplateService(getTestClient())
+	myTemplateService := NewTemplateService(getTestDBClient())
 	err = myTemplateService.SyncSchema(context.Background(), nil)
 	assert.Equal(t, err, nil)
 	ns, err := myTemplateService.CreateNamespace(context.Background(), vo.CreateNamespaceRequest{
@@ -31,7 +31,7 @@ func TestCreateWorkflow(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestClient())
+	myTemplateService := NewTemplateService(getTestDBClient())
 	ns, err := myTemplateService.CreateNamespace(ctx, vo.CreateNamespaceRequest{
 		Name:    "testing_create_namespace",
 		Comment: "testing_create_namespace",
@@ -103,7 +103,7 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestClient())
+	myTemplateService := NewTemplateService(getTestDBClient())
 	// 创建
 	ns, err := myTemplateService.CreateOrUpdateNamespace(ctx, vo.CreateNamespaceRequest{
 		Name:    "testing_create_or_update_namespace",

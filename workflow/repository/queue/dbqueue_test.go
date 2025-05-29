@@ -2,163 +2,164 @@ package queue
 
 import (
 	"fmt"
-
-	"testing"
+	"log/slog"
+	"sync"
 	"time"
 
-	"github.com/mmtbak/microlibrary/rdb"
-
-	"gorm.io/gorm"
+	"testing"
 
 	"github.com/go-playground/assert/v2"
 	"github.com/smartystreets/goconvey/convey"
-
-	"github.com/mmtbak/microlibrary/rdb"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
-func TestSyncSchema(t *testing.T) {
+func (dbmq *DBMessageQueue) CleanUnittestData() error {
+	tx := dbmq.dbClient.DB().Begin()
+	tx = tx.Exec("TRUNCATE TABLE message_queues")
+	return tx.Error
+}
+
+func TestDBMQSyncSchema(t *testing.T) {
 
 	var err error
 	dbclient := getTestDBClient()
 
-	convey.Convey("Test_Connect Database", t, func() {
-		db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-		convey.So(err, convey.ShouldBeNil)
-		dbclient = (&rdb.DBClient{}).WithDB(db)
-		convey.So(dbclient, convey.ShouldNotBeNil)
-
-	})
-
-	convey.Convey("Test NewDBDelayMessageQueue", t, func() {
+	convey.Convey("Test Connect to MySQL DB", t, func() {
 		// DBDelayQueue
 		dbopt := DefaultDBDelayQueueOption
 		dbmq := NewDBMessageQueue(dbclient, dbopt)
 		convey.So(err, convey.ShouldBeNil)
-		err = dbmq.SyncSchema()
-		convey.So(err, convey.ShouldBeNil)
+		convey.Convey("Test SyncSchema", func() {
+			err = dbmq.SyncSchema()
+			convey.So(err, convey.ShouldBeNil)
+
+		})
 	})
 }
 
-func TestDelayMessageQueue(t *testing.T) {
+func TestDBMQWithForwardQueue(t *testing.T) {
 	var err error
 	dbclient := getTestDBClient()
-
-	// DBDelayQueue
-	dbmq := NewDBMessageQueue(dbclient, DefaultDBDelayQueueOption)
+	var dbmq *DBMessageQueue
+	// Connect to MySQL DB
+	slog.Info("Test Connect to MySQL DB")
+	dbopt := DefaultDBDelayQueueOption
+	dbmq = NewDBMessageQueue(dbclient, dbopt)
+	slog.Info("Test SyncSchema MySQL DB")
 	err = dbmq.SyncSchema()
 	assert.Equal(t, err, nil)
-	fmt.Println("dbmq sync schema success")
-	var tables = []string{}
-	err = dbclient.DB().Raw("SELECT name FROM sqlite_master WHERE type='table'").Find(&tables).Error
-	assert.Equal(t, err, nil)
-	fmt.Println("db tables: ", tables)
-
-	rcvchan, err := dbmq.ReceiveInnerMessage()
+	slog.Info("Test Clean Unittest Data")
+	err = dbmq.CleanUnittestData()
 	assert.Equal(t, err, nil)
 
-	var testcases = []struct {
-		Message InnerMessageBody
-	}{
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 1,
-				Class:       "Execution",
-				Type:        "ExecutionInit",
-				StepID:      1,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 1,
-				Class:       "Execution",
-				Type:        "ExecutionInit",
-				StepID:      2,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 2,
-				Class:       "Execution",
-				Type:        "ExecutionInit",
-				StepID:      2,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 2,
-				Class:       "Execution",
-				Type:        "ExecutionInit",
-				StepID:      3,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 2,
-				Class:       "Step",
-				Type:        "StepInit",
-				StepID:      4,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
-		{
-			Message: InnerMessageBody{
-				ExecutionID: 2,
-				Class:       "Execution",
-				Type:        "ExecutionInit",
-				StepID:      5,
-				Data:        `{"testkey":"testvalue"}`,
-			},
-		},
+	var messages = []InnerMessageBody{
+		{1, 1, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{1, 2, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 2, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 3, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 4, "Step", "StepInit", `{"testkey":"testvalue"}`},
+		{2, 5, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
 	}
 
-	rcvchan, err = dbmq.ReceiveInnerMessage()
-	assert.Equal(t, err, nil)
+	forwardQueue := NewSimpleInnerQueue()
+	dbmq.SetForwardQueue(forwardQueue)
+	dbmq.StartPolling()
 
-	var wait = make(chan int)
-	// 接收信息
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	// receive data from forward queue
 	go func() {
-		var rcvmsg InnerMessageBody
-		fmt.Print("\n=> Start Receive Inner Message\n")
-		for idx, tt := range testcases {
-			rcvmsg = <-rcvchan
-			fmt.Printf("\n=> Received index -- %d  Inner Message :  %v  \n %v \n", idx, time.Now(), rcvmsg.Body())
-			tt.Message.ID = rcvmsg.Body().ID
-			if tt.Message != rcvmsg.Body() {
-				fmt.Printf("receive message not match \n")
-			} else {
-				fmt.Printf("receive message  match \n")
+		slog.Info("=> Receive Inner Message Start")
+		rcvChan, err := forwardQueue.ReceiveInnerMessage()
+		assert.Equal(t, err, nil)
+		msgCount := 0
+		for {
+			rcvMsg, ok := <-rcvChan
+			if !ok {
+				break
 			}
-			// Ack inner message
-			err = rcvmsg.Ack()
-			fmt.Println("ack: ", err)
+			msgCount++
+			slog.Info("receive message", "msg", rcvMsg)
 		}
-		fmt.Print("\n=>Receive Inner Message  Finish\n")
-		wait <- 0
-		fmt.Println("receive finish ")
-
+		slog.Info(fmt.Sprintf("receive message count: %d", msgCount))
+		slog.Info("=> Receive Inner Message Finish")
+		wg.Done()
+		assert.Equal(t, msgCount, len(messages))
 	}()
 
-	time.Sleep(2 * time.Second)
-	for idx, tt := range testcases {
-		fmt.Println("index --- ", idx)
-		sendtime := time.Now()
-		err = dbmq.SendInnerMessage(tt.Message, sendtime)
+	for _, msg := range messages {
+		err = dbmq.SendInnerMessage(msg, nil)
 		assert.Equal(t, err, nil)
-		fmt.Println("\n=> Send Normal Inner Message Finish , SendTime: ", time.Now())
+		slog.Info("send message", "msg", msg)
 	}
-	<-wait
-	fmt.Println("receive stop ")
+	slog.Info(fmt.Sprintf(
+		"all messages sent, send message count: %d", len(messages)),
+	)
+	time.Sleep(2 * time.Second) // wait for messages to be processed
 	err = dbmq.Close()
 	assert.Equal(t, err, nil)
-	err = masterinnerqueue.Close()
+	err = forwardQueue.Close()
+	assert.Equal(t, err, nil)
+	wg.Wait()
+}
+
+func TestDBMQSendReceiveMessage(t *testing.T) {
+	var err error
+	dbclient := getTestDBClient()
+	var dbmq *DBMessageQueue
+	// Connect to MySQL DB
+	slog.Info("Test Connect to MySQL DB")
+	dbopt := DefaultDBDelayQueueOption
+	dbmq = NewDBMessageQueue(dbclient, dbopt)
+	slog.Info("Test SyncSchema MySQL DB")
+	err = dbmq.SyncSchema()
+	assert.Equal(t, err, nil)
+	slog.Info("Test Clean Unittest Data")
+	err = dbmq.CleanUnittestData()
 	assert.Equal(t, err, nil)
 
-	fmt.Printf("finish ")
+	var messages = []InnerMessageBody{
+		{1, 1, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{1, 2, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 2, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 3, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+		{2, 4, "Step", "StepInit", `{"testkey":"testvalue"}`},
+		{2, 5, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
+	}
 
+	dbmq.StartPolling()
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	// receive data from forward queue
+	go func() {
+		slog.Info("=> Start Receive Inner Message from DB Queue")
+		rcvChan, err := dbmq.ReceiveInnerMessage()
+		assert.Equal(t, err, nil)
+		msgCount := 0
+		for {
+			rcvMsg, ok := <-rcvChan
+			if !ok {
+				break
+			}
+			msgCount++
+			slog.Info("receive message", "msg", rcvMsg)
+		}
+		slog.Info(fmt.Sprintf("receive message count: %d", msgCount))
+		slog.Info("=> Receive Inner Message Finish")
+		wg.Done()
+		assert.Equal(t, msgCount, len(messages))
+	}()
+
+	for _, msg := range messages {
+		err = dbmq.SendInnerMessage(msg, nil)
+		assert.Equal(t, err, nil)
+		slog.Info("send message", "msg", msg)
+	}
+	slog.Info(fmt.Sprintf(
+		"all messages sent, send message count: %d", len(messages)),
+	)
+	time.Sleep(2 * time.Second) // wait for messages to be processed
+	err = dbmq.Close()
+	assert.Equal(t, err, nil)
+	wg.Wait()
 }

@@ -2,27 +2,19 @@ package queue
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"sync"
 	"testing"
-	"time"
 
-	sqle "github.com/dolthub/go-mysql-server"
-	"github.com/dolthub/go-mysql-server/memory"
 	"github.com/dolthub/go-mysql-server/server"
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 var (
-	dbName              = "testdb"
-	address             = "127.0.0.1"
-	port                = 3306
-	dsn                 = fmt.Sprintf("root:@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", address, port, dbName)
+	mysqlSource         = "root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local"
 	testDB              *sql.DB
 	testDBServer        *server.Server
 	testMysqlServerOnce sync.Once
@@ -49,16 +41,11 @@ func getTestDBClient() *rdb.DBClient {
 	return testDBClient
 }
 
+// setupTestDB 初始化测试用的内存MySQL数据库
 func setupTestDB() {
 
 	var err error
-	testDBServer, err = CreateMemoryMySQLServer()
-	if err != nil {
-		panic(err)
-	}
-	StartMySQLServer(testDBServer)
-
-	testDB, err = sql.Open("mysql", dsn)
+	testDB, err = sql.Open("mysql", mysqlSource)
 	if err != nil {
 		panic(err)
 	}
@@ -70,31 +57,5 @@ func setupTestDB() {
 	if err != nil {
 		panic(err)
 	}
-
 	testDBClient = (&rdb.DBClient{}).WithDB(gormDB)
-	testDBClient.SyncTables(po.GetTemplateTables())
-}
-
-func StartMySQLServer(server *server.Server) {
-	go func() {
-		if err := server.Start(); err != nil {
-			panic(err)
-		}
-	}()
-	time.Sleep(500 * time.Millisecond)
-}
-
-func CreateMemoryMySQLServer() (*server.Server, error) {
-	db := memory.NewDatabase(dbName)
-	db.BaseDatabase.EnablePrimaryKeyIndexes()
-	provider := memory.NewDBProvider(db)
-
-	engine := sqle.NewDefault(provider)
-
-	config := server.Config{
-		Protocol: "tcp",
-		Address:  fmt.Sprintf("%s:%d", address, port),
-	}
-	s, err := server.NewServer(config, engine, memory.NewSessionBuilder(provider), nil)
-	return s, err
 }

@@ -10,15 +10,16 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/mmtbak/jsonpath_writer v0.1.2
 	github.com/mmtbak/microlibrary v0.0.0-20250507074410-90fd2f86c16e
 	github.com/ohler55/ojg v1.26.1
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
+	github.com/smartystreets/goconvey v1.6.4
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.5
+	gorm.io/driver/sqlite v1.5.7
+	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
@@ -51,6 +52,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/flatbuffers v2.0.0+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
 	github.com/gorilla/schema v1.2.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -64,10 +66,12 @@ require (
 	github.com/jcmturner/rpc/v2 v2.0.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/kos-v/dsnparser v1.1.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
+	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/panjf2000/ants/v2 v2.8.1 // indirect
@@ -79,6 +83,7 @@ require (
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
+	github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/tetratelabs/wazero v1.8.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
