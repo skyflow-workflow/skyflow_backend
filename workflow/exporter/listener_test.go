@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/kos-v/dsnparser"
+	"github.com/mmtbak/dsnparser"
 )
 
 func TestParseDSN(t *testing.T) {

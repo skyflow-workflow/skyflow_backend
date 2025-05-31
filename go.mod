@@ -11,6 +11,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/kos-v/dsnparser v1.1.0
 	github.com/mitchellh/mapstructure v1.5.0
+	github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415
 	github.com/mmtbak/microlibrary v0.0.0-20250531011832-df0634bedc53
 	github.com/ohler55/ojg v1.26.1
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
@@ -20,7 +21,7 @@ require (
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.7-0.20240204074919-46816ad31dde
+	gorm.io/gorm v1.25.5
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
@@ -54,7 +55,6 @@ require (
 	github.com/google/flatbuffers v2.0.0+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 // indirect
-	github.com/gorilla/schema v1.2.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
@@ -71,7 +71,6 @@ require (
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lestrrat-go/strftime v1.0.6 // indirect
-	github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/paulmach/orb v0.10.0 // indirect
@@ -112,5 +111,3 @@ require (
 )
 
 replace github.com/skyflow-workflow/skyflow_backbend/gen/pb => ./gen/pb
-
-replace github.com/kos-v/dsnparser => github.com/mmtbak/dsnparser v0.0.0-20240220012319-a0bde160948e
