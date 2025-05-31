@@ -38,8 +38,11 @@ jobs:
           # MYSQL_USER: root           #  auto created user
           # MYSQL_PASSWORD: devpass       # auto created user password
           TZ: Asia/Shanghai             # 时区设置
-        volumes:
-          - ./data/mysql:/bitnami/mysql  # 数据持久化目录
+        options: >-
+          --health-cmd "mysqladmin ping -p$$MYSQL_ROOT_PASSWORD"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
     steps:
     - uses: actions/checkout@v4
 
