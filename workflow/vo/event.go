@@ -2,14 +2,17 @@ package vo
 
 import "time"
 
-// ExecutionEvent ...
+// ExecutionEvent execution event
 type ExecutionEvent struct {
+	ID            int
 	ExecutionID   int
 	ExecutionUUID string
 	ExecutionURI  string
-	StepName      string
-	StepID        int
-	Data          interface{}
+	StateName     string
+	StateID       int
+	EventType     string
+	NanoSeconds   int64
+	Data          any
 	StartTime     time.Time
 	FinishTime    time.Time
 }

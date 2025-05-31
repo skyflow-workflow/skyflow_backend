@@ -38,9 +38,7 @@ func (svc *templateService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
-
 }
 
 func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNamespaceRequest, tx rdb.Tx) (vo.CreateNamespaceResponse, error) {

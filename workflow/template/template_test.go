@@ -6,16 +6,41 @@ import (
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"gopkg.in/go-playground/assert.v1"
 )
 
+func (svc *templateService) CleanTestDB(ctx context.Context, tx rdb.Tx) error {
+
+	var err error
+
+	tx, maker := svc.dbclient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	tables := []string{
+		"namespaces",
+		"activities",
+		"state_machines",
+	}
+	for _, table := range tables {
+		err = tx.Exec("TRUNCATE TABLE " + table).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+
+}
+
 func TestCreateNamespace(t *testing.T) {
 
 	var err error
-	myTemplateService := NewTemplateService(getTestClient())
+	myTemplateService := NewTemplateService(getTestDBClient())
 	err = myTemplateService.SyncSchema(context.Background(), nil)
+	assert.Equal(t, err, nil)
+	err = myTemplateService.CleanTestDB(context.Background(), nil)
 	assert.Equal(t, err, nil)
 	ns, err := myTemplateService.CreateNamespace(context.Background(), vo.CreateNamespaceRequest{
 		Name:    "unittest",
@@ -31,7 +56,11 @@ func TestCreateWorkflow(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestClient())
+	myTemplateService := NewTemplateService(getTestDBClient())
+	err = myTemplateService.SyncSchema(context.Background(), nil)
+	assert.Equal(t, err, nil)
+	err = myTemplateService.CleanTestDB(context.Background(), nil)
+	assert.Equal(t, err, nil)
 	ns, err := myTemplateService.CreateNamespace(ctx, vo.CreateNamespaceRequest{
 		Name:    "testing_create_namespace",
 		Comment: "testing_create_namespace",
@@ -103,8 +132,12 @@ func TestCreateOrUpdateWorkflow(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestClient())
-	// 创建
+	myTemplateService := NewTemplateService(getTestDBClient())
+	err = myTemplateService.SyncSchema(context.Background(), nil)
+	assert.Equal(t, err, nil)
+	err = myTemplateService.CleanTestDB(context.Background(), nil)
+	assert.Equal(t, err, nil)
+
 	ns, err := myTemplateService.CreateOrUpdateNamespace(ctx, vo.CreateNamespaceRequest{
 		Name:    "testing_create_or_update_namespace",
 		Comment: "testing_create_or_update_namespace",
