@@ -58,4 +58,8 @@ func setupTestDB() {
 		panic(err)
 	}
 	testDBClient = (&rdb.DBClient{}).WithDB(gormDB)
+	err = testDBClient.DB().Exec("drop table if exists namespaces;").Error
+	if err != nil {
+		panic(err)
+	}
 }
