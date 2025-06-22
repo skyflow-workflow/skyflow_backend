@@ -1,10 +1,12 @@
 package stepfunction
 
 import (
+	"context"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/expression/stepfunction"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 
@@ -265,7 +267,7 @@ func TestDecodeChoiceState(t *testing.T) {
 			wantError: nil,
 		},
 	}
-	decoder := NewStepfuncionDecoder(nil, nil)
+	decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
 
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
@@ -273,7 +275,7 @@ func TestDecodeChoiceState(t *testing.T) {
 			err = tt.expected.BaseState.Init()
 			assert.Equal(t, err, nil)
 
-			state, err := decoder.DecodeStateDefintion(tt.definition)
+			state, err := decoder.DecodeStateDefintion(context.Background(), tt.definition)
 			assert.Equal(t, err, nil)
 			opts := cmp.Options{cmpopts.IgnoreUnexported(states.BaseState{}), cmpopts.IgnoreUnexported(states.TaskBody{})}
 			diff := cmp.Diff(state, tt.expected, opts...)

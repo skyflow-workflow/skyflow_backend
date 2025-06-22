@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 )
 
 func TestParserStatemachineHeaderFailed(t *testing.T) {
@@ -21,7 +21,7 @@ func TestParserStatemachineHeaderFailed(t *testing.T) {
 			defintion: `{"version":false, "type":"stepfunction"}`,
 		},
 	}
-	decoder := NewStepfuncionDecoder(&decoder.StandardParserConfig, &decoder.DefaultQuota)
+	decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
 			header, err := decoder.DecodeStateMachineHeaderDefintion(tt.defintion)

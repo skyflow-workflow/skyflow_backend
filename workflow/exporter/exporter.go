@@ -31,7 +31,7 @@ func NewExporterService(lis *DBListener) (*exporterService, error) {
 		DBListener: lis,
 		Listeners:  []Listener{},
 	}
-	workerPool, err := ants.NewPoolWithFunc(DefaultPoolSize, exporter.AyncSendExecutionEvents, ants.WithNonblocking(false))
+	workerPool, err := ants.NewPoolWithFunc(DefaultPoolSize, exporter.AsyncSendExecutionEvents, ants.WithNonblocking(false))
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +67,8 @@ func (svc *exporterService) SendExecutionEvents(events []vo.ExecutionEvent) {
 	}
 }
 
-// AyncSendExecutionEvents async send execution events
-func (svc *exporterService) AyncSendExecutionEvents(i interface{}) {
+// AsyncSendExecutionEvents async send execution events
+func (svc *exporterService) AsyncSendExecutionEvents(i interface{}) {
 	var events, ok = i.([]vo.ExecutionEvent)
 	if !ok {
 		return

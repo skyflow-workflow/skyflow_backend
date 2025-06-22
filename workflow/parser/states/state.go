@@ -12,12 +12,13 @@ type State interface {
 	SetName(name string)
 	GetType() string
 	GetBone() StateBone
+	GetBaseState() *BaseState
 }
 
 // NextState next state info
 type NextState struct {
 	Name       string        // Next State Name
-	Output     interface{}   // State Output as the input of the next state
+	Output     any           // State Output as the input of the next state
 	Delay      time.Duration // Delay delay duration from current state to next state
 	Retry      bool          // Whether to trigger retry
 	RetryIndex int           // Which Indexed Retry strategy hit

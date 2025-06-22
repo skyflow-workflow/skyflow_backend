@@ -1,7 +1,12 @@
-package decoder
+package config
+
+type Config struct {
+	Option *Option
+	Quota  *Quota
+}
 
 // ParserConfig ...
-type ParserConfig struct {
+type Option struct {
 	// AllowActivity specifies whether to allow activity Task.
 	AllowActivity bool
 	// AllowWait specifies whether to allow Wait State.
@@ -20,17 +25,14 @@ type ParserConfig struct {
 	AllowSucceed bool
 	// AllowPass specifies whether to allow Pass State.
 	AllowPass bool
-}
-
-// StandardParserConfig standard model workflow
-var StandardParserConfig = ParserConfig{
-	AllowActivity: true,
-	AllowWait:     true,
-	AllowSuspend:  true,
-	AllowParallel: true,
-	AllowMap:      true,
-	AllowChoice:   true,
-	AllowFail:     true,
-	AllowSucceed:  true,
-	AllowPass:     true,
+	// AbortOnFail specifies whether to stop execution on state failure.
+	// in operation mode, it will try to execute all steps, user can retry the failed steps,
+	// but in express mode, it will stop on the first failure. use fail fast mode.
+	AbortOnFail bool
+	// PersistenceStep specifies whether to persist step data.
+	PersistenceStep bool
+	// EnableStepExecuteIndex specifies whether to enable execute index for step.
+	// in standard mode, it will use execute index to track the execution order of steps.
+	// in express mode, it will always not use execute index.
+	EnableStepExecuteIndex bool
 }

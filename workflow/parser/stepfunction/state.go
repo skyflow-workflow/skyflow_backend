@@ -39,14 +39,14 @@ func (sfDecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data m
 }
 
 // DecodeStateDefintion ...
-func (sfDecoder *StepfuncionDecoder) DecodeStateDefintion(definition string) (states.State, error) {
+func (sfDecoder *StepfuncionDecoder) DecodeStateDefintion(ctx context.Context, definition string) (states.State, error) {
 	var err error
 	datamap := make(map[string]any)
-	err = sfDecoder.JSONUnmarshall(definition, &datamap)
+	err = sfDecoder.JSONUnmarshal(definition, &datamap)
 	if err != nil {
 		return nil, err
 	}
-	state, err := sfDecoder.DecodeState(context.Background(), datamap)
+	state, err := sfDecoder.DecodeState(ctx, datamap)
 	if err != nil {
 		return nil, err
 	}

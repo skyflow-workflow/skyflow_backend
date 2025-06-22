@@ -101,5 +101,5 @@ type ListStateMachinesResponse struct {
 // DescribeStepResponse ...
 type DescribeStepResponse struct {
 	ExecutionUUID string
-	Step          po.State
+	Step          po.Step
 }

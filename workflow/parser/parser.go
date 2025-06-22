@@ -2,24 +2,25 @@
 package parser
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/stepfunction"
 )
 
 // ParserConfig parser configuration
 type Parser struct {
-	Config decoder.ParserConfig
-	Quota  decoder.Quota
+	Config              *config.Config
+	stepfunctionDecoder *stepfunction.StepfuncionDecoder
 }
 
 // NewParser ParserConfig parser configuration
-func NewParser(config decoder.ParserConfig, quotaconfig decoder.Quota) *Parser {
+func NewParser(config *config.Config) *Parser {
 	return &Parser{
-		Config: config,
-		Quota:  quotaconfig,
+		Config:              config,
+		stepfunctionDecoder: stepfunction.NewStepfuncionDecoder(config),
 	}
 }
 
@@ -31,8 +32,7 @@ func ValdateStateMachine(definition string) error {
 
 // ParseStateMachine ...
 func (parser *Parser) ParseStateMachine(definition string) (*states.StateMachine, error) {
-	decoder := stepfunction.NewStepfuncionDecoder(&parser.Config, &parser.Quota)
-	sm, err := decoder.Decode(definition)
+	sm, err := parser.stepfunctionDecoder.Decode(definition)
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +47,11 @@ func (parser *Parser) GenerateStateMachineURI(namespace string, stateMachineName
 	// Generate the workflow URI
 	workflow_uri := fmt.Sprintf("%s:%s/%s", "statemachine", namespace, stateMachineName)
 	return workflow_uri
+}
+func (parser *Parser) ParseState(definition string) (states.State, error) {
+	// Parse the step definition
+	state, err := parser.stepfunctionDecoder.DecodeStateDefintion(context.Background(), definition)
+	return state, err
 }
 
 func ParseStateMachine(definition string) (*states.StateMachine, error) {

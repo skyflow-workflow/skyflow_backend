@@ -4,12 +4,14 @@ import (
 	"database/sql"
 
 	"github.com/mmtbak/microlibrary/config"
+	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
 )
 
 var (
 	MockDB       *sql.DB
 	MockDBClient *rdb.DBClient
+	MockKafkaMQ  *mq.KafkaMessageQueue
 )
 var LocalUnitTestMySQLConfig = config.AccessPoint{
 	Source: "mysql://root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
@@ -53,6 +55,19 @@ func InitMockDB() error {
 	return nil
 }
 
-func GetKakfkaConfig() config.AccessPoint {
+func GetMockKafkaConfig() config.AccessPoint {
 	return LocalUnitTestKafka
+}
+
+func InitMockKafka() error {
+	var err error
+	MockKafkaMQ, err = mq.NewKafkaMessageQueue(GetMockKafkaConfig())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetMockKafkaMQ() *mq.KafkaMessageQueue {
+	return MockKafkaMQ
 }

@@ -3,6 +3,7 @@ package stepfunction
 import (
 	"context"
 
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 )
@@ -10,16 +11,14 @@ import (
 // StepfuncionDecoder ...
 type StepfuncionDecoder struct {
 	*decoder.CommonDecoder
-	config *decoder.ParserConfig
-	quota  *decoder.Quota
+	config *config.Config
 }
 
 // NewStepfuncionDecoder ...
-func NewStepfuncionDecoder(config *decoder.ParserConfig, quota *decoder.Quota) *StepfuncionDecoder {
+func NewStepfuncionDecoder(config *config.Config) *StepfuncionDecoder {
 	return &StepfuncionDecoder{
 		CommonDecoder: decoder.NewCommonDecoder(),
 		config:        config,
-		quota:         quota,
 	}
 }
 
@@ -28,7 +27,7 @@ func (decoder *StepfuncionDecoder) Decode(definition string) (*states.StateMachi
 	// Parse the state machine
 	var err error
 	datamap := make(map[string]any)
-	err = decoder.JSONUnmarshall(definition, &datamap)
+	err = decoder.JSONUnmarshal(definition, &datamap)
 	if err != nil {
 		return nil, err
 	}

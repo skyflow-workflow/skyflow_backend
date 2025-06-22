@@ -44,8 +44,8 @@ func (l *DBListener) SendEvents(events []vo.ExecutionEvent) {
 
 		dbEvent := po.ExecutionEvent{
 			ExecutionID: evt.ExecutionID,
-			StateID:     evt.StateID,
-			StateName:   evt.StateName,
+			StateID:     evt.StepID,
+			StateName:   evt.StepName,
 			EventType:   evt.EventType,
 			Data:        dataStr,
 			NanoSeconds: evt.NanoSeconds,
