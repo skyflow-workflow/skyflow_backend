@@ -8,48 +8,48 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
-// SkyflowService skyflow service handler
-type SkyflowService struct {
+// SkyflowServiceHandler skyflow service handler
+type SkyflowServiceHandler struct {
 	templateService template.TemplateService
 }
 
 // CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) CreateOrUpdateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
 	panic("unimplemented")
 }
 
 // CreateStateMachine implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) CreateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) CreateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
 	panic("unimplemented")
 }
 
 // DeleteActivity implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) DeleteActivity(ctx context.Context, req *pb.DeleteActivityRequest) (*pb.DeleteActivityResponse, error) {
+func (s *SkyflowServiceHandler) DeleteActivity(ctx context.Context, req *pb.DeleteActivityRequest) (*pb.DeleteActivityResponse, error) {
 	panic("unimplemented")
 }
 
 // DeleteStateMachine implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) DeleteStateMachine(ctx context.Context, req *pb.DeleteStateMachineRequest) (*pb.DeleteStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) DeleteStateMachine(ctx context.Context, req *pb.DeleteStateMachineRequest) (*pb.DeleteStateMachineResponse, error) {
 	panic("unimplemented")
 }
 
 // DescribeStateMachine implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) DescribeStateMachine(ctx context.Context, req *pb.DescribeStateMachineRequest) (*pb.DescribeStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *pb.DescribeStateMachineRequest) (*pb.DescribeStateMachineResponse, error) {
 	panic("unimplemented")
 }
 
 // ListStateMachines implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) ListStateMachines(ctx context.Context, req *pb.ListStateMachinesRequest) (*pb.ListStateMachinesResponse, error) {
+func (s *SkyflowServiceHandler) ListStateMachines(ctx context.Context, req *pb.ListStateMachinesRequest) (*pb.ListStateMachinesResponse, error) {
 	panic("unimplemented")
 }
 
 // UpdateStateMachine implements pb.SkyflowV1ServiceService.
-func (s *SkyflowService) UpdateStateMachine(ctx context.Context, req *pb.UpdateStateMachineRequest) (*pb.UpdateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) UpdateStateMachine(ctx context.Context, req *pb.UpdateStateMachineRequest) (*pb.UpdateStateMachineResponse, error) {
 	panic("unimplemented")
 }
 
 // CreateOrUpdateActivity implements pb.SkyflowServiceService.
-func (s *SkyflowService) CreateOrUpdateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
 	voreq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
 		Comment:      req.Comment,
@@ -68,7 +68,7 @@ func (s *SkyflowService) CreateOrUpdateActivity(ctx context.Context, req *pb.Cre
 }
 
 // CreateOrUpdateNamespace implements pb.SkyflowServiceService.
-func (s *SkyflowService) CreateOrUpdateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
 	voreq := vo.CreateNamespaceRequest{
 		Name:    req.Name,
 		Comment: req.Comment,
@@ -86,7 +86,7 @@ func (s *SkyflowService) CreateOrUpdateNamespace(ctx context.Context, req *pb.Cr
 }
 
 // CreateActivity implements pb.SkyflowService.
-func (s *SkyflowService) CreateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
+func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
 	voreq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
 		Comment:      req.Comment,
@@ -105,7 +105,7 @@ func (s *SkyflowService) CreateActivity(ctx context.Context, req *pb.CreateActiv
 }
 
 // CreateNamespace implements pb.SkyflowService.
-func (s *SkyflowService) CreateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
+func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
 
 	voreq := vo.CreateNamespaceRequest{
 		Name:    req.Name,
@@ -124,7 +124,7 @@ func (s *SkyflowService) CreateNamespace(ctx context.Context, req *pb.CreateName
 }
 
 // DescribeActivity implements pb.SkyflowService.
-func (s *SkyflowService) DescribeActivity(ctx context.Context, req *pb.DescribeActivityRequest) (*pb.DescribeActivityResponse, error) {
+func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pb.DescribeActivityRequest) (*pb.DescribeActivityResponse, error) {
 	voresp, err := s.templateService.DescribeActivity(ctx, req.ActivityUri, nil)
 	if err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ func (s *SkyflowService) DescribeActivity(ctx context.Context, req *pb.DescribeA
 }
 
 // ListActivities implements pb.SkyflowService.
-func (s *SkyflowService) ListActivities(ctx context.Context, req *pb.ListActivitiesRequest) (*pb.ListActivitiesResponse, error) {
+func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pb.ListActivitiesRequest) (*pb.ListActivitiesResponse, error) {
 
 	voreq := vo.ListActivitiesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),
@@ -161,7 +161,7 @@ func (s *SkyflowService) ListActivities(ctx context.Context, req *pb.ListActivit
 }
 
 // ListNamespaces implements pb.SkyflowService.
-func (s *SkyflowService) ListNamespaces(ctx context.Context, req *pb.ListNamespacesRequest) (*pb.ListNamespacesResponse, error) {
+func (s *SkyflowServiceHandler) ListNamespaces(ctx context.Context, req *pb.ListNamespacesRequest) (*pb.ListNamespacesResponse, error) {
 
 	voreq := vo.ListNamespacesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),

@@ -4,15 +4,6 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 )
 
-// ExceptionData State异常数据结构
-type ExceptionData struct {
-	Cause      string      `json:"cause"`       // Detail of the failure
-	Error      string      `json:"error"`       // Error Code of the failure
-	ErrorMatch []string    `json:"error_match"` // Error Code match list
-	Output     interface{} `json:"output"`      // Output of state
-	Extra      string      `json:"extra"`       // Extra information about exception
-}
-
 // Step 状态节点的抽象类
 type Step interface {
 	// 执行初始化
@@ -21,7 +12,7 @@ type Step interface {
 	Run(queue.InnerMessage) error
 	// 获得bone信息
 	GetBone() StepBone
-	GetNextStep(output interface{}) (NextStep, error)
+	GetNextStep(output any) (NextStep, error)
 	// 处理消息
 	ProcessEvent(queue.InnerMessage) error
 }

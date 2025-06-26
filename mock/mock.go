@@ -22,12 +22,10 @@ var LocalUnitTestMySQLConfig = config.AccessPoint{
 	},
 }
 
-var LocalUnitTestKafka = config.AccessPoint{
-	Source: "kafka://localhost:9092/?" +
-		"topics=my-event-test-topic" +
-		"&numpartition=2&numreplica=1&autocommitsecond=1" +
-		"initial=oldest&version=1.1.1",
-}
+var LocalUnitTestKafkaDSN = "kafka://localhost:9092/?" +
+	"topics=my-event-test-topic" +
+	"&numpartition=2&numreplica=1&autocommitsecond=1" +
+	"initial=oldest&version=1.1.1"
 
 func init() {
 	err := InitMockDB()
@@ -55,13 +53,13 @@ func InitMockDB() error {
 	return nil
 }
 
-func GetMockKafkaConfig() config.AccessPoint {
-	return LocalUnitTestKafka
+func GetMockKafkaDSN() string {
+	return LocalUnitTestKafkaDSN
 }
 
 func InitMockKafka() error {
 	var err error
-	MockKafkaMQ, err = mq.NewKafkaMessageQueue(GetMockKafkaConfig())
+	MockKafkaMQ, err = mq.NewKafkaMessageQueue(GetMockKafkaDSN())
 	if err != nil {
 		return err
 	}

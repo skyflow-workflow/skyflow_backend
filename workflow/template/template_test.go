@@ -16,7 +16,7 @@ func (svc *templateService) CleanTestDB(ctx context.Context, tx rdb.Tx) error {
 
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	tables := []string{

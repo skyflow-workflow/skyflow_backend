@@ -17,12 +17,12 @@ import (
 type TemplateService = *templateService
 
 type templateService struct {
-	dbclient *rdb.DBClient
+	dbClient *rdb.DBClient
 }
 
-func NewTemplateService(dbclient *rdb.DBClient) TemplateService {
+func NewTemplateService(dbClient *rdb.DBClient) TemplateService {
 	svc := &templateService{
-		dbclient: dbclient,
+		dbClient: dbClient,
 	}
 	return svc
 }
@@ -31,7 +31,7 @@ func (svc *templateService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.AutoMigrate(po.GetTemplateTables()...)
@@ -46,7 +46,7 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Select("id").Where("name = ?", req.Name).First(&ns).Error
@@ -78,7 +78,7 @@ func (svc *templateService) DescribeNamespace(ctx context.Context, name string, 
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Where("name = ?", name).First(&ns).Error
@@ -97,7 +97,7 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	// 先查询是否存在
@@ -125,7 +125,7 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 func (svc *templateService) CreateOrUpdateNamespace(ctx context.Context, req vo.CreateNamespaceRequest, tx rdb.Tx) (vo.CreateNamespaceResponse, error) {
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	newNS := po.Namespace{
@@ -150,7 +150,7 @@ func (svc *templateService) ListNamespaces(ctx context.Context, req vo.ListNames
 	var count int64
 	var nss = []po.Namespace{}
 	var resp vo.ListNamespacesResponse
-	tx, maker := svc.dbclient.NewTxMaker(nil)
+	tx, maker := svc.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	limit, offset := req.PageRequest.Limit()
 
@@ -182,7 +182,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	queryActivity := po.Activity{
@@ -232,7 +232,7 @@ func (svc *templateService) ListActivities(ctx context.Context, req vo.ListActiv
 	var resp vo.ListActivitiesResponse
 
 	limit, offset := req.PageRequest.Limit()
-	tx, maker := svc.dbclient.NewTxMaker(nil)
+	tx, maker := svc.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	tx = tx.Model(new(po.Activity))
 	err = tx.Count(&count).Error
@@ -256,7 +256,7 @@ func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.C
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
@@ -287,7 +287,7 @@ func (svc *templateService) DeleteActivity(ctx context.Context, req vo.DeleteAct
 	var activity po.Activity
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	// 先查询是否存在
@@ -319,7 +319,7 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 
 	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	queryWorkflow := po.StateMachine{
@@ -365,7 +365,7 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 func (svc *templateService) DescribeActivity(ctx context.Context, activityUri string, tx rdb.Tx) (po.Activity, error) {
 	var activity po.Activity
 	var err error
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Where(po.Activity{URI: activityUri}).Take(&activity).Error
@@ -376,7 +376,7 @@ func (svc *templateService) DescribeActivity(ctx context.Context, activityUri st
 func (svc *templateService) DescribeWorkflow(ctx context.Context, stateMachineUri string, tx rdb.Tx) (po.StateMachine, error) {
 	var workflow po.StateMachine
 	var err error
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Where(po.Activity{URI: stateMachineUri}).Take(&workflow).Error
@@ -392,7 +392,7 @@ func (svc *templateService) ListStateMachines(ctx context.Context, req vo.ListSt
 	var resp vo.ListStateMachinesResponse
 
 	limit, offset := req.PageRequest.Limit()
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	tx = tx.Model(new(po.StateMachine))
@@ -418,7 +418,7 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 
 	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)

@@ -1,9 +1,9 @@
 package main
 
-import "github.com/skyflow-workflow/skyflow_backbend/server/apiserver"
+import (
+	"github.com/skyflow-workflow/skyflow_backbend/cmd/skyflow/cmd"
+)
 
 func main() {
-
-	apiserver := apiserver.NewApiServer()
-	apiserver.Start()
+	cmd.Execute()
 }

@@ -12,11 +12,17 @@ type ApiServer struct {
 	server *server.Server
 }
 
+var skyflowConfigFilePath string = "./skyflow.yaml"
+
 // NewApiServer creates a new API server.
-func NewApiServer() *ApiServer {
+func NewApiServer(configFilePath string) *ApiServer {
+	if configFilePath != "" {
+		trpc.ServerConfigPath = configFilePath
+	}
+
 	s := trpc.NewServer()
-	pb.RegisterCommonServiceService(s, &CommonService{})
-	pb.RegisterSkyflowV1ServiceService(s, &SkyflowService{})
+	pb.RegisterCommonServiceService(s, &CommonServiceHandler{})
+	pb.RegisterSkyflowV1ServiceService(s, &SkyflowServiceHandler{})
 
 	return &ApiServer{
 		server: s,
@@ -29,4 +35,17 @@ func (s *ApiServer) Start() {
 	if err := s.server.Serve(); err != nil {
 		log.Error(err)
 	}
+}
+
+func LoadConfig(configFilePath string) error {
+	// Load the TRPC server configuration
+	if configFilePath != "" {
+		trpc.ServerConfigPath = configFilePath
+	}
+	_, err := trpc.LoadConfig(configFilePath)
+	if err != nil {
+		log.Error("Error loading TRPC server configuration", "error", err, "configPath", configFilePath)
+		return err
+	}
+	return nil
 }

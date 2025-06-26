@@ -12,7 +12,7 @@ require (
 	github.com/kos-v/dsnparser v1.1.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415
-	github.com/mmtbak/microlibrary v0.0.0-20250531011832-df0634bedc53
+	github.com/mmtbak/microlibrary v0.0.0-20250626184112-fbdf22d08b78
 	github.com/ohler55/ojg v1.26.1
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
 	github.com/panjf2000/ants/v2 v2.8.1
@@ -60,6 +60,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
 	github.com/jcmturner/dnsutils/v2 v2.0.0 // indirect
 	github.com/jcmturner/gofork v1.7.6 // indirect
@@ -83,6 +84,8 @@ require (
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d // indirect
 	github.com/spf13/cast v1.5.0 // indirect
+	github.com/spf13/cobra v1.9.1 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/tetratelabs/wazero v1.8.2 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.43.0 // indirect
