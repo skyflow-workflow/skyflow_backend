@@ -543,6 +543,8 @@ github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db/go.mod h1:/XxbfmMg8l
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/golang/snappy v0.0.4 h1:yAGX7huGHXlcLOEtBnF4w7FQwA26wojNCwOYAEhLjQM=
 github.com/golang/snappy v0.0.4/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
+github.com/goodaye/wire v0.0.0-20240514030838-d62769b00c2d h1:vUwyr10LOXsZ1A0pWMEnoR+ubyImX5Dk0EnyzAy3hVw=
+github.com/goodaye/wire v0.0.0-20240514030838-d62769b00c2d/go.mod h1:jnqQ4W55bVSeWfAv9UGy9SMnpLt+mIWUqR6aDVdIKS0=
 github.com/google/btree v0.0.0-20180813153112-4030bb1f1f0c/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
 github.com/google/btree v1.0.0/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
 github.com/google/btree v1.0.1/go.mod h1:xXMiIv4Fb/0kKde4SpL7qlzvu5cMJDRkFDxJfI9uaxA=
@@ -708,6 +710,8 @@ github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
+github.com/judwhite/go-svc v1.2.1 h1:a7fsJzYUa33sfDJRF2N/WXhA+LonCEEY8BJb1tuS5tA=
+github.com/judwhite/go-svc v1.2.1/go.mod h1:mo/P2JNX8C07ywpP9YtO2gnBgnUiFTHqtsZekJrUuTk=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
@@ -725,7 +729,6 @@ github.com/klauspost/compress v1.17.11/go.mod h1:pMDklpSncoRMuLFrf1W9Ss9KT+0rH90
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/konsorten/go-windows-terminal-sequences v1.0.2/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/konsorten/go-windows-terminal-sequences v1.0.3/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
-github.com/kos-v/dsnparser v1.1.0/go.mod h1:hKgcsdjz6eSeu7lP7zfTtuYly0wQaEXlYwXaSr+QOig=
 github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515/go.mod h1:+0opPa2QZZtGFBFZlji/RkVcI2GknAs/DXo4wKdlNEc=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pretty v0.2.0/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
@@ -790,12 +793,8 @@ github.com/mitchellh/osext v0.0.0-20151018003038-5e2d6d41470f/go.mod h1:OkQIRizQ
 github.com/mkevac/debugcharts v0.0.0-20191222103121-ae1c48aa8615/go.mod h1:Ad7oeElCZqA1Ufj0U9/liOF4BtVepxRcTvr2ey7zTvM=
 github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415 h1:ds5FgFMKWnQ0Fgn0FiLGwjbI7IQ1fiG7MmpxRaz3HNY=
 github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415/go.mod h1:8IkaTL3Mhbtv/yV8tNigjpNWHPVjBefB1N0xn88Pe74=
-github.com/mmtbak/microlibrary v0.0.0-20250531011832-df0634bedc53 h1:Z58d3K2lFTxybAa0g6pW1cbg0m8Q8lek1hLiCZDeiUM=
-github.com/mmtbak/microlibrary v0.0.0-20250531011832-df0634bedc53/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
-github.com/mmtbak/microlibrary v0.0.0-20250625035015-658cd3d170db h1:CZU1FZcMaX4gM1WlBwyHC3Z0dVuyoU2X7xdLsa9aC64=
-github.com/mmtbak/microlibrary v0.0.0-20250625035015-658cd3d170db/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
-github.com/mmtbak/microlibrary v0.0.0-20250626184112-fbdf22d08b78 h1:ysAIZT1R/UUOUrKPf9rDprRNpGQPzpJcywXmYnJROio=
-github.com/mmtbak/microlibrary v0.0.0-20250626184112-fbdf22d08b78/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
+github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a h1:iZtfeo5od+SnOwt/5tx83mS2DJ9aNN3Ou+Rx4NnjaQM=
+github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
 github.com/moby/locker v1.0.1/go.mod h1:S7SDdo5zpBK84bzzVlKr2V0hz+7x9hWbYC/kq7oQppc=
 github.com/moby/spdystream v0.2.0/go.mod h1:f7i0iNDQJ059oMTcWxx8MA/zKFIuD/lY+0GqbN2Wy8c=
 github.com/moby/sys/mount v0.3.3/go.mod h1:PBaEorSNTLG5t/+4EgukEQVlAvVEc6ZjTySwKdqp5K0=

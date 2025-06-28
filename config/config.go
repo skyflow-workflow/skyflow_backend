@@ -13,7 +13,7 @@ type SkyflowConfig struct {
 }
 
 type MessageQueueConfig struct {
-	Source string `yaml:"source"`
+	DSN string `yaml:"dsn"`
 }
 type APIConfig struct {
 	QPSLimit int `yaml:"qps_limit"` //qps limit
@@ -61,4 +61,8 @@ type ResourceLimiter struct {
 	// k8s style format, e.g. "512Mi" for memory and "2" for CPU.
 	MemoryLimit string `yaml:"memory_limit"`
 	CPULimit    string `yaml:"cpu_limit"`
+}
+
+func NewConfig() *SkyflowConfig {
+	return &SkyflowConfig{}
 }

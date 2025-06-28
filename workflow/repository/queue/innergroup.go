@@ -1,10 +1,7 @@
 package queue
 
 import (
-	"fmt"
 	"time"
-
-	"github.com/mmtbak/microlibrary/config"
 )
 
 // InnerQueueGroup inner queue group
@@ -13,35 +10,6 @@ type InnerQueueGroup struct {
 	_NormalQueue InnerMessageQueue
 	// Deplay InnerMessage Queue
 	_DelayQueue InnerMessageQueue
-}
-
-func NewInnerQueueGroupFromConfig(normal config.AccessPoint, delay config.AccessPoint) (*InnerQueueGroup, error) {
-
-	var err error
-	var normalqueue InnerMessageQueue
-	var delayqueue InnerMessageQueue
-	// queue define later
-	if normal.Source == "" {
-		err = fmt.Errorf("lack of config for inner queue")
-		return nil, err
-	}
-	normalqueue, err = NewInnerMessageQueueFromConfig(normal)
-	if err != nil {
-		return nil, err
-	}
-
-	if delay.Source != "" {
-		delayqueue, err = NewInnerMessageQueueFromConfig(delay)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	groupqueue, err := NewInnerQueueGroup(normalqueue, delayqueue)
-	if err != nil {
-		return nil, err
-	}
-	return groupqueue, nil
 }
 
 // NewInnerQueueGroup create new inner queue group

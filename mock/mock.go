@@ -3,7 +3,6 @@ package mock
 import (
 	"database/sql"
 
-	"github.com/mmtbak/microlibrary/config"
 	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
 )
@@ -13,13 +12,11 @@ var (
 	MockDBClient *rdb.DBClient
 	MockKafkaMQ  *mq.KafkaMessageQueue
 )
-var LocalUnitTestMySQLConfig = config.AccessPoint{
-	Source: "mysql://root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
-	Options: map[string]interface{}{
-		"sqllevel":    "info",
-		"maxopenconn": 100,
-		"maxidleconn": 100,
-	},
+var LocalUnitTestMySQLConfig = rdb.Config{
+	DSN:          "mysql://root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
+	LogLevel:     "info",
+	MaxOpenConns: 200,
+	MaxIdleConns: 200,
 }
 
 var LocalUnitTestKafkaDSN = "kafka://localhost:9092/?" +
@@ -42,11 +39,7 @@ func GetMockDBClient() *rdb.DBClient {
 func InitMockDB() error {
 
 	var err error
-	config, err := rdb.ParseConfig(LocalUnitTestMySQLConfig)
-	if err != nil {
-		return err
-	}
-	MockDBClient, err = rdb.NewDBClient(config)
+	MockDBClient, err = rdb.NewDBClient(&LocalUnitTestMySQLConfig)
 	if err != nil {
 		return err
 	}

@@ -9,9 +9,5 @@ import (
 var myValidate = validator.New()
 
 // default two executor
-var StandardExecutor = Executor{
-	Config: &config.StandardExecutorConfig,
-}
-var ExpressExecutor = Executor{
-	Config: &config.ExpressExecutorConfig,
-}
+var StandardExecutor = NewExecutor(&config.StandardExecutorConfig)
+var ExpressExecutor = NewExecutor(&config.ExpressExecutorConfig)

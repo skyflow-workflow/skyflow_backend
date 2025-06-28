@@ -22,7 +22,7 @@ type ExecutionStep struct {
 func NewExecutionStep(dbStep *po.Step, executor *Executor) (*ExecutionStep, error) {
 	var err error
 
-	state, err := executor.parser.ParseState(dbStep.Definition)
+	state, err := executor.Parser.ParseState(dbStep.Definition)
 	if err != nil {
 		return nil, err
 	}

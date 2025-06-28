@@ -13,7 +13,7 @@ import (
 
 func TestParseTask(t *testing.T) {
 
-	myExecutor := &StandardExecutor
+	myExecutor := StandardExecutor
 	dbStep := &po.Step{
 		Type: "Task",
 		Definition: `{
@@ -30,7 +30,7 @@ func TestParseTask(t *testing.T) {
 
 func TestTask(t *testing.T) {
 
-	myExecutor := &StandardExecutor
+	myExecutor := StandardExecutor
 	step_id := 52
 
 	taskStep, err := NewTaskFromID(step_id, myExecutor)
@@ -73,7 +73,7 @@ func TestRunTask(t *testing.T) {
 }
 
 func TestTaskToken(t *testing.T) {
-	myExecutor := &StandardExecutor
+	myExecutor := StandardExecutor
 	token := "e117a41b-f2a4-4195-a259-3a2718327d48"
 	task, err := myExecutor.NewTaskFromToken(token, []string{}, nil)
 	fmt.Println(err)

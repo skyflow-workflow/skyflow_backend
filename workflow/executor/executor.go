@@ -24,15 +24,20 @@ import (
 // The Executor struct encapsulates the necessary components for executing workflow events,
 type Executor struct {
 	MetaDB     *rdb.DBClient
-	innerQueue queue.InnerMessageQueue
-	exporter   exporter.ExporterService
+	InnerQueue queue.InnerMessageQueue
+	Exporter   exporter.ExporterService
 	Config     *config.Config
-	parser     *parser.Parser
+	Parser     *parser.Parser
 }
 
 // NewExecutor creates a new Executor instance
-func NewExecutor() *Executor {
-	return &Executor{}
+func NewExecutor(config *config.Config) *Executor {
+
+	executor := &Executor{
+		Config: config,
+		Parser: parser.NewParser(config),
+	}
+	return executor
 }
 
 func (executor *Executor) ProcessEvent(state *po.Step, event queue.InnerMessageBody) error {
@@ -75,7 +80,7 @@ func (executor *Executor) NewTaskFromToken(token string, fields []string, sessio
 func (executor *Executor) SendEventsMessages(events []vo.ExecutionEvent, msgs []queue.InnerMessageBody) error {
 
 	for _, msg := range msgs {
-		err := executor.innerQueue.SendInnerMessage(msg, nil)
+		err := executor.InnerQueue.SendInnerMessage(msg, nil)
 		if err != nil {
 			return err
 		}
@@ -84,18 +89,18 @@ func (executor *Executor) SendEventsMessages(events []vo.ExecutionEvent, msgs []
 }
 
 func (executor *Executor) SendMessage(message queue.InnerMessageBody, sendtime *time.Time) error {
-	if executor.innerQueue == nil {
+	if executor.InnerQueue == nil {
 		return fmt.Errorf("inner queue is not initialized")
 	}
-	return executor.innerQueue.SendInnerMessage(message, sendtime)
+	return executor.InnerQueue.SendInnerMessage(message, sendtime)
 }
 
 // SendExecutionEvents 发送event
 func (executor *Executor) SendExecutionEvents(events ...vo.ExecutionEvent) {
-	if executor.exporter == nil {
+	if executor.Exporter == nil {
 		return
 	}
-	executor.exporter.SendExecutionEvents(events)
+	executor.Exporter.SendExecutionEvents(events)
 }
 
 // ProcessEventStepInit process step event 'Init'
@@ -116,7 +121,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 		return err
 	}
 
-	parserState, err := executor.parser.ParseState(dbStep.Definition)
+	parserState, err := executor.Parser.ParseState(dbStep.Definition)
 	if err != nil {
 		slog.Error(err.Error())
 		return err
@@ -253,7 +258,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 	}
 	// message queue send create message
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateExeMsg)
-	err = executor.innerQueue.SendInnerMessage(message, nil)
+	err = executor.InnerQueue.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}

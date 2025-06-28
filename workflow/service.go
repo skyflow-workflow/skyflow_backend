@@ -2,6 +2,10 @@ package workflow
 
 import (
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/template"
 )
 
 // WorkflowService Service provides workflow related services
@@ -14,9 +18,38 @@ type WorkflowService *workflowService
 // workflowService is the implementation of WorkflowService interface
 // It provides methods to manage workflow execution, templates, and events.
 type workflowService struct {
-	DBClient *rdb.DBClient
+	DBClient         *rdb.DBClient
+	TemplateService  template.TemplateService
+	InnerQueue       queue.InnerMessageQueue
+	Exporter         exporter.ExporterService
+	standardExecutor *executor.Executor
+	expressExecutor  *executor.Executor
 }
 
-func NewWorkflowService(dbClient *rdb.DBClient) WorkflowService {
-	return &workflowService{}
+func NewWorkflowService(dbClient *rdb.DBClient, innerQueue queue.InnerMessageQueue) (WorkflowService, error) {
+	templateService := template.NewTemplateService(dbClient)
+	exporterService, err := exporter.NewExporterService(exporter.NewDBListener(dbClient))
+	if err != nil {
+		return nil, err
+	}
+
+	standardExecutor := executor.StandardExecutor
+	standardExecutor.MetaDB = dbClient
+	standardExecutor.InnerQueue = innerQueue
+	standardExecutor.Exporter = exporterService
+
+	expressExecutor := executor.ExpressExecutor
+	expressExecutor.MetaDB = dbClient
+	expressExecutor.InnerQueue = innerQueue
+	expressExecutor.Exporter = exporterService
+
+	svc := &workflowService{
+		DBClient:         dbClient,
+		TemplateService:  templateService,
+		InnerQueue:       innerQueue,
+		Exporter:         exporterService,
+		standardExecutor: standardExecutor,
+		expressExecutor:  expressExecutor,
+	}
+	return svc, nil
 }

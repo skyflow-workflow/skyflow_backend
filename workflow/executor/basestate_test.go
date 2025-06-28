@@ -17,7 +17,7 @@ func TestInitState(t *testing.T) {
 
 	var dbStep *po.Step
 	var err error
-	myExecutor := &StandardExecutor
+	myExecutor := StandardExecutor
 
 	dbStep, err = myExecutor.QueryStepByID(step_id, []string{}, nil)
 

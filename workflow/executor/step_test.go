@@ -10,7 +10,7 @@ import (
 
 func TestGetBone(t *testing.T) {
 
-	var myExecutor = &StandardExecutor
+	var myExecutor = StandardExecutor
 	var testcases = []struct {
 		step_id int
 		input   string

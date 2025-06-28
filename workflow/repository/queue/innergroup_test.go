@@ -4,12 +4,18 @@ import (
 	"log/slog"
 	"testing"
 
+	"github.com/go-playground/assert/v2"
 	"github.com/skyflow-workflow/skyflow_backbend/mock"
 )
 
 func TestCreateInnerQueueGroup(t *testing.T) {
 
-	queuegroup, err := NewInnerQueueGroupFromConfig(mock.LocalUnitTestKafka, mock.LocalUnitTestMySQLConfig)
+	masterQueue, err := NewInnerMessageQueueFromConfig(mock.LocalUnitTestKafkaDSN)
+	assert.Equal(t, nil, err)
+
+	delayQueue := NewDBMessageQueue(mock.MockDBClient, DefaultDBDelayQueueOption)
+
+	queuegroup, err := NewInnerQueueGroup(masterQueue, delayQueue)
 	if err != nil {
 		t.Error(err)
 		return

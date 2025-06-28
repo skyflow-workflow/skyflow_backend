@@ -197,7 +197,7 @@ func (t *Task) Run(message queue.InnerMessageBody) error {
 
 		// message queue send create message
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.StepGroupBlocked, dbStepGroup.StepID, nil)
-		err = t.Executor.innerQueue.SendInnerMessage(message, nil)
+		err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
 		if err != nil {
 			return err
 		}
@@ -595,7 +595,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		// message queue send create message
 		// send message
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateWakeup, dbStep.ID, mdec)
-		err = t.Executor.innerQueue.SendInnerMessage(message, &retrytime)
+		err = t.Executor.InnerQueue.SendInnerMessage(message, &retrytime)
 
 		if err != nil {
 			return err
@@ -639,7 +639,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		}
 		// message queue send create message
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextState, dbStep.ID, fns)
-		err = t.Executor.innerQueue.SendInnerMessage(message, nil)
+		err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
 
 		if err != nil {
 			slog.Error(err.Error())
@@ -696,7 +696,7 @@ func (t *Task) ProcessTaskStateWakeup(message queue.InnerMessageBody) error {
 
 	// message queue send create message
 	newmsg := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, nil)
-	err = t.Executor.innerQueue.SendInnerMessage(newmsg, nil)
+	err = t.Executor.InnerQueue.SendInnerMessage(newmsg, nil)
 	if err != nil {
 		return err
 	}
@@ -812,7 +812,7 @@ func (t *Task) SendTaskFailure(ctx context.Context, errorname string, cause stri
 
 	// message queue send create message
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateSend, dbStep.ID, nil)
-	err = t.Executor.innerQueue.SendInnerMessage(message, nil)
+	err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -912,7 +912,7 @@ func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 
 	// message queue send create message
 	message := NewStepMessage(dbstep.ExecutionID, MessageType.TaskStateSend, dbstep.ID, nil)
-	err = t.Executor.innerQueue.SendInnerMessage(message, nil)
+	err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
 
 	if err != nil {
 		slog.Error(
@@ -1033,7 +1033,7 @@ func (t *Task) SendTaskHeartbeat(ctx context.Context, message string, session rd
 		nextTimeoutTime := time.Now().Add(time.Second * time.Duration(innerdata.HeartbeatSeconds))
 		tasktimeoutMsg := NewStepMessage(dbstep.ExecutionID,
 			MessageType.TaskHeartBeatTimeup, dbstep.ID, mec)
-		err = t.Executor.innerQueue.SendInnerMessage(tasktimeoutMsg, &nextTimeoutTime)
+		err = t.Executor.InnerQueue.SendInnerMessage(tasktimeoutMsg, &nextTimeoutTime)
 		if err != nil {
 			return err
 		}

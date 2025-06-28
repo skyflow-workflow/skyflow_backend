@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/template"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
 // SkyflowServiceHandler skyflow service handler
 type SkyflowServiceHandler struct {
-	templateService template.TemplateService
+	wfSvc workflow.WorkflowService
 }
 
 // CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.
@@ -55,7 +55,7 @@ func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req 
 		Comment:      req.Comment,
 		Namespace:    req.Namespace,
 	}
-	voresp, err := s.templateService.CreateOrUpdateActivity(ctx, voreq, nil)
+	voresp, err := s.wfSvc.TemplateService.CreateOrUpdateActivity(ctx, voreq, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req
 		Name:    req.Name,
 		Comment: req.Comment,
 	}
-	voresp, err := s.templateService.CreateOrUpdateNamespace(ctx, voreq, nil)
+	voresp, err := s.wfSvc.TemplateService.CreateOrUpdateNamespace(ctx, voreq, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pb.Crea
 		Comment:      req.Comment,
 		Namespace:    req.Namespace,
 	}
-	voresp, err := s.templateService.CreateActivity(ctx, voreq, nil)
+	voresp, err := s.wfSvc.TemplateService.CreateActivity(ctx, voreq, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pb.Cre
 		Name:    req.Name,
 		Comment: req.Comment,
 	}
-	voresp, err := s.templateService.CreateNamespace(ctx, voreq, nil)
+	voresp, err := s.wfSvc.TemplateService.CreateNamespace(ctx, voreq, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pb.Cre
 
 // DescribeActivity implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pb.DescribeActivityRequest) (*pb.DescribeActivityResponse, error) {
-	voresp, err := s.templateService.DescribeActivity(ctx, req.ActivityUri, nil)
+	voresp, err := s.wfSvc.TemplateService.DescribeActivity(ctx, req.ActivityUri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pb.List
 		PageRequest: ToVOPageRequest(req.PageRequest),
 	}
 
-	voresp, err := s.templateService.ListActivities(ctx, voreq)
+	voresp, err := s.wfSvc.TemplateService.ListActivities(ctx, voreq)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (s *SkyflowServiceHandler) ListNamespaces(ctx context.Context, req *pb.List
 		PageRequest: ToVOPageRequest(req.PageRequest),
 	}
 
-	voresp, err := s.templateService.ListNamespaces(ctx, voreq)
+	voresp, err := s.wfSvc.TemplateService.ListNamespaces(ctx, voreq)
 	if err != nil {
 		return nil, err
 	}
