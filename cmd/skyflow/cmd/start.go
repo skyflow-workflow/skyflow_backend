@@ -9,6 +9,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/server/apiserver"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/spf13/cobra"
+	"trpc.group/trpc-go/trpc-go/server"
 )
 
 var (
@@ -35,13 +36,10 @@ args:
 
 func StartCommand(cmd *cobra.Command, args []string) {
 	var err error
-	// initialize trpc server
-	err = InitializeTrpc(trpc_conf)
-	if err != nil {
-		slog.Error("Error initializing trpc server", "error", err)
-		return
-	}
-
+	// initialize trpc server,
+	// this will load the configuration file and create a new server instance
+	// many plugins depends on trpc server configuration file
+	trpcServer := InitializeTrpcSever(trpc_conf)
 	sfConfig, err := LoadConfig(skyflow_conf)
 	if err != nil {
 		slog.Error("Error loading skyflow configuration", "error", err)
@@ -62,7 +60,7 @@ func StartCommand(cmd *cobra.Command, args []string) {
 			go func() {
 				defer wg.Done()
 				slog.Info("Starting API server...")
-				StartAPIServer(wfSvc)
+				StartAPIServer(trpcServer, wfSvc)
 			}()
 		case "dispatcher":
 			wg.Add(1)
@@ -93,9 +91,9 @@ func StartCommand(cmd *cobra.Command, args []string) {
 
 }
 
-func StartAPIServer(wfSvc workflow.WorkflowService) {
+func StartAPIServer(server *server.Server, wfSvc workflow.WorkflowService) {
 	// Initialize the API server
-	apiServer := apiserver.NewAPIServer(wfSvc)
+	apiServer := apiserver.NewAPIServer(server, wfSvc)
 	// Start the API server
 	apiServer.Start()
 }

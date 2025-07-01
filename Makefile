@@ -71,6 +71,7 @@ test:
 build:
 	@echo "building........"
 	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build  -o bin/skyflow $(FLAGS) ./cmd/skyflow/*.go
+	@echo "build success, binary file: bin/skyflow"
 
 .PHONY: run
 run: build

@@ -25,6 +25,7 @@ type Response struct {
 
 // DefaultHttpRespHandler  default trpc http handler
 var DefaultHttpRespHandler = func(w stdhttp.ResponseWriter, r *stdhttp.Request, rspbody []byte) (err error) {
+
 	var data json.RawMessage
 	if len(rspbody) == 0 {
 		data = []byte("null")

@@ -24,3 +24,5 @@ tests
 trpc_go.yaml
 trpc_go.dev.yaml
 skyflow.yaml
+
+.logs

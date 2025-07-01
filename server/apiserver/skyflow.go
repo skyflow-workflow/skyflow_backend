@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
@@ -163,6 +164,7 @@ func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pb.List
 // ListNamespaces implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) ListNamespaces(ctx context.Context, req *pb.ListNamespacesRequest) (*pb.ListNamespacesResponse, error) {
 
+	slog.Info("ListNamespaces called", "req", req)
 	voreq := vo.ListNamespacesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),
 	}

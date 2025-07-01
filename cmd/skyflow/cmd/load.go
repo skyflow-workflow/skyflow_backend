@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"log/slog"
 
@@ -9,8 +10,11 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/pkg/trpclog"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+
 	"trpc.group/trpc-go/trpc-go"
 	tconfig "trpc.group/trpc-go/trpc-go/config"
+	"trpc.group/trpc-go/trpc-go/filter"
+	"trpc.group/trpc-go/trpc-go/server"
 )
 
 func LoadConfig(customConfigFilePath string) (*config.SkyflowConfig, error) {
@@ -73,17 +77,30 @@ func LoadServices(conf *config.SkyflowConfig) (workflow.WorkflowService, error) 
 	return workflowService, nil
 }
 
-func InitializeTrpc(trpc_conf string) error {
+func InitializeTrpcSever(trpc_conf string) *server.Server {
 	if trpc_conf != "" {
 		trpc.ServerConfigPath = trpc_conf // Set the TRPC server configuration path
 	}
 
-	_, err := trpc.LoadConfig(trpc_conf)
-	if err != nil {
-		slog.Error("Error loading TRPC server configuration", "error", err, "configPath", trpc_conf)
-		return nil
-	}
+	// load TRPC server configuration
+	s := trpc.NewServer()
+
+	// load trpc logger config and transform it to slog logger
 	logger := trpclog.NewHandlerFromTrpcLogger(nil)
 	slog.SetDefault(slog.New(logger))
-	return nil
+	slog.Info("Initializing TRPC server", "configPath", trpc_conf)
+	// test config
+	f := filter.GetServer("accesslog")
+	fmt.Println("Accesslog filter is registered:", f)
+
+	cfg := trpc.GlobalConfig()
+	cfgbytes, err := json.Marshal(cfg) // This will ensure the config is loaded and can be marshaled to JSON
+	if err != nil {
+		slog.Error("Error marshaling TRPC server configuration", "error", err)
+		panic("err")
+	}
+	fmt.Println("TRPC server configuration loaded:", string(cfgbytes))
+	slog.Info("TRPC server configuration loaded", "config", string(cfgbytes))
+
+	return s
 }
