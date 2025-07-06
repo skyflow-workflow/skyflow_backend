@@ -123,9 +123,9 @@ func accessLog(ctx context.Context, err error, d time.Duration) {
 	if httpHeader != nil {
 		// HTTP request header
 		httpFieldList := []log.Field{
-			log.Field{Key: "protocol", Value: httpHeader.Request.Proto},
-			log.Field{Key: "http_method", Value: httpHeader.Request.Method},
-			log.Field{Key: "path", Value: string(httpHeader.Request.RequestURI)},
+			{Key: "protocol", Value: httpHeader.Request.Proto},
+			{Key: "http_method", Value: httpHeader.Request.Method},
+			{Key: "path", Value: string(httpHeader.Request.RequestURI)},
 		}
 		fieldList = append(fieldList, httpFieldList...)
 

@@ -2,7 +2,6 @@ package apiserver
 
 import (
 	"context"
-	"log/slog"
 
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
@@ -16,91 +15,166 @@ type SkyflowServiceHandler struct {
 
 // CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
-	panic("unimplemented")
+	voReq := vo.CreateStateMachineRequest{
+		Name:        req.Name,
+		Description: req.Description,
+		Definition:  req.Definition,
+		Namespace:   req.Namespace,
+	}
+	voResp, err := s.wfSvc.TemplateService.CreateOrUpdateStateMachine(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.CreateStateMachineResponse{
+		Data: ToPBStateMachine(&voResp.Data),
+	}
+	return resp, nil
 }
 
 // CreateStateMachine implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) CreateStateMachine(ctx context.Context, req *pb.CreateStateMachineRequest) (*pb.CreateStateMachineResponse, error) {
-	panic("unimplemented")
+	voReq := vo.CreateStateMachineRequest{
+		Name:        req.Name,
+		Description: req.Description,
+		Definition:  req.Definition,
+		Namespace:   req.Namespace,
+	}
+	voResp, err := s.wfSvc.TemplateService.CreateStateMachine(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.CreateStateMachineResponse{
+		Data: ToPBStateMachine(&voResp.Data),
+	}
+	return resp, nil
 }
 
 // DeleteActivity implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DeleteActivity(ctx context.Context, req *pb.DeleteActivityRequest) (*pb.DeleteActivityResponse, error) {
-	panic("unimplemented")
+	voReq := vo.DeleteActivityRequest{
+		ActivityURI: req.ActivityUri,
+	}
+	err := s.wfSvc.TemplateService.DeleteActivity(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.DeleteActivityResponse{}
+	return resp, nil
 }
 
 // DeleteStateMachine implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DeleteStateMachine(ctx context.Context, req *pb.DeleteStateMachineRequest) (*pb.DeleteStateMachineResponse, error) {
-	panic("unimplemented")
+	voReq := vo.DeleteStateMachineRequest{
+		StateMachineURI: req.StatemachineUri,
+	}
+	err := s.wfSvc.TemplateService.DeleteStateMachine(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteStateMachineResponse{}, nil
+
 }
 
 // DescribeStateMachine implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *pb.DescribeStateMachineRequest) (*pb.DescribeStateMachineResponse, error) {
-	panic("unimplemented")
+	voReq := vo.DescribeStateMachineRequest{
+		StateMachineURI: req.StatemachineUri,
+	}
+	voResp, err := s.wfSvc.TemplateService.DescribeStateMachine(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DescribeStateMachineResponse{
+		Data: ToPBStateMachine(&voResp),
+	}, nil
 }
 
 // ListStateMachines implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ListStateMachines(ctx context.Context, req *pb.ListStateMachinesRequest) (*pb.ListStateMachinesResponse, error) {
-	panic("unimplemented")
+
+	voReq := vo.ListStateMachinesRequest{
+		Namespace:   req.Namespace,
+		PageRequest: ToVOPageRequest(req.PageRequest),
+	}
+	voResp, err := s.wfSvc.TemplateService.ListStateMachines(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.ListStateMachinesResponse{
+		Statemachines: DataTransferArray(voResp.StateMachines, ToPBStateMachineItem),
+		PageResponse:  ToPBPageResponse(voResp.PageResponse),
+	}
+	return resp, nil
 }
 
 // UpdateStateMachine implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) UpdateStateMachine(ctx context.Context, req *pb.UpdateStateMachineRequest) (*pb.UpdateStateMachineResponse, error) {
-	panic("unimplemented")
+	voReq := vo.UpdateStateMachineRequest{
+		StateMachineURI: req.StatemachineUri,
+		Name:            req.Name,
+		Description:     req.Description,
+		Definition:      req.Definition,
+	}
+	err := s.wfSvc.TemplateService.UpdateStateMachine(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.UpdateStateMachineResponse{}
+	return resp, nil
 }
 
 // CreateOrUpdateActivity implements pb.SkyflowServiceService.
 func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
-	voreq := vo.CreateActivityRequest{
+	voReq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
-		Comment:      req.Comment,
+		Description:  req.Description,
 		Namespace:    req.Namespace,
 	}
-	voresp, err := s.wfSvc.TemplateService.CreateOrUpdateActivity(ctx, voreq, nil)
+	voResp, err := s.wfSvc.TemplateService.CreateOrUpdateActivity(ctx, voReq, nil)
 	if err != nil {
 		return nil, err
 	}
 	resp := pb.CreateActivityResponse{
-		ActivityUri: voresp.Data.URI,
-		CreateTime:  voresp.Data.CreateTime.Unix(),
-		UpdateTime:  voresp.Data.UpdateTime.Unix(),
+		ActivityUri: voResp.Data.URI,
+		CreateTime:  voResp.Data.CreateTime.Unix(),
+		UpdateTime:  voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
 
 // CreateOrUpdateNamespace implements pb.SkyflowServiceService.
 func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
-	voreq := vo.CreateNamespaceRequest{
-		Name:    req.Name,
-		Comment: req.Comment,
+	voReq := vo.CreateNamespaceRequest{
+		Name:        req.Name,
+		Description: req.Description,
 	}
-	voresp, err := s.wfSvc.TemplateService.CreateOrUpdateNamespace(ctx, voreq, nil)
+	voResp, err := s.wfSvc.TemplateService.CreateOrUpdateNamespace(ctx, voReq, nil)
 	if err != nil {
 		return nil, err
 	}
 	resp := pb.CreateNamespaceResponse{
-		Name:       voresp.Data.Name,
-		CreateTime: voresp.Data.CreateTime.Unix(),
-		UpdateTime: voresp.Data.UpdateTime.Unix(),
+		Name:       voResp.Data.Name,
+		CreateTime: voResp.Data.CreateTime.Unix(),
+		UpdateTime: voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
 
 // CreateActivity implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pb.CreateActivityRequest) (*pb.CreateActivityResponse, error) {
-	voreq := vo.CreateActivityRequest{
+	voReq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
-		Comment:      req.Comment,
+		Description:  req.Description,
 		Namespace:    req.Namespace,
 	}
-	voresp, err := s.wfSvc.TemplateService.CreateActivity(ctx, voreq, nil)
+	voResp, err := s.wfSvc.TemplateService.CreateActivity(ctx, voReq, nil)
 	if err != nil {
 		return nil, err
 	}
 	resp := pb.CreateActivityResponse{
-		ActivityUri: voresp.Data.URI,
-		CreateTime:  voresp.Data.CreateTime.Unix(),
-		UpdateTime:  voresp.Data.UpdateTime.Unix(),
+		ActivityUri: voResp.Data.URI,
+		CreateTime:  voResp.Data.CreateTime.Unix(),
+		UpdateTime:  voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
@@ -108,34 +182,34 @@ func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pb.Crea
 // CreateNamespace implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pb.CreateNamespaceRequest) (*pb.CreateNamespaceResponse, error) {
 
-	voreq := vo.CreateNamespaceRequest{
-		Name:    req.Name,
-		Comment: req.Comment,
+	voReq := vo.CreateNamespaceRequest{
+		Name:        req.Name,
+		Description: req.Description,
 	}
-	voresp, err := s.wfSvc.TemplateService.CreateNamespace(ctx, voreq, nil)
+	voResp, err := s.wfSvc.TemplateService.CreateNamespace(ctx, voReq, nil)
 	if err != nil {
 		return nil, err
 	}
 	resp := pb.CreateNamespaceResponse{
-		Name:       voresp.Data.Name,
-		CreateTime: voresp.Data.CreateTime.Unix(),
-		UpdateTime: voresp.Data.UpdateTime.Unix(),
+		Name:       voResp.Data.Name,
+		CreateTime: voResp.Data.CreateTime.Unix(),
+		UpdateTime: voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
 
 // DescribeActivity implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pb.DescribeActivityRequest) (*pb.DescribeActivityResponse, error) {
-	voresp, err := s.wfSvc.TemplateService.DescribeActivity(ctx, req.ActivityUri, nil)
+	voResp, err := s.wfSvc.TemplateService.DescribeActivity(ctx, req.ActivityUri, nil)
 	if err != nil {
 		return nil, err
 	}
 	resp := pb.DescribeActivityResponse{
-		Name:        voresp.Name,
-		ActivityUri: voresp.URI,
-		Comment:     voresp.Comment,
-		CreateTime:  voresp.CreateTime.Unix(),
-		UpdateTime:  voresp.UpdateTime.Unix(),
+		Name:        voResp.Name,
+		ActivityUri: voResp.URI,
+		Description: voResp.Description,
+		CreateTime:  voResp.CreateTime.Unix(),
+		UpdateTime:  voResp.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
@@ -143,19 +217,19 @@ func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pb.De
 // ListActivities implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pb.ListActivitiesRequest) (*pb.ListActivitiesResponse, error) {
 
-	voreq := vo.ListActivitiesRequest{
+	voReq := vo.ListActivitiesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),
 	}
 
-	voresp, err := s.wfSvc.TemplateService.ListActivities(ctx, voreq)
+	voResp, err := s.wfSvc.TemplateService.ListActivities(ctx, voReq)
 	if err != nil {
 		return nil, err
 	}
-	respdata := DataTransferArray(voresp.Activities, ToPBActivity)
+	respdata := DataTransferArray(voResp.Activities, ToPBActivityItem)
 
 	resp := &pb.ListActivitiesResponse{
 		Activities:   respdata,
-		PageResponse: ToPBPageResponse(voresp.PageResponse),
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
 	}
 	return resp, nil
 
@@ -164,20 +238,19 @@ func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pb.List
 // ListNamespaces implements pb.SkyflowService.
 func (s *SkyflowServiceHandler) ListNamespaces(ctx context.Context, req *pb.ListNamespacesRequest) (*pb.ListNamespacesResponse, error) {
 
-	slog.Info("ListNamespaces called", "req", req)
-	voreq := vo.ListNamespacesRequest{
+	voReq := vo.ListNamespacesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),
 	}
 
-	voresp, err := s.wfSvc.TemplateService.ListNamespaces(ctx, voreq)
+	voResp, err := s.wfSvc.TemplateService.ListNamespaces(ctx, voReq)
 	if err != nil {
 		return nil, err
 	}
-	respdata := DataTransferArray(voresp.Namespaces, ToPBNamespace)
+	respdata := DataTransferArray(voResp.Namespaces, ToPBNamespace)
 
 	resp := &pb.ListNamespacesResponse{
 		Namespaces:   respdata,
-		PageResponse: ToPBPageResponse(voresp.PageResponse),
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
 	}
 	return resp, nil
 }

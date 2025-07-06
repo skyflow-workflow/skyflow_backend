@@ -4,7 +4,7 @@ syntax = "proto3";
 
 package skyflow;
 
-// import "google/protobuf/timestamp.proto";
+// import "·ogle/protobuf/timestamp.proto";
 // import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "trpc/proto/trpc_options.proto";
@@ -97,27 +97,27 @@ service SkyflowV1Service {
     rpc DeleteActivity(DeleteActivityRequest) returns (DeleteActivityResponse) {
         option (trpc.alias) = "/api/v1/DeleteActivity";
     }
-    // CreateStateMachine 创建一个工作流
+    // CreateStateMachine 创建一个状态机
     rpc CreateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
         option (trpc.alias) = "/api/v1/CreateStateMachine";
     }
-    // CreateOrUpdateStateMachine 创建/更新一个工作流
+    // CreateOrUpdateStateMachine 创建/更新一个状态机
     rpc CreateOrUpdateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
         option (trpc.alias) = "/api/v1/CreateOrUpdateStateMachine";
     }
-    // DeleteStateMachine 删除一个工作流
+    // DeleteStateMachine 删除一个状态机
     rpc DeleteStateMachine(DeleteStateMachineRequest) returns (DeleteStateMachineResponse) {
         option (trpc.alias) = "/api/v1/DeleteStateMachine";
     }
-    // ListStateMachines 获得工作流列表
+    // ListStateMachines 获得状态机列表
     rpc ListStateMachines(ListStateMachinesRequest) returns (ListStateMachinesResponse) {
         option (trpc.alias) = "/api/v1/ListStateMachines";
     }
-    // DescribeStateMachine 获得一个工作流的描述
+    // DescribeStateMachine 获得一个状态机的描述
     rpc DescribeStateMachine(DescribeStateMachineRequest) returns (DescribeStateMachineResponse) {
         option (trpc.alias) = "/api/v1/DescribeStateMachine";
     }
-    // UpdateStateMachine 更新一个工作流
+    // UpdateStateMachine 更新一个状态机
     rpc UpdateStateMachine(UpdateStateMachineRequest) returns (UpdateStateMachineResponse) {
         option (trpc.alias) = "/api/v1/UpdateStateMachine";
     }
@@ -126,8 +126,8 @@ service SkyflowV1Service {
 message NamespaceListItem {
     // name 命名空间名字
     string name = 1;
-    // comment 命名空间描述
-    string comment = 2;
+    // description 命名空间描述
+    string description = 2;
     // create_time timestample
     int64 create_time = 11;
     // update_time timestample
@@ -138,8 +138,8 @@ message NamespaceListItem {
 message CreateNamespaceRequest {
     // name 命名空间名字
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    // comment 命名空间描述
-    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    // description 命名空间描述
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
 }
 
 // CreateNamespaceResponse 创建一个命名空间返回结构
@@ -172,8 +172,8 @@ message ListNamespacesResponse {
 message CreateActivityRequest {
     // name activity name
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    // comment activity comment
-    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    // description activity description
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     // namespace activity namespace
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // parameters activity parameters
@@ -200,8 +200,8 @@ message DescribeActivityRequest {
 message DescribeActivityResponse {
     // name activity name
     string name = 1;
-    // comment activity comment
-    string comment = 2;
+    // description activity description
+    string description = 2;
     // activity_uri activity uri
     string activity_uri = 3;
     // create_time create time timestample
@@ -231,8 +231,8 @@ message ListActivitiesRequest {
 message ActivityListItem {
     // name 活动名字
     string name = 1;
-    // comment 活动描述
-    string comment = 2;
+    // description 活动描述
+    string description = 2;
     // activity_uri 活动uri
     string activity_uri = 3;
     // create_time timestample
@@ -250,19 +250,19 @@ message ListActivitiesResponse {
 }
 
 
-// CreateStateMachineRequest 创建一个工作流请求结构
+// CreateStateMachineRequest 创建一个状态机请求结构
 message CreateStateMachineRequest {
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    string comment = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     string definition = 4 [(validate.rules).string = {min_bytes: 1}];
 }
-//CreateStateMachineResponse 创建一个工作流返回结构
+//CreateStateMachineResponse 创建一个状态机返回结构
 message CreateStateMachineResponse {
     StateMachineInfo data = 1 ;
 }
 
-// DescribeActivityRequest 获得工作流详情返回结构
+// DescribeActivityRequest 获得状态机详情返回结构
 message DescribeStateMachineRequest {
     string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
 }
@@ -272,35 +272,35 @@ message DescribeStateMachineResponse {
     StateMachineInfo data = 1;
 }
 
-// DeleteStateMachineRequest 删除一个工作流请求结构
+// DeleteStateMachineRequest 删除一个状态机请求结构
 message DeleteStateMachineRequest {
     string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
 }
 
-// DeleteStateMachineResponse 删除一个工作流返回结构
+// DeleteStateMachineResponse 删除一个状态机返回结构
 message DeleteStateMachineResponse {
 }
 
-// UpdateStateMachineRequest 更新一个工作流请求结构
+// UpdateStateMachineRequest 更新一个状态机请求结构
 message UpdateStateMachineRequest {
     string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
     string name = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
-    string comment = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string description = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
     string definition = 4 [(validate.rules).string = {min_bytes: 1}];
 }
 
-// UpdateStateMachineResponse 更新一个工作流返回结构
+// UpdateStateMachineResponse 更新一个状态机返回结构
 message UpdateStateMachineResponse {
 }
 
-// ListStateMachinesRequest 获得工作流列表请求结构
+// ListStateMachinesRequest 获得状态机列表请求结构
 message ListStateMachinesRequest {
     string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // 分页请求，默认 每分页大小 = 50条
     PageRequest page_request = 2;
 }
 
-// ListStateMachinesResponse 获得工作流列表请求返回
+// ListStateMachinesResponse 获得状态机列表请求返回
 message ListStateMachinesResponse {
     // 查询到的执行列表
     repeated StateMachineListItem statemachines = 1 ;
@@ -309,11 +309,11 @@ message ListStateMachinesResponse {
 }
 
 message StateMachineListItem {
-    // name 工作流名字
+    // name 状态机名字
     string name = 1;
-    // comment 工作流描述
-    string comment = 2;
-    // statemachine_uri 工作流uri
+    // description 状态机描述
+    string description = 2;
+    // statemachine_uri 状态机uri
     string statemachine_uri = 3;
     // create_time timestample
     int64 create_time = 11;
@@ -338,8 +338,8 @@ message ExecutionListItem {
     int64 finish_time = 13;
 }
 
-// StateInfo 一个State的状态描述
-message StateInfo {
+// StepInfo 一个Step的状态描述
+message StepInfo {
     int64 id = 1;
     string status = 2 ;
     string state_definition = 4 ;
@@ -365,54 +365,58 @@ message ExecutionEventInfo {
 // ActivityInfo 活动信息
 message ActivityInfo {
     string name = 1;
-    string comment = 2;
+    string description = 2;
     string activity_uri = 3;
-    string create_time = 11;
-    string modify_time = 12;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
 }
 
-// StateMachineInfo 工作流信息
+// StateMachineInfo 状态机信息
 message StateMachineInfo {
     string name = 1;
-    string comment = 2;
+    string description = 2;
     string statemachine_uri = 3;
-    string statemachine_definition = 4;
-    // stateMachine_type; pipeline/statemachine
-    string statemachine_type = 5 ;
-    string create_time = 11;
-    string modify_time = 12;
+    string definition = 4;
+    // type : standard / express
+    string type = 5 ;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
 }
 
-// ParseStateMachineRequest 解析一个工作流请求结构`
+// ParseStateMachineRequest 解析一个状态机请求结构`
 message ParseStateMachineRequest{
     // flow定义
-    string statemachine_definition = 1;
+    string definition = 1;
 }
 
-// ParseStateMachineResponse 解析一个工作流返回结构
+// ParseStateMachineResponse 解析一个状态机返回结构
 message ParseStateMachineResponse{
     // flow 类型
-    string statemachine_type = 1 ;
+    string type = 1 ;
     // flow 详细定义
-    string statemachine_detail =2 ;
+    string definition =2 ;
 }
 
 // 创建一个执行的请求体
 // 参数约束：
 // statemachine_uri 是指注册到 skyflowflow的 模板引用路径，
-// statemachine_definition是自定义的StateMachine定义,jons/yaml格式
-// statemachine_uri与statemachine_definition 二选一。
+// definition是自定义的StateMachine定义,json/yaml格式
+// statemachine_uri与definition 二选一。
 // execution_name：用户自定义的执行唯一名称，可选， 如果指定，自动生成一个新的uuid .
 message StartExecutionRequest {
-    // 工作流模板URI，可选，statemachine_uri 与statemachine_definition 必须指定一个
+    // 状态机模板URI，可选，statemachine_uri 与definition 必须指定一个
     string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}] ;
     // 流程模板定义，JSON/YAML格式的流程模板定义，可选
-    string statemachine_definition = 2 ;
-    // 工作流执行的标题，可为空
+    string definition = 2 ;
+    // 状态机执行的标题，可为空
     string title = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
-    // 工作流执行的输入，json格式的输入 ，可选，默认是空 '{}'
+    // 状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'
     string input = 4 ;
-    // 工作流执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid
+    // 状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid
     string execution_name = 5 [(validate.rules).string = {min_bytes: 0, max_bytes: 100}];
 }
 
@@ -431,7 +435,7 @@ message DescribeExecutionRequest {
     string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
 }
 
-// 获得一个执行的描述d的返回结构
+// 获得一个执行的描述的返回结构
 message DescribeExecutionResponse {
     // ExecutionInfo execution = 1 ;
 }
@@ -440,13 +444,11 @@ message DescribeExecutionResponse {
 message DescribeExecutionBoneRequest {
     // execution uuid 必选
     string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
-    // pipeline_mode 是否是pipeline模式， 可选，默认是false
-    bool pipeline_mode = 2;
 }
 
 // 获得一个执行的描述d的返回结构
 message DescribeExecutionBoneResponse {
-    // ExecutionInfo execution = 1 ;
+    // bone execution bone
     string bone  = 2 ;
 }
 
@@ -501,10 +503,10 @@ message DescribeStateRequest {
     // State id
     int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
-// DescribeStateRequest 获得一个State的信息返回结构
-message DescribeStateResponse {
-    // 返回的State 状态信息
-    StateInfo data = 1 ;
+// DescribeStepResponse 获得一个Step的信息返回结构
+message DescribeStepResponse {
+    // 返回的Step 状态信息
+    StepInfo data = 1 ;
     // execution uuid
     string execution_uuid = 2;
 }
@@ -626,14 +628,14 @@ message SendStateSkipRequest {
 // ErrorCode 错误码定义
 //  11XXX  system error
 //  12XXX   template error
-//  13XXX   exection error
+//  13XXX   execution error
 enum ErrorCode {
     // OK 正常
     OK  = 0;
     // UnknownError 未知错误
     UnknownError = 11000;
-    // InternelError 内部错误
-    InternelError = 11001;
+    // InternalError 内部错误
+    InternalError = 11001;
     // ResourceLimitExceeded 资源限制超出
     ResourceLimitExceeded = 11002;
     // The provided URI is not valid.
@@ -670,8 +672,8 @@ enum ErrorCode {
     StateStatusError = 1011;
     // ExecutionStatusError execution 状态错误
     ExecutionStatusError = 1012;
-    // ParameterIsVaild parameter is vaild
-    ParameterIsVaild = 1013;
+    // ParameterIsValid parameter is valid
+    ParameterIsValid = 1013;
     // ParameterLimitExceeded parameter limit exceeded
     ParameterLimitExceeded = 1014;
     // InputLimitExceeded input limit exceeded

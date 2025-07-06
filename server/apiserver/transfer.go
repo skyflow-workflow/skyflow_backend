@@ -19,7 +19,7 @@ func ToTimeString(t time.Time) string {
 	return t.Format(timeformat)
 }
 
-func ToPBExecution(in po.Execution) *pb.ExecutionListItem {
+func ToPBExecutionItem(in po.Execution) *pb.ExecutionListItem {
 
 	resp := &pb.ExecutionListItem{
 		ExecutionUuid: in.UUID,
@@ -84,31 +84,42 @@ func ToPBExecutionEvent(in po.ExecutionEvent) *pb.ExecutionEventInfo {
 
 func ToPBNamespace(in po.Namespace) *pb.NamespaceListItem {
 	resp := &pb.NamespaceListItem{
-		Name:       in.Name,
-		Comment:    in.Comment,
-		CreateTime: in.CreateTime.Unix(),
-		UpdateTime: in.UpdateTime.Unix(),
+		Name:        in.Name,
+		Description: in.Description,
+		CreateTime:  in.CreateTime.Unix(),
+		UpdateTime:  in.UpdateTime.Unix(),
 	}
 	return resp
 }
 
-func ToPBActivity(in po.Activity) *pb.ActivityListItem {
+func ToPBActivityItem(in po.Activity) *pb.ActivityListItem {
 	resp := &pb.ActivityListItem{
 		Name:        in.Name,
-		Comment:     in.Comment,
+		Description: in.Description,
 		ActivityUri: in.URI,
 		CreateTime:  in.CreateTime.Unix(),
 		UpdateTime:  in.UpdateTime.Unix(),
 	}
 	return resp
 }
-func ToPBStateMachine(in po.StateMachine) *pb.StateMachineListItem {
+func ToPBStateMachineItem(in po.StateMachine) *pb.StateMachineListItem {
 	resp := &pb.StateMachineListItem{
 		Name:            in.Name,
-		Comment:         in.Comment,
+		Description:     in.Description,
 		StatemachineUri: in.URI,
 		CreateTime:      in.CreateTime.Unix(),
 		UpdateTime:      in.UpdateTime.Unix(),
+	}
+	return resp
+}
+func ToPBStateMachine(in *po.StateMachine) *pb.StateMachineInfo {
+	resp := &pb.StateMachineInfo{
+		Name:            in.Name,
+		Description:     in.Description,
+		StatemachineUri: in.URI,
+		CreateTime:      in.CreateTime.Unix(),
+		UpdateTime:      in.UpdateTime.Unix(),
+		Definition:      in.Definition,
 	}
 	return resp
 }

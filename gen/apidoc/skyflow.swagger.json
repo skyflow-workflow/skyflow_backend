@@ -44,11 +44,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment activity comment"
+      "description": "description activity description"
      },
      {
       "name": "name",
@@ -91,11 +91,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment 命名空间描述"
+      "description": "description 命名空间描述"
      },
      {
       "name": "name",
@@ -124,11 +124,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment activity comment"
+      "description": "description activity description"
      },
      {
       "name": "name",
@@ -171,11 +171,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment 命名空间描述"
+      "description": "description 命名空间描述"
      },
      {
       "name": "name",
@@ -192,11 +192,11 @@
   },
   "/api/v1/CreateOrUpdateStateMachine": {
    "post": {
-    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个状态机",
     "operationId": "CreateOrUpdateStateMachine",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.CreateStateMachineResponse"
       }
@@ -204,13 +204,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -235,11 +235,11 @@
   },
   "/api/v1/CreateStateMachine": {
    "post": {
-    "summary": "CreateStateMachine 创建一个工作流",
+    "summary": "CreateStateMachine 创建一个状态机",
     "operationId": "CreateStateMachine",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.CreateStateMachineResponse"
       }
@@ -247,13 +247,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -304,11 +304,11 @@
   },
   "/api/v1/DeleteStateMachine": {
    "post": {
-    "summary": "DeleteStateMachine 删除一个工作流",
+    "summary": "DeleteStateMachine 删除一个状态机",
     "operationId": "DeleteStateMachine",
     "responses": {
      "200": {
-      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "description": "DeleteStateMachineResponse 删除一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.DeleteStateMachineResponse"
       }
@@ -355,7 +355,7 @@
   },
   "/api/v1/DescribeStateMachine": {
    "post": {
-    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "summary": "DescribeStateMachine 获得一个状态机的描述",
     "operationId": "DescribeStateMachine",
     "responses": {
      "200": {
@@ -471,11 +471,11 @@
   },
   "/api/v1/ListStateMachines": {
    "post": {
-    "summary": "ListStateMachines 获得工作流列表",
+    "summary": "ListStateMachines 获得状态机列表",
     "operationId": "ListStateMachines",
     "responses": {
      "200": {
-      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "description": "ListStateMachinesResponse 获得状态机列表请求返回",
       "schema": {
        "$ref": "#/definitions/skyflow.ListStateMachinesResponse"
       }
@@ -519,11 +519,11 @@
   },
   "/api/v1/UpdateStateMachine": {
    "post": {
-    "summary": "UpdateStateMachine 更新一个工作流",
+    "summary": "UpdateStateMachine 更新一个状态机",
     "operationId": "UpdateStateMachine",
     "responses": {
      "200": {
-      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "description": "UpdateStateMachineResponse 更新一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.UpdateStateMachineResponse"
       }
@@ -531,13 +531,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -652,11 +652,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment activity comment"
+      "description": "description activity description"
      },
      {
       "name": "name",
@@ -699,11 +699,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment 命名空间描述"
+      "description": "description 命名空间描述"
      },
      {
       "name": "name",
@@ -732,11 +732,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment activity comment"
+      "description": "description activity description"
      },
      {
       "name": "name",
@@ -779,11 +779,11 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string",
-      "description": "comment 命名空间描述"
+      "description": "description 命名空间描述"
      },
      {
       "name": "name",
@@ -800,11 +800,11 @@
   },
   "/skyflow.SkyflowV1Service/CreateOrUpdateStateMachine": {
    "post": {
-    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个状态机",
     "operationId": "CreateOrUpdateStateMachine2",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.CreateStateMachineResponse"
       }
@@ -812,13 +812,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -843,11 +843,11 @@
   },
   "/skyflow.SkyflowV1Service/CreateStateMachine": {
    "post": {
-    "summary": "CreateStateMachine 创建一个工作流",
+    "summary": "CreateStateMachine 创建一个状态机",
     "operationId": "CreateStateMachine2",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.CreateStateMachineResponse"
       }
@@ -855,13 +855,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -912,11 +912,11 @@
   },
   "/skyflow.SkyflowV1Service/DeleteStateMachine": {
    "post": {
-    "summary": "DeleteStateMachine 删除一个工作流",
+    "summary": "DeleteStateMachine 删除一个状态机",
     "operationId": "DeleteStateMachine2",
     "responses": {
      "200": {
-      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "description": "DeleteStateMachineResponse 删除一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.DeleteStateMachineResponse"
       }
@@ -963,7 +963,7 @@
   },
   "/skyflow.SkyflowV1Service/DescribeStateMachine": {
    "post": {
-    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "summary": "DescribeStateMachine 获得一个状态机的描述",
     "operationId": "DescribeStateMachine2",
     "responses": {
      "200": {
@@ -1079,11 +1079,11 @@
   },
   "/skyflow.SkyflowV1Service/ListStateMachines": {
    "post": {
-    "summary": "ListStateMachines 获得工作流列表",
+    "summary": "ListStateMachines 获得状态机列表",
     "operationId": "ListStateMachines2",
     "responses": {
      "200": {
-      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "description": "ListStateMachinesResponse 获得状态机列表请求返回",
       "schema": {
        "$ref": "#/definitions/skyflow.ListStateMachinesResponse"
       }
@@ -1127,11 +1127,11 @@
   },
   "/skyflow.SkyflowV1Service/UpdateStateMachine": {
    "post": {
-    "summary": "UpdateStateMachine 更新一个工作流",
+    "summary": "UpdateStateMachine 更新一个状态机",
     "operationId": "UpdateStateMachine2",
     "responses": {
      "200": {
-      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "description": "UpdateStateMachineResponse 更新一个状态机返回结构",
       "schema": {
        "$ref": "#/definitions/skyflow.UpdateStateMachineResponse"
       }
@@ -1139,13 +1139,13 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "definition",
       "in": "query",
       "required": false,
       "type": "string"
      },
      {
-      "name": "definition",
+      "name": "description",
       "in": "query",
       "required": false,
       "type": "string"
@@ -1178,16 +1178,16 @@
      "type": "string",
      "description": "activity_uri 活动uri"
     },
-    "comment": {
-     "title": "comment",
-     "type": "string",
-     "description": "comment 活动描述"
-    },
     "create_time": {
      "title": "create_time",
      "type": "string",
      "format": "int64",
      "description": "create_time timestample"
+    },
+    "description": {
+     "title": "description",
+     "type": "string",
+     "description": "description 活动描述"
     },
     "name": {
      "title": "name",
@@ -1261,7 +1261,7 @@
     }
    },
    "title": "skyflow.CreateStateMachineResponse",
-   "description": "CreateStateMachineResponse 创建一个工作流返回结构"
+   "description": "CreateStateMachineResponse 创建一个状态机返回结构"
   },
   "skyflow.DeleteActivityResponse": {
    "type": "object",
@@ -1271,7 +1271,7 @@
   "skyflow.DeleteStateMachineResponse": {
    "type": "object",
    "title": "skyflow.DeleteStateMachineResponse",
-   "description": "DeleteStateMachineResponse 删除一个工作流返回结构"
+   "description": "DeleteStateMachineResponse 删除一个状态机返回结构"
   },
   "skyflow.DescribeActivityResponse": {
    "type": "object",
@@ -1281,16 +1281,16 @@
      "type": "string",
      "description": "activity_uri activity uri"
     },
-    "comment": {
-     "title": "comment",
-     "type": "string",
-     "description": "comment activity comment"
-    },
     "create_time": {
      "title": "create_time",
      "type": "string",
      "format": "int64",
      "description": "create_time create time timestample"
+    },
+    "description": {
+     "title": "description",
+     "type": "string",
+     "description": "description activity description"
     },
     "name": {
      "title": "name",
@@ -1394,21 +1394,21 @@
     }
    },
    "title": "skyflow.ListStateMachinesResponse",
-   "description": "ListStateMachinesResponse 获得工作流列表请求返回"
+   "description": "ListStateMachinesResponse 获得状态机列表请求返回"
   },
   "skyflow.NamespaceListItem": {
    "type": "object",
    "properties": {
-    "comment": {
-     "title": "comment",
-     "type": "string",
-     "description": "comment 命名空间描述"
-    },
     "create_time": {
      "title": "create_time",
      "type": "string",
      "format": "int64",
      "description": "create_time timestample"
+    },
+    "description": {
+     "title": "description",
+     "type": "string",
+     "description": "description 命名空间描述"
     },
     "name": {
      "title": "name",
@@ -1477,62 +1477,66 @@
   "skyflow.StateMachineInfo": {
    "type": "object",
    "properties": {
-    "comment": {
-     "title": "comment",
-     "type": "string"
-    },
-    "create_time": {
-     "title": "create_time",
-     "type": "string"
-    },
-    "modify_time": {
-     "title": "modify_time",
-     "type": "string"
-    },
-    "name": {
-     "title": "name",
-     "type": "string"
-    },
-    "statemachine_definition": {
-     "title": "statemachine_definition",
-     "type": "string"
-    },
-    "statemachine_type": {
-     "title": "statemachine_type",
-     "type": "string",
-     "description": "stateMachine_type; pipeline/statemachine"
-    },
-    "statemachine_uri": {
-     "title": "statemachine_uri",
-     "type": "string"
-    }
-   },
-   "title": "skyflow.StateMachineInfo",
-   "description": "StateMachineInfo 工作流信息"
-  },
-  "skyflow.StateMachineListItem": {
-   "type": "object",
-   "properties": {
-    "comment": {
-     "title": "comment",
-     "type": "string",
-     "description": "comment 工作流描述"
-    },
     "create_time": {
      "title": "create_time",
      "type": "string",
      "format": "int64",
      "description": "create_time timestample"
     },
+    "definition": {
+     "title": "definition",
+     "type": "string"
+    },
+    "description": {
+     "title": "description",
+     "type": "string"
+    },
+    "name": {
+     "title": "name",
+     "type": "string"
+    },
+    "statemachine_uri": {
+     "title": "statemachine_uri",
+     "type": "string"
+    },
+    "type": {
+     "title": "type",
+     "type": "string",
+     "description": "type : standard / express"
+    },
+    "update_time": {
+     "title": "update_time",
+     "type": "string",
+     "format": "int64",
+     "description": "update_time timestample"
+    }
+   },
+   "title": "skyflow.StateMachineInfo",
+   "description": "StateMachineInfo 状态机信息"
+  },
+  "skyflow.StateMachineListItem": {
+   "type": "object",
+   "properties": {
+    "create_time": {
+     "title": "create_time",
+     "type": "string",
+     "format": "int64",
+     "description": "create_time timestample"
+    },
+    "description": {
+     "title": "description",
+     "type": "string",
+     "description": "description 状态机描述"
+    },
     "name": {
      "title": "name",
      "type": "string",
-     "description": "name 工作流名字"
+     "description": "name 状态机名字"
     },
     "statemachine_uri": {
      "title": "statemachine_uri",
      "type": "string",
-     "description": "statemachine_uri 工作流uri"
+     "description": "statemachine_uri 状态机uri"
     },
     "update_time": {
      "title": "update_time",
@@ -1547,7 +1551,7 @@
   "skyflow.UpdateStateMachineResponse": {
    "type": "object",
    "title": "skyflow.UpdateStateMachineResponse",
-   "description": "UpdateStateMachineResponse 更新一个工作流返回结构"
+   "description": "UpdateStateMachineResponse 更新一个状态机返回结构"
   }
  }
 }

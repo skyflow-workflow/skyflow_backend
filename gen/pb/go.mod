@@ -1,15 +1,15 @@
 module github.com/skyflow-StateMachine/skyflow_backbend/gen/pb
 
-go 1.22
+go 1.23
 
-toolchain go1.23.6
+toolchain go1.23.8
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
-	go.uber.org/mock v0.5.1
+	go.uber.org/mock v0.5.2
 	google.golang.org/protobuf v1.36.6
 	trpc.group/trpc-go/trpc-go v1.0.3
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1
 )
 
 require (

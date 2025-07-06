@@ -131,17 +131,17 @@ type SkyflowV1ServiceService interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error)
 	// DeleteActivity DeleteActivity 删除一个活动
 	DeleteActivity(ctx context.Context, req *DeleteActivityRequest) (*DeleteActivityResponse, error)
-	// CreateStateMachine CreateStateMachine 创建一个工作流
+	// CreateStateMachine CreateStateMachine 创建一个状态机
 	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
-	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
-	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
 	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error)
-	// ListStateMachines ListStateMachines 获得工作流列表
+	// ListStateMachines ListStateMachines 获得状态机列表
 	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error)
-	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
-	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error)
 }
 
@@ -585,32 +585,32 @@ func (s *UnimplementedSkyflowV1Service) DeleteActivity(ctx context.Context, req 
 	return nil, errors.New("rpc DeleteActivity of service SkyflowV1Service is not implemented")
 }
 
-// CreateStateMachine CreateStateMachine 创建一个工作流
+// CreateStateMachine CreateStateMachine 创建一个状态机
 func (s *UnimplementedSkyflowV1Service) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
 	return nil, errors.New("rpc CreateStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 func (s *UnimplementedSkyflowV1Service) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
 	return nil, errors.New("rpc CreateOrUpdateStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// DeleteStateMachine DeleteStateMachine 删除一个工作流
+// DeleteStateMachine DeleteStateMachine 删除一个状态机
 func (s *UnimplementedSkyflowV1Service) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error) {
 	return nil, errors.New("rpc DeleteStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// ListStateMachines ListStateMachines 获得工作流列表
+// ListStateMachines ListStateMachines 获得状态机列表
 func (s *UnimplementedSkyflowV1Service) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error) {
 	return nil, errors.New("rpc ListStateMachines of service SkyflowV1Service is not implemented")
 }
 
-// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 func (s *UnimplementedSkyflowV1Service) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error) {
 	return nil, errors.New("rpc DescribeStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// UpdateStateMachine UpdateStateMachine 更新一个工作流
+// UpdateStateMachine UpdateStateMachine 更新一个状态机
 func (s *UnimplementedSkyflowV1Service) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error) {
 	return nil, errors.New("rpc UpdateStateMachine of service SkyflowV1Service is not implemented")
 }
@@ -718,17 +718,17 @@ type SkyflowV1ServiceClientProxy interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (rsp *DescribeActivityResponse, err error)
 	// DeleteActivity DeleteActivity 删除一个活动
 	DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...client.Option) (rsp *DeleteActivityResponse, err error)
-	// CreateStateMachine CreateStateMachine 创建一个工作流
+	// CreateStateMachine CreateStateMachine 创建一个状态机
 	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
-	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
-	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
 	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...client.Option) (rsp *DeleteStateMachineResponse, err error)
-	// ListStateMachines ListStateMachines 获得工作流列表
+	// ListStateMachines ListStateMachines 获得状态机列表
 	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...client.Option) (rsp *ListStateMachinesResponse, err error)
-	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (rsp *DescribeStateMachineResponse, err error)
-	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (rsp *UpdateStateMachineResponse, err error)
 }
 

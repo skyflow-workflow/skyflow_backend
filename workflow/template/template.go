@@ -61,8 +61,8 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 	}
 
 	new_ns := po.Namespace{
-		Name:    req.Name,
-		Comment: req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 	}
 
 	err = tx.Create(&new_ns).Error
@@ -129,8 +129,8 @@ func (svc *templateService) CreateOrUpdateNamespace(ctx context.Context, req vo.
 	defer maker.Close(&err)
 
 	newNS := po.Namespace{
-		Name:    req.Name,
-		Comment: req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 	}
 
 	err = tx.Clauses(clause.OnConflict{
@@ -202,7 +202,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 	newActivity := po.Activity{
 		NamespaceID: namespace.ID,
 		Name:        req.ActivityName,
-		Comment:     req.Comment,
+		Description: req.Description,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
 		Parameters:  req.Parameters,
@@ -266,7 +266,7 @@ func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.C
 	newActivity := po.Activity{
 		NamespaceID: dbNamespace.ID,
 		Name:        req.ActivityName,
-		Comment:     req.Comment,
+		Description: req.Description,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
 		Parameters:  req.Parameters,
@@ -317,7 +317,7 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 	var err error
 	var sm po.StateMachine
 
-	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
+	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.Name)
 
 	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
@@ -338,8 +338,8 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 
 	newsm := po.StateMachine{
 		NamespaceID: namespace.ID,
-		Name:        req.StateMachineName,
-		Comment:     req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 		URI:         workflowUri,
 		Definition:  req.Definition,
 		Status:      ActivityStatus.Enable,
@@ -372,14 +372,14 @@ func (svc *templateService) DescribeActivity(ctx context.Context, activityUri st
 	return activity, err
 }
 
-// DescribeWorkflow implements skyflow.SkyflowServer.
-func (svc *templateService) DescribeWorkflow(ctx context.Context, stateMachineUri string, tx rdb.Tx) (po.StateMachine, error) {
+// DescribeStateMachine implements skyflow.SkyflowServer.
+func (svc *templateService) DescribeStateMachine(ctx context.Context, req vo.DescribeStateMachineRequest, tx rdb.Tx) (po.StateMachine, error) {
 	var workflow po.StateMachine
 	var err error
 	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
-	err = tx.Where(po.Activity{URI: stateMachineUri}).Take(&workflow).Error
+	err = tx.Where(po.Activity{URI: req.StateMachineURI}).Take(&workflow).Error
 	return workflow, err
 }
 
@@ -416,7 +416,7 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 
 	var err error
 
-	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
+	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.Name)
 
 	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
@@ -428,8 +428,8 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 
 	newStateMachine := po.StateMachine{
 		NamespaceID: dbNamespace.ID,
-		Name:        req.StateMachineName,
-		Comment:     req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 		URI:         statemachineUri,
 		Definition:  req.Definition,
 		Status:      ActivityStatus.Enable,
@@ -444,4 +444,65 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 	return vo.CreateStateMachineResponse{
 		Data: newStateMachine,
 	}, err
+}
+
+func (svc *templateService) UpdateStateMachine(ctx context.Context, req vo.UpdateStateMachineRequest, tx rdb.Tx) error {
+
+	var err error
+	var sm po.StateMachine
+
+	tx, maker := svc.dbClient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	err = tx.Where("uri = ?", req.StateMachineURI).Select("id").First(&sm).Error
+	if rdb.IsErrRecordNotFound(err) {
+		// state machine not found
+		err = pberror.NewPBError(int32(pb.ErrorCode_StateMachineDoesNotExist), "state machine: "+req.StateMachineURI+" not found")
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	updatesm := po.StateMachine{
+		Name:        sm.Name,
+		Description: sm.Description,
+		Definition:  sm.Definition,
+	}
+
+	err = tx.Where(po.StateMachine{ID: sm.ID}).Updates(&updatesm).Error
+	if err != nil {
+		return err
+	}
+	tx.Commit()
+
+	return nil
+}
+
+func (svc *templateService) DeleteStateMachine(ctx context.Context, req vo.DeleteStateMachineRequest, tx rdb.Tx) error {
+	var sm po.StateMachine
+	var err error
+
+	tx, maker := svc.dbClient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	// 先查询是否存在
+	err = tx.Where("uri = ?", req.StateMachineURI).First(&sm).Error
+	if err != nil && rdb.IsErrRecordNotFound(err) {
+		// state machine not found
+		err = pberror.NewPBError(int32(pb.ErrorCode_StateMachineDoesNotExist), "state machine: "+req.StateMachineURI+" not found")
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	// 删除
+	err = tx.Where(po.StateMachine{ID: sm.ID}).Delete(&po.StateMachine{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
