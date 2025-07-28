@@ -1,0 +1,32 @@
+server:
+  filter:
+    - accesslog  # 访问日志过滤器
+  service:
+    - name: trpc.http.skyflow
+      ip: 127.0.0.1
+      port: 8080
+      protocol: http
+      filter:
+        - accesslog  # 访问日志过滤器
+    - name: trpc.trpc.skyflow
+      ip: 127.0.0.1
+      port: 8081
+      protocol: trpc
+
+
+plugins:
+  log:
+    default:
+      - writer: console  # 控制台标准输出 默认
+        level: debug  # 标准输出日志的级别
+        formater: json  # 标准输出日志的格式 text/json
+  gateway:
+    accesslog:
+      - writer: console  # 控制台标准输出 默认
+        level: debug  # 标准输出日志的级别
+        formater: json  # 标准输出日志的格式 text/json
+      - writer: file  # 你自定义的core配置，名字随便定
+        level: info  # 文件输出日志的级别
+        formatter: json  # 标准输出日志的格式
+        writer_config:  # 本地文件输出具体配置
+          filename: .logs/access.log  # 本地文件滚动日志存放的路径
