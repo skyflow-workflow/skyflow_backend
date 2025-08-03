@@ -76,4 +76,4 @@ build:
 .PHONY: run
 run: build
 	@echo "running........"
-	@./bin/skyflow -conf trpc_go.yaml
+	@./bin/skyflow start api -c ./trpc_go.yaml --skyflow_config ./skyflow.yaml

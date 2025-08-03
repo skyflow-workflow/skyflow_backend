@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"log/slog"
 
@@ -13,7 +12,6 @@ import (
 
 	"trpc.group/trpc-go/trpc-go"
 	tconfig "trpc.group/trpc-go/trpc-go/config"
-	"trpc.group/trpc-go/trpc-go/filter"
 	"trpc.group/trpc-go/trpc-go/server"
 )
 
@@ -89,18 +87,6 @@ func InitializeTrpcSever(trpc_conf string) *server.Server {
 	logger := trpclog.NewHandlerFromTrpcLogger(nil)
 	slog.SetDefault(slog.New(logger))
 	slog.Info("Initializing TRPC server", "configPath", trpc_conf)
-	// test config
-	f := filter.GetServer("accesslog")
-	fmt.Println("Accesslog filter is registered:", f)
-
-	cfg := trpc.GlobalConfig()
-	cfgbytes, err := json.Marshal(cfg) // This will ensure the config is loaded and can be marshaled to JSON
-	if err != nil {
-		slog.Error("Error marshaling TRPC server configuration", "error", err)
-		panic("err")
-	}
-	fmt.Println("TRPC server configuration loaded:", string(cfgbytes))
-	slog.Info("TRPC server configuration loaded", "config", string(cfgbytes))
 
 	return s
 }
