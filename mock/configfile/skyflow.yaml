@@ -1,0 +1,23 @@
+persistence:
+  dsn: mysql://root:root@tcp(localhost:3306)/testdb?parseTime=true
+  max_idle_conns: 10
+  max_open_conns: 10
+  log_level: info
+  max_idle_time: 10m
+
+message_queue:
+  dsn: kafka://localhost:9092/?topics=skyflow-events&numpartition=3&numreplica=1&autocommitsecond=1&initial=oldest&version=1.1.1
+delay_message_queue:
+  dsn: redis://host:port/db
+api:
+  qps_limit: 1000
+dispatcher:
+  max_concurrency: 10
+  max_queue_size: 100
+exporter:
+  listeners:
+    - "http://localhost:8080/export"
+resource:
+  memory_request: 512Mi
+  cpu_request: 2
+  rate: 1000

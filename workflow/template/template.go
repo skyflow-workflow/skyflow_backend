@@ -56,7 +56,7 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 
 	if ns.ID != 0 {
 		// namespace already exists
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceAlreadyExists), "namespace: "+req.Name+" already exists")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceAlreadyExists, "namespace: "+req.Name+" already exists")
 		return vo.CreateNamespaceResponse{}, err
 	}
 
@@ -84,7 +84,7 @@ func (svc *templateService) DescribeNamespace(ctx context.Context, name string, 
 	err = tx.Where("name = ?", name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceDoesNotExist), "namespace: "+name+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+name+" not found")
 		return ns, err
 	}
 	if err != nil {
@@ -104,7 +104,7 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 	err = tx.Where("name = ?", req.Name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceDoesNotExist), "namespace: "+req.Name+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+req.Name+" not found")
 		return err
 	}
 	if err != nil {
@@ -323,7 +323,7 @@ func (svc *templateService) DeleteActivity(ctx context.Context, req vo.DeleteAct
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// activity not found
 		err = pberror.NewPBError(
-			int32(pb.ErrorCode_ActivityDoesNotExist), "activity: "+req.ActivityURI+" not found")
+			pb.ErrorCode_ActivityDoesNotExist, "activity: "+req.ActivityURI+" not found")
 		return err
 	}
 	if err != nil {
@@ -500,7 +500,7 @@ func (svc *templateService) UpdateStateMachine(ctx context.Context, req vo.Updat
 	err = tx.Where("uri = ?", req.StateMachineURI).Select("id").First(&sm).Error
 	if rdb.IsErrRecordNotFound(err) {
 		// state machine not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_StateMachineDoesNotExist), "state machine: "+req.StateMachineURI+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
 		return err
 	}
 	if err != nil {
@@ -533,7 +533,7 @@ func (svc *templateService) DeleteStateMachine(ctx context.Context, req vo.Delet
 	err = tx.Where("uri = ?", req.StateMachineURI).First(&sm).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// state machine not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_StateMachineDoesNotExist), "state machine: "+req.StateMachineURI+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
 		return err
 	}
 	if err != nil {

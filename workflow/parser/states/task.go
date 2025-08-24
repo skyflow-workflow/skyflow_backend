@@ -11,7 +11,7 @@ type TaskBody struct {
 	// Block : if block execution for task, default false
 	// if true, the task will block the workflow execution until the manual call to resume the task
 	// if false, the task will be executed automatically
-	Block            bool   `mapstructure:"Block" validate:"required"`
+	Block            bool   `mapstructure:"Block"`
 	Resource         string `validate:"required,gt=0"`
 	TimeoutSeconds   uint   `validate:"gte=0"`
 	HeartbeatSeconds uint   `validate:"gte=0"`
@@ -61,6 +61,8 @@ var DefaultCatchNode = TaskCatchNode{
 
 // DefaultTaskBody ...
 var DefaultTaskBody = TaskBody{
+	// default false, means task will not block the workflow execution
+	Block:    false,
 	Resource: "",
 	// default 0, 0 means no timeout limit
 	TimeoutSeconds: 0,

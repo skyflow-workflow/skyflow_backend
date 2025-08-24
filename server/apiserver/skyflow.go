@@ -6,11 +6,17 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 // SkyflowServiceHandler skyflow service handler
 type SkyflowServiceHandler struct {
 	wfSvc workflow.WorkflowService
+}
+
+// DeleteNamespace implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pb.DeleteNamespaceRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
 }
 
 // CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.

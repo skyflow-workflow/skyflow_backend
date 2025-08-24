@@ -53,6 +53,11 @@ lint_proto:
 	@echo "linting proto files........"
 	@protolint lint ${PROTOFILE}
 
+.PHONY: http
+http:
+	@echo "running http unittest case "
+	@httpyac curl/template.http --all
+
 .PHONY: pb
 pb:
 	@echo "generating pb files........"

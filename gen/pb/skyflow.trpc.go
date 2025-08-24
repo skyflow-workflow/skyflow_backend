@@ -121,6 +121,9 @@ type SkyflowV1ServiceService interface {
 	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	//  注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest) (*emptypb.Empty, error)
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error)
 	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
@@ -189,6 +192,24 @@ func SkyflowV1ServiceService_ListNamespaces_Handler(svr interface{}, ctx context
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
 		return svr.(SkyflowV1ServiceService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DeleteNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DeleteNamespaceRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DeleteNamespace(ctx, reqbody.(*DeleteNamespaceRequest))
 	}
 
 	var rsp interface{}
@@ -415,6 +436,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
 		},
 		{
+			Name: "/api/v1/DeleteNamespace",
+			Func: SkyflowV1ServiceService_DeleteNamespace_Handler,
+		},
+		{
 			Name: "/api/v1/CreateActivity",
 			Func: SkyflowV1ServiceService_CreateActivity_Handler,
 		},
@@ -469,6 +494,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/skyflow.SkyflowV1Service/ListNamespaces",
 			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DeleteNamespace",
+			Func: SkyflowV1ServiceService_DeleteNamespace_Handler,
 		},
 		{
 			Name: "/skyflow.SkyflowV1Service/CreateActivity",
@@ -558,6 +587,13 @@ func (s *UnimplementedSkyflowV1Service) CreateOrUpdateNamespace(ctx context.Cont
 // ListNamespaces ListNamespaces 获得命名空间列表
 func (s *UnimplementedSkyflowV1Service) ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error) {
 	return nil, errors.New("rpc ListNamespaces of service SkyflowV1Service is not implemented")
+}
+
+// DeleteNamespace DeleteNamespace 删除一个命名空间
+//
+//	注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+func (s *UnimplementedSkyflowV1Service) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest) (*emptypb.Empty, error) {
+	return nil, errors.New("rpc DeleteNamespace of service SkyflowV1Service is not implemented")
 }
 
 // CreateActivity CreateActivity 创建一个活动
@@ -708,6 +744,9 @@ type SkyflowV1ServiceClientProxy interface {
 	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (rsp *CreateNamespaceResponse, err error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (rsp *ListNamespacesResponse, err error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	//  注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...client.Option) (rsp *emptypb.Empty, err error)
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (rsp *CreateActivityResponse, err error)
 	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
@@ -795,6 +834,26 @@ func (c *SkyflowV1ServiceClientProxyImpl) ListNamespaces(ctx context.Context, re
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &ListNamespacesResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...client.Option) (*emptypb.Empty, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DeleteNamespace")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DeleteNamespace")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &emptypb.Empty{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

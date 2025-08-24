@@ -1,13 +1,13 @@
 module github.com/skyflow-StateMachine/skyflow_backbend/gen/pb
 
-go 1.23
+go 1.23.0
 
 toolchain go1.23.8
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
-	go.uber.org/mock v0.5.2
-	google.golang.org/protobuf v1.36.6
+	go.uber.org/mock v0.6.0
+	google.golang.org/protobuf v1.36.7
 	trpc.group/trpc-go/trpc-go v1.0.3
 	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1
 )
@@ -37,7 +37,7 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

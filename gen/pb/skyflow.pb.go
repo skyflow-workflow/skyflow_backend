@@ -559,6 +559,8 @@ type CreateNamespaceResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// name namespace name
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// description 命名空间描述
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time  update time timestample
@@ -600,6 +602,13 @@ func (*CreateNamespaceResponse) Descriptor() ([]byte, []int) {
 func (x *CreateNamespaceResponse) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateNamespaceResponse) GetDescription() string {
+	if x != nil {
+		return x.Description
 	}
 	return ""
 }
@@ -719,6 +728,171 @@ func (x *ListNamespacesResponse) GetPageResponse() *PageResponse {
 	return nil
 }
 
+// DescribeNamespaceRequest 获得一个命名空间的描述
+type DescribeNamespaceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// name 命名空间名字
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DescribeNamespaceRequest) Reset() {
+	*x = DescribeNamespaceRequest{}
+	mi := &file_proto_skyflow_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DescribeNamespaceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DescribeNamespaceRequest) ProtoMessage() {}
+
+func (x *DescribeNamespaceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_skyflow_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DescribeNamespaceRequest.ProtoReflect.Descriptor instead.
+func (*DescribeNamespaceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DescribeNamespaceRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+// DescribeNamespaceResponse 获得一个命名空间的描述返回
+type DescribeNamespaceResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// name 命名空间名字
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// description 命名空间描述
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	// create_time timestample
+	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	// update_time timestample
+	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DescribeNamespaceResponse) Reset() {
+	*x = DescribeNamespaceResponse{}
+	mi := &file_proto_skyflow_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DescribeNamespaceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DescribeNamespaceResponse) ProtoMessage() {}
+
+func (x *DescribeNamespaceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_skyflow_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DescribeNamespaceResponse.ProtoReflect.Descriptor instead.
+func (*DescribeNamespaceResponse) Descriptor() ([]byte, []int) {
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DescribeNamespaceResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *DescribeNamespaceResponse) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *DescribeNamespaceResponse) GetCreateTime() int64 {
+	if x != nil {
+		return x.CreateTime
+	}
+	return 0
+}
+
+func (x *DescribeNamespaceResponse) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
+// DeleteNamespaceRequest 删除一个命名空间
+type DeleteNamespaceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// name 命名空间名字
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteNamespaceRequest) Reset() {
+	*x = DeleteNamespaceRequest{}
+	mi := &file_proto_skyflow_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteNamespaceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteNamespaceRequest) ProtoMessage() {}
+
+func (x *DeleteNamespaceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_skyflow_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteNamespaceRequest.ProtoReflect.Descriptor instead.
+func (*DeleteNamespaceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DeleteNamespaceRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 // CreateActivityRequest 创建一个活动请求结构
 type CreateActivityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -736,7 +910,7 @@ type CreateActivityRequest struct {
 
 func (x *CreateActivityRequest) Reset() {
 	*x = CreateActivityRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[9]
+	mi := &file_proto_skyflow_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -748,7 +922,7 @@ func (x *CreateActivityRequest) String() string {
 func (*CreateActivityRequest) ProtoMessage() {}
 
 func (x *CreateActivityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[9]
+	mi := &file_proto_skyflow_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -761,7 +935,7 @@ func (x *CreateActivityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateActivityRequest.ProtoReflect.Descriptor instead.
 func (*CreateActivityRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{9}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CreateActivityRequest) GetName() string {
@@ -807,7 +981,7 @@ type CreateActivityResponse struct {
 
 func (x *CreateActivityResponse) Reset() {
 	*x = CreateActivityResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[10]
+	mi := &file_proto_skyflow_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -819,7 +993,7 @@ func (x *CreateActivityResponse) String() string {
 func (*CreateActivityResponse) ProtoMessage() {}
 
 func (x *CreateActivityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[10]
+	mi := &file_proto_skyflow_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -832,7 +1006,7 @@ func (x *CreateActivityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateActivityResponse.ProtoReflect.Descriptor instead.
 func (*CreateActivityResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{10}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CreateActivityResponse) GetActivityUri() string {
@@ -867,7 +1041,7 @@ type DescribeActivityRequest struct {
 
 func (x *DescribeActivityRequest) Reset() {
 	*x = DescribeActivityRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[11]
+	mi := &file_proto_skyflow_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -879,7 +1053,7 @@ func (x *DescribeActivityRequest) String() string {
 func (*DescribeActivityRequest) ProtoMessage() {}
 
 func (x *DescribeActivityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[11]
+	mi := &file_proto_skyflow_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -892,7 +1066,7 @@ func (x *DescribeActivityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeActivityRequest.ProtoReflect.Descriptor instead.
 func (*DescribeActivityRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{11}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *DescribeActivityRequest) GetActivityUri() string {
@@ -921,7 +1095,7 @@ type DescribeActivityResponse struct {
 
 func (x *DescribeActivityResponse) Reset() {
 	*x = DescribeActivityResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[12]
+	mi := &file_proto_skyflow_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -933,7 +1107,7 @@ func (x *DescribeActivityResponse) String() string {
 func (*DescribeActivityResponse) ProtoMessage() {}
 
 func (x *DescribeActivityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[12]
+	mi := &file_proto_skyflow_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -946,7 +1120,7 @@ func (x *DescribeActivityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeActivityResponse.ProtoReflect.Descriptor instead.
 func (*DescribeActivityResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{12}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *DescribeActivityResponse) GetName() string {
@@ -994,7 +1168,7 @@ type DeleteActivityRequest struct {
 
 func (x *DeleteActivityRequest) Reset() {
 	*x = DeleteActivityRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[13]
+	mi := &file_proto_skyflow_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1006,7 +1180,7 @@ func (x *DeleteActivityRequest) String() string {
 func (*DeleteActivityRequest) ProtoMessage() {}
 
 func (x *DeleteActivityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[13]
+	mi := &file_proto_skyflow_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1019,7 +1193,7 @@ func (x *DeleteActivityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteActivityRequest.ProtoReflect.Descriptor instead.
 func (*DeleteActivityRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{13}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeleteActivityRequest) GetActivityUri() string {
@@ -1038,7 +1212,7 @@ type DeleteActivityResponse struct {
 
 func (x *DeleteActivityResponse) Reset() {
 	*x = DeleteActivityResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[14]
+	mi := &file_proto_skyflow_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1050,7 +1224,7 @@ func (x *DeleteActivityResponse) String() string {
 func (*DeleteActivityResponse) ProtoMessage() {}
 
 func (x *DeleteActivityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[14]
+	mi := &file_proto_skyflow_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1063,7 +1237,7 @@ func (x *DeleteActivityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteActivityResponse.ProtoReflect.Descriptor instead.
 func (*DeleteActivityResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{14}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{17}
 }
 
 // ListActivitiesRequest 获得活动列表请求结构
@@ -1079,7 +1253,7 @@ type ListActivitiesRequest struct {
 
 func (x *ListActivitiesRequest) Reset() {
 	*x = ListActivitiesRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[15]
+	mi := &file_proto_skyflow_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1091,7 +1265,7 @@ func (x *ListActivitiesRequest) String() string {
 func (*ListActivitiesRequest) ProtoMessage() {}
 
 func (x *ListActivitiesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[15]
+	mi := &file_proto_skyflow_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1104,7 +1278,7 @@ func (x *ListActivitiesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListActivitiesRequest.ProtoReflect.Descriptor instead.
 func (*ListActivitiesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{15}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ListActivitiesRequest) GetNamespace() string {
@@ -1140,7 +1314,7 @@ type ActivityListItem struct {
 
 func (x *ActivityListItem) Reset() {
 	*x = ActivityListItem{}
-	mi := &file_proto_skyflow_proto_msgTypes[16]
+	mi := &file_proto_skyflow_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1152,7 +1326,7 @@ func (x *ActivityListItem) String() string {
 func (*ActivityListItem) ProtoMessage() {}
 
 func (x *ActivityListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[16]
+	mi := &file_proto_skyflow_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1165,7 +1339,7 @@ func (x *ActivityListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActivityListItem.ProtoReflect.Descriptor instead.
 func (*ActivityListItem) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{16}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ActivityListItem) GetName() string {
@@ -1216,7 +1390,7 @@ type ListActivitiesResponse struct {
 
 func (x *ListActivitiesResponse) Reset() {
 	*x = ListActivitiesResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[17]
+	mi := &file_proto_skyflow_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1228,7 +1402,7 @@ func (x *ListActivitiesResponse) String() string {
 func (*ListActivitiesResponse) ProtoMessage() {}
 
 func (x *ListActivitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[17]
+	mi := &file_proto_skyflow_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1241,7 +1415,7 @@ func (x *ListActivitiesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListActivitiesResponse.ProtoReflect.Descriptor instead.
 func (*ListActivitiesResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{17}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *ListActivitiesResponse) GetActivities() []*ActivityListItem {
@@ -1271,7 +1445,7 @@ type CreateStateMachineRequest struct {
 
 func (x *CreateStateMachineRequest) Reset() {
 	*x = CreateStateMachineRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[18]
+	mi := &file_proto_skyflow_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1283,7 +1457,7 @@ func (x *CreateStateMachineRequest) String() string {
 func (*CreateStateMachineRequest) ProtoMessage() {}
 
 func (x *CreateStateMachineRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[18]
+	mi := &file_proto_skyflow_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1296,7 +1470,7 @@ func (x *CreateStateMachineRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateStateMachineRequest.ProtoReflect.Descriptor instead.
 func (*CreateStateMachineRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{18}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *CreateStateMachineRequest) GetName() string {
@@ -1328,7 +1502,8 @@ func (x *CreateStateMachineRequest) GetDefinition() string {
 }
 
 // CreateStateMachineResponse 创建一个状态机返回结构
-type CreateStateMachineResponse struct {
+type
+CreateStateMachineResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          *StateMachineInfo      `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1337,7 +1512,7 @@ type CreateStateMachineResponse struct {
 
 func (x *CreateStateMachineResponse) Reset() {
 	*x = CreateStateMachineResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[19]
+	mi := &file_proto_skyflow_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1349,7 +1524,7 @@ func (x *CreateStateMachineResponse) String() string {
 func (*CreateStateMachineResponse) ProtoMessage() {}
 
 func (x *CreateStateMachineResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[19]
+	mi := &file_proto_skyflow_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1362,7 +1537,7 @@ func (x *CreateStateMachineResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateStateMachineResponse.ProtoReflect.Descriptor instead.
 func (*CreateStateMachineResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{19}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *CreateStateMachineResponse) GetData() *StateMachineInfo {
@@ -1382,7 +1557,7 @@ type DescribeStateMachineRequest struct {
 
 func (x *DescribeStateMachineRequest) Reset() {
 	*x = DescribeStateMachineRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[20]
+	mi := &file_proto_skyflow_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1394,7 +1569,7 @@ func (x *DescribeStateMachineRequest) String() string {
 func (*DescribeStateMachineRequest) ProtoMessage() {}
 
 func (x *DescribeStateMachineRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[20]
+	mi := &file_proto_skyflow_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1407,7 +1582,7 @@ func (x *DescribeStateMachineRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStateMachineRequest.ProtoReflect.Descriptor instead.
 func (*DescribeStateMachineRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{20}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *DescribeStateMachineRequest) GetStatemachineUri() string {
@@ -1427,7 +1602,7 @@ type DescribeStateMachineResponse struct {
 
 func (x *DescribeStateMachineResponse) Reset() {
 	*x = DescribeStateMachineResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[21]
+	mi := &file_proto_skyflow_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1439,7 +1614,7 @@ func (x *DescribeStateMachineResponse) String() string {
 func (*DescribeStateMachineResponse) ProtoMessage() {}
 
 func (x *DescribeStateMachineResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[21]
+	mi := &file_proto_skyflow_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1452,7 +1627,7 @@ func (x *DescribeStateMachineResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStateMachineResponse.ProtoReflect.Descriptor instead.
 func (*DescribeStateMachineResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{21}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DescribeStateMachineResponse) GetData() *StateMachineInfo {
@@ -1472,7 +1647,7 @@ type DeleteStateMachineRequest struct {
 
 func (x *DeleteStateMachineRequest) Reset() {
 	*x = DeleteStateMachineRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[22]
+	mi := &file_proto_skyflow_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1484,7 +1659,7 @@ func (x *DeleteStateMachineRequest) String() string {
 func (*DeleteStateMachineRequest) ProtoMessage() {}
 
 func (x *DeleteStateMachineRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[22]
+	mi := &file_proto_skyflow_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1497,7 +1672,7 @@ func (x *DeleteStateMachineRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteStateMachineRequest.ProtoReflect.Descriptor instead.
 func (*DeleteStateMachineRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{22}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *DeleteStateMachineRequest) GetStatemachineUri() string {
@@ -1516,7 +1691,7 @@ type DeleteStateMachineResponse struct {
 
 func (x *DeleteStateMachineResponse) Reset() {
 	*x = DeleteStateMachineResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[23]
+	mi := &file_proto_skyflow_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1528,7 +1703,7 @@ func (x *DeleteStateMachineResponse) String() string {
 func (*DeleteStateMachineResponse) ProtoMessage() {}
 
 func (x *DeleteStateMachineResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[23]
+	mi := &file_proto_skyflow_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1541,7 +1716,7 @@ func (x *DeleteStateMachineResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteStateMachineResponse.ProtoReflect.Descriptor instead.
 func (*DeleteStateMachineResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{23}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{26}
 }
 
 // UpdateStateMachineRequest 更新一个状态机请求结构
@@ -1557,7 +1732,7 @@ type UpdateStateMachineRequest struct {
 
 func (x *UpdateStateMachineRequest) Reset() {
 	*x = UpdateStateMachineRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[24]
+	mi := &file_proto_skyflow_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1569,7 +1744,7 @@ func (x *UpdateStateMachineRequest) String() string {
 func (*UpdateStateMachineRequest) ProtoMessage() {}
 
 func (x *UpdateStateMachineRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[24]
+	mi := &file_proto_skyflow_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1582,7 +1757,7 @@ func (x *UpdateStateMachineRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateStateMachineRequest.ProtoReflect.Descriptor instead.
 func (*UpdateStateMachineRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{24}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *UpdateStateMachineRequest) GetStatemachineUri() string {
@@ -1622,7 +1797,7 @@ type UpdateStateMachineResponse struct {
 
 func (x *UpdateStateMachineResponse) Reset() {
 	*x = UpdateStateMachineResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[25]
+	mi := &file_proto_skyflow_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1634,7 +1809,7 @@ func (x *UpdateStateMachineResponse) String() string {
 func (*UpdateStateMachineResponse) ProtoMessage() {}
 
 func (x *UpdateStateMachineResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[25]
+	mi := &file_proto_skyflow_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1647,7 +1822,7 @@ func (x *UpdateStateMachineResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateStateMachineResponse.ProtoReflect.Descriptor instead.
 func (*UpdateStateMachineResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{25}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{28}
 }
 
 // ListStateMachinesRequest 获得状态机列表请求结构
@@ -1662,7 +1837,7 @@ type ListStateMachinesRequest struct {
 
 func (x *ListStateMachinesRequest) Reset() {
 	*x = ListStateMachinesRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[26]
+	mi := &file_proto_skyflow_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1674,7 +1849,7 @@ func (x *ListStateMachinesRequest) String() string {
 func (*ListStateMachinesRequest) ProtoMessage() {}
 
 func (x *ListStateMachinesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[26]
+	mi := &file_proto_skyflow_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1687,7 +1862,7 @@ func (x *ListStateMachinesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStateMachinesRequest.ProtoReflect.Descriptor instead.
 func (*ListStateMachinesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{26}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *ListStateMachinesRequest) GetNamespace() string {
@@ -1717,7 +1892,7 @@ type ListStateMachinesResponse struct {
 
 func (x *ListStateMachinesResponse) Reset() {
 	*x = ListStateMachinesResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[27]
+	mi := &file_proto_skyflow_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1729,7 +1904,7 @@ func (x *ListStateMachinesResponse) String() string {
 func (*ListStateMachinesResponse) ProtoMessage() {}
 
 func (x *ListStateMachinesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[27]
+	mi := &file_proto_skyflow_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1742,7 +1917,7 @@ func (x *ListStateMachinesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStateMachinesResponse.ProtoReflect.Descriptor instead.
 func (*ListStateMachinesResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{27}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *ListStateMachinesResponse) GetStatemachines() []*StateMachineListItem {
@@ -1777,7 +1952,7 @@ type StateMachineListItem struct {
 
 func (x *StateMachineListItem) Reset() {
 	*x = StateMachineListItem{}
-	mi := &file_proto_skyflow_proto_msgTypes[28]
+	mi := &file_proto_skyflow_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1789,7 +1964,7 @@ func (x *StateMachineListItem) String() string {
 func (*StateMachineListItem) ProtoMessage() {}
 
 func (x *StateMachineListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[28]
+	mi := &file_proto_skyflow_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1802,7 +1977,7 @@ func (x *StateMachineListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StateMachineListItem.ProtoReflect.Descriptor instead.
 func (*StateMachineListItem) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{28}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *StateMachineListItem) GetName() string {
@@ -1862,7 +2037,7 @@ type ExecutionListItem struct {
 
 func (x *ExecutionListItem) Reset() {
 	*x = ExecutionListItem{}
-	mi := &file_proto_skyflow_proto_msgTypes[29]
+	mi := &file_proto_skyflow_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1874,7 +2049,7 @@ func (x *ExecutionListItem) String() string {
 func (*ExecutionListItem) ProtoMessage() {}
 
 func (x *ExecutionListItem) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[29]
+	mi := &file_proto_skyflow_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1887,7 +2062,7 @@ func (x *ExecutionListItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecutionListItem.ProtoReflect.Descriptor instead.
 func (*ExecutionListItem) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{29}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ExecutionListItem) GetExecutionUuid() string {
@@ -1956,7 +2131,7 @@ type StepInfo struct {
 
 func (x *StepInfo) Reset() {
 	*x = StepInfo{}
-	mi := &file_proto_skyflow_proto_msgTypes[30]
+	mi := &file_proto_skyflow_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1968,7 +2143,7 @@ func (x *StepInfo) String() string {
 func (*StepInfo) ProtoMessage() {}
 
 func (x *StepInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[30]
+	mi := &file_proto_skyflow_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1981,7 +2156,7 @@ func (x *StepInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StepInfo.ProtoReflect.Descriptor instead.
 func (*StepInfo) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{30}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *StepInfo) GetId() int64 {
@@ -2056,7 +2231,7 @@ type ExecutionEventInfo struct {
 
 func (x *ExecutionEventInfo) Reset() {
 	*x = ExecutionEventInfo{}
-	mi := &file_proto_skyflow_proto_msgTypes[31]
+	mi := &file_proto_skyflow_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2068,7 +2243,7 @@ func (x *ExecutionEventInfo) String() string {
 func (*ExecutionEventInfo) ProtoMessage() {}
 
 func (x *ExecutionEventInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[31]
+	mi := &file_proto_skyflow_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2081,7 +2256,7 @@ func (x *ExecutionEventInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecutionEventInfo.ProtoReflect.Descriptor instead.
 func (*ExecutionEventInfo) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{31}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *ExecutionEventInfo) GetStateId() int64 {
@@ -2149,7 +2324,7 @@ type ActivityInfo struct {
 
 func (x *ActivityInfo) Reset() {
 	*x = ActivityInfo{}
-	mi := &file_proto_skyflow_proto_msgTypes[32]
+	mi := &file_proto_skyflow_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2161,7 +2336,7 @@ func (x *ActivityInfo) String() string {
 func (*ActivityInfo) ProtoMessage() {}
 
 func (x *ActivityInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[32]
+	mi := &file_proto_skyflow_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2174,7 +2349,7 @@ func (x *ActivityInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ActivityInfo.ProtoReflect.Descriptor instead.
 func (*ActivityInfo) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{32}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ActivityInfo) GetName() string {
@@ -2231,7 +2406,7 @@ type StateMachineInfo struct {
 
 func (x *StateMachineInfo) Reset() {
 	*x = StateMachineInfo{}
-	mi := &file_proto_skyflow_proto_msgTypes[33]
+	mi := &file_proto_skyflow_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2243,7 +2418,7 @@ func (x *StateMachineInfo) String() string {
 func (*StateMachineInfo) ProtoMessage() {}
 
 func (x *StateMachineInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[33]
+	mi := &file_proto_skyflow_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2256,7 +2431,7 @@ func (x *StateMachineInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StateMachineInfo.ProtoReflect.Descriptor instead.
 func (*StateMachineInfo) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{33}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *StateMachineInfo) GetName() string {
@@ -2319,7 +2494,7 @@ type ParseStateMachineRequest struct {
 
 func (x *ParseStateMachineRequest) Reset() {
 	*x = ParseStateMachineRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[34]
+	mi := &file_proto_skyflow_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2331,7 +2506,7 @@ func (x *ParseStateMachineRequest) String() string {
 func (*ParseStateMachineRequest) ProtoMessage() {}
 
 func (x *ParseStateMachineRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[34]
+	mi := &file_proto_skyflow_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2344,7 +2519,7 @@ func (x *ParseStateMachineRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParseStateMachineRequest.ProtoReflect.Descriptor instead.
 func (*ParseStateMachineRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{34}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ParseStateMachineRequest) GetDefinition() string {
@@ -2367,7 +2542,7 @@ type ParseStateMachineResponse struct {
 
 func (x *ParseStateMachineResponse) Reset() {
 	*x = ParseStateMachineResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[35]
+	mi := &file_proto_skyflow_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2379,7 +2554,7 @@ func (x *ParseStateMachineResponse) String() string {
 func (*ParseStateMachineResponse) ProtoMessage() {}
 
 func (x *ParseStateMachineResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[35]
+	mi := &file_proto_skyflow_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2392,7 +2567,7 @@ func (x *ParseStateMachineResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParseStateMachineResponse.ProtoReflect.Descriptor instead.
 func (*ParseStateMachineResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{35}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ParseStateMachineResponse) GetType() string {
@@ -2433,7 +2608,7 @@ type StartExecutionRequest struct {
 
 func (x *StartExecutionRequest) Reset() {
 	*x = StartExecutionRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[36]
+	mi := &file_proto_skyflow_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2445,7 +2620,7 @@ func (x *StartExecutionRequest) String() string {
 func (*StartExecutionRequest) ProtoMessage() {}
 
 func (x *StartExecutionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[36]
+	mi := &file_proto_skyflow_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2458,7 +2633,7 @@ func (x *StartExecutionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StartExecutionRequest.ProtoReflect.Descriptor instead.
 func (*StartExecutionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{36}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *StartExecutionRequest) GetStatemachineUri() string {
@@ -2509,7 +2684,7 @@ type StartExecutionResponse struct {
 
 func (x *StartExecutionResponse) Reset() {
 	*x = StartExecutionResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[37]
+	mi := &file_proto_skyflow_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2521,7 +2696,7 @@ func (x *StartExecutionResponse) String() string {
 func (*StartExecutionResponse) ProtoMessage() {}
 
 func (x *StartExecutionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[37]
+	mi := &file_proto_skyflow_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2534,7 +2709,7 @@ func (x *StartExecutionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StartExecutionResponse.ProtoReflect.Descriptor instead.
 func (*StartExecutionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{37}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *StartExecutionResponse) GetExecutionUuid() string {
@@ -2562,7 +2737,7 @@ type DescribeExecutionRequest struct {
 
 func (x *DescribeExecutionRequest) Reset() {
 	*x = DescribeExecutionRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[38]
+	mi := &file_proto_skyflow_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2574,7 +2749,7 @@ func (x *DescribeExecutionRequest) String() string {
 func (*DescribeExecutionRequest) ProtoMessage() {}
 
 func (x *DescribeExecutionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[38]
+	mi := &file_proto_skyflow_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2587,7 +2762,7 @@ func (x *DescribeExecutionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeExecutionRequest.ProtoReflect.Descriptor instead.
 func (*DescribeExecutionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{38}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *DescribeExecutionRequest) GetExecutionUuid() string {
@@ -2606,7 +2781,7 @@ type DescribeExecutionResponse struct {
 
 func (x *DescribeExecutionResponse) Reset() {
 	*x = DescribeExecutionResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[39]
+	mi := &file_proto_skyflow_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2618,7 +2793,7 @@ func (x *DescribeExecutionResponse) String() string {
 func (*DescribeExecutionResponse) ProtoMessage() {}
 
 func (x *DescribeExecutionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[39]
+	mi := &file_proto_skyflow_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2631,7 +2806,7 @@ func (x *DescribeExecutionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeExecutionResponse.ProtoReflect.Descriptor instead.
 func (*DescribeExecutionResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{39}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{42}
 }
 
 // 获得一个执行的执行的Bone请求结构
@@ -2645,7 +2820,7 @@ type DescribeExecutionBoneRequest struct {
 
 func (x *DescribeExecutionBoneRequest) Reset() {
 	*x = DescribeExecutionBoneRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[40]
+	mi := &file_proto_skyflow_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2657,7 +2832,7 @@ func (x *DescribeExecutionBoneRequest) String() string {
 func (*DescribeExecutionBoneRequest) ProtoMessage() {}
 
 func (x *DescribeExecutionBoneRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[40]
+	mi := &file_proto_skyflow_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2670,7 +2845,7 @@ func (x *DescribeExecutionBoneRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeExecutionBoneRequest.ProtoReflect.Descriptor instead.
 func (*DescribeExecutionBoneRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{40}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *DescribeExecutionBoneRequest) GetExecutionUuid() string {
@@ -2691,7 +2866,7 @@ type DescribeExecutionBoneResponse struct {
 
 func (x *DescribeExecutionBoneResponse) Reset() {
 	*x = DescribeExecutionBoneResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[41]
+	mi := &file_proto_skyflow_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2703,7 +2878,7 @@ func (x *DescribeExecutionBoneResponse) String() string {
 func (*DescribeExecutionBoneResponse) ProtoMessage() {}
 
 func (x *DescribeExecutionBoneResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[41]
+	mi := &file_proto_skyflow_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2716,7 +2891,7 @@ func (x *DescribeExecutionBoneResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeExecutionBoneResponse.ProtoReflect.Descriptor instead.
 func (*DescribeExecutionBoneResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{41}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DescribeExecutionBoneResponse) GetBone() string {
@@ -2741,7 +2916,7 @@ type StopExecutionRequest struct {
 
 func (x *StopExecutionRequest) Reset() {
 	*x = StopExecutionRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[42]
+	mi := &file_proto_skyflow_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2753,7 +2928,7 @@ func (x *StopExecutionRequest) String() string {
 func (*StopExecutionRequest) ProtoMessage() {}
 
 func (x *StopExecutionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[42]
+	mi := &file_proto_skyflow_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2766,7 +2941,7 @@ func (x *StopExecutionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopExecutionRequest.ProtoReflect.Descriptor instead.
 func (*StopExecutionRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{42}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *StopExecutionRequest) GetExecutionUuid() string {
@@ -2809,7 +2984,7 @@ type ListExecutionsRequest struct {
 
 func (x *ListExecutionsRequest) Reset() {
 	*x = ListExecutionsRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[43]
+	mi := &file_proto_skyflow_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2821,7 +2996,7 @@ func (x *ListExecutionsRequest) String() string {
 func (*ListExecutionsRequest) ProtoMessage() {}
 
 func (x *ListExecutionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[43]
+	mi := &file_proto_skyflow_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2834,7 +3009,7 @@ func (x *ListExecutionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionsRequest.ProtoReflect.Descriptor instead.
 func (*ListExecutionsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{43}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *ListExecutionsRequest) GetStatemachineUri() string {
@@ -2885,7 +3060,7 @@ type ListExecutionsResponse struct {
 
 func (x *ListExecutionsResponse) Reset() {
 	*x = ListExecutionsResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[44]
+	mi := &file_proto_skyflow_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2897,7 +3072,7 @@ func (x *ListExecutionsResponse) String() string {
 func (*ListExecutionsResponse) ProtoMessage() {}
 
 func (x *ListExecutionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[44]
+	mi := &file_proto_skyflow_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2910,7 +3085,7 @@ func (x *ListExecutionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionsResponse.ProtoReflect.Descriptor instead.
 func (*ListExecutionsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{44}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *ListExecutionsResponse) GetExecutions() []*ExecutionListItem {
@@ -2938,7 +3113,7 @@ type ListExecutionEventsRequest struct {
 
 func (x *ListExecutionEventsRequest) Reset() {
 	*x = ListExecutionEventsRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[45]
+	mi := &file_proto_skyflow_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2950,7 +3125,7 @@ func (x *ListExecutionEventsRequest) String() string {
 func (*ListExecutionEventsRequest) ProtoMessage() {}
 
 func (x *ListExecutionEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[45]
+	mi := &file_proto_skyflow_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2963,7 +3138,7 @@ func (x *ListExecutionEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionEventsRequest.ProtoReflect.Descriptor instead.
 func (*ListExecutionEventsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{45}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *ListExecutionEventsRequest) GetExecutionUuid() string {
@@ -2993,7 +3168,7 @@ type ListExecutionEventsResponse struct {
 
 func (x *ListExecutionEventsResponse) Reset() {
 	*x = ListExecutionEventsResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[46]
+	mi := &file_proto_skyflow_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3005,7 +3180,7 @@ func (x *ListExecutionEventsResponse) String() string {
 func (*ListExecutionEventsResponse) ProtoMessage() {}
 
 func (x *ListExecutionEventsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[46]
+	mi := &file_proto_skyflow_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3018,7 +3193,7 @@ func (x *ListExecutionEventsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionEventsResponse.ProtoReflect.Descriptor instead.
 func (*ListExecutionEventsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{46}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ListExecutionEventsResponse) GetData() []*ExecutionEventInfo {
@@ -3046,7 +3221,7 @@ type DescribeStateRequest struct {
 
 func (x *DescribeStateRequest) Reset() {
 	*x = DescribeStateRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[47]
+	mi := &file_proto_skyflow_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3058,7 +3233,7 @@ func (x *DescribeStateRequest) String() string {
 func (*DescribeStateRequest) ProtoMessage() {}
 
 func (x *DescribeStateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[47]
+	mi := &file_proto_skyflow_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3071,7 +3246,7 @@ func (x *DescribeStateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStateRequest.ProtoReflect.Descriptor instead.
 func (*DescribeStateRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{47}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *DescribeStateRequest) GetStateId() int64 {
@@ -3094,7 +3269,7 @@ type DescribeStepResponse struct {
 
 func (x *DescribeStepResponse) Reset() {
 	*x = DescribeStepResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[48]
+	mi := &file_proto_skyflow_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3106,7 +3281,7 @@ func (x *DescribeStepResponse) String() string {
 func (*DescribeStepResponse) ProtoMessage() {}
 
 func (x *DescribeStepResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[48]
+	mi := &file_proto_skyflow_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3119,7 +3294,7 @@ func (x *DescribeStepResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStepResponse.ProtoReflect.Descriptor instead.
 func (*DescribeStepResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{48}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *DescribeStepResponse) GetData() *StepInfo {
@@ -3149,7 +3324,7 @@ type ListStateEventsRequest struct {
 
 func (x *ListStateEventsRequest) Reset() {
 	*x = ListStateEventsRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[49]
+	mi := &file_proto_skyflow_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3161,7 +3336,7 @@ func (x *ListStateEventsRequest) String() string {
 func (*ListStateEventsRequest) ProtoMessage() {}
 
 func (x *ListStateEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[49]
+	mi := &file_proto_skyflow_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3174,7 +3349,7 @@ func (x *ListStateEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStateEventsRequest.ProtoReflect.Descriptor instead.
 func (*ListStateEventsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{49}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *ListStateEventsRequest) GetStateId() int64 {
@@ -3202,7 +3377,7 @@ type GetActivityTaskRequest struct {
 
 func (x *GetActivityTaskRequest) Reset() {
 	*x = GetActivityTaskRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[50]
+	mi := &file_proto_skyflow_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3214,7 +3389,7 @@ func (x *GetActivityTaskRequest) String() string {
 func (*GetActivityTaskRequest) ProtoMessage() {}
 
 func (x *GetActivityTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[50]
+	mi := &file_proto_skyflow_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3227,7 +3402,7 @@ func (x *GetActivityTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetActivityTaskRequest.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{50}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *GetActivityTaskRequest) GetActivityUri() string {
@@ -3264,7 +3439,7 @@ type GetActivityTaskResponse struct {
 
 func (x *GetActivityTaskResponse) Reset() {
 	*x = GetActivityTaskResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[51]
+	mi := &file_proto_skyflow_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3276,7 +3451,7 @@ func (x *GetActivityTaskResponse) String() string {
 func (*GetActivityTaskResponse) ProtoMessage() {}
 
 func (x *GetActivityTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[51]
+	mi := &file_proto_skyflow_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3289,7 +3464,7 @@ func (x *GetActivityTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetActivityTaskResponse.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{51}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *GetActivityTaskResponse) GetActivityUri() string {
@@ -3361,7 +3536,7 @@ type SendTaskSuccessRequest struct {
 
 func (x *SendTaskSuccessRequest) Reset() {
 	*x = SendTaskSuccessRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[52]
+	mi := &file_proto_skyflow_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3373,7 +3548,7 @@ func (x *SendTaskSuccessRequest) String() string {
 func (*SendTaskSuccessRequest) ProtoMessage() {}
 
 func (x *SendTaskSuccessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[52]
+	mi := &file_proto_skyflow_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3386,7 +3561,7 @@ func (x *SendTaskSuccessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskSuccessRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskSuccessRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{52}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *SendTaskSuccessRequest) GetTaskToken() string {
@@ -3418,7 +3593,7 @@ type SendTaskFailureRequest struct {
 
 func (x *SendTaskFailureRequest) Reset() {
 	*x = SendTaskFailureRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[53]
+	mi := &file_proto_skyflow_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3430,7 +3605,7 @@ func (x *SendTaskFailureRequest) String() string {
 func (*SendTaskFailureRequest) ProtoMessage() {}
 
 func (x *SendTaskFailureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[53]
+	mi := &file_proto_skyflow_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3443,7 +3618,7 @@ func (x *SendTaskFailureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskFailureRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskFailureRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{53}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *SendTaskFailureRequest) GetTaskToken() string {
@@ -3480,7 +3655,7 @@ type SendTaskHeartbeatRequest struct {
 
 func (x *SendTaskHeartbeatRequest) Reset() {
 	*x = SendTaskHeartbeatRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[54]
+	mi := &file_proto_skyflow_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3492,7 +3667,7 @@ func (x *SendTaskHeartbeatRequest) String() string {
 func (*SendTaskHeartbeatRequest) ProtoMessage() {}
 
 func (x *SendTaskHeartbeatRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[54]
+	mi := &file_proto_skyflow_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3505,7 +3680,7 @@ func (x *SendTaskHeartbeatRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskHeartbeatRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskHeartbeatRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{54}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *SendTaskHeartbeatRequest) GetTaskToken() string {
@@ -3536,7 +3711,7 @@ type SendTaskReferenceRequest struct {
 
 func (x *SendTaskReferenceRequest) Reset() {
 	*x = SendTaskReferenceRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[55]
+	mi := &file_proto_skyflow_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3548,7 +3723,7 @@ func (x *SendTaskReferenceRequest) String() string {
 func (*SendTaskReferenceRequest) ProtoMessage() {}
 
 func (x *SendTaskReferenceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[55]
+	mi := &file_proto_skyflow_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3561,7 +3736,7 @@ func (x *SendTaskReferenceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskReferenceRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskReferenceRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{55}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *SendTaskReferenceRequest) GetTaskToken() string {
@@ -3598,7 +3773,7 @@ type StoreTaskDataRequest struct {
 
 func (x *StoreTaskDataRequest) Reset() {
 	*x = StoreTaskDataRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[56]
+	mi := &file_proto_skyflow_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3610,7 +3785,7 @@ func (x *StoreTaskDataRequest) String() string {
 func (*StoreTaskDataRequest) ProtoMessage() {}
 
 func (x *StoreTaskDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[56]
+	mi := &file_proto_skyflow_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3623,7 +3798,7 @@ func (x *StoreTaskDataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StoreTaskDataRequest.ProtoReflect.Descriptor instead.
 func (*StoreTaskDataRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{56}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *StoreTaskDataRequest) GetTaskToken() string {
@@ -3651,7 +3826,7 @@ type LoadTaskDataRequest struct {
 
 func (x *LoadTaskDataRequest) Reset() {
 	*x = LoadTaskDataRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[57]
+	mi := &file_proto_skyflow_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3663,7 +3838,7 @@ func (x *LoadTaskDataRequest) String() string {
 func (*LoadTaskDataRequest) ProtoMessage() {}
 
 func (x *LoadTaskDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[57]
+	mi := &file_proto_skyflow_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3676,7 +3851,7 @@ func (x *LoadTaskDataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoadTaskDataRequest.ProtoReflect.Descriptor instead.
 func (*LoadTaskDataRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{57}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *LoadTaskDataRequest) GetStateId() int64 {
@@ -3697,7 +3872,7 @@ type LoadTaskDataResponse struct {
 
 func (x *LoadTaskDataResponse) Reset() {
 	*x = LoadTaskDataResponse{}
-	mi := &file_proto_skyflow_proto_msgTypes[58]
+	mi := &file_proto_skyflow_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3709,7 +3884,7 @@ func (x *LoadTaskDataResponse) String() string {
 func (*LoadTaskDataResponse) ProtoMessage() {}
 
 func (x *LoadTaskDataResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[58]
+	mi := &file_proto_skyflow_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3722,7 +3897,7 @@ func (x *LoadTaskDataResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoadTaskDataResponse.ProtoReflect.Descriptor instead.
 func (*LoadTaskDataResponse) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{58}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *LoadTaskDataResponse) GetData() string {
@@ -3747,7 +3922,7 @@ type SendStateSkipRequest struct {
 
 func (x *SendStateSkipRequest) Reset() {
 	*x = SendStateSkipRequest{}
-	mi := &file_proto_skyflow_proto_msgTypes[59]
+	mi := &file_proto_skyflow_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3759,7 +3934,7 @@ func (x *SendStateSkipRequest) String() string {
 func (*SendStateSkipRequest) ProtoMessage() {}
 
 func (x *SendStateSkipRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[59]
+	mi := &file_proto_skyflow_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3772,7 +3947,7 @@ func (x *SendStateSkipRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendStateSkipRequest.ProtoReflect.Descriptor instead.
 func (*SendStateSkipRequest) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{59}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *SendStateSkipRequest) GetStateId() int64 {
@@ -3809,7 +3984,7 @@ type GetActivityTaskResponse_ExtraInfo struct {
 
 func (x *GetActivityTaskResponse_ExtraInfo) Reset() {
 	*x = GetActivityTaskResponse_ExtraInfo{}
-	mi := &file_proto_skyflow_proto_msgTypes[60]
+	mi := &file_proto_skyflow_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3821,7 +3996,7 @@ func (x *GetActivityTaskResponse_ExtraInfo) String() string {
 func (*GetActivityTaskResponse_ExtraInfo) ProtoMessage() {}
 
 func (x *GetActivityTaskResponse_ExtraInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_skyflow_proto_msgTypes[60]
+	mi := &file_proto_skyflow_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3834,7 +4009,7 @@ func (x *GetActivityTaskResponse_ExtraInfo) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetActivityTaskResponse_ExtraInfo.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskResponse_ExtraInfo) Descriptor() ([]byte, []int) {
-	return file_proto_skyflow_proto_rawDescGZIP(), []int{51, 0}
+	return file_proto_skyflow_proto_rawDescGZIP(), []int{54, 0}
 }
 
 func (x *GetActivityTaskResponse_ExtraInfo) GetStateId() int64 {
@@ -3884,9 +4059,10 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\x16CreateNamespaceRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\x12,\n" +
 	"\vdescription\x18\x02 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x00(\xe8\aR\vdescription\"o\n" +
+	"\xfaB\ar\x05 \x00(\xe8\aR\vdescription\"\x91\x01\n" +
 	"\x17CreateNamespaceResponse\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1f\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
@@ -3897,7 +4073,18 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"namespaces\x18\x01 \x03(\v2\x1a.skyflow.NamespaceListItemR\n" +
 	"namespaces\x12:\n" +
-	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"\xb9\x01\n" +
+	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"9\n" +
+	"\x18DescribeNamespaceRequest\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\"\x93\x01\n" +
+	"\x19DescribeNamespaceResponse\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
+	"\vcreate_time\x18\v \x01(\x03R\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\f \x01(\x03R\n" +
+	"updateTime\"7\n" +
+	"\x16DeleteNamespaceRequest\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\"\xb9\x01\n" +
 	"\x15CreateActivityRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\x12,\n" +
 	"\vdescription\x18\x02 \x01(\tB\n" +
@@ -4206,11 +4393,12 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\rCommonService\x125\n" +
 	"\x06Paging\x12\x14.skyflow.PageRequest\x1a\x15.skyflow.PageResponse\x12<\n" +
 	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\x12@\n" +
-	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\t\x8a\xb5\x18\x05/Ping2\xcb\r\n" +
+	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\t\x8a\xb5\x18\x05/Ping2\xb4\x0e\n" +
 	"\x10SkyflowV1Service\x12q\n" +
 	"\x0fCreateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"\x1b\x8a\xb5\x18\x17/api/v1/CreateNamespace\x12\x81\x01\n" +
 	"\x17CreateOrUpdateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"#\x8a\xb5\x18\x1f/api/v1/CreateOrUpdateNamespace\x12m\n" +
-	"\x0eListNamespaces\x12\x1e.skyflow.ListNamespacesRequest\x1a\x1f.skyflow.ListNamespacesResponse\"\x1a\x8a\xb5\x18\x16/api/v1/ListNamespaces\x12m\n" +
+	"\x0eListNamespaces\x12\x1e.skyflow.ListNamespacesRequest\x1a\x1f.skyflow.ListNamespacesResponse\"\x1a\x8a\xb5\x18\x16/api/v1/ListNamespaces\x12g\n" +
+	"\x0fDeleteNamespace\x12\x1f.skyflow.DeleteNamespaceRequest\x1a\x16.google.protobuf.Empty\"\x1b\x8a\xb5\x18\x17/api/v1/DeleteNamespace\x12m\n" +
 	"\x0eCreateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\x1a\x8a\xb5\x18\x16/api/v1/CreateActivity\x12}\n" +
 	"\x16CreateOrUpdateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\"\x8a\xb5\x18\x1e/api/v1/CreateOrUpdateActivity\x12m\n" +
 	"\x0eListActivities\x12\x1e.skyflow.ListActivitiesRequest\x1a\x1f.skyflow.ListActivitiesResponse\"\x1a\x8a\xb5\x18\x16/api/v1/ListActivities\x12u\n" +
@@ -4236,7 +4424,7 @@ func file_proto_skyflow_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_skyflow_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_skyflow_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
+var file_proto_skyflow_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_proto_skyflow_proto_goTypes = []any{
 	(ErrorCode)(0),                            // 0: skyflow.ErrorCode
 	(*PageRequest)(nil),                       // 1: skyflow.PageRequest
@@ -4248,117 +4436,122 @@ var file_proto_skyflow_proto_goTypes = []any{
 	(*CreateNamespaceResponse)(nil),           // 7: skyflow.CreateNamespaceResponse
 	(*ListNamespacesRequest)(nil),             // 8: skyflow.ListNamespacesRequest
 	(*ListNamespacesResponse)(nil),            // 9: skyflow.ListNamespacesResponse
-	(*CreateActivityRequest)(nil),             // 10: skyflow.CreateActivityRequest
-	(*CreateActivityResponse)(nil),            // 11: skyflow.CreateActivityResponse
-	(*DescribeActivityRequest)(nil),           // 12: skyflow.DescribeActivityRequest
-	(*DescribeActivityResponse)(nil),          // 13: skyflow.DescribeActivityResponse
-	(*DeleteActivityRequest)(nil),             // 14: skyflow.DeleteActivityRequest
-	(*DeleteActivityResponse)(nil),            // 15: skyflow.DeleteActivityResponse
-	(*ListActivitiesRequest)(nil),             // 16: skyflow.ListActivitiesRequest
-	(*ActivityListItem)(nil),                  // 17: skyflow.ActivityListItem
-	(*ListActivitiesResponse)(nil),            // 18: skyflow.ListActivitiesResponse
-	(*CreateStateMachineRequest)(nil),         // 19: skyflow.CreateStateMachineRequest
-	(*CreateStateMachineResponse)(nil),        // 20: skyflow.CreateStateMachineResponse
-	(*DescribeStateMachineRequest)(nil),       // 21: skyflow.DescribeStateMachineRequest
-	(*DescribeStateMachineResponse)(nil),      // 22: skyflow.DescribeStateMachineResponse
-	(*DeleteStateMachineRequest)(nil),         // 23: skyflow.DeleteStateMachineRequest
-	(*DeleteStateMachineResponse)(nil),        // 24: skyflow.DeleteStateMachineResponse
-	(*UpdateStateMachineRequest)(nil),         // 25: skyflow.UpdateStateMachineRequest
-	(*UpdateStateMachineResponse)(nil),        // 26: skyflow.UpdateStateMachineResponse
-	(*ListStateMachinesRequest)(nil),          // 27: skyflow.ListStateMachinesRequest
-	(*ListStateMachinesResponse)(nil),         // 28: skyflow.ListStateMachinesResponse
-	(*StateMachineListItem)(nil),              // 29: skyflow.StateMachineListItem
-	(*ExecutionListItem)(nil),                 // 30: skyflow.ExecutionListItem
-	(*StepInfo)(nil),                          // 31: skyflow.StepInfo
-	(*ExecutionEventInfo)(nil),                // 32: skyflow.ExecutionEventInfo
-	(*ActivityInfo)(nil),                      // 33: skyflow.ActivityInfo
-	(*StateMachineInfo)(nil),                  // 34: skyflow.StateMachineInfo
-	(*ParseStateMachineRequest)(nil),          // 35: skyflow.ParseStateMachineRequest
-	(*ParseStateMachineResponse)(nil),         // 36: skyflow.ParseStateMachineResponse
-	(*StartExecutionRequest)(nil),             // 37: skyflow.StartExecutionRequest
-	(*StartExecutionResponse)(nil),            // 38: skyflow.StartExecutionResponse
-	(*DescribeExecutionRequest)(nil),          // 39: skyflow.DescribeExecutionRequest
-	(*DescribeExecutionResponse)(nil),         // 40: skyflow.DescribeExecutionResponse
-	(*DescribeExecutionBoneRequest)(nil),      // 41: skyflow.DescribeExecutionBoneRequest
-	(*DescribeExecutionBoneResponse)(nil),     // 42: skyflow.DescribeExecutionBoneResponse
-	(*StopExecutionRequest)(nil),              // 43: skyflow.StopExecutionRequest
-	(*ListExecutionsRequest)(nil),             // 44: skyflow.ListExecutionsRequest
-	(*ListExecutionsResponse)(nil),            // 45: skyflow.ListExecutionsResponse
-	(*ListExecutionEventsRequest)(nil),        // 46: skyflow.ListExecutionEventsRequest
-	(*ListExecutionEventsResponse)(nil),       // 47: skyflow.ListExecutionEventsResponse
-	(*DescribeStateRequest)(nil),              // 48: skyflow.DescribeStateRequest
-	(*DescribeStepResponse)(nil),              // 49: skyflow.DescribeStepResponse
-	(*ListStateEventsRequest)(nil),            // 50: skyflow.ListStateEventsRequest
-	(*GetActivityTaskRequest)(nil),            // 51: skyflow.GetActivityTaskRequest
-	(*GetActivityTaskResponse)(nil),           // 52: skyflow.GetActivityTaskResponse
-	(*SendTaskSuccessRequest)(nil),            // 53: skyflow.SendTaskSuccessRequest
-	(*SendTaskFailureRequest)(nil),            // 54: skyflow.SendTaskFailureRequest
-	(*SendTaskHeartbeatRequest)(nil),          // 55: skyflow.SendTaskHeartbeatRequest
-	(*SendTaskReferenceRequest)(nil),          // 56: skyflow.SendTaskReferenceRequest
-	(*StoreTaskDataRequest)(nil),              // 57: skyflow.StoreTaskDataRequest
-	(*LoadTaskDataRequest)(nil),               // 58: skyflow.LoadTaskDataRequest
-	(*LoadTaskDataResponse)(nil),              // 59: skyflow.LoadTaskDataResponse
-	(*SendStateSkipRequest)(nil),              // 60: skyflow.SendStateSkipRequest
-	(*GetActivityTaskResponse_ExtraInfo)(nil), // 61: skyflow.GetActivityTaskResponse.ExtraInfo
-	(*emptypb.Empty)(nil),                     // 62: google.protobuf.Empty
+	(*DescribeNamespaceRequest)(nil),          // 10: skyflow.DescribeNamespaceRequest
+	(*DescribeNamespaceResponse)(nil),         // 11: skyflow.DescribeNamespaceResponse
+	(*DeleteNamespaceRequest)(nil),            // 12: skyflow.DeleteNamespaceRequest
+	(*CreateActivityRequest)(nil),             // 13: skyflow.CreateActivityRequest
+	(*CreateActivityResponse)(nil),            // 14: skyflow.CreateActivityResponse
+	(*DescribeActivityRequest)(nil),           // 15: skyflow.DescribeActivityRequest
+	(*DescribeActivityResponse)(nil),          // 16: skyflow.DescribeActivityResponse
+	(*DeleteActivityRequest)(nil),             // 17: skyflow.DeleteActivityRequest
+	(*DeleteActivityResponse)(nil),            // 18: skyflow.DeleteActivityResponse
+	(*ListActivitiesRequest)(nil),             // 19: skyflow.ListActivitiesRequest
+	(*ActivityListItem)(nil),                  // 20: skyflow.ActivityListItem
+	(*ListActivitiesResponse)(nil),            // 21: skyflow.ListActivitiesResponse
+	(*CreateStateMachineRequest)(nil),         // 22: skyflow.CreateStateMachineRequest
+	(*CreateStateMachineResponse)(nil),        // 23: skyflow.CreateStateMachineResponse
+	(*DescribeStateMachineRequest)(nil),       // 24: skyflow.DescribeStateMachineRequest
+	(*DescribeStateMachineResponse)(nil),      // 25: skyflow.DescribeStateMachineResponse
+	(*DeleteStateMachineRequest)(nil),         // 26: skyflow.DeleteStateMachineRequest
+	(*DeleteStateMachineResponse)(nil),        // 27: skyflow.DeleteStateMachineResponse
+	(*UpdateStateMachineRequest)(nil),         // 28: skyflow.UpdateStateMachineRequest
+	(*UpdateStateMachineResponse)(nil),        // 29: skyflow.UpdateStateMachineResponse
+	(*ListStateMachinesRequest)(nil),          // 30: skyflow.ListStateMachinesRequest
+	(*ListStateMachinesResponse)(nil),         // 31: skyflow.ListStateMachinesResponse
+	(*StateMachineListItem)(nil),              // 32: skyflow.StateMachineListItem
+	(*ExecutionListItem)(nil),                 // 33: skyflow.ExecutionListItem
+	(*StepInfo)(nil),                          // 34: skyflow.StepInfo
+	(*ExecutionEventInfo)(nil),                // 35: skyflow.ExecutionEventInfo
+	(*ActivityInfo)(nil),                      // 36: skyflow.ActivityInfo
+	(*StateMachineInfo)(nil),                  // 37: skyflow.StateMachineInfo
+	(*ParseStateMachineRequest)(nil),          // 38: skyflow.ParseStateMachineRequest
+	(*ParseStateMachineResponse)(nil),         // 39: skyflow.ParseStateMachineResponse
+	(*StartExecutionRequest)(nil),             // 40: skyflow.StartExecutionRequest
+	(*StartExecutionResponse)(nil),            // 41: skyflow.StartExecutionResponse
+	(*DescribeExecutionRequest)(nil),          // 42: skyflow.DescribeExecutionRequest
+	(*DescribeExecutionResponse)(nil),         // 43: skyflow.DescribeExecutionResponse
+	(*DescribeExecutionBoneRequest)(nil),      // 44: skyflow.DescribeExecutionBoneRequest
+	(*DescribeExecutionBoneResponse)(nil),     // 45: skyflow.DescribeExecutionBoneResponse
+	(*StopExecutionRequest)(nil),              // 46: skyflow.StopExecutionRequest
+	(*ListExecutionsRequest)(nil),             // 47: skyflow.ListExecutionsRequest
+	(*ListExecutionsResponse)(nil),            // 48: skyflow.ListExecutionsResponse
+	(*ListExecutionEventsRequest)(nil),        // 49: skyflow.ListExecutionEventsRequest
+	(*ListExecutionEventsResponse)(nil),       // 50: skyflow.ListExecutionEventsResponse
+	(*DescribeStateRequest)(nil),              // 51: skyflow.DescribeStateRequest
+	(*DescribeStepResponse)(nil),              // 52: skyflow.DescribeStepResponse
+	(*ListStateEventsRequest)(nil),            // 53: skyflow.ListStateEventsRequest
+	(*GetActivityTaskRequest)(nil),            // 54: skyflow.GetActivityTaskRequest
+	(*GetActivityTaskResponse)(nil),           // 55: skyflow.GetActivityTaskResponse
+	(*SendTaskSuccessRequest)(nil),            // 56: skyflow.SendTaskSuccessRequest
+	(*SendTaskFailureRequest)(nil),            // 57: skyflow.SendTaskFailureRequest
+	(*SendTaskHeartbeatRequest)(nil),          // 58: skyflow.SendTaskHeartbeatRequest
+	(*SendTaskReferenceRequest)(nil),          // 59: skyflow.SendTaskReferenceRequest
+	(*StoreTaskDataRequest)(nil),              // 60: skyflow.StoreTaskDataRequest
+	(*LoadTaskDataRequest)(nil),               // 61: skyflow.LoadTaskDataRequest
+	(*LoadTaskDataResponse)(nil),              // 62: skyflow.LoadTaskDataResponse
+	(*SendStateSkipRequest)(nil),              // 63: skyflow.SendStateSkipRequest
+	(*GetActivityTaskResponse_ExtraInfo)(nil), // 64: skyflow.GetActivityTaskResponse.ExtraInfo
+	(*emptypb.Empty)(nil),                     // 65: google.protobuf.Empty
 }
 var file_proto_skyflow_proto_depIdxs = []int32{
 	1,  // 0: skyflow.ListNamespacesRequest.page_request:type_name -> skyflow.PageRequest
 	5,  // 1: skyflow.ListNamespacesResponse.namespaces:type_name -> skyflow.NamespaceListItem
 	2,  // 2: skyflow.ListNamespacesResponse.page_response:type_name -> skyflow.PageResponse
 	1,  // 3: skyflow.ListActivitiesRequest.page_request:type_name -> skyflow.PageRequest
-	17, // 4: skyflow.ListActivitiesResponse.activities:type_name -> skyflow.ActivityListItem
+	20, // 4: skyflow.ListActivitiesResponse.activities:type_name -> skyflow.ActivityListItem
 	2,  // 5: skyflow.ListActivitiesResponse.page_response:type_name -> skyflow.PageResponse
-	34, // 6: skyflow.CreateStateMachineResponse.data:type_name -> skyflow.StateMachineInfo
-	34, // 7: skyflow.DescribeStateMachineResponse.data:type_name -> skyflow.StateMachineInfo
+	37, // 6: skyflow.CreateStateMachineResponse.data:type_name -> skyflow.StateMachineInfo
+	37, // 7: skyflow.DescribeStateMachineResponse.data:type_name -> skyflow.StateMachineInfo
 	1,  // 8: skyflow.ListStateMachinesRequest.page_request:type_name -> skyflow.PageRequest
-	29, // 9: skyflow.ListStateMachinesResponse.statemachines:type_name -> skyflow.StateMachineListItem
+	32, // 9: skyflow.ListStateMachinesResponse.statemachines:type_name -> skyflow.StateMachineListItem
 	2,  // 10: skyflow.ListStateMachinesResponse.page_response:type_name -> skyflow.PageResponse
 	1,  // 11: skyflow.ListExecutionsRequest.page_request:type_name -> skyflow.PageRequest
-	30, // 12: skyflow.ListExecutionsResponse.executions:type_name -> skyflow.ExecutionListItem
+	33, // 12: skyflow.ListExecutionsResponse.executions:type_name -> skyflow.ExecutionListItem
 	2,  // 13: skyflow.ListExecutionsResponse.page_response:type_name -> skyflow.PageResponse
 	1,  // 14: skyflow.ListExecutionEventsRequest.page_request:type_name -> skyflow.PageRequest
-	32, // 15: skyflow.ListExecutionEventsResponse.data:type_name -> skyflow.ExecutionEventInfo
+	35, // 15: skyflow.ListExecutionEventsResponse.data:type_name -> skyflow.ExecutionEventInfo
 	2,  // 16: skyflow.ListExecutionEventsResponse.page_response:type_name -> skyflow.PageResponse
-	31, // 17: skyflow.DescribeStepResponse.data:type_name -> skyflow.StepInfo
+	34, // 17: skyflow.DescribeStepResponse.data:type_name -> skyflow.StepInfo
 	1,  // 18: skyflow.ListStateEventsRequest.page_request:type_name -> skyflow.PageRequest
-	61, // 19: skyflow.GetActivityTaskResponse.extra_info:type_name -> skyflow.GetActivityTaskResponse.ExtraInfo
+	64, // 19: skyflow.GetActivityTaskResponse.extra_info:type_name -> skyflow.GetActivityTaskResponse.ExtraInfo
 	1,  // 20: skyflow.CommonService.Paging:input_type -> skyflow.PageRequest
-	62, // 21: skyflow.CommonService.HTTP:input_type -> google.protobuf.Empty
-	62, // 22: skyflow.CommonService.Ping:input_type -> google.protobuf.Empty
+	65, // 21: skyflow.CommonService.HTTP:input_type -> google.protobuf.Empty
+	65, // 22: skyflow.CommonService.Ping:input_type -> google.protobuf.Empty
 	6,  // 23: skyflow.SkyflowV1Service.CreateNamespace:input_type -> skyflow.CreateNamespaceRequest
 	6,  // 24: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:input_type -> skyflow.CreateNamespaceRequest
 	8,  // 25: skyflow.SkyflowV1Service.ListNamespaces:input_type -> skyflow.ListNamespacesRequest
-	10, // 26: skyflow.SkyflowV1Service.CreateActivity:input_type -> skyflow.CreateActivityRequest
-	10, // 27: skyflow.SkyflowV1Service.CreateOrUpdateActivity:input_type -> skyflow.CreateActivityRequest
-	16, // 28: skyflow.SkyflowV1Service.ListActivities:input_type -> skyflow.ListActivitiesRequest
-	12, // 29: skyflow.SkyflowV1Service.DescribeActivity:input_type -> skyflow.DescribeActivityRequest
-	14, // 30: skyflow.SkyflowV1Service.DeleteActivity:input_type -> skyflow.DeleteActivityRequest
-	19, // 31: skyflow.SkyflowV1Service.CreateStateMachine:input_type -> skyflow.CreateStateMachineRequest
-	19, // 32: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:input_type -> skyflow.CreateStateMachineRequest
-	23, // 33: skyflow.SkyflowV1Service.DeleteStateMachine:input_type -> skyflow.DeleteStateMachineRequest
-	27, // 34: skyflow.SkyflowV1Service.ListStateMachines:input_type -> skyflow.ListStateMachinesRequest
-	21, // 35: skyflow.SkyflowV1Service.DescribeStateMachine:input_type -> skyflow.DescribeStateMachineRequest
-	25, // 36: skyflow.SkyflowV1Service.UpdateStateMachine:input_type -> skyflow.UpdateStateMachineRequest
-	2,  // 37: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
-	4,  // 38: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
-	3,  // 39: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
-	7,  // 40: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	7,  // 41: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	9,  // 42: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
-	11, // 43: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
-	11, // 44: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
-	18, // 45: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
-	13, // 46: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
-	15, // 47: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
-	20, // 48: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	20, // 49: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	24, // 50: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
-	28, // 51: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
-	22, // 52: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
-	26, // 53: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
-	37, // [37:54] is the sub-list for method output_type
-	20, // [20:37] is the sub-list for method input_type
+	12, // 26: skyflow.SkyflowV1Service.DeleteNamespace:input_type -> skyflow.DeleteNamespaceRequest
+	13, // 27: skyflow.SkyflowV1Service.CreateActivity:input_type -> skyflow.CreateActivityRequest
+	13, // 28: skyflow.SkyflowV1Service.CreateOrUpdateActivity:input_type -> skyflow.CreateActivityRequest
+	19, // 29: skyflow.SkyflowV1Service.ListActivities:input_type -> skyflow.ListActivitiesRequest
+	15, // 30: skyflow.SkyflowV1Service.DescribeActivity:input_type -> skyflow.DescribeActivityRequest
+	17, // 31: skyflow.SkyflowV1Service.DeleteActivity:input_type -> skyflow.DeleteActivityRequest
+	22, // 32: skyflow.SkyflowV1Service.CreateStateMachine:input_type -> skyflow.CreateStateMachineRequest
+	22, // 33: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:input_type -> skyflow.CreateStateMachineRequest
+	26, // 34: skyflow.SkyflowV1Service.DeleteStateMachine:input_type -> skyflow.DeleteStateMachineRequest
+	30, // 35: skyflow.SkyflowV1Service.ListStateMachines:input_type -> skyflow.ListStateMachinesRequest
+	24, // 36: skyflow.SkyflowV1Service.DescribeStateMachine:input_type -> skyflow.DescribeStateMachineRequest
+	28, // 37: skyflow.SkyflowV1Service.UpdateStateMachine:input_type -> skyflow.UpdateStateMachineRequest
+	2,  // 38: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
+	4,  // 39: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
+	3,  // 40: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
+	7,  // 41: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	7,  // 42: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	9,  // 43: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
+	65, // 44: skyflow.SkyflowV1Service.DeleteNamespace:output_type -> google.protobuf.Empty
+	14, // 45: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
+	14, // 46: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
+	21, // 47: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
+	16, // 48: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
+	18, // 49: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
+	23, // 50: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	23, // 51: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	27, // 52: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
+	31, // 53: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
+	25, // 54: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
+	29, // 55: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
+	38, // [38:56] is the sub-list for method output_type
+	20, // [20:38] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name
@@ -4375,7 +4568,7 @@ func file_proto_skyflow_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_skyflow_proto_rawDesc), len(file_proto_skyflow_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   61,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

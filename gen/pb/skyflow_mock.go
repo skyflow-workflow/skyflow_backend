@@ -216,6 +216,21 @@ func (mr *MockSkyflowV1ServiceServiceMockRecorder) DeleteActivity(ctx, req any) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteActivity", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DeleteActivity), ctx, req)
 }
 
+// DeleteNamespace mocks base method.
+func (m *MockSkyflowV1ServiceService) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteNamespace", ctx, req)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteNamespace indicates an expected call of DeleteNamespace.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) DeleteNamespace(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNamespace", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).DeleteNamespace), ctx, req)
+}
+
 // DeleteStateMachine mocks base method.
 func (m *MockSkyflowV1ServiceService) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error) {
 	m.ctrl.T.Helper()
@@ -567,6 +582,26 @@ func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DeleteActivity(ctx, req a
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, req}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteActivity", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DeleteActivity), varargs...)
+}
+
+// DeleteNamespace mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...client.Option) (*emptypb.Empty, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteNamespace", varargs...)
+	ret0, _ := ret[0].(*emptypb.Empty)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteNamespace indicates an expected call of DeleteNamespace.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) DeleteNamespace(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNamespace", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).DeleteNamespace), varargs...)
 }
 
 // DeleteStateMachine mocks base method.

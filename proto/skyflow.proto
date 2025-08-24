@@ -76,6 +76,11 @@ service SkyflowV1Service {
     rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {
         option (trpc.alias) = "/api/v1/ListNamespaces";
     }
+    // DeleteNamespace 删除一个命名空间
+    // 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+    rpc DeleteNamespace(DeleteNamespaceRequest) returns (google.protobuf.Empty) {
+        option (trpc.alias) = "/api/v1/DeleteNamespace";
+    }
     // CreateActivity 创建一个活动
     rpc CreateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
         option (trpc.alias) = "/api/v1/CreateActivity";
@@ -146,6 +151,8 @@ message CreateNamespaceRequest {
 message CreateNamespaceResponse {
     // name namespace name
     string name = 1;
+    // description 命名空间描述
+    string description = 2;
     // create_time timestample
     int64 create_time = 11;
     // update_time  update time timestample
@@ -154,7 +161,6 @@ message CreateNamespaceResponse {
 
 // ListNamespacesRequest 获得命名空间列表
 message ListNamespacesRequest {
-
     // 分页请求，默认 每分页大小 = 50条
     PageRequest page_request = 1;
 }
@@ -167,6 +173,33 @@ message ListNamespacesResponse {
     // 分页信息
     PageResponse page_response = 2;
 }
+
+// DescribeNamespaceRequest 获得一个命名空间的描述
+message DescribeNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+}
+
+// DescribeNamespaceResponse 获得一个命名空间的描述返回
+message DescribeNamespaceResponse {
+    // name 命名空间名字
+    string name = 1;
+    // description 命名空间描述
+    string description = 2;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+
+// DeleteNamespaceRequest 删除一个命名空间
+message DeleteNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+}
+
+
 
 // CreateActivityRequest 创建一个活动请求结构
 message CreateActivityRequest {

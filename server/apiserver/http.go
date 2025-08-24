@@ -24,13 +24,13 @@ type Response struct {
 }
 
 // DefaultHttpRespHandler  default trpc http handler
-var DefaultHttpRespHandler = func(w stdhttp.ResponseWriter, r *stdhttp.Request, rspbody []byte) (err error) {
+var DefaultHttpRespHandler = func(w stdhttp.ResponseWriter, r *stdhttp.Request, rspBody []byte) (err error) {
 
 	var data json.RawMessage
-	if len(rspbody) == 0 {
+	if len(rspBody) == 0 {
 		data = []byte("null")
 	} else {
-		data = rspbody
+		data = rspBody
 	}
 	bs, _ := json.Marshal(&Response{Success: true, ErrorCode: "", ErrorMsg: "", Data: data})
 	_, err = bytes.NewBuffer(bs).WriteTo(w)
@@ -39,14 +39,20 @@ var DefaultHttpRespHandler = func(w stdhttp.ResponseWriter, r *stdhttp.Request, 
 
 // DefaultHTTPErrorHandler default http error handler
 var DefaultHTTPErrorHandler = func(w stdhttp.ResponseWriter, r *stdhttp.Request, e *errs.Error) {
+	var resp Response
+
 	// 填充指定格式错误信息到HTTP Body
-	resp := Response{
+	resp = Response{
 		Success:    false,
 		ErrorMsg:   e.Msg,
-		ErrorCode:  "InternalError",
+		ErrorCode:  e.Code.String(),
 		Data:       nil,
 		ReturnCode: int(e.Code),
 	}
-	bs, _ := json.Marshal(&resp)
+	bs, err := json.Marshal(&resp)
+	if err != nil {
+		stdhttp.Error(w, err.Error(), stdhttp.StatusInternalServerError)
+		return
+	}
 	_, _ = bytes.NewBuffer(bs).WriteTo(w)
 }

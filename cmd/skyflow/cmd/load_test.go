@@ -10,7 +10,7 @@ import (
 )
 
 func TestInitTrpcConfig(t *testing.T) {
-	configFilePath := "mock/trpc_go.yaml"
+	configFilePath := "./mock/configfile/trpc_go.yaml"
 
 	s := InitializeTrpcSever(configFilePath)
 	slog.Info("TRPC server initialized",

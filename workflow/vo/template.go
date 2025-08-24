@@ -47,10 +47,8 @@ type CreateActivityResponse struct {
 	Data po.Activity
 }
 
-// CreateStateMachineRequest ...
 type CreateStateMachineRequest struct {
 	Name        string
-	Type        string
 	Description string
 	Namespace   string
 	Definition  string

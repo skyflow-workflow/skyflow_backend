@@ -26,9 +26,9 @@ func TestGetBone(t *testing.T) {
 	for _, tt := range testcases {
 
 		fmt.Println(tt.step_id)
-		state, err := NewExecutionStep(&po.Step{}, myExecutor)
+		step, err := NewExecutionStep(&po.Step{}, myExecutor)
 		assert.Equal(t, err, nil)
-		bone := state.GetBone()
+		bone := step.GetBone()
 		fmt.Println(bone)
 	}
 
