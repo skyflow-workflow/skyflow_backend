@@ -3,6 +3,7 @@ package states
 import (
 	"fmt"
 	"math"
+	"slices"
 	"time"
 )
 
@@ -221,10 +222,8 @@ func (t *Task) GetNextState(input any, taskdata TaskSendData) (*NextState, error
 func HasIntersection(x []string, y []string) bool {
 
 	for _, yi := range y {
-		for _, xi := range x {
-			if yi == xi {
-				return true
-			}
+		if slices.Contains(x, yi) {
+			return true
 		}
 	}
 	return false
