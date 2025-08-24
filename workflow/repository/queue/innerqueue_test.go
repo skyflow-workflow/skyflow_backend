@@ -8,7 +8,7 @@ import (
 
 func TestCreateInnerQueue(t *testing.T) {
 
-	dsn := "kafka://localhost:9092/innerqueue_test?consumergroup=innerqueue_test_group"
+	dsn := "kafka://localhost:9092/?topics=innerqueue_test&consumergroup=innerqueue_test_group"
 	_, err := NewInnerMessageQueueFromConfig(dsn)
 	assert.Equal(t, nil, err)
 }

@@ -1,10 +1,10 @@
 package executor
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/go-playground/assert/v2"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
@@ -12,24 +12,48 @@ func TestGetBone(t *testing.T) {
 
 	var myExecutor = StandardExecutor
 	var testcases = []struct {
-		step_id int
-		input   string
+		dbStep po.Step
+		except StepBone
+		input  string
 	}{
 		{
-			step_id: 223,
-		},
-		{
-			step_id: 402,
+			dbStep: po.Step{
+				ID:     1,
+				Type:   "Task",
+				Status: "Running",
+				Definition: `{
+					"Type": "Task",
+					"Resource": "activity:function1",
+					"Next": "TMPAlarmShield",
+					"Comment": "test comment"
+				}`,
+				GroupIndex: 1,
+				GroupID:    1,
+			},
+			except: StepBone{
+				BaseBone: BaseBone{
+					BaseBone: states.BaseBone{
+						Type:    "Task",
+						Name:    "",
+						Next:    []string{"TMPAlarmShield"},
+						Comment: "test comment",
+					},
+					Status: "Running",
+					StepID: 1,
+					Index:  0,
+				},
+				StateMachineBone: nil,
+				Branches:         nil,
+			},
 		},
 	}
 
 	for _, tt := range testcases {
 
-		fmt.Println(tt.step_id)
-		step, err := NewExecutionStep(&po.Step{}, myExecutor)
+		step, err := NewExecutionStep(&tt.dbStep, myExecutor)
 		assert.Equal(t, err, nil)
 		bone := step.GetBone()
-		fmt.Println(bone)
+		assert.Equal(t, bone, tt.except)
 	}
 
 }

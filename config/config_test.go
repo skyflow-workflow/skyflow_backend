@@ -45,7 +45,7 @@ resource:
 			config: &SkyflowConfig{
 				Persistence: &rdb.Config{
 					DSN:          "mysql://user:password@tcp(localhost:3306)/skyflow",
-					MaxOpenConns: 100,
+					MaxOpenConns: 10,
 					MaxIdleConns: 10,
 					LogLevel:     "info",
 					MaxIdleTime:  "10m",

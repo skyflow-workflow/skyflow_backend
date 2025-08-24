@@ -25,7 +25,7 @@ type ExecutionBone struct {
 }
 
 type StateMachineBone struct {
-	Type    string
+	// Type    string
 	Version string
 	StartAt string              `json:"StartAt"`
 	States  map[string]StepBone `json:"States"`

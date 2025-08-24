@@ -3,15 +3,20 @@ package cmd
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"testing"
 
+	"github.com/go-playground/assert/v2"
 	_ "trpc.group/trpc-go/trpc-gateway/plugin/accesslog"
 	"trpc.group/trpc-go/trpc-go/filter"
 )
 
 func TestInitTrpcConfig(t *testing.T) {
-	configFilePath := "./mock/configfile/trpc_go.yaml"
+	configFilePath := "./mock/trpc_go.yaml"
 
+	wd, err := os.Getwd()
+	assert.Equal(t, err, nil)
+	slog.Info("Current working directory:", "wd", wd)
 	s := InitializeTrpcSever(configFilePath)
 	slog.Info("TRPC server initialized",
 		"server", s,
