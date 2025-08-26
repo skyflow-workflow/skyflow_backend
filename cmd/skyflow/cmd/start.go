@@ -12,17 +12,6 @@ import (
 	"trpc.group/trpc-go/trpc-go/server"
 )
 
-var (
-	trpc_conf    string = "./trpc_go.yaml" // Configuration file for the TRPC framework
-	skyflow_conf string = "./skyflow.yaml" // Configuration file for the skyflow server
-)
-
-func init() {
-	startCmd.Flags().StringVarP(&trpc_conf, "trpc_config", "c", "./trpc_go.yaml", " trpc configuration file, default is ./trpc_go.yaml")
-	startCmd.Flags().StringVarP(&skyflow_conf, "skyflow_config", "", "./skyflow.yaml", " skyflow configuration file, default is ./skyflow.yaml")
-
-}
-
 var startCmd = &cobra.Command{
 	Use:   "start [flags] [args]",
 	Short: "Start the skyflow workflow engine",
@@ -45,7 +34,7 @@ func StartCommand(cmd *cobra.Command, args []string) {
 		slog.Error("Error loading skyflow configuration", "error", err)
 		return
 	}
-	wfSvc, err := LoadServices(sfConfig)
+	wfSvc, err := LoadService(sfConfig)
 	if err != nil {
 		slog.Error("Error loading services", "error", err)
 		return

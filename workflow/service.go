@@ -1,6 +1,8 @@
 package workflow
 
 import (
+	"context"
+
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
@@ -13,7 +15,7 @@ import (
 // It is also used to manage workflow state and activity tasks.
 // The WorkflowService interface defines the methods that the service should implement.
 
-type WorkflowService *workflowService
+type WorkflowService = *workflowService
 
 // workflowService is the implementation of WorkflowService interface
 // It provides methods to manage workflow execution, templates, and events.
@@ -52,4 +54,23 @@ func NewWorkflowService(dbClient *rdb.DBClient, innerQueue queue.InnerMessageQue
 		expressExecutor:  expressExecutor,
 	}
 	return svc, nil
+}
+
+func (svc *workflowService) SyncSchema() error {
+	var err error
+	ctx := context.Background()
+	err = svc.TemplateService.SyncSchema(ctx, nil)
+	if err != nil {
+		return err
+	}
+	err = svc.Exporter.SyncSchema()
+	if err != nil {
+		return err
+	}
+	err = svc.InnerQueue.SyncSchema()
+	if err != nil {
+		return err
+	}
+	// TODO: sync executor schema
+	return nil
 }

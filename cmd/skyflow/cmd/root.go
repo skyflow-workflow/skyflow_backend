@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	format = outputformats.Text // Output format for the command, e.g., json, yaml
+	format              = outputformats.Text // Output format for the command, e.g., json, yaml
+	trpc_conf    string = "./trpc_go.yaml"   // Configuration file for the TRPC framework
+	skyflow_conf string = "./skyflow.yaml"   // Configuration file for the skyflow server
 )
 
 var outputformats = struct {
@@ -27,6 +29,8 @@ func init() {
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(startCmd)
 	rootCmd.AddCommand(testCmd)
+	rootCmd.AddCommand(syncSchemaCmd)
+
 }
 
 func initCobra() {
@@ -46,6 +50,9 @@ func rootCmdAddFlag() {
 	rootCmd.PersistentFlags().StringVarP(&format, "format", "f", outputformats.Text,
 		"Output format for the command. Supported formats: text, json. Default is 'text'.")
 	rootCmd.PersistentFlags().SortFlags = false // Disable sorting of flags
+	rootCmd.Flags().StringVarP(&trpc_conf, "trpc_config", "c", "./trpc_go.yaml", " trpc configuration file, default is ./trpc_go.yaml")
+	rootCmd.Flags().StringVarP(&skyflow_conf, "skyflow_config", "", "./skyflow.yaml", " skyflow configuration file, default is ./skyflow.yaml")
+
 }
 
 var rootCmd = &cobra.Command{

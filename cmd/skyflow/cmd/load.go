@@ -30,7 +30,7 @@ func LoadConfig(customConfigFilePath string) (*config.SkyflowConfig, error) {
 
 }
 
-func LoadServices(conf *config.SkyflowConfig) (workflow.WorkflowService, error) {
+func LoadService(conf *config.SkyflowConfig) (workflow.WorkflowService, error) {
 
 	var err error
 	var dbClient *rdb.DBClient
