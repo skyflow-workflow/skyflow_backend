@@ -1,21 +1,14 @@
 package queue
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/mmtbak/microlibrary/config"
+	"github.com/go-playground/assert/v2"
 )
 
 func TestCreateInnerQueue(t *testing.T) {
 
-	conf := config.AccessPoint{
-		Source: "",
-	}
-	mq, err := NewInnerMessageQueueFromConfig(conf)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(mq)
+	dsn := "kafka://localhost:9092/?topics=innerqueue_test&consumergroup=innerqueue_test_group"
+	_, err := NewInnerMessageQueueFromConfig(dsn)
+	assert.Equal(t, nil, err)
 }

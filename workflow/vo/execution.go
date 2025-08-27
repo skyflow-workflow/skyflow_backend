@@ -61,7 +61,7 @@ type GetActivityTaskRequest struct {
 
 // GetActivityTaskResponse ...
 type GetActivityTaskResponse struct {
-	Step             *po.State
+	Step             *po.Step
 	Execution        *po.Execution
 	Input            string
 	TaskToken        string
@@ -175,7 +175,6 @@ type StoreTaskDataRequest struct {
 type DescribeExecutionBoneRequest struct {
 	ExecutionID   int
 	ExecutionUUID string
-	PipelineMode  bool
 }
 
 // SkipBlockedTaskRequest ...

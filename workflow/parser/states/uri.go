@@ -24,11 +24,15 @@ var ResourceSeparator = ":"
 
 // ResourceType 资源类型
 var ResourceType = struct {
-	Builtin  string
-	Activity string
+	Builtin    string
+	Activity   string
+	Kubernetes string
+	K8s        string
 }{
-	Activity: "activity",
-	Builtin:  "builtin",
+	Activity:   "activity",
+	Builtin:    "builtin",
+	Kubernetes: "kubernetes",
+	K8s:        "k8s",
 }
 
 // ResourceURI  resource uri defintion

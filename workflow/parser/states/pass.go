@@ -5,14 +5,18 @@ type PassBody struct {
 	Result map[string]any `mapstructure:"Result" validate:"required"`
 }
 
+func (p *PassBody) GetOutput(input any) (any, error) {
+	return p.Result, nil
+}
+
 // Pass ...
 type Pass struct {
 	*BaseState
 	*PassBody
 }
 
-func (p *PassBody) GetOutput(input any) (any, error) {
-	return p.Result, nil
+func (p *Pass) GetBaseState() *BaseState {
+	return p.BaseState
 }
 
 // GetResult render result with input and parameters

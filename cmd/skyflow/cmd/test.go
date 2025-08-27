@@ -1,0 +1,52 @@
+package cmd
+
+import (
+	"log/slog"
+	"os"
+
+	"github.com/skyflow-workflow/skyflow_backbend/config"
+	"github.com/spf13/cobra"
+	"trpc.group/trpc-go/trpc-go"
+	tconfig "trpc.group/trpc-go/trpc-go/config"
+)
+
+var testCmd = &cobra.Command{
+	Use:   "test",
+	Short: "Test config validation for start skyflow workflow engine",
+	Long:  `Test config validation for start skyflow workflow engine.`,
+	Run: func(cmd *cobra.Command, args []string) {
+
+		var err error
+		err = CheckConfig()
+		if err != nil {
+			slog.Error("Error checking configuration", "error", err)
+			os.Exit(1)
+		}
+		slog.Info("Configuration check completed successfully")
+
+	},
+}
+
+func CheckConfig() error {
+	if trpc_conf != "" {
+		trpc.ServerConfigPath = trpc_conf // Set the TRPC server configuration path
+	}
+	_, err := trpc.LoadConfig(trpc_conf)
+	if err != nil {
+		slog.Error("Error loading TRPC server configuration", "error", err, "configPath", trpc_conf)
+		return err
+	}
+	_ = trpc.NewServer()
+	c, err := tconfig.Load(skyflow_conf, tconfig.WithCodec("yaml"))
+	if err != nil {
+		slog.Error("Error loading custom configuration file", "error", err, "configPath", skyflow_conf)
+		return err
+	}
+	var customConfig = config.SkyflowConfig{}
+	err = c.Unmarshal(&customConfig)
+	if err != nil {
+		slog.Error("Error unmarshalling custom configuration", "error", err, "configPath", skyflow_conf)
+		return err
+	}
+	return nil
+}

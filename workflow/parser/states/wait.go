@@ -24,6 +24,10 @@ type Wait struct {
 	*WaitBody
 }
 
+func (w *Wait) GetBaseState() *BaseState {
+	return w.BaseState
+}
+
 func (w *Wait) Init() error {
 	var err error
 	err = myValidate.Struct(w)

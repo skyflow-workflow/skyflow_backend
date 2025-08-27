@@ -11,8 +11,8 @@ type ParseFlowRequest struct {
 }
 
 type CreateNamespaceRequest struct {
-	Name    string
-	Comment string
+	Name        string
+	Description string
 }
 
 type CreateNamespaceResponse struct {
@@ -37,7 +37,7 @@ type DeleteNamespaceRequest struct {
 // CreateActivityRequest ...
 type CreateActivityRequest struct {
 	ActivityName string
-	Comment      string
+	Description  string
 	Namespace    string
 	// Parameters is the parameters description of the activity, it is a json string
 	Parameters string
@@ -47,12 +47,11 @@ type CreateActivityResponse struct {
 	Data po.Activity
 }
 
-// CreateStateMachineRequest ...
 type CreateStateMachineRequest struct {
-	StateMachineName string
-	Comment          string
-	Namespace        string
-	Definition       string
+	Name        string
+	Description string
+	Namespace   string
+	Definition  string
 }
 
 type CreateStateMachineResponse struct {
@@ -78,7 +77,7 @@ type DescribeActivityRequest struct {
 type DescribeActivityResponse struct {
 	ActivityURI string
 	Name        string
-	Comment     string
+	Description string
 	CreateTime  int64
 	UpdateTime  int64
 }
@@ -89,6 +88,7 @@ type DeleteActivityRequest struct {
 
 // ListStateMachinesRequest ...
 type ListStateMachinesRequest struct {
+	Namespace   string
 	PageRequest paging.PageRequest
 }
 
@@ -98,8 +98,26 @@ type ListStateMachinesResponse struct {
 	PageResponse  paging.PageResponse
 }
 
+type DescribeStateMachineRequest struct {
+	StateMachineURI string
+}
+type DescribeStateMachineResponse struct {
+	Data *po.StateMachine
+}
+
+type DeleteStateMachineRequest struct {
+	StateMachineURI string
+}
+
 // DescribeStepResponse ...
 type DescribeStepResponse struct {
 	ExecutionUUID string
-	Step          po.State
+	Step          po.Step
+}
+
+type UpdateStateMachineRequest struct {
+	StateMachineURI string
+	Name            string
+	Description     string
+	Definition      string
 }

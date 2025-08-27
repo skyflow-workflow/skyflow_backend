@@ -9,9 +9,11 @@ var (
 	// ErrorTaskTokenNotFound  常用错误类型 之一， TaskToken没找到
 	ErrorTaskTokenNotFound = fmt.Errorf("TaskTokenNotFound")
 	// ErrorStepNotFound  常用错误类型 之一， Step没找到
-	ErrorStepNotFound = fmt.Errorf("StepNotFound ")
+	ErrorStepNotFound = fmt.Errorf("step not found")
 	// ErrorStepGroupNotFound  常用错误类型 之一， StepGroup没找到
-	ErrorStepGroupNotFound = fmt.Errorf("StepgroupNotFound ")
+	ErrorStepGroupNotFound = fmt.Errorf("stepgroup not found")
+	// ErrorUserStepDataNotFound 常用错误类型 之一， UserStepData没找到
+	ErrorUserStepDataNotFound = fmt.Errorf("user step data not found")
 	// ErrorExecutionNotFound  常用错误类型 之一， Execution没找到
 	ErrorExecutionNotFound     = fmt.Errorf("ExecutionNotFound ")
 	ErrorUUIDExisted           = fmt.Errorf("uuid  has been existed")

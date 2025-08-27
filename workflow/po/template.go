@@ -4,11 +4,11 @@ import "time"
 
 // Namespace  资源namespace
 type Namespace struct {
-	ID         int       `json:"id" gorm:"primaryKey;autoIncrement"`
-	Name       string    `json:"name" gorm:"not null; type:VARCHAR(255);unique; comment:name"` //namespace name
-	Comment    string    `json:"comment" gorm:"type:MEDIUMTEXT"`
-	UpdateTime time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	CreateTime time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	ID          int       `json:"id" gorm:"primaryKey;autoIncrement"`
+	Name        string    `json:"name" gorm:"not null; type:VARCHAR(255);unique; comment:name"` //namespace name
+	Description string    `json:"description" gorm:"type:MEDIUMTEXT"`
+	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
+	CreateTime  time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
 // Activity  每一个函数功能被称为一个 Activity,有自己唯一的URI
@@ -18,7 +18,7 @@ type Activity struct {
 	Name        string    `json:"name" gorm:"not null; uniqueIndex:uni_namespace_activity;type:VARCHAR(128)"`
 	Type        string    `json:"type" gorm:"not null;type:VARCHAR(100)"`        // function type, activity/builtin/...
 	URI         string    `json:"uri" gorm:"not null; unique;type:VARCHAR(256)"` // function uri
-	Comment     string    `json:"comment" gorm:"type:TEXT"`
+	Description string    `json:"description" gorm:"type:TEXT"`
 	Parameters  string    `json:"parameters" gorm:"type:TEXT"`              // paramters descritpion
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"` // active |disable
 	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
@@ -32,7 +32,7 @@ type StateMachine struct {
 	Name        string    `json:"name" gorm:"not nul; uniqueIndex:uni_namespace_statemachine;type:VARCHAR(128)"`
 	URI         string    `json:"uri" gorm:"not null; unique;type:VARCHAR(256)"`
 	Definition  string    `json:"definition" gorm:"not null;type:MEDIUMTEXT"`
-	Comment     string    `json:"comment" gorm:"type:MEDIUMTEXT"`
+	Description string    `json:"description" gorm:"type:MEDIUMTEXT"`
 	Status      string    `json:"status" gorm:"not null;type:VARCHAR(100)"`
 	UpdateTime  time.Time `json:"update_time" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
 	CreateTime  time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`

@@ -1,5 +1,37 @@
-// package quota  defined skyflow quota here
-package decoder
+package executor
+
+type ExecutorConfig struct {
+	Option *Option
+	Quota  *Quota
+}
+
+// ParserConfig ...
+type Option struct {
+	// AllowActivity specifies whether to allow activity Task.
+	AllowActivity bool
+	// AllowWait specifies whether to allow Wait State.
+	AllowWait bool
+	// AllowSuspend specifies whether to allow Suspend State.
+	AllowSuspend bool
+	// AllowParallel specifies whether to allow Parallel State.
+	AllowParallel bool
+	// AllowMap specifies whether to allow Map State.
+	AllowMap bool
+	// AllowChoice specifies whether to allow Choice State.
+	AllowChoice bool
+	// AllowFail specifies whether to allow Fail State.
+	AllowFail bool
+	// AllowSucceed specifies whether to allow Succeed State.
+	AllowSucceed bool
+	// AllowPass specifies whether to allow Pass State.
+	AllowPass bool
+	// AbortOnFail specifies whether to stop execution on state failure.
+	// in operation mode, it will try to execute all steps, user can retry the failed steps,
+	// but in express mode, it will stop on the first failure. use fail fast mode.
+	AbortOnFail bool
+	// PersistenceStep specifies whether to persist step data.
+	PersistenceStep bool
+}
 
 // Quota defines the quota for the workflow parser
 type Quota struct {
@@ -76,4 +108,40 @@ var DefaultQuota = Quota{
 	MaxTaskInputSize: 32 * 1024,
 	// max task output size 32KB
 	MaxTaskOutputSize: 32 * 1024,
+}
+
+// StandardExecutorConfig standard model workflow executor config
+var StandardExecutorConfig = ExecutorConfig{
+	Option: &Option{
+		AllowActivity:   true,
+		AllowWait:       true,
+		AllowSuspend:    true,
+		AllowParallel:   true,
+		AllowMap:        true,
+		AllowChoice:     true,
+		AllowFail:       true,
+		AllowSucceed:    true,
+		AllowPass:       true,
+		AbortOnFail:     false,
+		PersistenceStep: true,
+	},
+	Quota: &DefaultQuota,
+}
+
+// ExpressParserConfig express model workflow executor config
+var ExpressExecutorConfig = ExecutorConfig{
+	Option: &Option{
+		AllowActivity:   false,
+		AllowWait:       false,
+		AllowSuspend:    false,
+		AllowParallel:   true,
+		AllowMap:        true,
+		AllowChoice:     true,
+		AllowFail:       true,
+		AllowSucceed:    true,
+		AllowPass:       true,
+		AbortOnFail:     true,
+		PersistenceStep: false,
+	},
+	Quota: &DefaultQuota,
 }

@@ -35,8 +35,8 @@ func (decoder *CommonDecoder) Decode(definition string) (*states.StateMachine, e
 	return nil, nil
 }
 
-// JSONUnmarshall unmarshal the json string to the target object
-func (decoder *CommonDecoder) JSONUnmarshall(data string, v any) error {
+// JSONUnmarshal unmarshal the json string to the target object
+func (decoder *CommonDecoder) JSONUnmarshal(data string, v any) error {
 	err := myJson.Unmarshal([]byte(data), v)
 	if err != nil {
 		if jsonerr, ok := err.(*json.SyntaxError); ok {

@@ -8,8 +8,8 @@ type ExecutionEvent struct {
 	ExecutionID   int
 	ExecutionUUID string
 	ExecutionURI  string
-	StateName     string
-	StateID       int
+	StepName      string
+	StepID        int
 	EventType     string
 	NanoSeconds   int64
 	Data          any

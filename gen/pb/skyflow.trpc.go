@@ -121,6 +121,9 @@ type SkyflowV1ServiceService interface {
 	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(ctx context.Context, req *ListNamespacesRequest) (*ListNamespacesResponse, error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	//  注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest) (*emptypb.Empty, error)
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error)
 	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
@@ -131,17 +134,17 @@ type SkyflowV1ServiceService interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest) (*DescribeActivityResponse, error)
 	// DeleteActivity DeleteActivity 删除一个活动
 	DeleteActivity(ctx context.Context, req *DeleteActivityRequest) (*DeleteActivityResponse, error)
-	// CreateStateMachine CreateStateMachine 创建一个工作流
+	// CreateStateMachine CreateStateMachine 创建一个状态机
 	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
-	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
-	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
 	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error)
-	// ListStateMachines ListStateMachines 获得工作流列表
+	// ListStateMachines ListStateMachines 获得状态机列表
 	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error)
-	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
-	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error)
 }
 
@@ -189,6 +192,24 @@ func SkyflowV1ServiceService_ListNamespaces_Handler(svr interface{}, ctx context
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
 		return svr.(SkyflowV1ServiceService).ListNamespaces(ctx, reqbody.(*ListNamespacesRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DeleteNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DeleteNamespaceRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DeleteNamespace(ctx, reqbody.(*DeleteNamespaceRequest))
 	}
 
 	var rsp interface{}
@@ -415,6 +436,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
 		},
 		{
+			Name: "/api/v1/DeleteNamespace",
+			Func: SkyflowV1ServiceService_DeleteNamespace_Handler,
+		},
+		{
 			Name: "/api/v1/CreateActivity",
 			Func: SkyflowV1ServiceService_CreateActivity_Handler,
 		},
@@ -469,6 +494,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/skyflow.SkyflowV1Service/ListNamespaces",
 			Func: SkyflowV1ServiceService_ListNamespaces_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DeleteNamespace",
+			Func: SkyflowV1ServiceService_DeleteNamespace_Handler,
 		},
 		{
 			Name: "/skyflow.SkyflowV1Service/CreateActivity",
@@ -560,6 +589,13 @@ func (s *UnimplementedSkyflowV1Service) ListNamespaces(ctx context.Context, req 
 	return nil, errors.New("rpc ListNamespaces of service SkyflowV1Service is not implemented")
 }
 
+// DeleteNamespace DeleteNamespace 删除一个命名空间
+//
+//	注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+func (s *UnimplementedSkyflowV1Service) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest) (*emptypb.Empty, error) {
+	return nil, errors.New("rpc DeleteNamespace of service SkyflowV1Service is not implemented")
+}
+
 // CreateActivity CreateActivity 创建一个活动
 func (s *UnimplementedSkyflowV1Service) CreateActivity(ctx context.Context, req *CreateActivityRequest) (*CreateActivityResponse, error) {
 	return nil, errors.New("rpc CreateActivity of service SkyflowV1Service is not implemented")
@@ -585,32 +621,32 @@ func (s *UnimplementedSkyflowV1Service) DeleteActivity(ctx context.Context, req 
 	return nil, errors.New("rpc DeleteActivity of service SkyflowV1Service is not implemented")
 }
 
-// CreateStateMachine CreateStateMachine 创建一个工作流
+// CreateStateMachine CreateStateMachine 创建一个状态机
 func (s *UnimplementedSkyflowV1Service) CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
 	return nil, errors.New("rpc CreateStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 func (s *UnimplementedSkyflowV1Service) CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest) (*CreateStateMachineResponse, error) {
 	return nil, errors.New("rpc CreateOrUpdateStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// DeleteStateMachine DeleteStateMachine 删除一个工作流
+// DeleteStateMachine DeleteStateMachine 删除一个状态机
 func (s *UnimplementedSkyflowV1Service) DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error) {
 	return nil, errors.New("rpc DeleteStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// ListStateMachines ListStateMachines 获得工作流列表
+// ListStateMachines ListStateMachines 获得状态机列表
 func (s *UnimplementedSkyflowV1Service) ListStateMachines(ctx context.Context, req *ListStateMachinesRequest) (*ListStateMachinesResponse, error) {
 	return nil, errors.New("rpc ListStateMachines of service SkyflowV1Service is not implemented")
 }
 
-// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 func (s *UnimplementedSkyflowV1Service) DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error) {
 	return nil, errors.New("rpc DescribeStateMachine of service SkyflowV1Service is not implemented")
 }
 
-// UpdateStateMachine UpdateStateMachine 更新一个工作流
+// UpdateStateMachine UpdateStateMachine 更新一个状态机
 func (s *UnimplementedSkyflowV1Service) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error) {
 	return nil, errors.New("rpc UpdateStateMachine of service SkyflowV1Service is not implemented")
 }
@@ -708,6 +744,9 @@ type SkyflowV1ServiceClientProxy interface {
 	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...client.Option) (rsp *CreateNamespaceResponse, err error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...client.Option) (rsp *ListNamespacesResponse, err error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	//  注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...client.Option) (rsp *emptypb.Empty, err error)
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...client.Option) (rsp *CreateActivityResponse, err error)
 	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
@@ -718,17 +757,17 @@ type SkyflowV1ServiceClientProxy interface {
 	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...client.Option) (rsp *DescribeActivityResponse, err error)
 	// DeleteActivity DeleteActivity 删除一个活动
 	DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...client.Option) (rsp *DeleteActivityResponse, err error)
-	// CreateStateMachine CreateStateMachine 创建一个工作流
+	// CreateStateMachine CreateStateMachine 创建一个状态机
 	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
-	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个工作流
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
 	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...client.Option) (rsp *CreateStateMachineResponse, err error)
-	// DeleteStateMachine DeleteStateMachine 删除一个工作流
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
 	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...client.Option) (rsp *DeleteStateMachineResponse, err error)
-	// ListStateMachines ListStateMachines 获得工作流列表
+	// ListStateMachines ListStateMachines 获得状态机列表
 	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...client.Option) (rsp *ListStateMachinesResponse, err error)
-	// DescribeStateMachine DescribeStateMachine 获得一个工作流的描述
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (rsp *DescribeStateMachineResponse, err error)
-	// UpdateStateMachine UpdateStateMachine 更新一个工作流
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (rsp *UpdateStateMachineResponse, err error)
 }
 
@@ -795,6 +834,26 @@ func (c *SkyflowV1ServiceClientProxyImpl) ListNamespaces(ctx context.Context, re
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &ListNamespacesResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...client.Option) (*emptypb.Empty, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DeleteNamespace")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DeleteNamespace")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &emptypb.Empty{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

@@ -3,11 +3,16 @@ package states
 import (
 	"fmt"
 	"math"
+	"slices"
 	"time"
 )
 
 // TaskBody ...
 type TaskBody struct {
+	// Block : if block execution for task, default false
+	// if true, the task will block the workflow execution until the manual call to resume the task
+	// if false, the task will be executed automatically
+	Block            bool   `mapstructure:"Block"`
 	Resource         string `validate:"required,gt=0"`
 	TimeoutSeconds   uint   `validate:"gte=0"`
 	HeartbeatSeconds uint   `validate:"gte=0"`
@@ -57,6 +62,8 @@ var DefaultCatchNode = TaskCatchNode{
 
 // DefaultTaskBody ...
 var DefaultTaskBody = TaskBody{
+	// default false, means task will not block the workflow execution
+	Block:    false,
 	Resource: "",
 	// default 0, 0 means no timeout limit
 	TimeoutSeconds: 0,
@@ -97,6 +104,10 @@ func (body *TaskBody) Init() error {
 type Task struct {
 	*BaseState
 	*TaskBody
+}
+
+func (t *Task) GetBaseState() *BaseState {
+	return t.BaseState
 }
 
 // Init init task
@@ -147,7 +158,7 @@ func (t *Task) GetTaskTimeout() (TaskTimeout, error) {
 // @input state input data
 // @taskdata task send data
 // return next state
-func (t *Task) GetNextState(input interface{}, taskdata TaskSendData) (NextState, error) {
+func (t *Task) GetNextState(input any, taskdata TaskSendData) (*NextState, error) {
 	var err error
 
 	var nextstate NextState
@@ -155,13 +166,13 @@ func (t *Task) GetNextState(input interface{}, taskdata TaskSendData) (NextState
 		// task submit success
 		output, err := t.GetOutput(input, taskdata.Output)
 		if err != nil {
-			return nextstate, err
+			return nil, err
 		}
 		nextstate = NextState{
 			Name:   t.Next,
 			Output: output,
 		}
-		return nextstate, nil
+		return &nextstate, nil
 	}
 	// task submit failed, find Retry/Catch strategy
 	for index, retry := range t.TaskBody.Retry {
@@ -184,7 +195,7 @@ func (t *Task) GetNextState(input interface{}, taskdata TaskSendData) (NextState
 			RetryIndex: index,
 			Retry:      true,
 		}
-		return nextstate, nil
+		return &nextstate, nil
 
 	}
 	// try catch node
@@ -195,26 +206,24 @@ func (t *Task) GetNextState(input interface{}, taskdata TaskSendData) (NextState
 		}
 		output, err := t.GetOutputWithPath(input, taskdata.Output, catchnode.ResultPath, "$")
 		if err != nil {
-			return nextstate, err
+			return nil, err
 		}
 		nextstate = NextState{
 			Name:   catchnode.Next,
 			Output: output,
 		}
-		return nextstate, nil
+		return &nextstate, nil
 	}
 	err = fmt.Errorf("can't match any strategy")
-	return nextstate, err
+	return nil, err
 }
 
 // HasIntersection  return  if x and y have common elements
 func HasIntersection(x []string, y []string) bool {
 
 	for _, yi := range y {
-		for _, xi := range x {
-			if yi == xi {
-				return true
-			}
+		if slices.Contains(x, yi) {
+			return true
 		}
 	}
 	return false

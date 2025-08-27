@@ -45,14 +45,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment activity comment",
+      "description": "description activity description",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment activity comment"
+       "title": "description",
+       "description": "description activity description"
       }
      },
      {
@@ -112,14 +112,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment 命名空间描述",
+      "description": "description 命名空间描述",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment 命名空间描述"
+       "title": "description",
+       "description": "description 命名空间描述"
       }
      },
      {
@@ -157,14 +157,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment activity comment",
+      "description": "description activity description",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment activity comment"
+       "title": "description",
+       "description": "description activity description"
       }
      },
      {
@@ -224,14 +224,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment 命名空间描述",
+      "description": "description 命名空间描述",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment 命名空间描述"
+       "title": "description",
+       "description": "description 命名空间描述"
       }
      },
      {
@@ -253,11 +253,11 @@
   },
   "/api/v1/CreateOrUpdateStateMachine": {
    "post": {
-    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个状态机",
     "operationId": "CreateOrUpdateStateMachine",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -269,21 +269,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -312,11 +312,11 @@
   },
   "/api/v1/CreateStateMachine": {
    "post": {
-    "summary": "CreateStateMachine 创建一个工作流",
+    "summary": "CreateStateMachine 创建一个状态机",
     "operationId": "CreateStateMachine",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -328,21 +328,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -403,13 +403,47 @@
     ]
    }
   },
+  "/api/v1/DeleteNamespace": {
+   "post": {
+    "summary": "DeleteNamespace 删除一个命名空间     注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间",
+    "operationId": "DeleteNamespace",
+    "responses": {
+     "200": {
+      "description": "A generic empty message that you can re-use to avoid defining duplicated\n empty messages in your APIs. A typical example is to use it as the request\n or the response type of an API method. For instance:\n\n     service Foo {\n       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n     }\n\n The JSON representation for `Empty` is empty JSON object `{}`.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/google.protobuf.Empty"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "description": "name 命名空间名字",
+      "schema": {
+       "type": "string",
+       "title": "name",
+       "description": "name 命名空间名字"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/api/v1/DeleteStateMachine": {
    "post": {
-    "summary": "DeleteStateMachine 删除一个工作流",
+    "summary": "DeleteStateMachine 删除一个状态机",
     "operationId": "DeleteStateMachine",
     "responses": {
      "200": {
-      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "description": "DeleteStateMachineResponse 删除一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -471,7 +505,7 @@
   },
   "/api/v1/DescribeStateMachine": {
    "post": {
-    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "summary": "DescribeStateMachine 获得一个状态机的描述",
     "operationId": "DescribeStateMachine",
     "responses": {
      "200": {
@@ -626,11 +660,11 @@
   },
   "/api/v1/ListStateMachines": {
    "post": {
-    "summary": "ListStateMachines 获得工作流列表",
+    "summary": "ListStateMachines 获得状态机列表",
     "operationId": "ListStateMachines",
     "responses": {
      "200": {
-      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "description": "ListStateMachinesResponse 获得状态机列表请求返回",
       "content": {
        "application/json": {
         "schema": {
@@ -691,11 +725,11 @@
   },
   "/api/v1/UpdateStateMachine": {
    "post": {
-    "summary": "UpdateStateMachine 更新一个工作流",
+    "summary": "UpdateStateMachine 更新一个状态机",
     "operationId": "UpdateStateMachine",
     "responses": {
      "200": {
-      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "description": "UpdateStateMachineResponse 更新一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -707,21 +741,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -864,14 +898,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment activity comment",
+      "description": "description activity description",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment activity comment"
+       "title": "description",
+       "description": "description activity description"
       }
      },
      {
@@ -931,14 +965,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment 命名空间描述",
+      "description": "description 命名空间描述",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment 命名空间描述"
+       "title": "description",
+       "description": "description 命名空间描述"
       }
      },
      {
@@ -976,14 +1010,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment activity comment",
+      "description": "description activity description",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment activity comment"
+       "title": "description",
+       "description": "description activity description"
       }
      },
      {
@@ -1043,14 +1077,14 @@
     },
     "parameters": [
      {
-      "name": "comment",
+      "name": "description",
       "in": "query",
       "required": false,
-      "description": "comment 命名空间描述",
+      "description": "description 命名空间描述",
       "schema": {
        "type": "string",
-       "title": "comment",
-       "description": "comment 命名空间描述"
+       "title": "description",
+       "description": "description 命名空间描述"
       }
      },
      {
@@ -1072,11 +1106,11 @@
   },
   "/skyflow.SkyflowV1Service/CreateOrUpdateStateMachine": {
    "post": {
-    "summary": "CreateOrUpdateStateMachine 创建/更新一个工作流",
+    "summary": "CreateOrUpdateStateMachine 创建/更新一个状态机",
     "operationId": "CreateOrUpdateStateMachine2",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -1088,21 +1122,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -1131,11 +1165,11 @@
   },
   "/skyflow.SkyflowV1Service/CreateStateMachine": {
    "post": {
-    "summary": "CreateStateMachine 创建一个工作流",
+    "summary": "CreateStateMachine 创建一个状态机",
     "operationId": "CreateStateMachine2",
     "responses": {
      "200": {
-      "description": "CreateStateMachineResponse 创建一个工作流返回结构",
+      "description": "CreateStateMachineResponse 创建一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -1147,21 +1181,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -1222,13 +1256,47 @@
     ]
    }
   },
+  "/skyflow.SkyflowV1Service/DeleteNamespace": {
+   "post": {
+    "summary": "DeleteNamespace 删除一个命名空间     注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间",
+    "operationId": "DeleteNamespace2",
+    "responses": {
+     "200": {
+      "description": "A generic empty message that you can re-use to avoid defining duplicated\n empty messages in your APIs. A typical example is to use it as the request\n or the response type of an API method. For instance:\n\n     service Foo {\n       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n     }\n\n The JSON representation for `Empty` is empty JSON object `{}`.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/google.protobuf.Empty"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "name",
+      "in": "query",
+      "required": false,
+      "description": "name 命名空间名字",
+      "schema": {
+       "type": "string",
+       "title": "name",
+       "description": "name 命名空间名字"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/skyflow.SkyflowV1Service/DeleteStateMachine": {
    "post": {
-    "summary": "DeleteStateMachine 删除一个工作流",
+    "summary": "DeleteStateMachine 删除一个状态机",
     "operationId": "DeleteStateMachine2",
     "responses": {
      "200": {
-      "description": "DeleteStateMachineResponse 删除一个工作流返回结构",
+      "description": "DeleteStateMachineResponse 删除一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -1290,7 +1358,7 @@
   },
   "/skyflow.SkyflowV1Service/DescribeStateMachine": {
    "post": {
-    "summary": "DescribeStateMachine 获得一个工作流的描述",
+    "summary": "DescribeStateMachine 获得一个状态机的描述",
     "operationId": "DescribeStateMachine2",
     "responses": {
      "200": {
@@ -1445,11 +1513,11 @@
   },
   "/skyflow.SkyflowV1Service/ListStateMachines": {
    "post": {
-    "summary": "ListStateMachines 获得工作流列表",
+    "summary": "ListStateMachines 获得状态机列表",
     "operationId": "ListStateMachines2",
     "responses": {
      "200": {
-      "description": "ListStateMachinesResponse 获得工作流列表请求返回",
+      "description": "ListStateMachinesResponse 获得状态机列表请求返回",
       "content": {
        "application/json": {
         "schema": {
@@ -1510,11 +1578,11 @@
   },
   "/skyflow.SkyflowV1Service/UpdateStateMachine": {
    "post": {
-    "summary": "UpdateStateMachine 更新一个工作流",
+    "summary": "UpdateStateMachine 更新一个状态机",
     "operationId": "UpdateStateMachine2",
     "responses": {
      "200": {
-      "description": "UpdateStateMachineResponse 更新一个工作流返回结构",
+      "description": "UpdateStateMachineResponse 更新一个状态机返回结构",
       "content": {
        "application/json": {
         "schema": {
@@ -1526,21 +1594,21 @@
     },
     "parameters": [
      {
-      "name": "comment",
-      "in": "query",
-      "required": false,
-      "schema": {
-       "type": "string",
-       "title": "comment"
-      }
-     },
-     {
       "name": "definition",
       "in": "query",
       "required": false,
       "schema": {
        "type": "string",
        "title": "definition"
+      }
+     },
+     {
+      "name": "description",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "description"
       }
      },
      {
@@ -1570,6 +1638,11 @@
  },
  "components": {
   "schemas": {
+   "google.protobuf.Empty": {
+    "type": "object",
+    "title": "google.protobuf.Empty",
+    "description": "A generic empty message that you can re-use to avoid defining duplicated\n empty messages in your APIs. A typical example is to use it as the request\n or the response type of an API method. For instance:\n\n     service Foo {\n       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n     }\n\n The JSON representation for `Empty` is empty JSON object `{}`."
+   },
    "skyflow.ActivityListItem": {
     "type": "object",
     "properties": {
@@ -1578,16 +1651,16 @@
       "type": "string",
       "description": "activity_uri 活动uri"
      },
-     "comment": {
-      "title": "comment",
-      "type": "string",
-      "description": "comment 活动描述"
-     },
      "create_time": {
       "title": "create_time",
       "type": "string",
       "format": "int64",
       "description": "create_time timestample"
+     },
+     "description": {
+      "title": "description",
+      "type": "string",
+      "description": "description 活动描述"
      },
      "name": {
       "title": "name",
@@ -1637,6 +1710,11 @@
       "format": "int64",
       "description": "create_time timestample"
      },
+     "description": {
+      "title": "description",
+      "type": "string",
+      "description": "description 命名空间描述"
+     },
      "name": {
       "title": "name",
       "type": "string",
@@ -1661,7 +1739,7 @@
      }
     },
     "title": "skyflow.CreateStateMachineResponse",
-    "description": "CreateStateMachineResponse 创建一个工作流返回结构"
+    "description": "CreateStateMachineResponse 创建一个状态机返回结构"
    },
    "skyflow.DeleteActivityResponse": {
     "type": "object",
@@ -1671,7 +1749,7 @@
    "skyflow.DeleteStateMachineResponse": {
     "type": "object",
     "title": "skyflow.DeleteStateMachineResponse",
-    "description": "DeleteStateMachineResponse 删除一个工作流返回结构"
+    "description": "DeleteStateMachineResponse 删除一个状态机返回结构"
    },
    "skyflow.DescribeActivityResponse": {
     "type": "object",
@@ -1681,16 +1759,16 @@
       "type": "string",
       "description": "activity_uri activity uri"
      },
-     "comment": {
-      "title": "comment",
-      "type": "string",
-      "description": "comment activity comment"
-     },
      "create_time": {
       "title": "create_time",
       "type": "string",
       "format": "int64",
       "description": "create_time create time timestample"
+     },
+     "description": {
+      "title": "description",
+      "type": "string",
+      "description": "description activity description"
      },
      "name": {
       "title": "name",
@@ -1794,21 +1872,21 @@
      }
     },
     "title": "skyflow.ListStateMachinesResponse",
-    "description": "ListStateMachinesResponse 获得工作流列表请求返回"
+    "description": "ListStateMachinesResponse 获得状态机列表请求返回"
    },
    "skyflow.NamespaceListItem": {
     "type": "object",
     "properties": {
-     "comment": {
-      "title": "comment",
-      "type": "string",
-      "description": "comment 命名空间描述"
-     },
      "create_time": {
       "title": "create_time",
       "type": "string",
       "format": "int64",
       "description": "create_time timestample"
+     },
+     "description": {
+      "title": "description",
+      "type": "string",
+      "description": "description 命名空间描述"
      },
      "name": {
       "title": "name",
@@ -1877,62 +1955,66 @@
    "skyflow.StateMachineInfo": {
     "type": "object",
     "properties": {
-     "comment": {
-      "title": "comment",
-      "type": "string"
-     },
-     "create_time": {
-      "title": "create_time",
-      "type": "string"
-     },
-     "modify_time": {
-      "title": "modify_time",
-      "type": "string"
-     },
-     "name": {
-      "title": "name",
-      "type": "string"
-     },
-     "statemachine_definition": {
-      "title": "statemachine_definition",
-      "type": "string"
-     },
-     "statemachine_type": {
-      "title": "statemachine_type",
-      "type": "string",
-      "description": "stateMachine_type; pipeline/statemachine"
-     },
-     "statemachine_uri": {
-      "title": "statemachine_uri",
-      "type": "string"
-     }
-    },
-    "title": "skyflow.StateMachineInfo",
-    "description": "StateMachineInfo 工作流信息"
-   },
-   "skyflow.StateMachineListItem": {
-    "type": "object",
-    "properties": {
-     "comment": {
-      "title": "comment",
-      "type": "string",
-      "description": "comment 工作流描述"
-     },
      "create_time": {
       "title": "create_time",
       "type": "string",
       "format": "int64",
       "description": "create_time timestample"
      },
+     "definition": {
+      "title": "definition",
+      "type": "string"
+     },
+     "description": {
+      "title": "description",
+      "type": "string"
+     },
+     "name": {
+      "title": "name",
+      "type": "string"
+     },
+     "statemachine_uri": {
+      "title": "statemachine_uri",
+      "type": "string"
+     },
+     "type": {
+      "title": "type",
+      "type": "string",
+      "description": "type : standard / express"
+     },
+     "update_time": {
+      "title": "update_time",
+      "type": "string",
+      "format": "int64",
+      "description": "update_time timestample"
+     }
+    },
+    "title": "skyflow.StateMachineInfo",
+    "description": "StateMachineInfo 状态机信息"
+   },
+   "skyflow.StateMachineListItem": {
+    "type": "object",
+    "properties": {
+     "create_time": {
+      "title": "create_time",
+      "type": "string",
+      "format": "int64",
+      "description": "create_time timestample"
+     },
+     "description": {
+      "title": "description",
+      "type": "string",
+      "description": "description 状态机描述"
+     },
      "name": {
       "title": "name",
       "type": "string",
-      "description": "name 工作流名字"
+      "description": "name 状态机名字"
      },
      "statemachine_uri": {
       "title": "statemachine_uri",
       "type": "string",
-      "description": "statemachine_uri 工作流uri"
+      "description": "statemachine_uri 状态机uri"
      },
      "update_time": {
       "title": "update_time",
@@ -1947,7 +2029,7 @@
    "skyflow.UpdateStateMachineResponse": {
     "type": "object",
     "title": "skyflow.UpdateStateMachineResponse",
-    "description": "UpdateStateMachineResponse 更新一个工作流返回结构"
+    "description": "UpdateStateMachineResponse 更新一个状态机返回结构"
    }
   }
  }

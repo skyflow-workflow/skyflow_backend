@@ -17,12 +17,12 @@ import (
 type TemplateService = *templateService
 
 type templateService struct {
-	dbclient *rdb.DBClient
+	dbClient *rdb.DBClient
 }
 
-func NewTemplateService(dbclient *rdb.DBClient) TemplateService {
+func NewTemplateService(dbClient *rdb.DBClient) TemplateService {
 	svc := &templateService{
-		dbclient: dbclient,
+		dbClient: dbClient,
 	}
 	return svc
 }
@@ -31,7 +31,7 @@ func (svc *templateService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.AutoMigrate(po.GetTemplateTables()...)
@@ -46,7 +46,7 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Select("id").Where("name = ?", req.Name).First(&ns).Error
@@ -56,13 +56,13 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 
 	if ns.ID != 0 {
 		// namespace already exists
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceAlreadyExists), "namespace: "+req.Name+" already exists")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceAlreadyExists, "namespace: "+req.Name+" already exists")
 		return vo.CreateNamespaceResponse{}, err
 	}
 
 	new_ns := po.Namespace{
-		Name:    req.Name,
-		Comment: req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 	}
 
 	err = tx.Create(&new_ns).Error
@@ -78,13 +78,13 @@ func (svc *templateService) DescribeNamespace(ctx context.Context, name string, 
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Where("name = ?", name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceDoesNotExist), "namespace: "+name+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+name+" not found")
 		return ns, err
 	}
 	if err != nil {
@@ -97,14 +97,14 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 	var ns po.Namespace
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	// 先查询是否存在
 	err = tx.Where("name = ?", req.Name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_NameSpaceDoesNotExist), "namespace: "+req.Name+" not found")
+		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+req.Name+" not found")
 		return err
 	}
 	if err != nil {
@@ -125,21 +125,32 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 func (svc *templateService) CreateOrUpdateNamespace(ctx context.Context, req vo.CreateNamespaceRequest, tx rdb.Tx) (vo.CreateNamespaceResponse, error) {
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	newNS := po.Namespace{
-		Name:    req.Name,
-		Comment: req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 	}
+	// insert or update namespace
+	// if the namespace already exists, it will be updated
+	tx = tx.Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).Create(&newNS)
 
-	err = tx.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "name"}},
-		DoUpdates: clause.AssignmentColumns([]string{"comment", "update_time"}),
-	}).Create(&newNS).Error
-
+	err = tx.Error
+	if err != nil {
+		tx.Rollback()
+		return vo.CreateNamespaceResponse{}, err
+	}
+	// query the namespace to return
+	// if the namespace exists, newNS will update and newNS.ID will not be set
+	// so we need to query the namespace again
+	queryNs := po.Namespace{}
+	err = tx.Model(new(po.Namespace)).Where(
+		"name = ?", req.Name).First(&queryNs).Error
 	return vo.CreateNamespaceResponse{
-		Data: newNS,
+		Data: queryNs,
 	}, err
 }
 
@@ -150,7 +161,7 @@ func (svc *templateService) ListNamespaces(ctx context.Context, req vo.ListNames
 	var count int64
 	var nss = []po.Namespace{}
 	var resp vo.ListNamespacesResponse
-	tx, maker := svc.dbclient.NewTxMaker(nil)
+	tx, maker := svc.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	limit, offset := req.PageRequest.Limit()
 
@@ -182,7 +193,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	queryActivity := po.Activity{
@@ -202,7 +213,7 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 	newActivity := po.Activity{
 		NamespaceID: namespace.ID,
 		Name:        req.ActivityName,
-		Comment:     req.Comment,
+		Description: req.Description,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
 		Parameters:  req.Parameters,
@@ -226,13 +237,13 @@ func (svc *templateService) CreateActivity(ctx context.Context, req vo.CreateAct
 // ListActivities implements skyflow.SkyflowServer.
 func (svc *templateService) ListActivities(ctx context.Context, req vo.ListActivitiesRequest) (vo.ListActivitiesResponse, error) {
 
-	var activitys []po.Activity
+	var activities []po.Activity
 	var err error
 	var count int64
 	var resp vo.ListActivitiesResponse
 
 	limit, offset := req.PageRequest.Limit()
-	tx, maker := svc.dbclient.NewTxMaker(nil)
+	tx, maker := svc.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	tx = tx.Model(new(po.Activity))
 	err = tx.Count(&count).Error
@@ -240,12 +251,12 @@ func (svc *templateService) ListActivities(ctx context.Context, req vo.ListActiv
 		return resp, err
 	}
 
-	err = tx.Offset(limit).Offset(offset).Order("name asc").Find(&activitys).Error
+	err = tx.Limit(limit).Offset(offset).Order("name asc").Find(&activities).Error
 	if err != nil {
 		return resp, err
 	}
 
-	resp.Activities = activitys
+	resp.Activities = activities
 	resp.PageResponse = req.PageRequest.Response(count)
 	return resp, err
 }
@@ -256,7 +267,7 @@ func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.C
 
 	activity_uri := parser.GenerateActivityURI(req.Namespace, req.ActivityName)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
@@ -266,19 +277,36 @@ func (svc *templateService) CreateOrUpdateActivity(ctx context.Context, req vo.C
 	newActivity := po.Activity{
 		NamespaceID: dbNamespace.ID,
 		Name:        req.ActivityName,
-		Comment:     req.Comment,
+		Description: req.Description,
 		URI:         activity_uri,
 		Status:      ActivityStatus.Enable,
 		Parameters:  req.Parameters,
 	}
 
-	err = tx.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "uri"}},
-		DoUpdates: clause.AssignmentColumns([]string{"name", "comment", "parameters", "status", "update_time"}),
-	}).Create(&newActivity).Error
+	tx = tx.Clauses(clause.OnConflict{
+		UpdateAll: true, // update all fields
+		// Columns:   []clause.Column{{Name: "uri"}},
+		// DoUpdates: clause.AssignmentColumns([]string{"name", "description", "parameters", "status", "update_time"}),
+	}).Create(&newActivity)
+
+	err = tx.Error
+	if err != nil {
+		tx.Rollback()
+		return vo.CreateActivityResponse{}, err
+	}
+	// query the activity to return
+	// we need to query the namespace again to return the correct namespace ID
+	queryActivity := po.Activity{}
+	err = tx.Model(new(po.Activity)).Where(
+		"uri = ?", activity_uri).First(&queryActivity).Error
+
+	if err != nil {
+		tx.Rollback()
+		return vo.CreateActivityResponse{}, err
+	}
 
 	return vo.CreateActivityResponse{
-		Data: newActivity,
+		Data: queryActivity,
 	}, err
 }
 
@@ -287,14 +315,15 @@ func (svc *templateService) DeleteActivity(ctx context.Context, req vo.DeleteAct
 	var activity po.Activity
 	var err error
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	// 先查询是否存在
-	err = tx.Where("name = ?", req.ActivityURI).First(&activity).Error
+	err = tx.Model(new(po.Activity)).Where("uri = ?", req.ActivityURI).First(&activity).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// activity not found
-		err = pberror.NewPBError(int32(pb.ErrorCode_ActivityDoesNotExist), "activity: "+req.ActivityURI+" not found")
+		err = pberror.NewPBError(
+			pb.ErrorCode_ActivityDoesNotExist, "activity: "+req.ActivityURI+" not found")
 		return err
 	}
 	if err != nil {
@@ -312,14 +341,15 @@ func (svc *templateService) DeleteActivity(ctx context.Context, req vo.DeleteAct
 }
 
 // CreateStateMachine implements skyflow.SkyflowServer.
-func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.CreateStateMachineRequest, tx rdb.Tx) (vo.CreateStateMachineResponse, error) {
+func (svc *templateService) CreateStateMachine(ctx context.Context,
+	req vo.CreateStateMachineRequest, tx rdb.Tx) (vo.CreateStateMachineResponse, error) {
 
 	var err error
 	var sm po.StateMachine
 
-	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
+	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.Name)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	queryWorkflow := po.StateMachine{
@@ -338,8 +368,8 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 
 	newsm := po.StateMachine{
 		NamespaceID: namespace.ID,
-		Name:        req.StateMachineName,
-		Comment:     req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 		URI:         workflowUri,
 		Definition:  req.Definition,
 		Status:      ActivityStatus.Enable,
@@ -365,21 +395,21 @@ func (svc *templateService) CreateStateMachine(ctx context.Context, req vo.Creat
 func (svc *templateService) DescribeActivity(ctx context.Context, activityUri string, tx rdb.Tx) (po.Activity, error) {
 	var activity po.Activity
 	var err error
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	err = tx.Where(po.Activity{URI: activityUri}).Take(&activity).Error
 	return activity, err
 }
 
-// DescribeWorkflow implements skyflow.SkyflowServer.
-func (svc *templateService) DescribeWorkflow(ctx context.Context, stateMachineUri string, tx rdb.Tx) (po.StateMachine, error) {
+// DescribeStateMachine implements skyflow.SkyflowServer.
+func (svc *templateService) DescribeStateMachine(ctx context.Context, req vo.DescribeStateMachineRequest, tx rdb.Tx) (po.StateMachine, error) {
 	var workflow po.StateMachine
 	var err error
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
-	err = tx.Where(po.Activity{URI: stateMachineUri}).Take(&workflow).Error
+	err = tx.Where(po.Activity{URI: req.StateMachineURI}).Take(&workflow).Error
 	return workflow, err
 }
 
@@ -392,7 +422,7 @@ func (svc *templateService) ListStateMachines(ctx context.Context, req vo.ListSt
 	var resp vo.ListStateMachinesResponse
 
 	limit, offset := req.PageRequest.Limit()
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	tx = tx.Model(new(po.StateMachine))
@@ -401,7 +431,7 @@ func (svc *templateService) ListStateMachines(ctx context.Context, req vo.ListSt
 		return resp, err
 	}
 
-	err = tx.Offset(limit).Offset(offset).Order("name asc").Find(&sms).Error
+	err = tx.Limit(limit).Offset(offset).Order("name asc").Find(&sms).Error
 	if err != nil {
 		return resp, err
 	}
@@ -416,9 +446,9 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 
 	var err error
 
-	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.StateMachineName)
+	statemachineUri := parser.GenerateStateMachineURI(req.Namespace, req.Name)
 
-	tx, maker := svc.dbclient.NewTxMaker(tx)
+	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
 
 	dbNamespace, err := svc.DescribeNamespace(ctx, req.Namespace, tx)
@@ -428,20 +458,94 @@ func (svc *templateService) CreateOrUpdateStateMachine(ctx context.Context, req 
 
 	newStateMachine := po.StateMachine{
 		NamespaceID: dbNamespace.ID,
-		Name:        req.StateMachineName,
-		Comment:     req.Comment,
+		Name:        req.Name,
+		Description: req.Description,
 		URI:         statemachineUri,
 		Definition:  req.Definition,
 		Status:      ActivityStatus.Enable,
 	}
 
-	err = tx.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "uri"}},
-		DoUpdates: clause.AssignmentColumns([]string{"name", "comment", "definition", "status", "update_time"}),
-	}).Create(&newStateMachine).Error
+	tx = tx.Clauses(clause.OnConflict{
+		UpdateAll: true, // update all fields
+		// Columns:   []clause.Column{{Name: "uri"}},
+		// DoUpdates: clause.AssignmentColumns([]string{"name", "description", "definition", "status", "update_time"}),
+	}).Create(&newStateMachine)
+
+	err = tx.Error
+	if err != nil {
+		tx.Rollback()
+		return vo.CreateStateMachineResponse{}, err
+	}
+	// query the state machine to return
+	queryStateMachine := po.StateMachine{}
+	err = tx.Model(new(po.StateMachine)).Where(
+		"uri = ?", statemachineUri).First(&queryStateMachine).Error
+	if err != nil {
+		tx.Rollback()
+		return vo.CreateStateMachineResponse{}, err
+	}
+	return vo.CreateStateMachineResponse{
+		Data: queryStateMachine,
+	}, err
+}
+
+func (svc *templateService) UpdateStateMachine(ctx context.Context, req vo.UpdateStateMachineRequest, tx rdb.Tx) error {
+
+	var err error
+	var sm po.StateMachine
+
+	tx, maker := svc.dbClient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	err = tx.Where("uri = ?", req.StateMachineURI).Select("id").First(&sm).Error
+	if rdb.IsErrRecordNotFound(err) {
+		// state machine not found
+		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	updatesm := po.StateMachine{
+		Name:        sm.Name,
+		Description: sm.Description,
+		Definition:  sm.Definition,
+	}
+
+	err = tx.Where(po.StateMachine{ID: sm.ID}).Updates(&updatesm).Error
+	if err != nil {
+		return err
+	}
 	tx.Commit()
 
-	return vo.CreateStateMachineResponse{
-		Data: newStateMachine,
-	}, err
+	return nil
+}
+
+func (svc *templateService) DeleteStateMachine(ctx context.Context, req vo.DeleteStateMachineRequest, tx rdb.Tx) error {
+	var sm po.StateMachine
+	var err error
+
+	tx, maker := svc.dbClient.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	// 先查询是否存在
+	err = tx.Where("uri = ?", req.StateMachineURI).First(&sm).Error
+	if err != nil && rdb.IsErrRecordNotFound(err) {
+		// state machine not found
+		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	// 删除
+	err = tx.Where(po.StateMachine{ID: sm.ID}).Delete(&po.StateMachine{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }

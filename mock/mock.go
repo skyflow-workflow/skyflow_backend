@@ -3,29 +3,26 @@ package mock
 import (
 	"database/sql"
 
-	"github.com/mmtbak/microlibrary/config"
+	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
 )
 
 var (
 	MockDB       *sql.DB
 	MockDBClient *rdb.DBClient
+	MockKafkaMQ  *mq.KafkaMessageQueue
 )
-var LocalUnitTestMySQLConfig = config.AccessPoint{
-	Source: "mysql://root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
-	Options: map[string]interface{}{
-		"sqllevel":    "info",
-		"maxopenconn": 100,
-		"maxidleconn": 100,
-	},
+var LocalUnitTestMySQLConfig = rdb.Config{
+	DSN:          "mysql://root:root@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
+	LogLevel:     "info",
+	MaxOpenConns: 200,
+	MaxIdleConns: 200,
 }
 
-var LocalUnitTestKafka = config.AccessPoint{
-	Source: "kafka://localhost:9092/?" +
-		"topics=my-event-test-topic" +
-		"&numpartition=2&numreplica=1&autocommitsecond=1" +
-		"initial=oldest&version=1.1.1",
-}
+var LocalUnitTestKafkaDSN = "kafka://localhost:9092/?" +
+	"topics=my-event-test-topic" +
+	"&numpartition=2&numreplica=1&autocommitsecond=1" +
+	"initial=oldest&version=1.1.1"
 
 func init() {
 	err := InitMockDB()
@@ -42,17 +39,26 @@ func GetMockDBClient() *rdb.DBClient {
 func InitMockDB() error {
 
 	var err error
-	config, err := rdb.ParseConfig(LocalUnitTestMySQLConfig)
-	if err != nil {
-		return err
-	}
-	MockDBClient, err = rdb.NewDBClient(config)
+	MockDBClient, err = rdb.NewDBClient(&LocalUnitTestMySQLConfig)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GetKakfkaConfig() config.AccessPoint {
-	return LocalUnitTestKafka
+func GetMockKafkaDSN() string {
+	return LocalUnitTestKafkaDSN
+}
+
+func InitMockKafka() error {
+	var err error
+	MockKafkaMQ, err = mq.NewKafkaMessageQueue(GetMockKafkaDSN())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func GetMockKafkaMQ() *mq.KafkaMessageQueue {
+	return MockKafkaMQ
 }

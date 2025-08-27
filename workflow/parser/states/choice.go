@@ -23,6 +23,10 @@ type Choice struct {
 	*ChoiceBody
 }
 
+func (choice *Choice) GetBaseState() *BaseState {
+	return choice.BaseState
+}
+
 // GetBone get choice bone
 func (choice *Choice) GetBone() StateBone {
 	bone := choice.BaseState.GetBone()

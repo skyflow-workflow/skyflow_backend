@@ -1,6 +1,7 @@
 package template
 
 import (
+	"context"
 	"database/sql"
 	"os"
 	"sync"
@@ -19,15 +20,23 @@ var (
 	testDBServer        *server.Server
 	testMysqlServerOnce sync.Once
 	testDBClient        *rdb.DBClient
+	myTemplateService   *templateService
 )
 
 func TestMain(m *testing.M) {
 
+	var err error
 	testMysqlServerOnce.Do(setupTestDB)
 	defer func() {
 		testDBServer.Close()
 		testDB.Close()
 	}()
+
+	myTemplateService := NewTemplateService(getTestDBClient())
+	err = myTemplateService.SyncSchema(context.Background(), nil)
+	if err != nil {
+		panic(err)
+	}
 	// 运行测试
 	code := m.Run()
 	os.Exit(code)

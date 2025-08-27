@@ -53,6 +53,11 @@ lint_proto:
 	@echo "linting proto files........"
 	@protolint lint ${PROTOFILE}
 
+.PHONY: http
+http:
+	@echo "running http unittest case "
+	@httpyac curl/template.http --all
+
 .PHONY: pb
 pb:
 	@echo "generating pb files........"
@@ -71,8 +76,9 @@ test:
 build:
 	@echo "building........"
 	@GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO) version && go build  -o bin/skyflow $(FLAGS) ./cmd/skyflow/*.go
+	@echo "build success, binary file: bin/skyflow"
 
 .PHONY: run
 run: build
 	@echo "running........"
-	@./bin/skyflow -conf trpc_go.yaml
+	@./bin/skyflow start api -c ./trpc_go.yaml --skyflow_config ./skyflow.yaml

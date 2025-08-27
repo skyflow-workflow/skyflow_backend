@@ -2,29 +2,35 @@ package apiserver
 
 import (
 	pb "github.com/skyflow-workflow/skyflow_backbend/gen/pb"
-	trpc "trpc.group/trpc-go/trpc-go"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"trpc.group/trpc-go/trpc-go/log"
 	"trpc.group/trpc-go/trpc-go/server"
 )
 
-// ApiServer is the API server.
-type ApiServer struct {
-	server *server.Server
+// APIServer is the API server.
+type APIServer struct {
+	server      *server.Server
+	workflowSvc workflow.WorkflowService
 }
 
-// NewApiServer creates a new API server.
-func NewApiServer() *ApiServer {
-	s := trpc.NewServer()
-	pb.RegisterCommonServiceService(s, &CommonService{})
-	pb.RegisterSkyflowV1ServiceService(s, &SkyflowService{})
+var skyflowConfigFilePath string = "./skyflow.yaml"
 
-	return &ApiServer{
-		server: s,
+// NewAPIServer creates a new API server.
+func NewAPIServer(server *server.Server, svc workflow.WorkflowService) *APIServer {
+	pb.RegisterCommonServiceService(server, &CommonServiceHandler{})
+	pb.RegisterSkyflowV1ServiceService(server, &SkyflowServiceHandler{
+		wfSvc: svc,
+	})
+
+	return &APIServer{
+		server:      server,
+		workflowSvc: svc,
 	}
 }
 
 // Start starts the API server.
-func (s *ApiServer) Start() {
+func (s *APIServer) Start() {
+
 	// Start the API server
 	if err := s.server.Serve(); err != nil {
 		log.Error(err)

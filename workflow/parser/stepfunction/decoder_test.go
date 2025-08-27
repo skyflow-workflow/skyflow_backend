@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 )
 
 func TestParserStateMachine(t *testing.T) {
@@ -42,7 +43,7 @@ func TestParserStateMachine(t *testing.T) {
 			t.Log("Parsing File:", filepath)
 			filecontent, err := os.ReadFile(filepath)
 			assert.Equal(t, err, nil)
-			decoder := NewStepfuncionDecoder(nil, nil)
+			decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
 			_, err = decoder.Decode(string(filecontent))
 			if err != nil {
 				t.Logf("Error parsing file: %s", err)

@@ -1,0 +1,79 @@
+@hostname = 127.0.0.1
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = application/json
+
+
+### CreateNamespace
+POST  {{host}}/api/v1/CreateNamespace
+Content-Type: {{contentType}}
+
+{
+  "name": "example-namespace",
+  "description": "This is a namespace to test the functionality"
+
+}
+
+### CreateNamespace
+POST  {{host}}/api/v1/CreateOrUpdateNamespace
+Content-Type: {{contentType}}
+
+{
+  "name": "example-create-update-namespace",
+  "description": "This is a namespace to test the create or update functionality"
+
+}
+
+
+### ListNamespaces
+POST  {{host}}/api/v1/ListNamespaces
+Accept: application/json
+
+{
+    "page_request": {
+        "page_size": 120,
+        "page_number": 1
+    }
+}
+
+### DeleteNamespace
+POST  {{host}}/api/v1/DeleteNamespace
+Content-Type: {{contentType}}
+
+{
+  "name": "example-namespace"
+}
+
+
+### CreateOrUpdateActivity
+POST  {{host}}/api/v1/CreateOrUpdateActivity
+Content-Type: application/json
+
+{
+  "namespace": "example-namespace",
+  "activity_id": "activity-1",
+  "name": "Example Activity",
+  "description": "This is an example activity",
+  "start_time": "2023-10-01T00:00:00Z",
+  "end_time": "2023-10-02T00:00:00Z"
+}
+
+
+
+### ListActivities
+POST  {{host}}/api/v1/ListActivities
+Accept: application/json
+
+{
+    "namespace": "example-namespace"
+}
+
+
+
+
+### GetEvents
+POST http://127.0.0.1:8080/api/v1/ListActivities/namespace
+Accept: application/json
+{
+    "namespace": "namespace"
+}

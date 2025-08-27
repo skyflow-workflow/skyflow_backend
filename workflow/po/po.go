@@ -6,11 +6,11 @@ func GetExecutionTables() []any {
 
 	return []any{
 		new(Execution),
-		new(State),
+		new(Step),
 		new(ActivityTask),
 		new(ExecutionEvent),
 		new(TaskToken),
-		new(StateGroup),
+		new(StepGroup),
 	}
 }
 

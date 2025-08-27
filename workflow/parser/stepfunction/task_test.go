@@ -1,11 +1,13 @@
 package stepfunction
 
 import (
+	"context"
 	"testing"
 
 	"github.com/go-playground/assert/v2"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 )
 
@@ -84,12 +86,13 @@ func TestDecodeTask(t *testing.T) {
 		},
 	}
 
-	decoder := NewStepfuncionDecoder(nil, nil)
+	decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
+	// Add a default state for comparison
 
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
 			var err error
-			state, err := decoder.DecodeStateDefintion(tt.definition)
+			state, err := decoder.DecodeStateDefintion(context.Background(), tt.definition)
 			if err != nil {
 				assert.Equal(t, tt.wantError != nil, true)
 				assert.Equal(t, err.Error(), tt.wantError.Error())

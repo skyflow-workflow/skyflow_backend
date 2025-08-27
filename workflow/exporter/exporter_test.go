@@ -25,8 +25,8 @@ func TestSendEvents(t *testing.T) {
 		{
 			ExecutionID:   65,
 			ExecutionUUID: "xxx",
-			StateName:     "S1",
-			StateID:       0,
+			StepName:      "S1",
+			StepID:        0,
 			Data: map[string]any{
 				"Input":    "{}",
 				"Resource": "activity:unitest/add",
