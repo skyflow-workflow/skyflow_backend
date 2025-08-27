@@ -10,13 +10,6 @@ import (
 	tconfig "trpc.group/trpc-go/trpc-go/config"
 )
 
-var customConfigFilePath = "./skyflow.yaml"
-
-func init() {
-	testCmd.Flags().StringVarP(&trpc_conf, "trpc_conf", "c", "./trpc_go.yaml", " trpc configuration file, default is ./trpc_go.yaml")
-
-}
-
 var testCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Test config validation for start skyflow workflow engine",
@@ -44,15 +37,15 @@ func CheckConfig() error {
 		return err
 	}
 	_ = trpc.NewServer()
-	c, err := tconfig.Load(customConfigFilePath, tconfig.WithCodec("yaml"))
+	c, err := tconfig.Load(skyflow_conf, tconfig.WithCodec("yaml"))
 	if err != nil {
-		slog.Error("Error loading custom configuration file", "error", err, "configPath", customConfigFilePath)
+		slog.Error("Error loading custom configuration file", "error", err, "configPath", skyflow_conf)
 		return err
 	}
 	var customConfig = config.SkyflowConfig{}
 	err = c.Unmarshal(&customConfig)
 	if err != nil {
-		slog.Error("Error unmarshalling custom configuration", "error", err, "configPath", customConfigFilePath)
+		slog.Error("Error unmarshalling custom configuration", "error", err, "configPath", skyflow_conf)
 		return err
 	}
 	return nil

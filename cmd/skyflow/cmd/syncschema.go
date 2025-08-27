@@ -15,6 +15,8 @@ var syncSchemaCmd = &cobra.Command{
 
 func SyncSchemaCommand(cmd *cobra.Command, args []string) {
 
+	slog.Info("Syncing workflow schema...", "config", skyflow_conf)
+
 	sfConfig, err := LoadConfig(skyflow_conf)
 	if err != nil {
 		slog.Error("Error loading skyflow configuration", "error", err)
