@@ -115,7 +115,7 @@ func (svc *exporterService) ListStepEvents(req vo.ListStepEventsRequest) (vo.Lis
 	tx := svc.DBListener.Client().NewTx()
 	defer tx.Commit()
 	// 查询总数
-	tx = tx.Model(new(po.ExecutionEvent)).Where(po.ExecutionEvent{StateID: req.StepID})
+	tx = tx.Model(new(po.ExecutionEvent)).Where(po.ExecutionEvent{StepID: req.StepID})
 	err := tx.Count(&count).Error
 	if err != nil {
 		return vo.ListExecutionEventsResponse{}, err

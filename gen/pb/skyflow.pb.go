@@ -72,8 +72,8 @@ const (
 	ErrorCode_ExecutionUUIDExisted ErrorCode = 1009
 	// ActivityTaskNotFound activity  task 不存在
 	ErrorCode_ActivityTaskNotFound ErrorCode = 1010
-	// StateStatusError State 状态错误
-	ErrorCode_StateStatusError ErrorCode = 1011
+	// StepStatusError Step 状态错误
+	ErrorCode_StepStatusError ErrorCode = 1011
 	// ExecutionStatusError execution 状态错误
 	ErrorCode_ExecutionStatusError ErrorCode = 1012
 	// ParameterIsValid parameter is valid
@@ -112,7 +112,7 @@ var (
 		1008:  "StateMachineNotFound",
 		1009:  "ExecutionUUIDExisted",
 		1010:  "ActivityTaskNotFound",
-		1011:  "StateStatusError",
+		1011:  "StepStatusError",
 		1012:  "ExecutionStatusError",
 		1013:  "ParameterIsValid",
 		1014:  "ParameterLimitExceeded",
@@ -142,7 +142,7 @@ var (
 		"StateMachineNotFound":         1008,
 		"ExecutionUUIDExisted":         1009,
 		"ActivityTaskNotFound":         1010,
-		"StateStatusError":             1011,
+		"StepStatusError":              1011,
 		"ExecutionStatusError":         1012,
 		"ParameterIsValid":             1013,
 		"ParameterLimitExceeded":       1014,
@@ -1502,8 +1502,7 @@ func (x *CreateStateMachineRequest) GetDefinition() string {
 }
 
 // CreateStateMachineResponse 创建一个状态机返回结构
-type
-CreateStateMachineResponse struct {
+type CreateStateMachineResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Data          *StateMachineInfo      `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2116,17 +2115,17 @@ func (x *ExecutionListItem) GetFinishTime() int64 {
 
 // StepInfo 一个Step的状态描述
 type StepInfo struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Status          string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	StateDefinition string                 `protobuf:"bytes,4,opt,name=state_definition,json=stateDefinition,proto3" json:"state_definition,omitempty"`
-	Input           string                 `protobuf:"bytes,5,opt,name=input,proto3" json:"input,omitempty"`
-	Output          string                 `protobuf:"bytes,6,opt,name=output,proto3" json:"output,omitempty"`
-	CreateTime      string                 `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	StartTime       string                 `protobuf:"bytes,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	FinishTime      string                 `protobuf:"bytes,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Definition    string                 `protobuf:"bytes,4,opt,name=definition,proto3" json:"definition,omitempty"`
+	Input         string                 `protobuf:"bytes,5,opt,name=input,proto3" json:"input,omitempty"`
+	Output        string                 `protobuf:"bytes,6,opt,name=output,proto3" json:"output,omitempty"`
+	CreateTime    string                 `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	StartTime     string                 `protobuf:"bytes,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	FinishTime    string                 `protobuf:"bytes,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *StepInfo) Reset() {
@@ -2173,9 +2172,9 @@ func (x *StepInfo) GetStatus() string {
 	return ""
 }
 
-func (x *StepInfo) GetStateDefinition() string {
+func (x *StepInfo) GetDefinition() string {
 	if x != nil {
-		return x.StateDefinition
+		return x.Definition
 	}
 	return ""
 }
@@ -2217,14 +2216,15 @@ func (x *StepInfo) GetFinishTime() string {
 
 // ExecutionEventInfo 执行事件
 type ExecutionEventInfo struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	StateId       int64                  `protobuf:"varint,2,opt,name=state_id,json=stateId,proto3" json:"state_id,omitempty"`
-	StateName     string                 `protobuf:"bytes,3,opt,name=state_name,json=stateName,proto3" json:"state_name,omitempty"`
-	EventType     string                 `protobuf:"bytes,4,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`
-	Data          string                 `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
-	CreateTime    string                 `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	StartTime     string                 `protobuf:"bytes,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
-	FinishTime    string                 `protobuf:"bytes,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// step id
+	StepId        int64  `protobuf:"varint,2,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	StepName      string `protobuf:"bytes,3,opt,name=step_name,json=stepName,proto3" json:"step_name,omitempty"`
+	EventType     string `protobuf:"bytes,4,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`
+	Data          string `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
+	CreateTime    string `protobuf:"bytes,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	StartTime     string `protobuf:"bytes,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	FinishTime    string `protobuf:"bytes,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2259,16 +2259,16 @@ func (*ExecutionEventInfo) Descriptor() ([]byte, []int) {
 	return file_proto_skyflow_proto_rawDescGZIP(), []int{34}
 }
 
-func (x *ExecutionEventInfo) GetStateId() int64 {
+func (x *ExecutionEventInfo) GetStepId() int64 {
 	if x != nil {
-		return x.StateId
+		return x.StepId
 	}
 	return 0
 }
 
-func (x *ExecutionEventInfo) GetStateName() string {
+func (x *ExecutionEventInfo) GetStepName() string {
 	if x != nil {
-		return x.StateName
+		return x.StepName
 	}
 	return ""
 }
@@ -3210,29 +3210,29 @@ func (x *ListExecutionEventsResponse) GetPageResponse() *PageResponse {
 	return nil
 }
 
-// DescribeStateRequest 获得一个State的信息请求结构
-type DescribeStateRequest struct {
+// DescribeStepRequest 获得一个Step的信息请求结构
+type DescribeStepRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// State id
-	StateId       int64 `protobuf:"varint,1,opt,name=state_id,json=stateId,proto3" json:"state_id,omitempty"`
+	// Step id
+	StepId        int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *DescribeStateRequest) Reset() {
-	*x = DescribeStateRequest{}
+func (x *DescribeStepRequest) Reset() {
+	*x = DescribeStepRequest{}
 	mi := &file_proto_skyflow_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *DescribeStateRequest) String() string {
+func (x *DescribeStepRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DescribeStateRequest) ProtoMessage() {}
+func (*DescribeStepRequest) ProtoMessage() {}
 
-func (x *DescribeStateRequest) ProtoReflect() protoreflect.Message {
+func (x *DescribeStepRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_skyflow_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3244,14 +3244,14 @@ func (x *DescribeStateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DescribeStateRequest.ProtoReflect.Descriptor instead.
-func (*DescribeStateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use DescribeStepRequest.ProtoReflect.Descriptor instead.
+func (*DescribeStepRequest) Descriptor() ([]byte, []int) {
 	return file_proto_skyflow_proto_rawDescGZIP(), []int{50}
 }
 
-func (x *DescribeStateRequest) GetStateId() int64 {
+func (x *DescribeStepRequest) GetStepId() int64 {
 	if x != nil {
-		return x.StateId
+		return x.StepId
 	}
 	return 0
 }
@@ -3311,31 +3311,31 @@ func (x *DescribeStepResponse) GetExecutionUuid() string {
 	return ""
 }
 
-// ListStateEventsRequest 获得一个State的执行事件列表请求机构
-type ListStateEventsRequest struct {
+// ListStepEventsRequest 获得一个Step的执行事件列表请求机构
+type ListStepEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// State id
-	StateId int64 `protobuf:"varint,1,opt,name=state_id,json=stateId,proto3" json:"state_id,omitempty"`
+	// Step id
+	StepId int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
 	// 分页信息
 	PageRequest   *PageRequest `protobuf:"bytes,2,opt,name=page_request,json=pageRequest,proto3" json:"page_request,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListStateEventsRequest) Reset() {
-	*x = ListStateEventsRequest{}
+func (x *ListStepEventsRequest) Reset() {
+	*x = ListStepEventsRequest{}
 	mi := &file_proto_skyflow_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListStateEventsRequest) String() string {
+func (x *ListStepEventsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListStateEventsRequest) ProtoMessage() {}
+func (*ListStepEventsRequest) ProtoMessage() {}
 
-func (x *ListStateEventsRequest) ProtoReflect() protoreflect.Message {
+func (x *ListStepEventsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_skyflow_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3347,19 +3347,19 @@ func (x *ListStateEventsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListStateEventsRequest.ProtoReflect.Descriptor instead.
-func (*ListStateEventsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListStepEventsRequest.ProtoReflect.Descriptor instead.
+func (*ListStepEventsRequest) Descriptor() ([]byte, []int) {
 	return file_proto_skyflow_proto_rawDescGZIP(), []int{52}
 }
 
-func (x *ListStateEventsRequest) GetStateId() int64 {
+func (x *ListStepEventsRequest) GetStepId() int64 {
 	if x != nil {
-		return x.StateId
+		return x.StepId
 	}
 	return 0
 }
 
-func (x *ListStateEventsRequest) GetPageRequest() *PageRequest {
+func (x *ListStepEventsRequest) GetPageRequest() *PageRequest {
 	if x != nil {
 		return x.PageRequest
 	}
@@ -3974,8 +3974,8 @@ func (x *SendStateSkipRequest) GetOutput() string {
 // ExtraInfo 附加信息
 type GetActivityTaskResponse_ExtraInfo struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// State id
-	StateId int64 `protobuf:"varint,1,opt,name=state_id,json=stateId,proto3" json:"state_id,omitempty"`
+	// Step id
+	StepId int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
 	// execution uuid
 	ExecutionUuid string `protobuf:"bytes,2,opt,name=execution_uuid,json=executionUuid,proto3" json:"execution_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -4012,9 +4012,9 @@ func (*GetActivityTaskResponse_ExtraInfo) Descriptor() ([]byte, []int) {
 	return file_proto_skyflow_proto_rawDescGZIP(), []int{54, 0}
 }
 
-func (x *GetActivityTaskResponse_ExtraInfo) GetStateId() int64 {
+func (x *GetActivityTaskResponse_ExtraInfo) GetStepId() int64 {
 	if x != nil {
-		return x.StateId
+		return x.StepId
 	}
 	return 0
 }
@@ -4186,11 +4186,13 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\f \x01(\x03R\tstartTime\x12\x1f\n" +
 	"\vfinish_time\x18\r \x01(\x03R\n" +
-	"finishTime\"\xec\x01\n" +
+	"finishTime\"\xe1\x01\n" +
 	"\bStepInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\x12)\n" +
-	"\x10state_definition\x18\x04 \x01(\tR\x0fstateDefinition\x12\x14\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12\x1e\n" +
+	"\n" +
+	"definition\x18\x04 \x01(\tR\n" +
+	"definition\x12\x14\n" +
 	"\x05input\x18\x05 \x01(\tR\x05input\x12\x16\n" +
 	"\x06output\x18\x06 \x01(\tR\x06output\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\tR\n" +
@@ -4198,11 +4200,10 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\f \x01(\tR\tstartTime\x12\x1f\n" +
 	"\vfinish_time\x18\r \x01(\tR\n" +
-	"finishTime\"\xe2\x01\n" +
-	"\x12ExecutionEventInfo\x12\x19\n" +
-	"\bstate_id\x18\x02 \x01(\x03R\astateId\x12\x1d\n" +
-	"\n" +
-	"state_name\x18\x03 \x01(\tR\tstateName\x12\x1d\n" +
+	"finishTime\"\xde\x01\n" +
+	"\x12ExecutionEventInfo\x12\x17\n" +
+	"\astep_id\x18\x02 \x01(\x03R\x06stepId\x12\x1b\n" +
+	"\tstep_name\x18\x03 \x01(\tR\bstepName\x12\x1d\n" +
 	"\n" +
 	"event_type\x18\x04 \x01(\tR\teventType\x12\x12\n" +
 	"\x04data\x18\x05 \x01(\tR\x04data\x12\x1f\n" +
@@ -4292,18 +4293,18 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\fpage_request\x18\x02 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"\x8a\x01\n" +
 	"\x1bListExecutionEventsResponse\x12/\n" +
 	"\x04data\x18\x01 \x03(\v2\x1b.skyflow.ExecutionEventInfoR\x04data\x12:\n" +
-	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\":\n" +
-	"\x14DescribeStateRequest\x12\"\n" +
-	"\bstate_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\astateId\"d\n" +
+	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"7\n" +
+	"\x13DescribeStepRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\"d\n" +
 	"\x14DescribeStepResponse\x12%\n" +
 	"\x04data\x18\x01 \x01(\v2\x11.skyflow.StepInfoR\x04data\x12%\n" +
-	"\x0eexecution_uuid\x18\x02 \x01(\tR\rexecutionUuid\"u\n" +
-	"\x16ListStateEventsRequest\x12\"\n" +
-	"\bstate_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\astateId\x127\n" +
+	"\x0eexecution_uuid\x18\x02 \x01(\tR\rexecutionUuid\"r\n" +
+	"\x15ListStepEventsRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\x127\n" +
 	"\fpage_request\x18\x02 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"G\n" +
 	"\x16GetActivityTaskRequest\x12-\n" +
 	"\factivity_uri\x18\x01 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x01(\xc8\x01R\vactivityUri\"\xc2\x03\n" +
+	"\xfaB\ar\x05 \x01(\xc8\x01R\vactivityUri\"\xc0\x03\n" +
 	"\x17GetActivityTaskResponse\x12!\n" +
 	"\factivity_uri\x18\x01 \x01(\tR\vactivityUri\x12\x1d\n" +
 	"\n" +
@@ -4315,9 +4316,9 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\x11heartbeat_seconds\x18\a \x01(\x03R\x10heartbeatSeconds\x12I\n" +
 	"\n" +
 	"extra_info\x18\n" +
-	" \x01(\v2*.skyflow.GetActivityTaskResponse.ExtraInfoR\textraInfo\x1aM\n" +
-	"\tExtraInfo\x12\x19\n" +
-	"\bstate_id\x18\x01 \x01(\x03R\astateId\x12%\n" +
+	" \x01(\v2*.skyflow.GetActivityTaskResponse.ExtraInfoR\textraInfo\x1aK\n" +
+	"\tExtraInfo\x12\x17\n" +
+	"\astep_id\x18\x01 \x01(\x03R\x06stepId\x12%\n" +
 	"\x0eexecution_uuid\x18\x02 \x01(\tR\rexecutionUuid\"Z\n" +
 	"\x16SendTaskSuccessRequest\x12(\n" +
 	"\n" +
@@ -4359,7 +4360,7 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\bstate_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\astateId\x12\x1d\n" +
 	"\n" +
 	"next_state\x18\x02 \x01(\tR\tnextState\x12\x16\n" +
-	"\x06output\x18\x03 \x01(\tR\x06output*\xd0\x05\n" +
+	"\x06output\x18\x03 \x01(\tR\x06output*\xcf\x05\n" +
 	"\tErrorCode\x12\x06\n" +
 	"\x02OK\x10\x00\x12\x11\n" +
 	"\fUnknownError\x10\xf8U\x12\x12\n" +
@@ -4382,8 +4383,8 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\x10ActivityNotFound\x10\xef\a\x12\x19\n" +
 	"\x14StateMachineNotFound\x10\xf0\a\x12\x19\n" +
 	"\x14ExecutionUUIDExisted\x10\xf1\a\x12\x19\n" +
-	"\x14ActivityTaskNotFound\x10\xf2\a\x12\x15\n" +
-	"\x10StateStatusError\x10\xf3\a\x12\x19\n" +
+	"\x14ActivityTaskNotFound\x10\xf2\a\x12\x14\n" +
+	"\x0fStepStatusError\x10\xf3\a\x12\x19\n" +
 	"\x14ExecutionStatusError\x10\xf4\a\x12\x15\n" +
 	"\x10ParameterIsValid\x10\xf5\a\x12\x1b\n" +
 	"\x16ParameterLimitExceeded\x10\xf6\a\x12\x17\n" +
@@ -4393,7 +4394,7 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\rCommonService\x125\n" +
 	"\x06Paging\x12\x14.skyflow.PageRequest\x1a\x15.skyflow.PageResponse\x12<\n" +
 	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\x12@\n" +
-	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\t\x8a\xb5\x18\x05/Ping2\xb4\x0e\n" +
+	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\t\x8a\xb5\x18\x05/Ping2\xc9\x17\n" +
 	"\x10SkyflowV1Service\x12q\n" +
 	"\x0fCreateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"\x1b\x8a\xb5\x18\x17/api/v1/CreateNamespace\x12\x81\x01\n" +
 	"\x17CreateOrUpdateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"#\x8a\xb5\x18\x1f/api/v1/CreateOrUpdateNamespace\x12m\n" +
@@ -4409,7 +4410,17 @@ const file_proto_skyflow_proto_rawDesc = "" +
 	"\x12DeleteStateMachine\x12\".skyflow.DeleteStateMachineRequest\x1a#.skyflow.DeleteStateMachineResponse\"\x1e\x8a\xb5\x18\x1a/api/v1/DeleteStateMachine\x12y\n" +
 	"\x11ListStateMachines\x12!.skyflow.ListStateMachinesRequest\x1a\".skyflow.ListStateMachinesResponse\"\x1d\x8a\xb5\x18\x19/api/v1/ListStateMachines\x12\x85\x01\n" +
 	"\x14DescribeStateMachine\x12$.skyflow.DescribeStateMachineRequest\x1a%.skyflow.DescribeStateMachineResponse\" \x8a\xb5\x18\x1c/api/v1/DescribeStateMachine\x12}\n" +
-	"\x12UpdateStateMachine\x12\".skyflow.UpdateStateMachineRequest\x1a#.skyflow.UpdateStateMachineResponse\"\x1e\x8a\xb5\x18\x1a/api/v1/UpdateStateMachineB9Z7github.com/skyflow-StateMachine/skyflow_backbend/gen/pbb\x06proto3"
+	"\x12UpdateStateMachine\x12\".skyflow.UpdateStateMachineRequest\x1a#.skyflow.UpdateStateMachineResponse\"\x1e\x8a\xb5\x18\x1a/api/v1/UpdateStateMachine\x12y\n" +
+	"\x11ParseStateMachine\x12!.skyflow.ParseStateMachineRequest\x1a\".skyflow.ParseStateMachineResponse\"\x1d\x8a\xb5\x18\x19/api/v1/ParseStateMachine\x12m\n" +
+	"\x0eStartExecution\x12\x1e.skyflow.StartExecutionRequest\x1a\x1f.skyflow.StartExecutionResponse\"\x1a\x8a\xb5\x18\x16/api/v1/StartExecution\x12y\n" +
+	"\x11DescribeExecution\x12!.skyflow.DescribeExecutionRequest\x1a\".skyflow.DescribeExecutionResponse\"\x1d\x8a\xb5\x18\x19/api/v1/DescribeExecution\x12\x89\x01\n" +
+	"\x15DescribeExecutionBone\x12%.skyflow.DescribeExecutionBoneRequest\x1a&.skyflow.DescribeExecutionBoneResponse\"!\x8a\xb5\x18\x1d/api/v1/DescribeExecutionBone\x12a\n" +
+	"\rStopExecution\x12\x1d.skyflow.StopExecutionRequest\x1a\x16.google.protobuf.Empty\"\x19\x8a\xb5\x18\x15/api/v1/StopExecution\x12m\n" +
+	"\x0eListExecutions\x12\x1e.skyflow.ListExecutionsRequest\x1a\x1f.skyflow.ListExecutionsResponse\"\x1a\x8a\xb5\x18\x16/api/v1/ListExecutions\x12\x81\x01\n" +
+	"\x13ListExecutionEvents\x12#.skyflow.ListExecutionEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"\x1f\x8a\xb5\x18\x1b/api/v1/ListExecutionEvents\x12e\n" +
+	"\fDescribeStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x1d.skyflow.DescribeStepResponse\"\x18\x8a\xb5\x18\x14/api/v1/DescribeStep\x12r\n" +
+	"\x0eListStepEvents\x12\x1e.skyflow.ListStepEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"\x1a\x8a\xb5\x18\x16/api/v1/ListStepEvents\x12q\n" +
+	"\x0fGetActivityTask\x12\x1f.skyflow.GetActivityTaskRequest\x1a .skyflow.GetActivityTaskResponse\"\x1b\x8a\xb5\x18\x17/api/v1/GetActivityTaskB,Z*github.com/skyflow/skyflow_backbend/gen/pbb\x06proto3"
 
 var (
 	file_proto_skyflow_proto_rawDescOnce sync.Once
@@ -4477,9 +4488,9 @@ var file_proto_skyflow_proto_goTypes = []any{
 	(*ListExecutionsResponse)(nil),            // 48: skyflow.ListExecutionsResponse
 	(*ListExecutionEventsRequest)(nil),        // 49: skyflow.ListExecutionEventsRequest
 	(*ListExecutionEventsResponse)(nil),       // 50: skyflow.ListExecutionEventsResponse
-	(*DescribeStateRequest)(nil),              // 51: skyflow.DescribeStateRequest
+	(*DescribeStepRequest)(nil),               // 51: skyflow.DescribeStepRequest
 	(*DescribeStepResponse)(nil),              // 52: skyflow.DescribeStepResponse
-	(*ListStateEventsRequest)(nil),            // 53: skyflow.ListStateEventsRequest
+	(*ListStepEventsRequest)(nil),             // 53: skyflow.ListStepEventsRequest
 	(*GetActivityTaskRequest)(nil),            // 54: skyflow.GetActivityTaskRequest
 	(*GetActivityTaskResponse)(nil),           // 55: skyflow.GetActivityTaskResponse
 	(*SendTaskSuccessRequest)(nil),            // 56: skyflow.SendTaskSuccessRequest
@@ -4512,7 +4523,7 @@ var file_proto_skyflow_proto_depIdxs = []int32{
 	35, // 15: skyflow.ListExecutionEventsResponse.data:type_name -> skyflow.ExecutionEventInfo
 	2,  // 16: skyflow.ListExecutionEventsResponse.page_response:type_name -> skyflow.PageResponse
 	34, // 17: skyflow.DescribeStepResponse.data:type_name -> skyflow.StepInfo
-	1,  // 18: skyflow.ListStateEventsRequest.page_request:type_name -> skyflow.PageRequest
+	1,  // 18: skyflow.ListStepEventsRequest.page_request:type_name -> skyflow.PageRequest
 	64, // 19: skyflow.GetActivityTaskResponse.extra_info:type_name -> skyflow.GetActivityTaskResponse.ExtraInfo
 	1,  // 20: skyflow.CommonService.Paging:input_type -> skyflow.PageRequest
 	65, // 21: skyflow.CommonService.HTTP:input_type -> google.protobuf.Empty
@@ -4532,26 +4543,46 @@ var file_proto_skyflow_proto_depIdxs = []int32{
 	30, // 35: skyflow.SkyflowV1Service.ListStateMachines:input_type -> skyflow.ListStateMachinesRequest
 	24, // 36: skyflow.SkyflowV1Service.DescribeStateMachine:input_type -> skyflow.DescribeStateMachineRequest
 	28, // 37: skyflow.SkyflowV1Service.UpdateStateMachine:input_type -> skyflow.UpdateStateMachineRequest
-	2,  // 38: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
-	4,  // 39: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
-	3,  // 40: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
-	7,  // 41: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	7,  // 42: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	9,  // 43: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
-	65, // 44: skyflow.SkyflowV1Service.DeleteNamespace:output_type -> google.protobuf.Empty
-	14, // 45: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
-	14, // 46: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
-	21, // 47: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
-	16, // 48: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
-	18, // 49: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
-	23, // 50: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	23, // 51: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	27, // 52: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
-	31, // 53: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
-	25, // 54: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
-	29, // 55: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
-	38, // [38:56] is the sub-list for method output_type
-	20, // [20:38] is the sub-list for method input_type
+	38, // 38: skyflow.SkyflowV1Service.ParseStateMachine:input_type -> skyflow.ParseStateMachineRequest
+	40, // 39: skyflow.SkyflowV1Service.StartExecution:input_type -> skyflow.StartExecutionRequest
+	42, // 40: skyflow.SkyflowV1Service.DescribeExecution:input_type -> skyflow.DescribeExecutionRequest
+	44, // 41: skyflow.SkyflowV1Service.DescribeExecutionBone:input_type -> skyflow.DescribeExecutionBoneRequest
+	46, // 42: skyflow.SkyflowV1Service.StopExecution:input_type -> skyflow.StopExecutionRequest
+	47, // 43: skyflow.SkyflowV1Service.ListExecutions:input_type -> skyflow.ListExecutionsRequest
+	49, // 44: skyflow.SkyflowV1Service.ListExecutionEvents:input_type -> skyflow.ListExecutionEventsRequest
+	51, // 45: skyflow.SkyflowV1Service.DescribeStep:input_type -> skyflow.DescribeStepRequest
+	53, // 46: skyflow.SkyflowV1Service.ListStepEvents:input_type -> skyflow.ListStepEventsRequest
+	54, // 47: skyflow.SkyflowV1Service.GetActivityTask:input_type -> skyflow.GetActivityTaskRequest
+	2,  // 48: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
+	4,  // 49: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
+	3,  // 50: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
+	7,  // 51: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	7,  // 52: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	9,  // 53: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
+	65, // 54: skyflow.SkyflowV1Service.DeleteNamespace:output_type -> google.protobuf.Empty
+	14, // 55: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
+	14, // 56: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
+	21, // 57: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
+	16, // 58: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
+	18, // 59: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
+	23, // 60: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	23, // 61: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	27, // 62: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
+	31, // 63: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
+	25, // 64: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
+	29, // 65: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
+	39, // 66: skyflow.SkyflowV1Service.ParseStateMachine:output_type -> skyflow.ParseStateMachineResponse
+	41, // 67: skyflow.SkyflowV1Service.StartExecution:output_type -> skyflow.StartExecutionResponse
+	43, // 68: skyflow.SkyflowV1Service.DescribeExecution:output_type -> skyflow.DescribeExecutionResponse
+	45, // 69: skyflow.SkyflowV1Service.DescribeExecutionBone:output_type -> skyflow.DescribeExecutionBoneResponse
+	65, // 70: skyflow.SkyflowV1Service.StopExecution:output_type -> google.protobuf.Empty
+	48, // 71: skyflow.SkyflowV1Service.ListExecutions:output_type -> skyflow.ListExecutionsResponse
+	50, // 72: skyflow.SkyflowV1Service.ListExecutionEvents:output_type -> skyflow.ListExecutionEventsResponse
+	52, // 73: skyflow.SkyflowV1Service.DescribeStep:output_type -> skyflow.DescribeStepResponse
+	50, // 74: skyflow.SkyflowV1Service.ListStepEvents:output_type -> skyflow.ListExecutionEventsResponse
+	55, // 75: skyflow.SkyflowV1Service.GetActivityTask:output_type -> skyflow.GetActivityTaskResponse
+	48, // [48:76] is the sub-list for method output_type
+	20, // [20:48] is the sub-list for method input_type
 	20, // [20:20] is the sub-list for extension type_name
 	20, // [20:20] is the sub-list for extension extendee
 	0,  // [0:20] is the sub-list for field type_name

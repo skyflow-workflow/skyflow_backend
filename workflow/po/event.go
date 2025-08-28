@@ -6,8 +6,8 @@ import "time"
 type ExecutionEvent struct {
 	ID             int64     `json:"id" gorm:"primaryKey;autoIncrement;type:INT(11)"`
 	ExecutionID    int       `json:"execution_id" gorm:"index;not null;type:INT(11)"` //所在的Executeion
-	StateID        int       `json:"state_id"  gorm:"type:INT(11);index;not null"`
-	StateName      string    `json:"state_name" gorm:"size:100"`
+	StepID         int       `json:"step_id"  gorm:"type:INT(11);index;not null"`
+	StepName       string    `json:"step_name" gorm:"size:100"`
 	EventType      string    `json:"event_type"  gorm:"not null;size:255"`
 	Data           string    `json:"data"  gorm:"type:JSON"`
 	NanoSeconds    int64     `json:"nano_seconds"  gorm:"not null;index;type:BIGINT UNSIGNED"`

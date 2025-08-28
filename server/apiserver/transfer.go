@@ -70,8 +70,8 @@ func ToPBPageResponse(req paging.PageResponse) *pb.PageResponse {
 func ToPBExecutionEvent(in po.ExecutionEvent) *pb.ExecutionEventInfo {
 
 	resp := &pb.ExecutionEventInfo{
-		StateId:    int64(in.StateID),
-		StateName:  in.StateName,
+		StepId:     int64(in.StepID),
+		StepName:   in.StepName,
 		EventType:  in.EventType,
 		CreateTime: in.CreateTime.String(),
 		StartTime:  in.StartTime.String(),

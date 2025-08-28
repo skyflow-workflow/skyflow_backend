@@ -10,7 +10,7 @@ import "google/protobuf/empty.proto";
 import "trpc/proto/trpc_options.proto";
 import "validate/validate.proto";
 
-option go_package = "github.com/skyflow-StateMachine/skyflow_backbend/gen/pb";
+option go_package = "github.com/skyflow/skyflow_backbend/gen/pb";
 
 // CommonService 通用服务
 service CommonService {
@@ -125,6 +125,47 @@ service SkyflowV1Service {
     // UpdateStateMachine 更新一个状态机
     rpc UpdateStateMachine(UpdateStateMachineRequest) returns (UpdateStateMachineResponse) {
         option (trpc.alias) = "/api/v1/UpdateStateMachine";
+    }
+    // ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+    // 验证definition的合法性
+    rpc ParseStateMachine(ParseStateMachineRequest) returns (ParseStateMachineResponse) {
+        option (trpc.alias) = "/api/v1/ParseStateMachine";
+    }
+    // 任务管理
+    // StartExecution 创建一个执行任务
+    rpc StartExecution(StartExecutionRequest) returns (StartExecutionResponse) {
+        option (trpc.alias) = "/api/v1/StartExecution";
+    }
+    // DescribeExecution 获得一个执行的描述
+    rpc DescribeExecution(DescribeExecutionRequest) returns (DescribeExecutionResponse) {
+        option (trpc.alias) = "/api/v1/DescribeExecution";
+    }
+    // DescribeExecutionBone 获得一个执行的执行的Bone信息
+    // Bone信息用于前段展示执行的流程图
+    rpc DescribeExecutionBone(DescribeExecutionBoneRequest) returns (DescribeExecutionBoneResponse) {
+        option (trpc.alias) = "/api/v1/DescribeExecutionBone";
+    }
+    // StopExecution 终止一个执行
+    rpc StopExecution(StopExecutionRequest) returns (google.protobuf.Empty) {
+        option (trpc.alias) = "/api/v1/StopExecution";
+    }
+    // ListExecutions 获得execution列表
+    rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse) {
+        option (trpc.alias) = "/api/v1/ListExecutions";
+    }
+    // ListExecutionEvents 获得一个执行的Event列表
+    rpc ListExecutionEvents(ListExecutionEventsRequest) returns (ListExecutionEventsResponse) {
+        option (trpc.alias) = "/api/v1/ListExecutionEvents";
+    }
+
+    rpc DescribeStep(DescribeStepRequest) returns (DescribeStepResponse) {
+        option (trpc.alias) = "/api/v1/DescribeStep";
+    }
+    rpc ListStepEvents(ListStepEventsRequest) returns (ListExecutionEventsResponse) {
+        option (trpc.alias) = "/api/v1/ListStepEvents";
+    }
+    rpc GetActivityTask(GetActivityTaskRequest) returns (GetActivityTaskResponse) {
+        option (trpc.alias) = "/api/v1/GetActivityTask";
     }
 }
 // NamespaceInfo 命名空间信息
@@ -375,7 +416,7 @@ message ExecutionListItem {
 message StepInfo {
     int64 id = 1;
     string status = 2 ;
-    string state_definition = 4 ;
+    string definition = 4 ;
     string input = 5 ;
     string output = 6;
     string create_time = 11;
@@ -385,8 +426,9 @@ message StepInfo {
 
 // ExecutionEventInfo 执行事件
 message ExecutionEventInfo {
-    int64 state_id = 2 ;
-    string state_name = 3;
+    // step id
+    int64 step_id = 2 ;
+    string step_name = 3;
     string event_type = 4;
     string data = 5;
     string create_time = 11;
@@ -531,10 +573,10 @@ message ListExecutionEventsResponse {
     PageResponse page_response = 2;
 }
 
-// DescribeStateRequest 获得一个State的信息请求结构
-message DescribeStateRequest {
-    // State id
-    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
+// DescribeStepRequest 获得一个Step的信息请求结构
+message DescribeStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 // DescribeStepResponse 获得一个Step的信息返回结构
 message DescribeStepResponse {
@@ -544,10 +586,10 @@ message DescribeStepResponse {
     string execution_uuid = 2;
 }
 
-// ListStateEventsRequest 获得一个State的执行事件列表请求机构
-message ListStateEventsRequest {
-    // State id
-    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
+// ListStepEventsRequest 获得一个Step的执行事件列表请求机构
+message ListStepEventsRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
     // 分页信息
     PageRequest page_request = 2;
 
@@ -563,8 +605,8 @@ message GetActivityTaskRequest {
 message GetActivityTaskResponse {
     // ExtraInfo 附加信息
     message ExtraInfo {
-        // State id
-        int64 state_id = 1;
+        // Step id
+        int64 step_id = 1;
         // execution uuid
         string execution_uuid = 2;
     }
@@ -701,8 +743,8 @@ enum ErrorCode {
     ExecutionUUIDExisted = 1009;
     // ActivityTaskNotFound activity  task 不存在
     ActivityTaskNotFound = 1010;
-    // StateStatusError State 状态错误
-    StateStatusError = 1011;
+    // StepStatusError Step 状态错误
+    StepStatusError = 1011;
     // ExecutionStatusError execution 状态错误
     ExecutionStatusError = 1012;
     // ParameterIsValid parameter is valid

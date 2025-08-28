@@ -146,6 +146,29 @@ type SkyflowV1ServiceService interface {
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
 	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error)
+	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+	//  验证definition的合法性
+	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest) (*ParseStateMachineResponse, error)
+	// StartExecution 任务管理
+	//  StartExecution 创建一个执行任务
+	StartExecution(ctx context.Context, req *StartExecutionRequest) (*StartExecutionResponse, error)
+	// DescribeExecution DescribeExecution 获得一个执行的描述
+	DescribeExecution(ctx context.Context, req *DescribeExecutionRequest) (*DescribeExecutionResponse, error)
+	// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+	//  Bone信息用于前段展示执行的流程图
+	DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest) (*DescribeExecutionBoneResponse, error)
+	// StopExecution StopExecution 终止一个执行
+	StopExecution(ctx context.Context, req *StopExecutionRequest) (*emptypb.Empty, error)
+	// ListExecutions ListExecutions 获得execution列表
+	ListExecutions(ctx context.Context, req *ListExecutionsRequest) (*ListExecutionsResponse, error)
+	// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+	ListExecutionEvents(ctx context.Context, req *ListExecutionEventsRequest) (*ListExecutionEventsResponse, error)
+
+	DescribeStep(ctx context.Context, req *DescribeStepRequest) (*DescribeStepResponse, error)
+
+	ListStepEvents(ctx context.Context, req *ListStepEventsRequest) (*ListExecutionEventsResponse, error)
+
+	GetActivityTask(ctx context.Context, req *GetActivityTaskRequest) (*GetActivityTaskResponse, error)
 }
 
 func SkyflowV1ServiceService_CreateNamespace_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -418,6 +441,186 @@ func SkyflowV1ServiceService_UpdateStateMachine_Handler(svr interface{}, ctx con
 	return rsp, nil
 }
 
+func SkyflowV1ServiceService_ParseStateMachine_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ParseStateMachineRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ParseStateMachine(ctx, reqbody.(*ParseStateMachineRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_StartExecution_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &StartExecutionRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).StartExecution(ctx, reqbody.(*StartExecutionRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DescribeExecution_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DescribeExecutionRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DescribeExecution(ctx, reqbody.(*DescribeExecutionRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DescribeExecutionBone_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DescribeExecutionBoneRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DescribeExecutionBone(ctx, reqbody.(*DescribeExecutionBoneRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_StopExecution_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &StopExecutionRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).StopExecution(ctx, reqbody.(*StopExecutionRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_ListExecutions_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ListExecutionsRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ListExecutions(ctx, reqbody.(*ListExecutionsRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_ListExecutionEvents_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ListExecutionEventsRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ListExecutionEvents(ctx, reqbody.(*ListExecutionEventsRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_DescribeStep_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &DescribeStepRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).DescribeStep(ctx, reqbody.(*DescribeStepRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_ListStepEvents_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ListStepEventsRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ListStepEvents(ctx, reqbody.(*ListStepEventsRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func SkyflowV1ServiceService_GetActivityTask_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetActivityTaskRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).GetActivityTask(ctx, reqbody.(*GetActivityTaskRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // SkyflowV1ServiceServer_ServiceDesc descriptor for server.RegisterService.
 var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "skyflow.SkyflowV1Service",
@@ -484,6 +687,46 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Func: SkyflowV1ServiceService_UpdateStateMachine_Handler,
 		},
 		{
+			Name: "/api/v1/ParseStateMachine",
+			Func: SkyflowV1ServiceService_ParseStateMachine_Handler,
+		},
+		{
+			Name: "/api/v1/StartExecution",
+			Func: SkyflowV1ServiceService_StartExecution_Handler,
+		},
+		{
+			Name: "/api/v1/DescribeExecution",
+			Func: SkyflowV1ServiceService_DescribeExecution_Handler,
+		},
+		{
+			Name: "/api/v1/DescribeExecutionBone",
+			Func: SkyflowV1ServiceService_DescribeExecutionBone_Handler,
+		},
+		{
+			Name: "/api/v1/StopExecution",
+			Func: SkyflowV1ServiceService_StopExecution_Handler,
+		},
+		{
+			Name: "/api/v1/ListExecutions",
+			Func: SkyflowV1ServiceService_ListExecutions_Handler,
+		},
+		{
+			Name: "/api/v1/ListExecutionEvents",
+			Func: SkyflowV1ServiceService_ListExecutionEvents_Handler,
+		},
+		{
+			Name: "/api/v1/DescribeStep",
+			Func: SkyflowV1ServiceService_DescribeStep_Handler,
+		},
+		{
+			Name: "/api/v1/ListStepEvents",
+			Func: SkyflowV1ServiceService_ListStepEvents_Handler,
+		},
+		{
+			Name: "/api/v1/GetActivityTask",
+			Func: SkyflowV1ServiceService_GetActivityTask_Handler,
+		},
+		{
 			Name: "/skyflow.SkyflowV1Service/CreateNamespace",
 			Func: SkyflowV1ServiceService_CreateNamespace_Handler,
 		},
@@ -542,6 +785,46 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/skyflow.SkyflowV1Service/UpdateStateMachine",
 			Func: SkyflowV1ServiceService_UpdateStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ParseStateMachine",
+			Func: SkyflowV1ServiceService_ParseStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/StartExecution",
+			Func: SkyflowV1ServiceService_StartExecution_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DescribeExecution",
+			Func: SkyflowV1ServiceService_DescribeExecution_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DescribeExecutionBone",
+			Func: SkyflowV1ServiceService_DescribeExecutionBone_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/StopExecution",
+			Func: SkyflowV1ServiceService_StopExecution_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ListExecutions",
+			Func: SkyflowV1ServiceService_ListExecutions_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ListExecutionEvents",
+			Func: SkyflowV1ServiceService_ListExecutionEvents_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/DescribeStep",
+			Func: SkyflowV1ServiceService_DescribeStep_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ListStepEvents",
+			Func: SkyflowV1ServiceService_ListStepEvents_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/GetActivityTask",
+			Func: SkyflowV1ServiceService_GetActivityTask_Handler,
 		},
 	},
 }
@@ -649,6 +932,56 @@ func (s *UnimplementedSkyflowV1Service) DescribeStateMachine(ctx context.Context
 // UpdateStateMachine UpdateStateMachine 更新一个状态机
 func (s *UnimplementedSkyflowV1Service) UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error) {
 	return nil, errors.New("rpc UpdateStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+//
+//	验证definition的合法性
+func (s *UnimplementedSkyflowV1Service) ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest) (*ParseStateMachineResponse, error) {
+	return nil, errors.New("rpc ParseStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// StartExecution 任务管理
+//
+//	StartExecution 创建一个执行任务
+func (s *UnimplementedSkyflowV1Service) StartExecution(ctx context.Context, req *StartExecutionRequest) (*StartExecutionResponse, error) {
+	return nil, errors.New("rpc StartExecution of service SkyflowV1Service is not implemented")
+}
+
+// DescribeExecution DescribeExecution 获得一个执行的描述
+func (s *UnimplementedSkyflowV1Service) DescribeExecution(ctx context.Context, req *DescribeExecutionRequest) (*DescribeExecutionResponse, error) {
+	return nil, errors.New("rpc DescribeExecution of service SkyflowV1Service is not implemented")
+}
+
+// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+//
+//	Bone信息用于前段展示执行的流程图
+func (s *UnimplementedSkyflowV1Service) DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest) (*DescribeExecutionBoneResponse, error) {
+	return nil, errors.New("rpc DescribeExecutionBone of service SkyflowV1Service is not implemented")
+}
+
+// StopExecution StopExecution 终止一个执行
+func (s *UnimplementedSkyflowV1Service) StopExecution(ctx context.Context, req *StopExecutionRequest) (*emptypb.Empty, error) {
+	return nil, errors.New("rpc StopExecution of service SkyflowV1Service is not implemented")
+}
+
+// ListExecutions ListExecutions 获得execution列表
+func (s *UnimplementedSkyflowV1Service) ListExecutions(ctx context.Context, req *ListExecutionsRequest) (*ListExecutionsResponse, error) {
+	return nil, errors.New("rpc ListExecutions of service SkyflowV1Service is not implemented")
+}
+
+// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+func (s *UnimplementedSkyflowV1Service) ListExecutionEvents(ctx context.Context, req *ListExecutionEventsRequest) (*ListExecutionEventsResponse, error) {
+	return nil, errors.New("rpc ListExecutionEvents of service SkyflowV1Service is not implemented")
+}
+func (s *UnimplementedSkyflowV1Service) DescribeStep(ctx context.Context, req *DescribeStepRequest) (*DescribeStepResponse, error) {
+	return nil, errors.New("rpc DescribeStep of service SkyflowV1Service is not implemented")
+}
+func (s *UnimplementedSkyflowV1Service) ListStepEvents(ctx context.Context, req *ListStepEventsRequest) (*ListExecutionEventsResponse, error) {
+	return nil, errors.New("rpc ListStepEvents of service SkyflowV1Service is not implemented")
+}
+func (s *UnimplementedSkyflowV1Service) GetActivityTask(ctx context.Context, req *GetActivityTaskRequest) (*GetActivityTaskResponse, error) {
+	return nil, errors.New("rpc GetActivityTask of service SkyflowV1Service is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -769,6 +1102,29 @@ type SkyflowV1ServiceClientProxy interface {
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...client.Option) (rsp *DescribeStateMachineResponse, err error)
 	// UpdateStateMachine UpdateStateMachine 更新一个状态机
 	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...client.Option) (rsp *UpdateStateMachineResponse, err error)
+	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+	//  验证definition的合法性
+	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest, opts ...client.Option) (rsp *ParseStateMachineResponse, err error)
+	// StartExecution 任务管理
+	//  StartExecution 创建一个执行任务
+	StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...client.Option) (rsp *StartExecutionResponse, err error)
+	// DescribeExecution DescribeExecution 获得一个执行的描述
+	DescribeExecution(ctx context.Context, req *DescribeExecutionRequest, opts ...client.Option) (rsp *DescribeExecutionResponse, err error)
+	// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+	//  Bone信息用于前段展示执行的流程图
+	DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest, opts ...client.Option) (rsp *DescribeExecutionBoneResponse, err error)
+	// StopExecution StopExecution 终止一个执行
+	StopExecution(ctx context.Context, req *StopExecutionRequest, opts ...client.Option) (rsp *emptypb.Empty, err error)
+	// ListExecutions ListExecutions 获得execution列表
+	ListExecutions(ctx context.Context, req *ListExecutionsRequest, opts ...client.Option) (rsp *ListExecutionsResponse, err error)
+	// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+	ListExecutionEvents(ctx context.Context, req *ListExecutionEventsRequest, opts ...client.Option) (rsp *ListExecutionEventsResponse, err error)
+
+	DescribeStep(ctx context.Context, req *DescribeStepRequest, opts ...client.Option) (rsp *DescribeStepResponse, err error)
+
+	ListStepEvents(ctx context.Context, req *ListStepEventsRequest, opts ...client.Option) (rsp *ListExecutionEventsResponse, err error)
+
+	GetActivityTask(ctx context.Context, req *GetActivityTaskRequest, opts ...client.Option) (rsp *GetActivityTaskResponse, err error)
 }
 
 type SkyflowV1ServiceClientProxyImpl struct {
@@ -1074,6 +1430,206 @@ func (c *SkyflowV1ServiceClientProxyImpl) UpdateStateMachine(ctx context.Context
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &UpdateStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest, opts ...client.Option) (*ParseStateMachineResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ParseStateMachine")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ParseStateMachine")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ParseStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...client.Option) (*StartExecutionResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/StartExecution")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("StartExecution")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &StartExecutionResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DescribeExecution(ctx context.Context, req *DescribeExecutionRequest, opts ...client.Option) (*DescribeExecutionResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DescribeExecution")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DescribeExecution")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DescribeExecutionResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest, opts ...client.Option) (*DescribeExecutionBoneResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DescribeExecutionBone")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DescribeExecutionBone")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DescribeExecutionBoneResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) StopExecution(ctx context.Context, req *StopExecutionRequest, opts ...client.Option) (*emptypb.Empty, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/StopExecution")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("StopExecution")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &emptypb.Empty{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ListExecutions(ctx context.Context, req *ListExecutionsRequest, opts ...client.Option) (*ListExecutionsResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ListExecutions")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ListExecutions")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ListExecutionsResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ListExecutionEvents(ctx context.Context, req *ListExecutionEventsRequest, opts ...client.Option) (*ListExecutionEventsResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ListExecutionEvents")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ListExecutionEvents")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ListExecutionEventsResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) DescribeStep(ctx context.Context, req *DescribeStepRequest, opts ...client.Option) (*DescribeStepResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/DescribeStep")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("DescribeStep")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &DescribeStepResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ListStepEvents(ctx context.Context, req *ListStepEventsRequest, opts ...client.Option) (*ListExecutionEventsResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ListStepEvents")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ListStepEvents")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ListExecutionEventsResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) GetActivityTask(ctx context.Context, req *GetActivityTaskRequest, opts ...client.Option) (*GetActivityTaskResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/GetActivityTask")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("GetActivityTask")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &GetActivityTaskResponse{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

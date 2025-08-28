@@ -14,6 +14,56 @@ type SkyflowServiceHandler struct {
 	wfSvc workflow.WorkflowService
 }
 
+// DescribeExecution implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pb.DescribeExecutionRequest) (*pb.DescribeExecutionResponse, error) {
+	panic("unimplemented")
+}
+
+// DescribeExecutionBone implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) DescribeExecutionBone(ctx context.Context, req *pb.DescribeExecutionBoneRequest) (*pb.DescribeExecutionBoneResponse, error) {
+	panic("unimplemented")
+}
+
+// DescribeStep implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pb.DescribeStepRequest) (*pb.DescribeStepResponse, error) {
+	panic("unimplemented")
+}
+
+// GetActivityTask implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pb.GetActivityTaskRequest) (*pb.GetActivityTaskResponse, error) {
+	panic("unimplemented")
+}
+
+// ListExecutionEvents implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pb.ListExecutionEventsRequest) (*pb.ListExecutionEventsResponse, error) {
+	panic("unimplemented")
+}
+
+// ListExecutions implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pb.ListExecutionsRequest) (*pb.ListExecutionsResponse, error) {
+	panic("unimplemented")
+}
+
+// ListStepEvents implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pb.ListStepEventsRequest) (*pb.ListExecutionEventsResponse, error) {
+	panic("unimplemented")
+}
+
+// ParseStateMachine implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pb.ParseStateMachineRequest) (*pb.ParseStateMachineResponse, error) {
+	panic("unimplemented")
+}
+
+// StartExecution implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pb.StartExecutionRequest) (*pb.StartExecutionResponse, error) {
+	panic("unimplemented")
+}
+
+// StopExecution implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) StopExecution(ctx context.Context, req *pb.StopExecutionRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
 // DeleteNamespace implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pb.DeleteNamespaceRequest) (*emptypb.Empty, error) {
 	panic("unimplemented")

@@ -379,6 +379,58 @@
     ]
    }
   },
+  "/api/v1/DescribeExecution": {
+   "post": {
+    "summary": "DescribeExecution 获得一个执行的描述",
+    "operationId": "DescribeExecution",
+    "responses": {
+     "200": {
+      "description": "获得一个执行的描述的返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeExecutionResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid 必选"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/DescribeExecutionBone": {
+   "post": {
+    "summary": "DescribeExecutionBone 获得一个执行的执行的Bone信息     Bone信息用于前段展示执行的流程图",
+    "operationId": "DescribeExecutionBone",
+    "responses": {
+     "200": {
+      "description": "获得一个执行的描述d的返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeExecutionBoneResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid 必选"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/api/v1/DescribeStateMachine": {
    "post": {
     "summary": "DescribeStateMachine 获得一个状态机的描述",
@@ -397,6 +449,59 @@
       "in": "query",
       "required": false,
       "type": "string"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/DescribeStep": {
+   "post": {
+    "summary": "",
+    "operationId": "DescribeStep",
+    "responses": {
+     "200": {
+      "description": "DescribeStepResponse 获得一个Step的信息返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeStepResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "step_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "Step id"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/GetActivityTask": {
+   "post": {
+    "summary": "",
+    "operationId": "GetActivityTask",
+    "responses": {
+     "200": {
+      "description": "GetActivityTaskResponse 返回查询到的结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.GetActivityTaskResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "task uri"
      }
     ],
     "tags": [
@@ -446,6 +551,127 @@
       "type": "string",
       "format": "int64",
       "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/ListExecutionEvents": {
+   "post": {
+    "summary": "ListExecutionEvents 获得一个执行的Event列表",
+    "operationId": "ListExecutionEvents",
+    "responses": {
+     "200": {
+      "description": "ListExecutionEventsResponse 获得一个执行的Event列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionEventsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/ListExecutions": {
+   "post": {
+    "summary": "ListExecutions 获得execution列表",
+    "operationId": "ListExecutions",
+    "responses": {
+     "200": {
+      "description": "ListExecutionsResponse 获得execution列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuids",
+      "in": "query",
+      "required": false,
+      "type": "array",
+      "description": "uuid 列表，指定的uuid列表查询， 可选, 最大100个",
+      "items": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "流程名字, 按照名字查询， 可选"
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态，按照状态查询， 可选"
+     },
+     {
+      "name": "title",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "title按照title 关键字查询，可选。title like \"%${title}%\""
      }
     ],
     "tags": [
@@ -536,6 +762,176 @@
       "type": "string",
       "format": "int64",
       "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/ListStepEvents": {
+   "post": {
+    "summary": "",
+    "operationId": "ListStepEvents",
+    "responses": {
+     "200": {
+      "description": "ListExecutionEventsResponse 获得一个执行的Event列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionEventsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     },
+     {
+      "name": "step_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "Step id"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/ParseStateMachine": {
+   "post": {
+    "summary": "ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型     验证definition的合法性",
+    "operationId": "ParseStateMachine",
+    "responses": {
+     "200": {
+      "description": "ParseStateMachineResponse 解析一个状态机返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ParseStateMachineResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "flow定义"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/StartExecution": {
+   "post": {
+    "summary": "任务管理     StartExecution 创建一个执行任务",
+    "operationId": "StartExecution",
+    "responses": {
+     "200": {
+      "description": "创建一个执行的请求返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.StartExecutionResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "流程模板定义，JSON/YAML格式的流程模板定义，可选"
+     },
+     {
+      "name": "execution_name",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid"
+     },
+     {
+      "name": "input",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'"
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机模板URI，可选，statemachine_uri 与definition 必须指定一个"
+     },
+     {
+      "name": "title",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的标题，可为空"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/StopExecution": {
+   "post": {
+    "summary": "StopExecution 终止一个执行",
+    "operationId": "StopExecution",
+    "responses": {
+     "200": {
+      "description": "A generic empty message that you can re-use to avoid defining duplicated\n empty messages in your APIs. A typical example is to use it as the request\n or the response type of an API method. For instance:\n\n     service Foo {\n       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n     }\n\n The JSON representation for `Empty` is empty JSON object `{}`.",
+      "schema": {
+       "$ref": "#/definitions/google.protobuf.Empty"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "cause",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "cause， error的文本描述， 可选"
+     },
+     {
+      "name": "error",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "Error 错误类型，用来匹配异常, 必选"
+     },
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid， 必选"
      }
     ],
     "tags": [
@@ -1013,6 +1409,58 @@
     ]
    }
   },
+  "/skyflow.SkyflowV1Service/DescribeExecution": {
+   "post": {
+    "summary": "DescribeExecution 获得一个执行的描述",
+    "operationId": "DescribeExecution2",
+    "responses": {
+     "200": {
+      "description": "获得一个执行的描述的返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeExecutionResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid 必选"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/DescribeExecutionBone": {
+   "post": {
+    "summary": "DescribeExecutionBone 获得一个执行的执行的Bone信息     Bone信息用于前段展示执行的流程图",
+    "operationId": "DescribeExecutionBone2",
+    "responses": {
+     "200": {
+      "description": "获得一个执行的描述d的返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeExecutionBoneResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid 必选"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
   "/skyflow.SkyflowV1Service/DescribeStateMachine": {
    "post": {
     "summary": "DescribeStateMachine 获得一个状态机的描述",
@@ -1031,6 +1479,59 @@
       "in": "query",
       "required": false,
       "type": "string"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/DescribeStep": {
+   "post": {
+    "summary": "",
+    "operationId": "DescribeStep2",
+    "responses": {
+     "200": {
+      "description": "DescribeStepResponse 获得一个Step的信息返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.DescribeStepResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "step_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "Step id"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/GetActivityTask": {
+   "post": {
+    "summary": "",
+    "operationId": "GetActivityTask2",
+    "responses": {
+     "200": {
+      "description": "GetActivityTaskResponse 返回查询到的结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.GetActivityTaskResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "activity_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "task uri"
      }
     ],
     "tags": [
@@ -1080,6 +1581,127 @@
       "type": "string",
       "format": "int64",
       "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/ListExecutionEvents": {
+   "post": {
+    "summary": "ListExecutionEvents 获得一个执行的Event列表",
+    "operationId": "ListExecutionEvents2",
+    "responses": {
+     "200": {
+      "description": "ListExecutionEventsResponse 获得一个执行的Event列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionEventsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string"
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/ListExecutions": {
+   "post": {
+    "summary": "ListExecutions 获得execution列表",
+    "operationId": "ListExecutions2",
+    "responses": {
+     "200": {
+      "description": "ListExecutionsResponse 获得execution列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "execution_uuids",
+      "in": "query",
+      "required": false,
+      "type": "array",
+      "description": "uuid 列表，指定的uuid列表查询， 可选, 最大100个",
+      "items": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "流程名字, 按照名字查询， 可选"
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态，按照状态查询， 可选"
+     },
+     {
+      "name": "title",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "title按照title 关键字查询，可选。title like \"%${title}%\""
      }
     ],
     "tags": [
@@ -1170,6 +1792,176 @@
       "type": "string",
       "format": "int64",
       "description": "请求分页大小"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/ListStepEvents": {
+   "post": {
+    "summary": "",
+    "operationId": "ListStepEvents2",
+    "responses": {
+     "200": {
+      "description": "ListExecutionEventsResponse 获得一个执行的Event列表返回值",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ListExecutionEventsResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "page_request.order_by",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "请求排序字段"
+     },
+     {
+      "name": "page_request.page_number",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求页号"
+     },
+     {
+      "name": "page_request.page_size",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "请求分页大小"
+     },
+     {
+      "name": "step_id",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "int64",
+      "description": "Step id"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/ParseStateMachine": {
+   "post": {
+    "summary": "ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型     验证definition的合法性",
+    "operationId": "ParseStateMachine2",
+    "responses": {
+     "200": {
+      "description": "ParseStateMachineResponse 解析一个状态机返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.ParseStateMachineResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "flow定义"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/StartExecution": {
+   "post": {
+    "summary": "任务管理     StartExecution 创建一个执行任务",
+    "operationId": "StartExecution2",
+    "responses": {
+     "200": {
+      "description": "创建一个执行的请求返回结构",
+      "schema": {
+       "$ref": "#/definitions/skyflow.StartExecutionResponse"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "流程模板定义，JSON/YAML格式的流程模板定义，可选"
+     },
+     {
+      "name": "execution_name",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid"
+     },
+     {
+      "name": "input",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'"
+     },
+     {
+      "name": "statemachine_uri",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机模板URI，可选，statemachine_uri 与definition 必须指定一个"
+     },
+     {
+      "name": "title",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "状态机执行的标题，可为空"
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/StopExecution": {
+   "post": {
+    "summary": "StopExecution 终止一个执行",
+    "operationId": "StopExecution2",
+    "responses": {
+     "200": {
+      "description": "A generic empty message that you can re-use to avoid defining duplicated\n empty messages in your APIs. A typical example is to use it as the request\n or the response type of an API method. For instance:\n\n     service Foo {\n       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n     }\n\n The JSON representation for `Empty` is empty JSON object `{}`.",
+      "schema": {
+       "$ref": "#/definitions/google.protobuf.Empty"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "cause",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "cause， error的文本描述， 可选"
+     },
+     {
+      "name": "error",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "Error 错误类型，用来匹配异常, 必选"
+     },
+     {
+      "name": "execution_uuid",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "description": "execution uuid， 必选"
      }
     ],
     "tags": [
@@ -1369,6 +2161,23 @@
    "title": "skyflow.DescribeActivityResponse",
    "description": "DescribeActivityResponse 获得活动列表请求返回"
   },
+  "skyflow.DescribeExecutionBoneResponse": {
+   "type": "object",
+   "properties": {
+    "bone": {
+     "title": "bone",
+     "type": "string",
+     "description": "bone execution bone"
+    }
+   },
+   "title": "skyflow.DescribeExecutionBoneResponse",
+   "description": "获得一个执行的描述d的返回结构"
+  },
+  "skyflow.DescribeExecutionResponse": {
+   "type": "object",
+   "title": "skyflow.DescribeExecutionResponse",
+   "description": "获得一个执行的描述的返回结构"
+  },
   "skyflow.DescribeStateMachineResponse": {
    "type": "object",
    "properties": {
@@ -1379,6 +2188,173 @@
    },
    "title": "skyflow.DescribeStateMachineResponse",
    "description": "DescribeStateMachineResponse 获得活动列表请求返回结构"
+  },
+  "skyflow.DescribeStepResponse": {
+   "type": "object",
+   "properties": {
+    "data": {
+     "title": "data",
+     "$ref": "#/definitions/skyflow.StepInfo",
+     "description": " 返回的Step 状态信息\n"
+    },
+    "execution_uuid": {
+     "title": "execution_uuid",
+     "type": "string",
+     "description": "execution uuid"
+    }
+   },
+   "title": "skyflow.DescribeStepResponse",
+   "description": "DescribeStepResponse 获得一个Step的信息返回结构"
+  },
+  "skyflow.ExecutionEventInfo": {
+   "type": "object",
+   "properties": {
+    "create_time": {
+     "title": "create_time",
+     "type": "string"
+    },
+    "data": {
+     "title": "data",
+     "type": "string"
+    },
+    "event_type": {
+     "title": "event_type",
+     "type": "string"
+    },
+    "finish_time": {
+     "title": "finish_time",
+     "type": "string"
+    },
+    "start_time": {
+     "title": "start_time",
+     "type": "string"
+    },
+    "step_id": {
+     "title": "step_id",
+     "type": "string",
+     "format": "int64",
+     "description": "step id"
+    },
+    "step_name": {
+     "title": "step_name",
+     "type": "string"
+    }
+   },
+   "title": "skyflow.ExecutionEventInfo",
+   "description": "ExecutionEventInfo 执行事件"
+  },
+  "skyflow.ExecutionListItem": {
+   "type": "object",
+   "properties": {
+    "create_time": {
+     "title": "create_time",
+     "type": "string",
+     "format": "int64",
+     "description": "create_time timestample"
+    },
+    "definition": {
+     "title": "definition",
+     "type": "string"
+    },
+    "execution_uuid": {
+     "title": "execution_uuid",
+     "type": "string",
+     "description": "execution_uuid"
+    },
+    "finish_time": {
+     "title": "finish_time",
+     "type": "string",
+     "format": "int64",
+     "description": "finish_time timestample"
+    },
+    "start_time": {
+     "title": "start_time",
+     "type": "string",
+     "format": "int64",
+     "description": "start_time timestample"
+    },
+    "status": {
+     "title": "status",
+     "type": "string",
+     "description": "status execution status"
+    },
+    "title": {
+     "title": "title",
+     "type": "string",
+     "description": "title execution title"
+    }
+   },
+   "title": "skyflow.ExecutionListItem",
+   "description": "ExecutionListItem execution info in ListExecutionsResponse"
+  },
+  "skyflow.GetActivityTaskResponse": {
+   "type": "object",
+   "properties": {
+    "activity_uri": {
+     "title": "activity_uri",
+     "type": "string",
+     "description": "task_uri"
+    },
+    "extra_info": {
+     "title": "extra_info",
+     "$ref": "#/definitions/skyflow.GetActivityTaskResponse.ExtraInfo",
+     "description": " task 的额外信息\n"
+    },
+    "heartbeat_seconds": {
+     "title": "heartbeat_seconds",
+     "type": "string",
+     "format": "int64",
+     "description": "task 心跳超时时间，单位(s), 0 表示不超时"
+    },
+    "heartbeat_timeout_second": {
+     "title": "heartbeat_timeout_second",
+     "type": "string",
+     "format": "int64",
+     "description": "Deprecated: 该字段已经废弃，使用heartbeat_seconds\n task 心跳超时时间，单位(s), 0 表示不超时"
+    },
+    "input": {
+     "title": "input",
+     "type": "string",
+     "description": "task 的输入，需要worker自己解码"
+    },
+    "task_token": {
+     "title": "task_token",
+     "type": "string",
+     "description": "task_token"
+    },
+    "timeout_second": {
+     "title": "timeout_second",
+     "type": "string",
+     "format": "int64",
+     "description": "Deprecated: 该字段已经废弃，使用timeout_seconds\n task 的超时时间，单位(s), 0表示不超时"
+    },
+    "timeout_seconds": {
+     "title": "timeout_seconds",
+     "type": "string",
+     "format": "int64",
+     "description": "task 的超时时间，单位(s), 0表示不超时"
+    }
+   },
+   "title": "skyflow.GetActivityTaskResponse",
+   "description": "GetActivityTaskResponse 返回查询到的结构"
+  },
+  "skyflow.GetActivityTaskResponse.ExtraInfo": {
+   "type": "object",
+   "properties": {
+    "execution_uuid": {
+     "title": "execution_uuid",
+     "type": "string",
+     "description": "execution uuid"
+    },
+    "step_id": {
+     "title": "step_id",
+     "type": "string",
+     "format": "int64",
+     "description": "Step id"
+    }
+   },
+   "title": "skyflow.GetActivityTaskResponse.ExtraInfo",
+   "description": "ExtraInfo 附加信息"
   },
   "skyflow.HTTPResponseMessage": {
    "type": "object",
@@ -1417,6 +2393,46 @@
    },
    "title": "skyflow.ListActivitiesResponse",
    "description": "ListActivitiesResponse 获得活动列表请求返回"
+  },
+  "skyflow.ListExecutionEventsResponse": {
+   "type": "object",
+   "properties": {
+    "data": {
+     "title": "data",
+     "type": "array",
+     "description": " 返回Event列表\n",
+     "items": {
+      "$ref": "#/definitions/skyflow.ExecutionEventInfo"
+     }
+    },
+    "page_response": {
+     "title": "page_response",
+     "$ref": "#/definitions/skyflow.PageResponse",
+     "description": " 分页信息\n"
+    }
+   },
+   "title": "skyflow.ListExecutionEventsResponse",
+   "description": "ListExecutionEventsResponse 获得一个执行的Event列表返回值"
+  },
+  "skyflow.ListExecutionsResponse": {
+   "type": "object",
+   "properties": {
+    "executions": {
+     "title": "executions",
+     "type": "array",
+     "description": " 查询到的执行列表\n",
+     "items": {
+      "$ref": "#/definitions/skyflow.ExecutionListItem"
+     }
+    },
+    "page_response": {
+     "title": "page_response",
+     "$ref": "#/definitions/skyflow.PageResponse",
+     "description": " 分页信息\n"
+    }
+   },
+   "title": "skyflow.ListExecutionsResponse",
+   "description": "ListExecutionsResponse 获得execution列表返回值"
   },
   "skyflow.ListNamespacesResponse": {
    "type": "object",
@@ -1518,6 +2534,23 @@
    "title": "skyflow.PageResponse",
    "description": "分页返回结构"
   },
+  "skyflow.ParseStateMachineResponse": {
+   "type": "object",
+   "properties": {
+    "definition": {
+     "title": "definition",
+     "type": "string",
+     "description": "flow 详细定义"
+    },
+    "type": {
+     "title": "type",
+     "type": "string",
+     "description": "flow 类型"
+    }
+   },
+   "title": "skyflow.ParseStateMachineResponse",
+   "description": "ParseStateMachineResponse 解析一个状态机返回结构"
+  },
   "skyflow.PingResponse": {
    "type": "object",
    "properties": {
@@ -1535,6 +2568,23 @@
    },
    "title": "skyflow.PingResponse",
    "description": "PingResponse ping返回"
+  },
+  "skyflow.StartExecutionResponse": {
+   "type": "object",
+   "properties": {
+    "create_time": {
+     "title": "create_time",
+     "type": "string",
+     "description": "执行创建的时间"
+    },
+    "execution_uuid": {
+     "title": "execution_uuid",
+     "type": "string",
+     "description": "返回的执行的唯一ID"
+    }
+   },
+   "title": "skyflow.StartExecutionResponse",
+   "description": "创建一个执行的请求返回结构"
   },
   "skyflow.StateMachineInfo": {
    "type": "object",
@@ -1609,6 +2659,46 @@
    },
    "title": "skyflow.StateMachineListItem",
    "description": "StateMachineListItem"
+  },
+  "skyflow.StepInfo": {
+   "type": "object",
+   "properties": {
+    "create_time": {
+     "title": "create_time",
+     "type": "string"
+    },
+    "definition": {
+     "title": "definition",
+     "type": "string"
+    },
+    "finish_time": {
+     "title": "finish_time",
+     "type": "string"
+    },
+    "id": {
+     "title": "id",
+     "type": "string",
+     "format": "int64"
+    },
+    "input": {
+     "title": "input",
+     "type": "string"
+    },
+    "output": {
+     "title": "output",
+     "type": "string"
+    },
+    "start_time": {
+     "title": "start_time",
+     "type": "string"
+    },
+    "status": {
+     "title": "status",
+     "type": "string"
+    }
+   },
+   "title": "skyflow.StepInfo",
+   "description": "StepInfo 一个Step的状态描述"
   },
   "skyflow.UpdateStateMachineResponse": {
    "type": "object",
