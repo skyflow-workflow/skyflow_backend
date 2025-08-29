@@ -1,5 +1,5 @@
 persistence:
-  dsn: mysql://root:root@tcp(localhost:3306)/testdb?parseTime=true
+  dsn: mysql://user:password@tcp(localhost:3306)/mydb?charset=utf8mb4&parseTime=True&loc=Local
   max_idle_conns: 10
   max_open_conns: 10
   log_level: info
