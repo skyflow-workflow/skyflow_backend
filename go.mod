@@ -20,7 +20,8 @@ require (
 	github.com/skyflow-workflow/skyflow_backbend/gen/pb v0.0.0-20241109094122-6caef8ab07e4
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/spf13/cobra v1.9.1
-	google.golang.org/protobuf v1.36.7
+	github.com/stretchr/testify v1.10.0
+	google.golang.org/protobuf v1.36.8
 	gopkg.in/go-playground/assert.v1 v1.2.1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
