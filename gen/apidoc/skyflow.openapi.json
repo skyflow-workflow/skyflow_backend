@@ -1112,11 +1112,11 @@
       "name": "definition",
       "in": "query",
       "required": false,
-      "description": "flow定义",
+      "description": "statemachine definition",
       "schema": {
        "type": "string",
        "title": "definition",
-       "description": "flow定义"
+       "description": "statemachine definition"
       }
      }
     ],
@@ -1310,6 +1310,67 @@
       "schema": {
        "type": "string",
        "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/api/v1/ValidateStateMachineDefinition": {
+   "post": {
+    "summary": "ValidateStateMachineDefinition 验证状态机定义的合法性",
+    "operationId": "ValidateStateMachineDefinition",
+    "responses": {
+     "200": {
+      "description": "ValidateStateMachineDefinitionResponse 验证状态机定义返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ValidateStateMachineDefinitionResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "description": "statemachine definition",
+      "schema": {
+       "type": "string",
+       "title": "definition",
+       "description": "statemachine definition"
+      }
+     },
+     {
+      "name": "max_results",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "title": "max_results"
+      }
+     },
+     {
+      "name": "severity",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "severity"
+      }
+     },
+     {
+      "name": "type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "type"
       }
      }
     ],
@@ -2501,11 +2562,11 @@
       "name": "definition",
       "in": "query",
       "required": false,
-      "description": "flow定义",
+      "description": "statemachine definition",
       "schema": {
        "type": "string",
        "title": "definition",
-       "description": "flow定义"
+       "description": "statemachine definition"
       }
      }
     ],
@@ -2699,6 +2760,67 @@
       "schema": {
        "type": "string",
        "title": "statemachine_uri"
+      }
+     }
+    ],
+    "tags": [
+     "skyflowv1service.trpc"
+    ]
+   }
+  },
+  "/skyflow.SkyflowV1Service/ValidateStateMachineDefinition": {
+   "post": {
+    "summary": "ValidateStateMachineDefinition 验证状态机定义的合法性",
+    "operationId": "ValidateStateMachineDefinition2",
+    "responses": {
+     "200": {
+      "description": "ValidateStateMachineDefinitionResponse 验证状态机定义返回结构",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/skyflow.ValidateStateMachineDefinitionResponse"
+        }
+       }
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "definition",
+      "in": "query",
+      "required": false,
+      "description": "statemachine definition",
+      "schema": {
+       "type": "string",
+       "title": "definition",
+       "description": "statemachine definition"
+      }
+     },
+     {
+      "name": "max_results",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "title": "max_results"
+      }
+     },
+     {
+      "name": "severity",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "severity"
+      }
+     },
+     {
+      "name": "type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "title": "type"
       }
      }
     ],
@@ -3241,7 +3363,7 @@
      "type": {
       "title": "type",
       "type": "string",
-      "description": "flow 类型"
+      "description": "statemachine type"
      }
     },
     "title": "skyflow.ParseStateMachineResponse",
@@ -3400,6 +3522,52 @@
     "type": "object",
     "title": "skyflow.UpdateStateMachineResponse",
     "description": "UpdateStateMachineResponse 更新一个状态机返回结构"
+   },
+   "skyflow.ValidateStateMachineDefinitionDiagnostic": {
+    "type": "object",
+    "properties": {
+     "code": {
+      "title": "code",
+      "type": "string"
+     },
+     "location": {
+      "title": "location",
+      "type": "string"
+     },
+     "message": {
+      "title": "message",
+      "type": "string"
+     },
+     "severity": {
+      "title": "severity",
+      "type": "string"
+     }
+    },
+    "title": "skyflow.ValidateStateMachineDefinitionDiagnostic",
+    "description": "ValidateStateMachineDefinitionDiagnostic 验证状态机定义返回的错误信息"
+   },
+   "skyflow.ValidateStateMachineDefinitionResponse": {
+    "type": "object",
+    "properties": {
+     "diagnostics": {
+      "title": "diagnostics",
+      "type": "array",
+      "description": " 是否合法\n",
+      "items": {
+       "$ref": "#/components/schemas/skyflow.ValidateStateMachineDefinitionDiagnostic"
+      }
+     },
+     "result": {
+      "title": "result",
+      "type": "string"
+     },
+     "truncated": {
+      "title": "truncated",
+      "type": "string"
+     }
+    },
+    "title": "skyflow.ValidateStateMachineDefinitionResponse",
+    "description": "ValidateStateMachineDefinitionResponse 验证状态机定义返回结构"
    }
   }
  }

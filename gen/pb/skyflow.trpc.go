@@ -149,6 +149,8 @@ type SkyflowV1ServiceService interface {
 	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
 	//  验证definition的合法性
 	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest) (*ParseStateMachineResponse, error)
+	// ValidateStateMachineDefinition ValidateStateMachineDefinition 验证状态机定义的合法性
+	ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest) (*ValidateStateMachineDefinitionResponse, error)
 	// StartExecution 任务管理
 	//  StartExecution 创建一个执行任务
 	StartExecution(ctx context.Context, req *StartExecutionRequest) (*StartExecutionResponse, error)
@@ -459,6 +461,24 @@ func SkyflowV1ServiceService_ParseStateMachine_Handler(svr interface{}, ctx cont
 	return rsp, nil
 }
 
+func SkyflowV1ServiceService_ValidateStateMachineDefinition_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &ValidateStateMachineDefinitionRequest{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(SkyflowV1ServiceService).ValidateStateMachineDefinition(ctx, reqbody.(*ValidateStateMachineDefinitionRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 func SkyflowV1ServiceService_StartExecution_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
 	req := &StartExecutionRequest{}
 	filters, err := f(req)
@@ -691,6 +711,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 			Func: SkyflowV1ServiceService_ParseStateMachine_Handler,
 		},
 		{
+			Name: "/api/v1/ValidateStateMachineDefinition",
+			Func: SkyflowV1ServiceService_ValidateStateMachineDefinition_Handler,
+		},
+		{
 			Name: "/api/v1/StartExecution",
 			Func: SkyflowV1ServiceService_StartExecution_Handler,
 		},
@@ -789,6 +813,10 @@ var SkyflowV1ServiceServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/skyflow.SkyflowV1Service/ParseStateMachine",
 			Func: SkyflowV1ServiceService_ParseStateMachine_Handler,
+		},
+		{
+			Name: "/skyflow.SkyflowV1Service/ValidateStateMachineDefinition",
+			Func: SkyflowV1ServiceService_ValidateStateMachineDefinition_Handler,
 		},
 		{
 			Name: "/skyflow.SkyflowV1Service/StartExecution",
@@ -939,6 +967,11 @@ func (s *UnimplementedSkyflowV1Service) UpdateStateMachine(ctx context.Context, 
 //	验证definition的合法性
 func (s *UnimplementedSkyflowV1Service) ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest) (*ParseStateMachineResponse, error) {
 	return nil, errors.New("rpc ParseStateMachine of service SkyflowV1Service is not implemented")
+}
+
+// ValidateStateMachineDefinition ValidateStateMachineDefinition 验证状态机定义的合法性
+func (s *UnimplementedSkyflowV1Service) ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest) (*ValidateStateMachineDefinitionResponse, error) {
+	return nil, errors.New("rpc ValidateStateMachineDefinition of service SkyflowV1Service is not implemented")
 }
 
 // StartExecution 任务管理
@@ -1105,6 +1138,8 @@ type SkyflowV1ServiceClientProxy interface {
 	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
 	//  验证definition的合法性
 	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest, opts ...client.Option) (rsp *ParseStateMachineResponse, err error)
+	// ValidateStateMachineDefinition ValidateStateMachineDefinition 验证状态机定义的合法性
+	ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest, opts ...client.Option) (rsp *ValidateStateMachineDefinitionResponse, err error)
 	// StartExecution 任务管理
 	//  StartExecution 创建一个执行任务
 	StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...client.Option) (rsp *StartExecutionResponse, err error)
@@ -1450,6 +1485,26 @@ func (c *SkyflowV1ServiceClientProxyImpl) ParseStateMachine(ctx context.Context,
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &ParseStateMachineResponse{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *SkyflowV1ServiceClientProxyImpl) ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest, opts ...client.Option) (*ValidateStateMachineDefinitionResponse, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/api/v1/ValidateStateMachineDefinition")
+	msg.WithCalleeServiceName(SkyflowV1ServiceServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("")
+	msg.WithCalleeServer("")
+	msg.WithCalleeService("SkyflowV1Service")
+	msg.WithCalleeMethod("ValidateStateMachineDefinition")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &ValidateStateMachineDefinitionResponse{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

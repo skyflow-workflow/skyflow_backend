@@ -486,6 +486,21 @@ func (mr *MockSkyflowV1ServiceServiceMockRecorder) UpdateStateMachine(ctx, req a
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).UpdateStateMachine), ctx, req)
 }
 
+// ValidateStateMachineDefinition mocks base method.
+func (m *MockSkyflowV1ServiceService) ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest) (*ValidateStateMachineDefinitionResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ValidateStateMachineDefinition", ctx, req)
+	ret0, _ := ret[0].(*ValidateStateMachineDefinitionResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ValidateStateMachineDefinition indicates an expected call of ValidateStateMachineDefinition.
+func (mr *MockSkyflowV1ServiceServiceMockRecorder) ValidateStateMachineDefinition(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateStateMachineDefinition", reflect.TypeOf((*MockSkyflowV1ServiceService)(nil).ValidateStateMachineDefinition), ctx, req)
+}
+
 // MockCommonServiceClientProxy is a mock of CommonServiceClientProxy interface.
 type MockCommonServiceClientProxy struct {
 	ctrl     *gomock.Controller
@@ -1092,4 +1107,24 @@ func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) UpdateStateMachine(ctx, r
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, req}, opts...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStateMachine", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).UpdateStateMachine), varargs...)
+}
+
+// ValidateStateMachineDefinition mocks base method.
+func (m *MockSkyflowV1ServiceClientProxy) ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest, opts ...client.Option) (*ValidateStateMachineDefinitionResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, req}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ValidateStateMachineDefinition", varargs...)
+	ret0, _ := ret[0].(*ValidateStateMachineDefinitionResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ValidateStateMachineDefinition indicates an expected call of ValidateStateMachineDefinition.
+func (mr *MockSkyflowV1ServiceClientProxyMockRecorder) ValidateStateMachineDefinition(ctx, req any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, req}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateStateMachineDefinition", reflect.TypeOf((*MockSkyflowV1ServiceClientProxy)(nil).ValidateStateMachineDefinition), varargs...)
 }

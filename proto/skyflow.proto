@@ -131,6 +131,12 @@ service SkyflowV1Service {
     rpc ParseStateMachine(ParseStateMachineRequest) returns (ParseStateMachineResponse) {
         option (trpc.alias) = "/api/v1/ParseStateMachine";
     }
+
+    //ValidateStateMachineDefinition 验证状态机定义的合法性
+    rpc ValidateStateMachineDefinition(ValidateStateMachineDefinitionRequest) returns (ValidateStateMachineDefinitionResponse) {
+        option (trpc.alias) = "/api/v1/ValidateStateMachineDefinition";
+    }
+
     // 任务管理
     // StartExecution 创建一个执行任务
     rpc StartExecution(StartExecutionRequest) returns (StartExecutionResponse) {
@@ -464,16 +470,41 @@ message StateMachineInfo {
 
 // ParseStateMachineRequest 解析一个状态机请求结构`
 message ParseStateMachineRequest{
-    // flow定义
+    // statemachine definition
     string definition = 1;
 }
 
 // ParseStateMachineResponse 解析一个状态机返回结构
 message ParseStateMachineResponse{
-    // flow 类型
+    // statemachine type
     string type = 1 ;
     // flow 详细定义
     string definition =2 ;
+}
+
+// ValidateStateMachineDefinitionRequest 验证状态机定义请求结构
+message ValidateStateMachineDefinitionRequest{
+    // statemachine definition
+    string definition = 1;
+    int32 max_results = 2;
+    string severity = 3;
+    string type = 4;
+
+}
+// ValidateStateMachineDefinitionResponse 验证状态机定义返回结构
+message ValidateStateMachineDefinitionResponse{
+    // 是否合法
+    repeated ValidateStateMachineDefinitionDiagnostic diagnostics = 1;
+    string result = 2 ;
+    string truncated = 3 ;
+}
+
+// ValidateStateMachineDefinitionDiagnostic 验证状态机定义返回的错误信息
+message ValidateStateMachineDefinitionDiagnostic{
+    string code = 1;
+    string message = 2;
+    string severity = 3;
+    string location = 4;
 }
 
 // 创建一个执行的请求体
