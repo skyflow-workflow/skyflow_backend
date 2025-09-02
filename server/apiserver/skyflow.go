@@ -14,6 +14,11 @@ type SkyflowServiceHandler struct {
 	wfSvc workflow.WorkflowService
 }
 
+// ValidateStateMachineDefinition implements pb.SkyflowV1ServiceService.
+func (s *SkyflowServiceHandler) ValidateStateMachineDefinition(ctx context.Context, req *pb.ValidateStateMachineDefinitionRequest) (*pb.ValidateStateMachineDefinitionResponse, error) {
+	panic("unimplemented")
+}
+
 // DescribeExecution implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pb.DescribeExecutionRequest) (*pb.DescribeExecutionResponse, error) {
 	panic("unimplemented")

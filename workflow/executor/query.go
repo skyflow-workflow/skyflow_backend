@@ -9,12 +9,12 @@ import (
 )
 
 // QueryStepByID
-func (executor *Executor) QueryStepByID(step_id int, fields []string, session rdb.Tx) (*po.Step, error) {
+func (svc *executionService) QueryStepByID(step_id int, fields []string, session rdb.Tx) (*po.Step, error) {
 
 	var dbStep po.Step
 	var err error
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {
@@ -28,10 +28,10 @@ func (executor *Executor) QueryStepByID(step_id int, fields []string, session rd
 }
 
 // QueryStepIDByTaskToken 使用tasktoken 查询step id,
-func (executor *Executor) QueryStepIDByTaskToken(tasktoken string, session rdb.Tx) (step_id int, err error) {
+func (svc *executionService) QueryStepIDByTaskToken(tasktoken string, session rdb.Tx) (step_id int, err error) {
 
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	err = tx.Model(new(po.TaskToken)).Where(po.TaskToken{Token: tasktoken, IsDeleted: false}).Select("step_id").Take(&step_id).Error
@@ -46,11 +46,11 @@ func (executor *Executor) QueryStepIDByTaskToken(tasktoken string, session rdb.T
 }
 
 // QueryExecutionByID
-func (executor *Executor) QueryExecutionByID(execution_id int, fields []string, session rdb.Tx) (*po.Execution, error) {
+func (svc *executionService) QueryExecutionByID(execution_id int, fields []string, session rdb.Tx) (*po.Execution, error) {
 	var dbExe po.Execution
 	var err error
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {

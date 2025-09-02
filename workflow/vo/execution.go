@@ -5,7 +5,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
-// StartExecutionRequest 新建Execution 的请求
+// StartExecutionRequest Start Execution Request
 type StartExecutionRequest struct {
 	ExecutionUUID      string        `json:"execution_uuid" `      //关联的 uuid
 	WorkflowURI        string        `json:"workflow_uri" `        //statemachine uri

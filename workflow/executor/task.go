@@ -93,7 +93,7 @@ func NewTaskFromID(id int, executor *Executor) (*Task, error) {
 
 	var err error
 
-	dbStep, err := executor.QueryStepByID(id, []string{}, nil)
+	dbStep, err := executor.Service.QueryStepByID(id, []string{}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -498,7 +498,7 @@ func (t *Task) ProcessTaskHeartbeatTimeout(message queue.InnerMessageBody) error
 	tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 	txf := rdb.ForUpdate(tx)
-	dbStep, err = t.Executor.QueryStepByID(dbStep.ID, append(StepFields.L1, "execute_count", "data"), txf)
+	dbStep, err = t.Executor.Service.QueryStepByID(dbStep.ID, append(StepFields.L1, "execute_count", "data"), txf)
 	if err != nil {
 		return err
 	}
