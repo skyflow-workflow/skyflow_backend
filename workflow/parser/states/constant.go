@@ -243,3 +243,13 @@ var QueryLanguages = struct {
 	JSONPath: "JSONPath",
 	JSONata:  "JSONata",
 }
+
+// StateMachine最大深度,防止流程图过度复杂
+// MaxDepth 最大深度， 默认为10
+var MaxDepth = 10
+
+// StartDepth 最外层的Depth ,默认为1
+var StartDepth = 1
+
+// StartGroupID 最外层的Group ID， 默认为 1
+var StartGroupID = 1

@@ -50,7 +50,7 @@ func NewStepMessage(execution_id int, types string, step_id int, data interface{
 		Type:        types,
 		StepID:      step_id,
 		Data:        s,
-		Class:       queue.MessageClass.State,
+		Class:       queue.MessageClass.Step,
 	}
 	return message
 }

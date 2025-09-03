@@ -1,6 +1,9 @@
 package executor
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
@@ -33,4 +36,14 @@ func (svc *executionService) SendExecutionEvents(events ...vo.ExecutionEvent) {
 		return
 	}
 	svc.Exporter.SendExecutionEvents(events)
+}
+
+// SendExecutionEvents 发送event
+func (svc *executionService) SendInnerMessage(message queue.InnerMessageBody, sendtime *time.Time) error {
+
+	if svc.InnerQueue == nil {
+		return fmt.Errorf("inner queue is not initialized")
+	}
+	return svc.InnerQueue.SendInnerMessage(message, sendtime)
+
 }

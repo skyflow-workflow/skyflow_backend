@@ -22,9 +22,9 @@ import (
 // It is designed to be extensible, allowing for different execution strategies and configurations.
 // The Executor struct encapsulates the necessary components for executing workflow events,
 type Executor struct {
-	Service *executionService
-	Config  *config.Config
-	Parser  *parser.Parser
+	ExecutionService *executionService
+	Config           *config.Config
+	Parser           *parser.Parser
 }
 
 // NewExecutor creates a new Executor instance
@@ -51,7 +51,7 @@ func (executor *Executor) NewTaskFromToken(token string, fields []string, sessio
 	var dbStep *po.Step
 
 	// 增加控制session
-	tx, maker := executor.Service.MetaDB.NewTxMaker(session)
+	tx, maker := executor.ExecutionService.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	err = tx.Where(tasktoken).Take(&tasktoken).Error
@@ -62,7 +62,7 @@ func (executor *Executor) NewTaskFromToken(token string, fields []string, sessio
 		return nil, err
 	}
 
-	dbStep, err = executor.Service.QueryStepByID(tasktoken.StepID, fields, tx)
+	dbStep, err = executor.ExecutionService.QueryStepByID(tasktoken.StepID, fields, tx)
 	if err != nil {
 		return nil, err
 	}
@@ -74,27 +74,14 @@ func (executor *Executor) NewTaskFromToken(token string, fields []string, sessio
 	return state, err
 }
 
-func (executor *Executor) SendEventsMessages(events []vo.ExecutionEvent, msgs []queue.InnerMessageBody) error {
+func (executor *Executor) SendInnerMessage(message queue.InnerMessageBody, sendtime *time.Time) error {
 
-	for _, msg := range msgs {
-		err := executor.InnerQueue.SendInnerMessage(msg, nil)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (executor *Executor) SendMessage(message queue.InnerMessageBody, sendtime *time.Time) error {
-	if executor.Service.InnerQueue == nil {
-		return fmt.Errorf("inner queue is not initialized")
-	}
-	return executor.Service.InnerQueue.SendInnerMessage(message, sendtime)
+	return executor.ExecutionService.SendInnerMessage(message, sendtime)
 }
 
 // SendExecutionEvents 发送event
 func (executor *Executor) SendExecutionEvents(events ...vo.ExecutionEvent) {
-	executor.Service.Exporter.SendExecutionEvents(events)
+	executor.ExecutionService.Exporter.SendExecutionEvents(events)
 }
 
 // ProcessEventStepInit process step event 'Init'
@@ -108,7 +95,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 	var dbExecution *po.Execution
 
 	// 提前取出 Input字段， 避免在事务中查询
-	dbStep, err = executor.Service.QueryStepByID(msg.StepID, append(StepFields.L2, StepFieldNames.Definition), nil)
+	dbStep, err = executor.ExecutionService.QueryStepByID(msg.StepID, append(StepFields.L2, StepFieldNames.Definition), nil)
 
 	if err != nil {
 		slog.Error(err.Error())
@@ -129,21 +116,21 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 
 	var EnableExecuteIndex = executor.Config.Option.EnableStepExecuteIndex
 
-	tx, maker := executor.MetaDB.NewTxMaker(nil)
+	tx, maker := executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	// 如果打开了 ExecuteIndex 开关，需要计算每个步骤的ExecuteIndex
 	if EnableExecuteIndex {
 		// 要计算执行的Index , 需要加全局锁
 		txf := rdb.ForUpdate(tx)
-		dbExecution, err = executor.Service.QueryExecutionByID(msg.ExecutionID,
+		dbExecution, err = executor.ExecutionService.QueryExecutionByID(msg.ExecutionID,
 			[]string{ExecutionFieldNames.ID, ExecutionFieldNames.MaxExecuteIndex}, txf)
 		if err != nil {
 			return err
 		}
 	} else {
 		// 减少一次额外的查询
-		dbExecution, err = executor.Service.QueryExecutionByID(msg.ExecutionID,
+		dbExecution, err = executor.ExecutionService.QueryExecutionByID(msg.ExecutionID,
 			[]string{ExecutionFieldNames.ID, ExecutionFieldNames.MaxExecuteIndex}, tx)
 		if err != nil {
 			return err
@@ -252,7 +239,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 	}
 	// message queue send create message
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateExeMsg)
-	err = executor.InnerQueue.SendInnerMessage(message, nil)
+	err = executor.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}

@@ -24,6 +24,7 @@ type workflowService struct {
 	TemplateService  template.TemplateService
 	InnerQueue       queue.InnerMessageQueue
 	Exporter         exporter.ExporterService
+	ExecutionService executor.ExecutionService
 	standardExecutor *executor.Executor
 	expressExecutor  *executor.Executor
 }

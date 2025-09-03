@@ -64,9 +64,9 @@ stages:
 		fmt.Printf("process index --- %d \n", idx)
 
 		var req = vo.StartExecutionRequest{
-			Title:              fmt.Sprintf("unittest for create execution : %s", time.Now().String()),
-			WorkflowDefinition: tt.definition,
-			Input:              tt.input,
+			Title:                  fmt.Sprintf("unittest for create execution : %s", time.Now().String()),
+			StateMachineDefinition: tt.definition,
+			Input:                  tt.input,
 		}
 		result, err := myExecutionService.StartExecution(req)
 		if err != nil {
@@ -91,9 +91,9 @@ func TestStartExecutionPipeline(t *testing.T) {
 		return
 	}
 	var req = vo.StartExecutionRequest{
-		Title:              fmt.Sprintf("create for create execution : %s", time.Now().String()),
-		WorkflowDefinition: string(content),
-		Input:              input,
+		Title:                  fmt.Sprintf("create for create execution : %s", time.Now().String()),
+		StateMachineDefinition: string(content),
+		Input:                  input,
 	}
 	result, err := myExecutionService.StartExecution(req)
 	if err != nil {

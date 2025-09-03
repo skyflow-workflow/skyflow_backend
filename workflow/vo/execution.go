@@ -7,12 +7,12 @@ import (
 
 // StartExecutionRequest Start Execution Request
 type StartExecutionRequest struct {
-	ExecutionUUID      string        `json:"execution_uuid" `      //关联的 uuid
-	WorkflowURI        string        `json:"workflow_uri" `        //statemachine uri
-	WorkflowDefinition string        `json:"workflow_definition" ` // statemachine content
-	Title              string        `json:"title"`                // execution title
-	Data               ExecutionData // 执行数据
-	Input              string        `json:"input"` //输入
+	ExecutionUUID          string        `json:"execution_uuid" `          //custom defined uuid
+	StateMachineURI        string        `json:"statemachine_uri" `        //statemachine uri
+	StateMachineDefinition string        `json:"statemachine_definition" ` // statemachine content
+	Title                  string        `json:"title"`                    // execution title
+	Data                   ExecutionData // 执行数据
+	Input                  string        `json:"input"` //输入
 }
 
 // ExecutionData Execution Data Field
@@ -29,9 +29,9 @@ type StartExecutionResponse struct {
 // RestartExecutionRequest 重新创建 Execution
 type RestartExecutionRequest struct {
 	// 当前需要重新发起的execution uuid
-	UUID  string `json:"uuid" post:"required notzero"`
-	Cause string `json:"cause" `
-	Error string `json:"error" `
+	ExecutionUUID string `json:"execution_uuid"  post:"required notzero"`
+	Cause         string `json:"cause" `
+	Error         string `json:"error" `
 	// 是否关闭当前任务
 	Abort bool `json:"abort"`
 }
