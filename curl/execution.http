@@ -1,0 +1,14 @@
+@hostname = 127.0.0.1
+@port = 8080
+@host = http://{{hostname}}:{{port}}
+@contentType = application/json
+
+
+### Start Execution
+POST  {{host}}/api/v1/StartExecution
+Content-Type: {{contentType}}
+
+{
+  "name": "example-namespace",
+  "description": "This is a namespace to test the functionality"
+}

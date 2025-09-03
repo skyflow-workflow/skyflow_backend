@@ -66,7 +66,15 @@ func (s *SkyflowServiceHandler) StopExecution(ctx context.Context, req *pb.StopE
 
 // DeleteNamespace implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pb.DeleteNamespaceRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.DeleteNamespaceRequest{
+		Name: req.Name,
+	}
+
+	err := s.wfSvc.TemplateService.DeleteNamespace(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
 
 // CreateOrUpdateStateMachine implements pb.SkyflowV1ServiceService.
