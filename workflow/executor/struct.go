@@ -12,7 +12,7 @@ import (
 type StartExecutionResponse struct {
 	Data     *po.Execution
 	Events   []vo.ExecutionEvent
-	Messages []queue.InnerMessage
+	Messages []queue.InnerMessageBody
 }
 
 // StopExecutionResponse function StopExecution Return struct

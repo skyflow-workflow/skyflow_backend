@@ -26,6 +26,12 @@ type Execution struct {
 	CreateTime      time.Time  `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }
 
+// ExecutionShade shade table for execution , for lock execution
+type ExecutionShade struct {
+	ID   int    `json:"id" gorm:"primaryKey;autoIncrement"`
+	UUID string `json:"uuid" gorm:"not null; type:VARCHAR(255);unique; comment:UUID"` //execution uuid
+}
+
 // Step  step in workflow execution
 type Step struct {
 	ID          int `json:"id" gorm:"primaryKey;autoIncrement"`
