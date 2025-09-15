@@ -13,7 +13,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415
-	github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a
+	github.com/mmtbak/microlibrary v0.0.0-20250915173024-088594bbc259
 	github.com/ohler55/ojg v1.26.1
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
 	github.com/panjf2000/ants/v2 v2.11.3

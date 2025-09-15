@@ -792,6 +792,8 @@ github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415 h1:ds5FgFMKWnQ0Fg
 github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415/go.mod h1:8IkaTL3Mhbtv/yV8tNigjpNWHPVjBefB1N0xn88Pe74=
 github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a h1:iZtfeo5od+SnOwt/5tx83mS2DJ9aNN3Ou+Rx4NnjaQM=
 github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
+github.com/mmtbak/microlibrary v0.0.0-20250915173024-088594bbc259 h1:Qv50F4/pqObxolgCXYd5Zr3dR09Q1uLErATyqftg6Fg=
+github.com/mmtbak/microlibrary v0.0.0-20250915173024-088594bbc259/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
 github.com/moby/locker v1.0.1/go.mod h1:S7SDdo5zpBK84bzzVlKr2V0hz+7x9hWbYC/kq7oQppc=
 github.com/moby/spdystream v0.2.0/go.mod h1:f7i0iNDQJ059oMTcWxx8MA/zKFIuD/lY+0GqbN2Wy8c=
 github.com/moby/sys/mount v0.3.3/go.mod h1:PBaEorSNTLG5t/+4EgukEQVlAvVEc6ZjTySwKdqp5K0=

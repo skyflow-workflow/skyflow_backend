@@ -48,16 +48,16 @@ func (lock *DBLock) Lock() error {
 
 	var err error
 	tx := lock.service.client.NewTx()
-	var lockexe po.ExecutionShade
+	var lockExe po.ExecutionShade
 	var lockstep po.Step
 	tx.Begin()
 	switch lock.locktype {
 	case LockTypes.Execution:
-		err = rdb.ForUpdate(tx).Select("id").Take(&lockexe, lock.id).Error
+		err = rdb.ForUpdate(tx).Select("id").Take(&lockExe, lock.id).Error
 	case LockTypes.Step:
 		err = rdb.ForUpdate(tx).Select("id").Take(&lockstep, lock.id).Error
 	default:
-		err = fmt.Errorf("unsuppored lock resource type  '%s'", lock.locktype)
+		err = fmt.Errorf("unsupported lock resource type  '%s'", lock.locktype)
 	}
 	if err != nil {
 		return err
