@@ -114,7 +114,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 		return err
 	}
 
-	var EnableExecuteIndex = executor.Config.Option.EnableStepExecuteIndex
+	var EnableExecuteIndex = executor.Config.Option.EnableExecuteIndex
 
 	tx, maker := executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)

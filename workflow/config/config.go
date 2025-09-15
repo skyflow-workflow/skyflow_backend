@@ -31,8 +31,8 @@ type Option struct {
 	AbortOnFail bool
 	// PersistenceStep specifies whether to persist step data.
 	PersistenceStep bool
-	// EnableStepExecuteIndex specifies whether to enable execute index for step.
+	// EnableExecuteIndex specifies whether to enable execute index for step.
 	// in standard mode, it will use execute index to track the execution order of steps.
 	// in express mode, it will always not use execute index.
-	EnableStepExecuteIndex bool
+	EnableExecuteIndex bool
 }

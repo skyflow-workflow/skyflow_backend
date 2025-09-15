@@ -21,12 +21,6 @@ type TaskWakeupMessage struct {
 	Token   string `json:"token"`
 }
 
-type StepExecuteMessage struct {
-	// if block is true, the step will be blocked
-	// default is false
-	Block bool `json:"block"`
-}
-
 // NewExecutionMessage create a new message
 func NewExecutionMessage(execution_id int, types string, data interface{}) queue.InnerMessageBody {
 

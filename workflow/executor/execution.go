@@ -3,17 +3,21 @@ package executor
 import (
 	"encoding/json"
 	"fmt"
+	"slices"
 	"sort"
 	"time"
 
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"trpc.group/trpc-go/tnet/log"
 )
 
 // Execution  StateMachine 执行实例
 type Execution struct {
-	StateMachine *grammar.StateMachine
+	StateMachine *states.StateMachine
 	Data         *po.Execution
 	// state map
 	States           map[string]Step
@@ -32,7 +36,7 @@ type ExecutionInfo struct {
 func NewExecutionFromID(id int, svc ExecutionService) (*Execution, error) {
 
 	var err error
-	var dbexe po.Execution
+	var dbexe *po.Execution
 
 	// 使用最小的数据集来来初始化
 	dbexe, err = svc.QueryExecutionByID(id, ExecutionFields.L1, nil)
@@ -40,7 +44,7 @@ func NewExecutionFromID(id int, svc ExecutionService) (*Execution, error) {
 		return nil, err
 	}
 
-	exe, err := NewExecutionFromData(&dbexe, svc)
+	exe, err := NewExecutionFromData(dbexe, svc)
 	return exe, err
 }
 
@@ -52,12 +56,8 @@ func NewExecutionFromID(id int, svc ExecutionService) (*Execution, error) {
 func NewExecutionFromData(data *po.Execution, svc ExecutionService) (exe *Execution, err error) {
 
 	exe = &Execution{
-		Data:   data,
-		States: map[string]Step{},
-		Bone: ExecutionBone{
-			StartAt: "",
-			States:  map[string]StepBone{},
-		},
+		Data:             data,
+		States:           map[string]Step{},
 		ExecutionService: svc,
 	}
 
@@ -91,7 +91,7 @@ func (exe *Execution) FullInit() error {
 		return nil
 	}
 
-	var dbexecution po.Execution
+	var dbexecution *po.Execution
 	id := exe.Data.ID
 
 	// 查询到全量的数据
@@ -103,7 +103,7 @@ func (exe *Execution) FullInit() error {
 	// 后面需要计算input
 	exe.Data = &dbexecution
 
-	wf, err := parser.ParseWorkflow(dbexecution.FlowDefinition)
+	sm, err := parser.ParseStateMachine(exe.Data.Definition)
 	if err != nil {
 		return err
 	}
@@ -115,7 +115,7 @@ func (exe *Execution) FullInit() error {
 }
 
 // ProcessEvent 处理事件
-func (exe *Execution) ProcessEvent(msg queue.InnerMessage) error {
+func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 
 	var err error
 
@@ -137,7 +137,7 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessage) error {
 	// 如果状态在规则中， 则检查状态，如果不在， 则忽略不检查
 	if ok {
 		// 如果不在预期状态中， 忽略事件
-		if !toolkit.StringInSlice(checkstatus, dbexe.Status) {
+		if !slices.Contains(checkstatus, dbexe.Status) {
 			msg := fmt.Sprintf("execution '%d' process event '%s' current status '%s' not match ",
 				msg.ExecutionID, msg.Type, dbexe.Status)
 			log.Error(msg)
@@ -347,7 +347,7 @@ func (e *Execution) ProcessInit() error {
 
 	// 先开启session， 所有的事情都应该在一个session中
 	// 开始事务
-	tx, maker := e.ExecutionService.metadb.NewSessionMaker(nil)
+	tx, maker := e.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	now := time.Now()
@@ -385,7 +385,7 @@ func (e *Execution) ProcessInit() error {
 
 	TaskCreateTime := time.Now()
 	// Create Event
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: dbexecution.ID,
 		StepName:    ExecutionEventStateName.Start,
 		StartTime:   starttime,
@@ -399,8 +399,8 @@ func (e *Execution) ProcessInit() error {
 
 	// 发送消息
 	// 处理下一个节点
-	msg := StateExecuteMessage{
-		Unblock: false,
+	msg := StepExecuteMessage{
+		Block: false,
 	}
 	message := NewStateMessage(dbexecution.ID, MessageType.StateNewTurn, insmresp.StartStepID, msg)
 	err = e.ExecutionService.innerqueue.SendInnerMessage(message, time.Now())
@@ -562,7 +562,7 @@ func (e *Execution) ProcessTimeout() error {
 	}
 
 	now := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: e.Data.ID,
 		StartTime:   starttime,
 		FinishTime:  now,
@@ -585,7 +585,7 @@ func (e *Execution) ProcessAbortTimeout() error {
 	}
 
 	now := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: e.Data.ID,
 		StartTime:   starttime,
 		FinishTime:  now,
@@ -611,7 +611,7 @@ func (e *Execution) ProcessExecutionFailed(message queue.InnerMessage) error {
 	}
 
 	now := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: e.Data.ID,
 		StartTime:   starttime,
 		FinishTime:  now,
@@ -635,7 +635,7 @@ func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessage) error {
 	}
 
 	now := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: e.Data.ID,
 		StartTime:   starttime,
 		FinishTime:  now,
@@ -657,7 +657,7 @@ func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessage) error {
 	}
 
 	now := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: e.Data.ID,
 		StartTime:   starttime,
 		FinishTime:  now,
@@ -717,7 +717,7 @@ func (e *Execution) ProcessSucceed(output string) error {
 	tx.Commit()
 
 	finishtime := time.Now()
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: dbexecution.ID,
 		StepName:    ExecutionEventStateName.End,
 		StartTime:   starttime,
@@ -796,7 +796,7 @@ func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Sessio
 	}
 
 	finishtime := time.Now()
-	event := ExecutionEvent{
+	event := vo.ExecutionEvent{
 		ExecutionID: dbexecution_id,
 		StartTime:   starttime,
 		FinishTime:  finishtime,

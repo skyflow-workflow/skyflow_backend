@@ -27,6 +27,11 @@ type StepWakeupMessage struct {
 	Token        string `json:"token"`
 }
 
+type StepExecuteMessage struct {
+	// if block step execute
+	Block bool `json:"block"`
+}
+
 // FindNextStep  for find next step
 type FindNextStep struct {
 	Name    string

@@ -9,6 +9,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"trpc.group/trpc-go/tnet/log"
 
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -16,10 +17,11 @@ import (
 
 // ExecutionStep execution step
 type ExecutionStep struct {
-	Data      *po.Step
-	Executor  *Executor
-	State     states.State
-	BaseState *states.BaseState
+	Data             *po.Step
+	ExecutionService executionService
+	Executor         *Executor
+	State            states.State
+	// BaseState        *states.BaseState
 }
 
 // NewBaseExecutionStep New一个可执行状态实例
@@ -31,10 +33,9 @@ func NewExecutionStep(dbStep *po.Step, executor *Executor) (*ExecutionStep, erro
 		return nil, err
 	}
 	exeStep := &ExecutionStep{
-		State:     state,
-		Executor:  executor,
-		Data:      dbStep,
-		BaseState: state.GetBaseState(),
+		State:    state,
+		Executor: executor,
+		Data:     dbStep,
 	}
 	return exeStep, nil
 
@@ -109,18 +110,17 @@ func (step *ExecutionStep) GetNextStep(output any) (NextStep, error) {
 
 // Init Init初始化state
 // NOCC:golint/fnsize("设计如此")
-func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
+func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
 
-	var dbStep po.Step
-	var basedbstep po.Step
-	var dbExecution po.Execution
-	var exelock lock.Lock
+	var dbStep *po.Step
+	var basedbstep *po.Step
+	var dbExecution *po.Execution
 
-	var stateexemsg = StateExecuteMessage{
-		Unblock: false,
+	var stateexemsg = StepExecuteMessage{
+		Block: false,
 	}
 	// 兼容历史消息
 	if msg.Data != "" {
@@ -129,7 +129,6 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 			return err
 		}
 	}
-
 	// 提前取出 Input字段， 避免在事务中查询
 	basedbstep, err = step.ExecutionService.QueryStepByID(step.Data.ID, append(StepFields.L1, "input"), nil)
 
@@ -138,11 +137,11 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 		return err
 	}
 
-	tx, maker := step.ExecutionService.metadb.NewSessionMaker(nil)
+	tx, maker := step.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	// 如果打开了 ExecuteIndex 开关，需要计算每个步骤的ExecuteIndex
-	if step.ExecutionService.EnableExecuteIndex {
+	if step.Executor.Config.Option.EnableExecuteIndex {
 		// 要计算执行的Index , 需要加全局锁
 		txf := rdb.ForUpdate(tx)
 		dbExecution, err = step.ExecutionService.QueryExecutionByID(step.Data.ExecutionID, []string{"id", "max_execute_index"}, txf)
@@ -167,8 +166,8 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 	}
 
 	// 判断 是否超过 MaxExecuteTimes, 如果超过， 则拒绝执行
-	if dbStep.ExecuteCount >= int(step.BaseSate.MaxExecuteTimes) {
-		err = fmt.Errorf("state execute count reach 'MaxExecuteTimes' argument")
+	if dbStep.ExecuteCount >= int(step.State.GetBaseState().MaxExecuteTimes) {
+		err = fmt.Errorf("step execute count reach 'MaxExecuteTimes' argument")
 		return err
 	}
 	// 开始准备初始化
@@ -180,7 +179,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 	// maxindex 代表当前最大的执行Index。
 	// 如果当前是未执行节点，  则dbstep.ExecuteIndex = maxindex +1; maxindex = dbstep.ExecuteIndex
 	// 如果当前是已经执行的节点，则 都保持不变 。
-	if step.ExecutionService.EnableExecuteIndex {
+	if step.Executor.Config.Option.EnableExecuteIndex {
 
 		//初始化 基础结构数据, 计算当前的ExecuteIndex
 		// maxindex 是
@@ -205,7 +204,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 	// 非Task 状态需要在处理流程中计数器 +1 ，
 	// 因为task节点可以自动重试，可以在重试逻辑中自动累加计数器，所以需要在执行逻辑中 +1
 	// 但是其他类型节点不需要，可以在全局初始化的时候 +1， 这些节点重试的时候，进入初始化流程中， 在这里再次 +1
-	if dbStep.Type == grammar.StateType.Task {
+	if dbStep.Type == string(states.StateTypes.Task) {
 		executecount = dbStep.ExecuteCount
 	} else {
 		executecount = dbStep.ExecuteCount + 1
@@ -240,12 +239,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 	}
 	tx.Commit()
 
-	// 尽量提前解锁
-	if exelock != nil {
-		exelock.Unlock()
-	}
-
-	event0 := ExecutionEvent{
+	event0 := vo.ExecutionEvent{
 		ExecutionID: dbStep.ExecutionID,
 		StepID:      dbStep.ID,
 		StepName:    basedbstep.Name,
@@ -255,14 +249,14 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 			Input: basedbstep.Input,
 		},
 	}
-	event1 := ExecutionEvent{
+	event1 := vo.ExecutionEvent{
 		ExecutionID: dbStep.ExecutionID,
 		StepID:      dbStep.ID,
 		StepName:    basedbstep.Name,
 		StartTime:   starttime,
 		FinishTime:  now,
 		Data: EventContent_StateInit{
-			Action:         "StartState",
+			Action:         "StartStep",
 			ExecutionIndex: executionindex,
 			ExecutionCount: updatestate.ExecuteCount,
 		},
@@ -270,8 +264,8 @@ func (step *ExecutionStep) Init(msg queue.InnerMessage) error {
 	step.ExecutionService.SendExecutionEvents(event0, event1)
 
 	// message queue send create message
-	message := NewStateMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateexemsg)
-	err = step.ExecutionService.innerqueue.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateexemsg)
+	err = step.ExecutionService.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}

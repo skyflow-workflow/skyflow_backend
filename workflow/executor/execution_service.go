@@ -2,6 +2,7 @@ package executor
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
@@ -164,7 +165,7 @@ func (svc *executionService) JudgeExecutionRunningStatus(execution_id int) error
 	}
 
 	// 如果 消息类型是正常消息， 而 Execution状态不在 [ created  running ] , 忽略消息。 不能接收Failed/Abort/Success 等其他状态的消息
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Running)},
+	if !slices.Contains([]string{string(ExecutionStatus.Running)},
 		dbexecution.Status) {
 		return fmt.Errorf("%w: current status '%s'", vo.ErrorExecutionStatus, dbexecution.Status)
 	}

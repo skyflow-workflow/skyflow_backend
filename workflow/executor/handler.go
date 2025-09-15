@@ -176,7 +176,7 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 			return dbNull, err
 		}
 	}
-	return resp.Data, nil
+	return *resp.Data, nil
 }
 
 // _StartExecution 创建一个Execution
@@ -695,7 +695,7 @@ func (svc *executionService) SendStepSkip(ctx context.Context, req vo.SendStepSk
 	}
 
 	// Execution 是Failed /Running 状态
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Failed), string(ExecutionStatus.Running)}, dbexecution.Status) {
+	if !slices.Contains([]string{string(ExecutionStatus.Failed), string(ExecutionStatus.Running)}, dbexecution.Status) {
 		err = fmt.Errorf("%w: current execution status '%s'", vo.ErrorExecutionStatus, dbexecution.Status)
 		return err
 	}
@@ -719,7 +719,7 @@ func (svc *executionService) SendStepSkip(ctx context.Context, req vo.SendStepSk
 
 		err = fmt.Errorf("%w: step [ %s ] is End step, has no next step '%s'", vo.ErrorParamterInvalid, dbstep.Name, req.NextStepName)
 		return err
-	} else if !bone.End && !toolkit.StringInSlice(bone.Next, req.NextStepName) {
+	} else if !bone.End && !slices.Contains(bone.Next, req.NextStepName) {
 		//当前节点不是最后一个节点， next 必需在 bone 的next列表中
 		err = fmt.Errorf(" %w : step [ %s ] has no next step  [ %s ]  ", vo.ErrorParamterInvalid, dbstep.Name, req.NextStepName)
 		return err
@@ -932,7 +932,7 @@ func (svc *executionService) RedoStep(step_id int) error {
 	// }
 
 	// Execution 是Failed /Running 状态
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Running), string(ExecutionStatus.Failed)}, dbexecution.Status) {
+	if !slices.Contains([]string{string(ExecutionStatus.Running), string(ExecutionStatus.Failed)}, dbexecution.Status) {
 		err = fmt.Errorf("%w: current execution status '%s' is invalid", vo.ErrorExecutionStatus, dbexecution.Status)
 		return err
 	}
@@ -1007,7 +1007,7 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 	defer lock.Unlock()
 
 	// Execution 是Failed /Running 状态
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Suspending)},
+	if !slices.Contains([]string{string(ExecutionStatus.Suspending)},
 		dbexecution.Status) {
 		err = fmt.Errorf("execution [ %s ]  Status Should Not  Be [ %s ]", dbexecution.UUID, dbexecution.Status)
 		return err
@@ -1177,7 +1177,7 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 	}
 
 	// Execution 是Failed /Running 状态
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Suspending), string(ExecutionStatus.Running)},
+	if !slices.Contains([]string{string(ExecutionStatus.Suspending), string(ExecutionStatus.Running)},
 		dbexecution.Status) {
 		err = fmt.Errorf("execution [ %s ]  Status Should Not  Be [ %s ]", dbexecution.UUID, dbexecution.Status)
 		return err
@@ -1275,7 +1275,7 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 		return err
 	}
 
-	if !toolkit.StringInSlice([]string{string(ExecutionStatus.Failed), string(ExecutionStatus.Running)},
+	if !slices.Contains([]string{string(ExecutionStatus.Failed), string(ExecutionStatus.Running)},
 		dbexecution.Status) {
 		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorExecutionStatus, dbexecution.Status)
 		return err
@@ -1284,7 +1284,7 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorStepStatus, dbstep.Status)
 		return err
 	}
-	if dbstep.Type == states.StateType.Parallel || dbstep.Type == states.StateType.Map || dbstep.Type == states.StateType.StateGroup {
+	if dbstep.Type == string(states.StateTypes.Parallel) || dbstep.Type == string(states.StateTypes.Map) || dbstep.Type == string(states.StateTypes.StateGroup) {
 		err = fmt.Errorf("%w: operation: 'Retry' , step type '%s'", vo.ErrorUnsupportOperationForStep, dbstep.Type)
 		return err
 	}
@@ -1328,8 +1328,8 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 
 	svc.SendExecutionEvents(event)
 
-	msg := StateExecuteMessage{
-		Unblock: true,
+	msg := StepExecuteMessage{
+		Block: true,
 	}
 	//  写入message queue ,发送手动处理消息
 	message := NewStepMessage(dbstep.ExecutionID, MessageType.StateNewTurn, dbstep.ID, msg)
@@ -1856,8 +1856,8 @@ func (svc *executionService) RetryExecution(execution_id int) error {
 		}
 		events = append(events, event)
 
-		msg := StateExecuteMessage{
-			Unblock: true,
+		msg := StepExecuteMessage{
+			Block: true,
 		}
 
 		message := NewStepMessage(dbstep.ExecutionID, MessageType.StateNewTurn, dbstep.ID, msg)
@@ -2109,8 +2109,8 @@ func (svc *executionService) UnblockTask(ctx context.Context, req vo.UnblockTask
 	}
 	tx.Commit()
 
-	msgdata := StateExecuteMessage{
-		Unblock: true,
+	msgdata := StepExecuteMessage{
+		Block: true,
 	}
 	msg := NewStepMessage(dbstep.ExecutionID, MessageType.StateExecute, dbstep.ID, msgdata)
 	err = svc.SendInnerMessage(msg, time.Now())
@@ -2234,8 +2234,8 @@ func (svc *executionService) UnblockExecution(ctx context.Context, execution_id 
 		}
 		events = append(events, event)
 
-		msg := StateExecuteMessage{
-			Unblock: true,
+		msg := StepExecuteMessage{
+			Block: true,
 		}
 
 		message := NewStepMessage(dbstep.ExecutionID, MessageType.StateExecute, dbstep.ID, msg)

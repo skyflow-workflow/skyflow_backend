@@ -13,24 +13,18 @@ type Step interface {
 	// 执行初始化
 	Init(queue.InnerMessage) error
 	// 执行
-	Run(queue.InnerMessage) error
+	Run(queue.InnerMessageBody) error
 	// 获得bone信息
 	GetBone() StepBone
 	GetNextStep(output any) (NextStep, error)
 	// 处理消息
-	ProcessEvent(queue.InnerMessage) error
+	ProcessEvent(queue.InnerMessageBody) error
 }
 
 // NewStepFromData ...
 func NewStepFromData(dbStep *po.Step, executor *Executor) (Step, error) {
 	var step Step
 	var err error
-
-	state, err := executor.Parser.ParseState(dbStep.Definition)
-	if err != nil {
-		return nil, err
-	}
-	node := state.GetBone()
 	switch dbStep.Type {
 	case string(states.StateTypes.Task):
 		step, err = NewTaskFromData(dbStep, executor)

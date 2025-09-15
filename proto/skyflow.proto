@@ -5,7 +5,8 @@ syntax = "proto3";
 package skyflow;
 
 // import "·ogle/protobuf/timestamp.proto";
-// import "google/api/annotations.proto";
+import "google/api/annotations.proto";
+import "openapiv3/annotations.proto";
 import "google/protobuf/empty.proto";
 import "trpc/proto/trpc_options.proto";
 import "validate/validate.proto";
@@ -67,6 +68,15 @@ service SkyflowV1Service {
     // CreateNamespace 创建一个命名空间
     rpc CreateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
         option (trpc.alias) = "/api/v1/CreateNamespace";
+        option (google.api.http) = {
+            post: "/api/v1/CreateNamespace"
+            body: "*"
+        };
+        option (openapiv3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // CreateOrUpdateNamespace 创建/更新一个命名空间
     rpc CreateOrUpdateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
