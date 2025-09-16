@@ -26,6 +26,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.5
+	trpc.group/trpc-go/tnet v1.0.1
 	trpc.group/trpc-go/trpc-gateway/plugin/accesslog v0.0.0-00010101000000-000000000000
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
@@ -111,7 +112,6 @@ require (
 	google.golang.org/grpc v1.65.0 // indirect
 	gopkg.in/src-d/go-errors.v1 v1.0.0 // indirect
 	gorm.io/driver/clickhouse v0.5.1 // indirect
-	trpc.group/trpc-go/tnet v1.0.1 // indirect
 	trpc.group/trpc-go/trpc-gateway v1.0.2 // indirect
 	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.1 // indirect
 )

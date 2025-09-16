@@ -790,8 +790,6 @@ github.com/mitchellh/osext v0.0.0-20151018003038-5e2d6d41470f/go.mod h1:OkQIRizQ
 github.com/mkevac/debugcharts v0.0.0-20191222103121-ae1c48aa8615/go.mod h1:Ad7oeElCZqA1Ufj0U9/liOF4BtVepxRcTvr2ey7zTvM=
 github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415 h1:ds5FgFMKWnQ0Fgn0FiLGwjbI7IQ1fiG7MmpxRaz3HNY=
 github.com/mmtbak/dsnparser v0.0.0-20250517034549-8858a2c28415/go.mod h1:8IkaTL3Mhbtv/yV8tNigjpNWHPVjBefB1N0xn88Pe74=
-github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a h1:iZtfeo5od+SnOwt/5tx83mS2DJ9aNN3Ou+Rx4NnjaQM=
-github.com/mmtbak/microlibrary v0.0.0-20250627043751-0098b587384a/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
 github.com/mmtbak/microlibrary v0.0.0-20250915173024-088594bbc259 h1:Qv50F4/pqObxolgCXYd5Zr3dR09Q1uLErATyqftg6Fg=
 github.com/mmtbak/microlibrary v0.0.0-20250915173024-088594bbc259/go.mod h1:nNvoqjECML3HRyOl7XG8rZYQ4JsCU24yKcOWB7SGyDg=
 github.com/moby/locker v1.0.1/go.mod h1:S7SDdo5zpBK84bzzVlKr2V0hz+7x9hWbYC/kq7oQppc=

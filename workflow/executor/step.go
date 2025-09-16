@@ -11,7 +11,7 @@ import (
 // Step 状态节点的抽象类
 type Step interface {
 	// 执行初始化
-	Init(queue.InnerMessage) error
+	Init(queue.InnerMessageBody) error
 	// 执行
 	Run(queue.InnerMessageBody) error
 	// 获得bone信息

@@ -8,6 +8,7 @@ import (
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/lock"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
@@ -15,9 +16,10 @@ import (
 type ExecutionService = *executionService
 
 type executionService struct {
-	MetaDB     *rdb.DBClient
-	InnerQueue queue.InnerMessageQueue
-	Exporter   exporter.ExporterService
+	MetaDB      *rdb.DBClient
+	InnerQueue  queue.InnerMessageQueue
+	Exporter    exporter.ExporterService
+	LockService lock.LockService
 }
 
 func NewExecutionService(

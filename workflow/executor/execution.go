@@ -19,12 +19,13 @@ import (
 type Execution struct {
 	StateMachine *states.StateMachine
 	Data         *po.Execution
+	Executor     *Executor
 	// state map
 	States           map[string]Step
 	ExecutionService ExecutionService
 }
 
-// ExecutionInfo  内置的ExecutionInfor Struct
+// ExecutionInfo  内置的ExecutionInfo Struct
 type ExecutionInfo struct {
 	UUID    string `json:"uuid"`    // execution uuid
 	URLPath string `json:"urlpath"` // 访问路径
@@ -119,16 +120,17 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 
 	var err error
 
-	lock := exe.ExecutionService.lockservice.LockExecution(msg.ExecutionID)
+	lock := exe.ExecutionService.LockService.LockExecution(msg.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
 	}
 	defer lock.Unlock()
+	tx := lock.GetTx()
 
-	var dbexe po.Execution
+	var dbexe *po.Execution
 
-	dbexe, err = exe.ExecutionService.QueryExecutionByID(msg.ExecutionID, []string{"id", "status"}, nil)
+	dbexe, err = exe.ExecutionService.QueryExecutionByID(msg.ExecutionID, []string{"id", "status"}, tx)
 	if err != nil {
 		return err
 	}
