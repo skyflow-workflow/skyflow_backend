@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/domain"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/lock"
@@ -16,10 +17,11 @@ import (
 type ExecutionService = *executionService
 
 type executionService struct {
-	MetaDB      *rdb.DBClient
-	InnerQueue  queue.InnerMessageQueue
-	Exporter    exporter.ExporterService
-	LockService lock.LockService
+	MetaDB        *rdb.DBClient
+	InnerQueue    queue.InnerMessageQueue
+	Exporter      exporter.ExporterService
+	LockService   lock.LockService
+	DomainService domain.DomainService
 }
 
 func NewExecutionService(
@@ -27,11 +29,14 @@ func NewExecutionService(
 	InnerQueue queue.InnerMessageQueue,
 	Exporter exporter.ExporterService,
 ) ExecutionService {
-	return &executionService{
-		MetaDB:     MetaDB,
-		InnerQueue: InnerQueue,
-		Exporter:   Exporter,
+	var svc = &executionService{
+		MetaDB:        MetaDB,
+		InnerQueue:    InnerQueue,
+		Exporter:      Exporter,
+		LockService:   lock.NewDBLockService(MetaDB),
+		DomainService: domain.DefaultDomainService,
 	}
+	return svc
 }
 
 // SendExecutionEvents 发送event

@@ -179,7 +179,7 @@ func (e *Execution) GetInput() (interface{}, error) {
 		return nil, err
 	}
 
-	fullurl := e.ExecutionService.domainService.QueryExecutionURL(e.Data.UUID)
+	fullurl := e.ExecutionService.DomainService.QueryExecutionURL(e.Data.UUID)
 
 	var info = ExecutionInfo{
 		UUID: e.Data.UUID,
@@ -201,7 +201,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 	var dbstepmap = map[string]*po.Step{}
 
 	// 查询数据
-	tx := e.ExecutionService.metadb.DB()
+	tx := e.ExecutionService.MetaDB.DB()
 	err = tx.Where(po.Step{ExecutionID: e.Data.ID}).Find(&dbsteps).Error
 	if err != nil {
 		return bone, err
@@ -247,7 +247,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		}
 		StateMap[dp.ID] = newstate
 		// 如果是parallel 或者map 节点， 记录下来
-		if dp.Type == grammar.StateType.Map || dp.Type == grammar.StateType.Parallel {
+		if dp.Type == string(states.StateTypes.Map) || dp.Type == string(states.StateTypes.Parallel) {
 			levelconnector = append(levelconnector, dp)
 		}
 	}
@@ -367,8 +367,8 @@ func (e *Execution) ProcessInit() error {
 
 	insmresp, err := e.InsertStateMachine(&sm.StateMachineBody, InsertStateMachineOption{
 		StartDeindex: -1,
-		StartDepth:   grammar.StartDepth,
-		StartGroupID: grammar.StartGroupID,
+		StartDepth:   states.StartDepth,
+		StartGroupID: states.StartGroupID,
 	}, tx)
 	if err != nil {
 		return err

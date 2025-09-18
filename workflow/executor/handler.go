@@ -7,10 +7,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
 	"strings"
 	"time"
 
+	"github.com/dolthub/vitess/go/vt/log"
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
@@ -18,7 +20,6 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"gorm.io/gorm"
-	"trpc.group/trpc-go/tnet/log"
 )
 
 // StepErrorProcess state 执行报错时候的处理方式
@@ -33,7 +34,7 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 
 	// 如果是状态异常，忽略消息
 	if errors.Is(catcherr, vo.ErrorStepStatus) {
-		log.Errorf(fmt.Sprintln(err, msg))
+		slog.Error(fmt.Sprintln(err, msg))
 		return nil
 	}
 
@@ -144,7 +145,6 @@ func (svc *executionService) ExecutionErrorProcess(catcherr error, execution_id 
 		Data:        EventContent_ExecutionFailed{Error: "", Cause: catcherr.Error()},
 	}
 	svc.SendExecutionEvents(event1)
-
 	return nil
 }
 

@@ -41,6 +41,17 @@ func (s *BaseState) GetType() string {
 	return s.Type
 }
 
+func (s *BaseState) IsEnd() bool {
+	return s.End
+}
+
+func (s *BaseState) GetNext() []string {
+	if s.Next == "" {
+		return []string{}
+	}
+	return []string{s.Next}
+}
+
 // Validate ...
 func (s *BaseState) Validate() error {
 

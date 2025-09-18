@@ -12,6 +12,8 @@ type State interface {
 	SetName(name string)
 	GetType() string
 	GetBone() StateBone
+	IsEnd() bool
+	GetNext() []string
 	GetBaseState() *BaseState
 }
 
