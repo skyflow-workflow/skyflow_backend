@@ -26,8 +26,11 @@ type SubGroupState struct {
 
 // StateMachineBody statemachine 的body 定义
 type StateMachineBody struct {
-	StartAt string
-	States  map[string]State
+	StartAt       string
+	States        map[string]interface{} `mapstructure:"States" validate:"required,gt=0"`
+	_States       map[string]State
+	_Depth        int
+	_NewStateFunc func(data map[string]interface{}, depth int) (State, error)
 }
 
 // NewStateMachineBodyFromMap Parse data to StateMachine
@@ -47,6 +50,19 @@ func NewStateMachineBodyFromMap(data map[string]interface{}, depth int) (smb Sta
 	return
 }
 
+func NewStateMachineBody(depth int) StateMachineBody {
+	return StateMachineBody{
+		States:        map[string]interface{}{},
+		_States:       []State{},
+		_Depth:        depth,
+		_NewStateFunc: NewStateFromMap,
+		_Bone: StateMachineBone{
+			StartAt: "",
+			States:  map[string]StateBone{},
+		},
+	}
+}
+
 func (s *StateMachineBody) SetStartAt(name string) {
 	s.StartAt = name
 }
@@ -56,7 +72,7 @@ func (s *StateMachineBody) GetBone() StateMachineBone {
 		StartAt: s.StartAt,
 		States:  make(map[string]StateBone),
 	}
-	for name, state := range s.States {
+	for name, state := range s._States {
 		bone.States[name] = state.GetBone()
 	}
 	return bone
@@ -71,7 +87,7 @@ func (s *StateMachineBody) Validate() error {
 			StateMachineFieldNames.StartAt, s.StartAt)
 	}
 	// verify all nodes next in state valid
-	for statename, statebone := range s.States {
+	for statename, statebone := range s._States {
 		for _, next := range statebone.GetBone().Next {
 			if _, ok := s.States[next]; !ok {
 				return fmt.Errorf(
@@ -83,7 +99,7 @@ func (s *StateMachineBody) Validate() error {
 	}
 
 	hasEnd := false
-	for _, state := range s.States {
+	for _, state := range s._States {
 		if state.GetBone().End {
 			hasEnd = true
 			break
@@ -140,26 +156,26 @@ func (smb *StateMachineBody) Init() (err error) {
 	// verify statemachine
 	// 验证startat 在map中
 
-	var statebonesmap = map[string]int{}
-	for _, s := range smb.States {
-		statebonesmap[s.GetName()] = 0
+	var stateBonesMap = map[string]int{}
+	for _, s := range smb._States {
+		stateBonesMap[s.GetName()] = 0
 	}
 
-	if _, ok := statebonesmap[smb.StartAt]; !ok {
+	if _, ok := stateBonesMap[smb.StartAt]; !ok {
 		err = fmt.Errorf("field 'StartAt' State '%s' not  found", smb.StartAt)
 		return
 	}
 	// 验证所有节点的next 在state 中
-	for _, state := range smb.States {
+	for _, state := range smb._States {
 		for _, next := range state.GetBone().Next {
-			if _, ok := statebonesmap[next]; !ok {
+			if _, ok := stateBonesMap[next]; !ok {
 				return fmt.Errorf("state [ %s ] Next '%s' not found in statemachine", state.GetName(), next)
 			}
 		}
 	}
 
 	end := false
-	for _, state := range smb.States {
+	for _, state := range smb._States {
 		if state.IsEnd() {
 			end = true
 			break
@@ -179,67 +195,65 @@ func (smb *StateMachineBody) AddState(newstate State) {
 }
 
 // GetGroupStates 生成状态机中所有的state的group信息，并且拉平
-func (smb *StateMachineBody) GetGroupStates() ([]StateMachineGroupState, error) {
+func (smb *StateMachineBody) GetGroupStates(startGroupID int) ([]StateMachineGroupState, error) {
 	var err error
 	var smgss = []StateMachineGroupState{}
-	// var startdepth = StartDepth
-	var GGroupID = StartGroupID
+	// global group id 全局的group id
+	var GlobalGroupID = startGroupID
 
 	// type Process func(sm *StateMachine, groupID int, depth int) error
-	type Process func(sm *StateGroup, groupID int) error
+	type Process func(sm *StateMachineBody, groupId int) error
 	var process Process
 
-	process = func(sm *StateGroup, groupID int) error {
+	process = func(smb *StateMachineBody, groupID int) error {
 
-		for idx, state := range sm.States {
-			name := state.GetName()
+		var idx = 0
+		for name, state := range smb._States {
+			idx = idx + 1
 			var subgroup *SubGroupState
-			stype := state.GetType()
-			if stype == string(StateTypes.Parallel) {
-				ps, ok := state.(*ParallelState)
+			sType := state.GetType()
+			if sType == string(StateTypes.Parallel) {
+				ps, ok := state.(*Parallel)
 				if !ok {
 					err = fmt.Errorf("transform state '%s' to  'Parallel' failed", name)
 					return err
 				}
-				// 深度+1, deprecated, 深度计算在初始化的时候就算了
-				// var newdepth = depth + 1
-				//
-				GGroupID = GGroupID + 1
+				GlobalGroupID = GlobalGroupID + 1
 				//SubGroupID  子组的GroupID
-				SubGroupID := GGroupID
+				SubGroupID := GlobalGroupID
 
-				for idx2, branchsm := range ps._Branches {
+				for idx2, branchSmb := range ps._Branches {
 					// 每次都是新的group
-					// newGrouID 每个组内的group id
-					GGroupID = GGroupID + 1
-					subgrouID := GGroupID
+					// newGroupID 每个组内的group id
+					GlobalGroupID = GlobalGroupID + 1
+					subgroupId := GlobalGroupID
 
-					err = process(branchsm, subgrouID)
+					err = process(branchSmb, subgroupId)
 					if err != nil {
 						return err
 					}
 
-					smstate := StateMachineGroupState{
+					smState := StateMachineGroupState{
 						GroupID:    SubGroupID,
 						GroupIndex: idx2,
-						Depth:      branchsm._Depth,
-						Name:       branchsm.Name,
-						State:      branchsm.BaseState,
+						Depth:      branchSmb._Depth,
+						Name:       branchSmb.Name,
+						State:      branchSmb.BaseState,
 						SubGroup: &SubGroupState{
-							SubGroupID:    subgrouID,
-							SubStartAt:    branchsm.StartAt,
+							SubGroupID:    subgroupId,
+							SubStartAt:    branchSmb.StartAt,
 							MasterGroupID: groupID,
 							MasterName:    name,
 						},
 					}
-					smgss = append(smgss, smstate)
+					smgss = append(smgss, smState)
 
 				}
 			}
 			newsms := StateMachineGroupState{
 				GroupID:    groupID,
 				GroupIndex: idx,
-				Depth:      sm._Depth,
+				Depth:      smb._Depth,
 				Name:       name,
 				State:      state,
 				SubGroup:   subgroup,
@@ -248,9 +262,8 @@ func (smb *StateMachineBody) GetGroupStates() ([]StateMachineGroupState, error) 
 		}
 		return nil
 	}
-	outersg := &StateGroup{
-		StateMachineBody: *smb,
-	}
-	err = process(outersg, GGroupID)
+
+	firstSmb := smb
+	err = process(firstSmb, GlobalGroupID)
 	return smgss, err
 }

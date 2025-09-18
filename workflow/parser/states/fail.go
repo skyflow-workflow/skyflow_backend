@@ -18,7 +18,7 @@ type FailData struct {
 	Error string `json:"error"`
 }
 
-// JSONString fail data string sealize
+// JSONString fail data string serialization
 func (fd FailData) String() string {
 	jsonstr, _ := ToString(fd)
 	return jsonstr

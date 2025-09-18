@@ -11,11 +11,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"gopkg.mihoyo.com/plat/cloudflow/pkg/jsonpath"
-	"gopkg.mihoyo.com/plat/cloudflow/workflow/quota"
-	"gopkg.mihoyo.com/plat/cloudflow/workflow/vo"
-
 	"github.com/mohae/deepcopy"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
 //  Map Sate Parser Here
@@ -56,16 +53,17 @@ import (
 // MapState Map State Struct
 // 新增字段ItemResultPath，用来将Item 放置到Input中去的路径
 type MapState struct {
-	*BaseState     `mapstructure:",squash"`
+	*BaseState `mapstructure:",squash"`
+	*MapBody   `mapstructure:",squash"`
+}
+
+type MapBody struct {
 	ItemsPath      string `mapstructure:"ItemsPath" validate:"required,gt=0,startswith=$"`
 	ItemResultPath string `mapstructure:"ItemResultPath" validate:"gte=0"`
 	MaxConcurrency int    `mapstructure:"MaxConcurrency" validate:"gte=0"`
 	//FailContinue 一条分支执行结束后，是否自动启动新分支
-	FailContinue   bool                   `mapstructure:"FailContinue" `
-	ItemProcessor  map[string]interface{} `mapstructure:"ItemProcessor" validate:"required,gt=0"`
-	_ItemProcessor *StateGroup
-	_ItemsPath     *jsonpath.Compiled
-	_Depth         int
+	FailContinue  bool                   `mapstructure:"FailContinue" `
+	ItemProcessor map[string]interface{} `mapstructure:"ItemProcessor" validate:"required,gt=0"`
 }
 
 // NewMapStateFromString New Map Struct
@@ -103,7 +101,7 @@ func NewMapStateFromMap(data map[string]interface{}, depth int) (*MapState, erro
 	return state, err
 }
 
-// InitByMap Inititalize Parser Map State Content
+// InitByMap Initialize Parser Map State Content
 func (s *MapState) InitByMap(data map[string]interface{}) error {
 	var err error
 

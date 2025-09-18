@@ -1,7 +1,6 @@
 package states
 
 import (
-	"fmt"
 	"testing"
 
 	"gopkg.in/go-playground/assert.v1"
@@ -10,44 +9,48 @@ import (
 func TestParseFailState(t *testing.T) {
 
 	var testcases = []struct {
-		template  string
-		wantError bool
+		state    *Fail
+		faildata FailData
 	}{
 		{
-			template: `{
-				"Type":"Fail"
-				}`,
-			wantError: false,
+			state: &Fail{
+				BaseState: &BaseState{
+					Name: "fail1",
+					Type: "Fail",
+					Next: "end",
+				},
+				FailBody: &FailBody{
+					Abort: true,
+					Cause: "test cause1",
+					Error: "test error1",
+				},
+			},
+			faildata: FailData{
+				Cause: "test cause1",
+				Error: "test error2",
+			},
 		},
 		{
-			template: `{
-				"Type":"Fail",
-				"Error": "这个错误我处理不了",
-				"Cause": "这个代码bug了"
-				}`,
-			wantError: false,
-		},
-		{
-			template: `{
-				"Type":"Fail",
-				"Next":"X"
-				}`,
-			wantError: true,
+			state: &Fail{
+				BaseState: &BaseState{
+					Name: "fail2",
+					Type: "Fail",
+					Next: "end",
+				},
+				FailBody: &FailBody{
+					Abort: true,
+					Cause: "test cause2",
+					Error: "test error2",
+				},
+			},
+			faildata: FailData{
+				Cause: "test cause2",
+				Error: "test error2",
+			},
 		},
 	}
 
-	for idx, tt := range testcases {
-
-		fmt.Println("index :", idx)
-		state, err := NewFailStateFromString(tt.template)
-		fmt.Println(err)
-		fmt.Println(state)
-		assert.Equal(t, tt.wantError, err != nil)
-		if err == nil {
-			data := state.GetFailData()
-			fmt.Println(data)
-			bone := state.GetBone()
-			fmt.Println(bone)
-		}
+	for _, tt := range testcases {
+		assert.Equal(t, tt.state.GetFailData(), tt.faildata)
 	}
 }

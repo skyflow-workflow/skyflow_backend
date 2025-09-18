@@ -54,3 +54,51 @@ func TestParseParallelState(t *testing.T) {
 	fmt.Println(string(bonestr))
 
 }
+
+// NewParallelStateFromString NewParallelStateFromString
+func NewParallelStateFromString(definition string, depth int) (*Parallel, error) {
+
+	state, err := NewGenericGroupStateFromString(definition, depth, NewParallelStateFromMap)
+	return state, err
+}
+
+// NewParallelStateFromMap NewParallelStateFromMap
+func NewParallelStateFromMap(data map[string]interface{}, depth int) (*Parallel, error) {
+
+	var err error
+	state := &Parallel{
+		_Branches: []*StateGroup{},
+		_Depth:    depth,
+	}
+
+	// basestate
+	bs, err := NewBaseStateFromMap(data)
+	if err != nil {
+		return state, err
+	}
+	state.BaseState = bs
+
+	err = state.InitByMap(data)
+	return state, err
+}
+
+// InitByMap Inititalize TaskState Content
+func (s *Parallel) InitByMap(data map[string]interface{}) error {
+	var err error
+
+	// 初始化自身
+	err = MapStructDecode(data, s)
+	if err != nil {
+		return err
+	}
+
+	err = myvalidate.Struct(s)
+	if err != nil {
+		return err
+	}
+	err = s.Init()
+	if err != nil {
+		return err
+	}
+	return err
+}

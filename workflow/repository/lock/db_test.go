@@ -62,7 +62,7 @@ func TestExecutionLock(t *testing.T) {
 	assert.Equal(t, err, nil)
 
 	wg := sync.WaitGroup{}
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		wg.Add(1)
 		go AcquireLock(exeShadeID, fmt.Sprintf("lockid-%d", i), &wg)
 	}
