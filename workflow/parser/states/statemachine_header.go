@@ -67,22 +67,27 @@ func NewDefautStateMachineHeader() StateMachineHeader {
 
 // NewStateMachineHeaderFromMap NewStateMachineHeaderFromMap
 func NewStateMachineHeaderFromMap(data map[string]interface{}) (*StateMachineHeader, error) {
+	var err error
 	header := NewDefautStateMachineHeader()
-	err := (&header).InitByMap(data)
-	return &header, err
+	headerptr := &header
+	err = InitStateMachineHeaderByMap(headerptr, data)
+	if err != nil {
+		return nil, err
+	}
+	return headerptr, err
 }
 
 // InitByMap 通过Map类型初始化
-func (h *StateMachineHeader) InitByMap(data map[string]interface{}) error {
+func InitStateMachineHeaderByMap(header *StateMachineHeader, data map[string]interface{}) error {
 
 	var err error
 
 	// 解析header
-	err = mapstructure.Decode(data, h)
+	err = mapstructure.Decode(data, header)
 	if err != nil {
 		return err
 	}
-	err = h.Init()
+	err = header.Init()
 	if err != nil {
 		return err
 	}

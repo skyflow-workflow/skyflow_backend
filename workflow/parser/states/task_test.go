@@ -6,7 +6,68 @@ import (
 	"github.com/go-playground/assert/v2"
 )
 
-func TestTaskGetNextState(t *testing.T) {
+func TestTaskGetBone(t *testing.T) {
+
+	var testcases = []struct {
+		task    *Task
+		except  StateBone
+		wantErr bool
+	}{
+		{
+			task: &Task{
+				BaseState: &BaseState{
+					Type: "Task",
+					Next: "NextState",
+				},
+				TaskBody: &TaskBody{
+					Catch: []TaskCatchNode{
+						{
+							Next: "CatchNextState",
+						},
+						{
+							Next: "CatchNextState",
+						},
+					},
+				},
+			},
+			except: StateBone{
+				BaseBone: BaseBone{
+					Type: "Task",
+					Next: []string{"NextState", "CatchNextState", "CatchNextState"},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			task: &Task{
+				BaseState: &BaseState{
+					Type: "Task",
+					Next: "NextState",
+				},
+				TaskBody: &TaskBody{
+					Catch: []TaskCatchNode{
+						{
+							Next: "CatchNextState",
+						},
+						{
+							Next: "CatchNextState",
+						},
+					},
+				},
+			},
+			except: StateBone{
+				BaseBone: BaseBone{
+					Type: "Task",
+					Next: []string{"NextState", "CatchNextState", "CatchNextState"},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range testcases {
+		actualbone := tt.task.GetBone()
+		assert.Equal(t, actualbone, tt.except)
+	}
 
 }
 

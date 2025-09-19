@@ -4,3 +4,7 @@ package states
 type Suspend struct {
 	*BaseState
 }
+
+func (s *Suspend) GetBaseState() *BaseState {
+	return s.BaseState
+}

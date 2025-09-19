@@ -26,6 +26,56 @@ type BaseState struct {
 	Catch           any    `json:"Catch,omitempty"`
 }
 
+func NewDefautBaseState() *BaseState {
+
+	bs := &BaseState{
+		InputPath:  "",
+		OutputPath: "$",
+		Next:       "",
+		ResultPath: "",
+		Parameters: nil,
+		// default MaxExecuteTimes = 1000 suitable for most cases
+		MaxExecuteTimes: 1000,
+		End:             false,
+	}
+	return bs
+}
+
+// NewBaseStateFromMap NewState from MapData
+func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
+
+	bs := NewDefautBaseState()
+	err := InitBaseState(bs, data)
+	if err != nil {
+		return nil, err
+	}
+	err = bs.Init()
+	if err != nil {
+		return nil, err
+	}
+	return bs, err
+}
+
+// NewBaseStateFromString  New State From  String
+func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
+	var data = map[string]interface{}{}
+	err = myJson.Unmarshal([]byte(definition), &data)
+	if err != nil {
+		return
+	}
+	bs, err = NewBaseStateFromMap(data)
+	return
+}
+
+func InitBaseState(bs *BaseState, data map[string]interface{}) error {
+
+	err := MapStructDecode(data, bs)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
 // GetName ...
 func (s *BaseState) GetName() string {
 	return s.Name

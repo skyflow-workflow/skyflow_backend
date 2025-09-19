@@ -26,40 +26,82 @@ type SubGroupState struct {
 
 // StateMachineBody statemachine 的body 定义
 type StateMachineBody struct {
-	StartAt       string
+	StartAt       string                 `mapstructure:"StartAt" validate:"required,gt=0"`
 	States        map[string]interface{} `mapstructure:"States" validate:"required,gt=0"`
 	_States       map[string]State
 	_Depth        int
-	_NewStateFunc func(data map[string]interface{}, depth int) (State, error)
+	_NewStateFunc func(data map[string]any, depth int) (State, error)
+}
+
+func (smb *StateMachineBody) SetNewStateFunc(f func(data map[string]any, depth int) (State, error)) {
+	smb._NewStateFunc = f
 }
 
 // NewStateMachineBodyFromMap Parse data to StateMachine
-func NewStateMachineBodyFromMap(data map[string]interface{}, depth int) (smb StateMachineBody, err error) {
+func NewStateMachineBodyFromMap(data map[string]interface{}, depth int) (smb *StateMachineBody, err error) {
 
 	// 状态机深度不能超过最大深度
 	if depth > MaxDepth {
 		err = fmt.Errorf("statemachine depth  reach MaxDepth [ %d ] ", MaxDepth)
 		return
 	}
-	smb = NewStateMachineBody(depth)
+	newsmb := NewDefaultStateMachineBody(depth)
+	smb = &newsmb
 
-	err = smb.InitByMap(data)
+	err = InitStateMachineBodyByMap(smb, data)
 	if err != nil {
 		return
 	}
 	return
 }
 
-func NewStateMachineBody(depth int) StateMachineBody {
+// InitByMap Use map to init StateMachineBody content
+func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]interface{}) (err error) {
+
+	// 解析验证 剩余字段states 字段
+	err = mapstructure.Decode(data, smb)
+	if err != nil {
+		return
+	}
+
+	err = myvalidate.Struct(smb)
+	if err != nil {
+		return
+	}
+
+	for name, stateObj := range smb.States {
+		if name == "" {
+			err = fmt.Errorf(" state name should not be '' ")
+			return
+		}
+		content, ok := stateObj.(map[string]interface{})
+		if !ok {
+			err = fmt.Errorf(" state [ %s ] content should be map  ", name)
+			return
+		}
+		var newstate State
+		newstate, err = smb._NewStateFunc(content, smb._Depth)
+		if err != nil {
+			err = fmt.Errorf("state [ %s ] failed: %w", name, err)
+			return
+		}
+		newstate.SetName(name)
+
+		smb.AddState(newstate)
+	}
+	err = smb.Init()
+	if err != nil {
+		return
+	}
+	return nil
+}
+
+func NewDefaultStateMachineBody(depth int) StateMachineBody {
 	return StateMachineBody{
 		States:        map[string]interface{}{},
-		_States:       []State{},
+		_States:       map[string]State{},
 		_Depth:        depth,
 		_NewStateFunc: NewStateFromMap,
-		_Bone: StateMachineBone{
-			StartAt: "",
-			States:  map[string]StateBone{},
-		},
 	}
 }
 
@@ -111,46 +153,6 @@ func (s *StateMachineBody) Validate() error {
 	return nil
 }
 
-// InitByMap Use map to init StateMachineBody content
-func (smb *StateMachineBody) InitByMap(data map[string]interface{}) (err error) {
-
-	// 解析验证 剩余字段states 字段
-	err = mapstructure.Decode(data, smb)
-	if err != nil {
-		return
-	}
-
-	err = myvalidate.Struct(smb)
-	if err != nil {
-		return
-	}
-
-	for name, stateObj := range smb.States {
-		if name == "" {
-			err = fmt.Errorf(" state name should not be '' ")
-			return
-		}
-		content, ok := stateObj.(map[string]interface{})
-		if !ok {
-			err = fmt.Errorf(" state [ %s ] content should be map  ", name)
-			return
-		}
-		var newstate State
-		newstate, err = smb._NewStateFunc(content, smb._Depth)
-		if err != nil {
-			err = fmt.Errorf("state [ %s ] failed: %w", name, err)
-			return
-		}
-		newstate.SetName(name)
-
-		smb.AddState(newstate)
-	}
-	err = smb.Init()
-	if err != nil {
-		return
-	}
-	return nil
-}
 func (smb *StateMachineBody) Init() (err error) {
 
 	// verify statemachine
@@ -211,45 +213,6 @@ func (smb *StateMachineBody) GetGroupStates(startGroupID int) ([]StateMachineGro
 		for name, state := range smb._States {
 			idx = idx + 1
 			var subgroup *SubGroupState
-			sType := state.GetType()
-			if sType == string(StateTypes.Parallel) {
-				ps, ok := state.(*Parallel)
-				if !ok {
-					err = fmt.Errorf("transform state '%s' to  'Parallel' failed", name)
-					return err
-				}
-				GlobalGroupID = GlobalGroupID + 1
-				//SubGroupID  子组的GroupID
-				SubGroupID := GlobalGroupID
-
-				for idx2, branchSmb := range ps._Branches {
-					// 每次都是新的group
-					// newGroupID 每个组内的group id
-					GlobalGroupID = GlobalGroupID + 1
-					subgroupId := GlobalGroupID
-
-					err = process(branchSmb, subgroupId)
-					if err != nil {
-						return err
-					}
-
-					smState := StateMachineGroupState{
-						GroupID:    SubGroupID,
-						GroupIndex: idx2,
-						Depth:      branchSmb._Depth,
-						Name:       branchSmb.Name,
-						State:      branchSmb.BaseState,
-						SubGroup: &SubGroupState{
-							SubGroupID:    subgroupId,
-							SubStartAt:    branchSmb.StartAt,
-							MasterGroupID: groupID,
-							MasterName:    name,
-						},
-					}
-					smgss = append(smgss, smState)
-
-				}
-			}
 			newsms := StateMachineGroupState{
 				GroupID:    groupID,
 				GroupIndex: idx,

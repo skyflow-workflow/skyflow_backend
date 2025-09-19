@@ -6,63 +6,55 @@ type StateMachine struct {
 	*StateMachineBody
 }
 
-func NewStateMachine() *StateMachine {
-	sm := StateMachine{
-		StateMachineHeader: NewDefautStateMachineHeader(),
-		StateMachineBody:   NewStateMachineBody(StartDepth),
+func NewStateMachineFromString(data string) (*StateMachine, error) {
+
+	mapdata, err := ToMap(data)
+	if err != nil {
+		return nil, err
 	}
-	return &sm
+	sm, err := NewStateMachineFromMap(mapdata)
+	if err != nil {
+		return nil, err
+	}
+	return sm, err
 }
 
-// InitByMap Inititalize 初始化一个StateMachine 实例
-// jsonMap 一个map[string]interface[] 初始化数据源
-// NOCC:golint/fnsize("设计如此")
-func (sm *StateMachine) InitByMap(data map[string]interface{}) (err error) {
+func NewStateMachineFromMap(data map[string]interface{}) (*StateMachine, error) {
 
-	defer func() {
-		if p := recover(); p != nil {
-			err = p.(error)
-		}
-	}()
-
-	err = sm.StateMachineHeader.InitByMap(data)
+	var err error
+	sm := &StateMachine{}
+	header, err := NewStateMachineHeaderFromMap(data)
 	if err != nil {
-		return
+		return nil, err
 	}
-	err = sm.StateMachineBody.InitByMap(data)
+	body, err := NewStateMachineBodyFromMap(data, StartDepth)
 	if err != nil {
-		return
+		return nil, err
 	}
-
+	sm.StateMachineHeader = header
+	sm.StateMachineBody = body
 	err = sm.Init()
 	if err != nil {
-		return
+		return nil, err
 	}
-
-	return err
+	return sm, err
 }
 
 func (sm *StateMachine) Init() (err error) {
-
-	return sm.StateMachineBody.Init()
+	err = sm.StateMachineHeader.Init()
+	if err != nil {
+		return err
+	}
+	err = sm.StateMachineBody.Init()
+	if err != nil {
+		return err
+	}
+	return
 }
 
 // GetInput  GetInput
-func (sm StateMachine) GetInput(input interface{}, executioninfo interface{}) (interface{}, error) {
+func (sm StateMachine) GetInput(input any, executioninfo any) (any, error) {
 	return sm.StateMachineHeader.GetInput(input, executioninfo)
-}
-
-func NewStateMachineBody(depth int) StateMachineBody {
-	return StateMachineBody{
-		States:        map[string]interface{}{},
-		_States:       []State{},
-		_Depth:        depth,
-		_NewStateFunc: NewStateFromMap,
-		_Bone: StateMachineBone{
-			StartAt: "",
-			States:  map[string]StateBone{},
-		},
-	}
 }
 
 // Validate ...
@@ -78,5 +70,14 @@ func ParserStateMachine(definition string) error {
 
 // GetBone  GetBone
 func (sm StateMachine) GetBone() StateMachineBone {
-	return sm._Bone
+	bone := sm.StateMachineBody.GetBone()
+	return bone
+}
+
+func (sm *StateMachine) GetGroupStates() ([]StateMachineGroupState, error) {
+	groupstates, err := sm.StateMachineBody.GetGroupStates(StartGroupID)
+	if err != nil {
+		return nil, err
+	}
+	return groupstates, nil
 }

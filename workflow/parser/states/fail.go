@@ -32,3 +32,7 @@ func (s *Fail) GetFailData() FailData {
 	}
 	return fd
 }
+
+func (s *Fail) GetBaseState() *BaseState {
+	return s.BaseState
+}

@@ -9,3 +9,7 @@ type Succeed struct {
 func (s *Succeed) IsEnd() bool {
 	return true
 }
+
+func (s *Succeed) GetBaseState() *BaseState {
+	return s.BaseState
+}

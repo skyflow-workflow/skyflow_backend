@@ -24,3 +24,5 @@ tests
 trpc_go.dev.yaml
 
 .logs
+
+.test

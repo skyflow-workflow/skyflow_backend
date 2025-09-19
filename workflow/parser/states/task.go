@@ -13,9 +13,9 @@ type TaskBody struct {
 	// if true, the task will block the workflow execution until the manual call to resume the task
 	// if false, the task will be executed automatically
 	Block            bool   `mapstructure:"Block"`
-	Resource         string `validate:"required,gt=0"`
-	TimeoutSeconds   uint   `validate:"gte=0"`
-	HeartbeatSeconds uint   `validate:"gte=0"`
+	Resource         string `mapstructure:"Resource" validate:"required,gt=0"`
+	TimeoutSeconds   uint   `mapstructure:"Resource" validate:"gte=0"`
+	HeartbeatSeconds uint   `mapstructure:"Resource" validate:"gte=0"`
 	// Retry for decode
 	Retry []TaskRetryNode `mapstructure:"Retry"`
 	// Catch for decode
@@ -81,6 +81,23 @@ type TaskTimeout struct {
 	HeartBeatTimeout time.Duration
 }
 
+func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
+
+	var err error
+	taskbody := DefaultTaskBody
+	// mapping data to taskbody
+	err = MapStructDecode(data, &taskbody)
+	if err != nil {
+		return nil, err
+	}
+	// validate taskbody
+	err = taskbody.Validate()
+	if err != nil {
+		return nil, err
+	}
+	return &taskbody, err
+}
+
 // Validate ...
 func (body *TaskBody) Validate() error {
 	var err error
@@ -97,7 +114,7 @@ func (body *TaskBody) Validate() error {
 
 // Init ...
 func (body *TaskBody) Init() error {
-	return body.Validate()
+	return nil
 }
 
 // Task ...
@@ -132,10 +149,6 @@ func (t *Task) Validate() error {
 // GetBone get bone
 func (t *Task) GetBone() StateBone {
 	bone := t.BaseState.GetBone()
-
-	if len(t.TaskBody.Retry) == 0 {
-		return bone
-	}
 	for _, catch := range t.TaskBody.Catch {
 		bone.Next = append(bone.Next, catch.Next)
 	}
