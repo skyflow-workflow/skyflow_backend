@@ -26,8 +26,8 @@ type SubGroupState struct {
 
 // StateMachineBody statemachine 的body 定义
 type StateMachineBody struct {
-	StartAt       string                 `mapstructure:"StartAt" validate:"required,gt=0"`
-	States        map[string]interface{} `mapstructure:"States" validate:"required,gt=0"`
+	StartAt       string         `mapstructure:"StartAt" validate:"required,gt=0"`
+	States        map[string]any `mapstructure:"States" validate:"required,gt=0"`
 	_States       map[string]State
 	_Depth        int
 	_NewStateFunc func(data map[string]any, depth int) (State, error)
@@ -37,8 +37,21 @@ func (smb *StateMachineBody) SetNewStateFunc(f func(data map[string]any, depth i
 	smb._NewStateFunc = f
 }
 
+func NewStateMachineBodyFromString(data string, depth int) (smb *StateMachineBody, err error) {
+
+	datamap, err := ToMap(data)
+	if err != nil {
+		return
+	}
+	smb, err = NewStateMachineBodyFromMap(datamap, depth)
+	if err != nil {
+		return
+	}
+	return
+}
+
 // NewStateMachineBodyFromMap Parse data to StateMachine
-func NewStateMachineBodyFromMap(data map[string]interface{}, depth int) (smb *StateMachineBody, err error) {
+func NewStateMachineBodyFromMap(data map[string]any, depth int) (smb *StateMachineBody, err error) {
 
 	// 状态机深度不能超过最大深度
 	if depth > MaxDepth {
@@ -56,7 +69,7 @@ func NewStateMachineBodyFromMap(data map[string]interface{}, depth int) (smb *St
 }
 
 // InitByMap Use map to init StateMachineBody content
-func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]interface{}) (err error) {
+func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]any) (err error) {
 
 	// 解析验证 剩余字段states 字段
 	err = mapstructure.Decode(data, smb)
@@ -74,7 +87,7 @@ func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]interface{
 			err = fmt.Errorf(" state name should not be '' ")
 			return
 		}
-		content, ok := stateObj.(map[string]interface{})
+		content, ok := stateObj.(map[string]any)
 		if !ok {
 			err = fmt.Errorf(" state [ %s ] content should be map  ", name)
 			return
@@ -98,7 +111,7 @@ func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]interface{
 
 func NewDefaultStateMachineBody(depth int) StateMachineBody {
 	return StateMachineBody{
-		States:        map[string]interface{}{},
+		States:        map[string]any{},
 		_States:       map[string]State{},
 		_Depth:        depth,
 		_NewStateFunc: NewStateFromMap,

@@ -75,10 +75,10 @@ var DefaultTaskBody = TaskBody{
 	Catch: []TaskCatchNode{},
 }
 
-// TaskTimeout Describe Task Timeout demand
-type TaskTimeout struct {
-	TaskTimeout      time.Duration
-	HeartBeatTimeout time.Duration
+// NewTaskStateFromString  Create New Wait State
+func NewTaskStateFromString(definition string) (state *TaskState, err error) {
+	state, err = NewGenericStateFromString(definition, NewTaskStateFromMap)
+	return
 }
 
 func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
@@ -96,6 +96,80 @@ func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
 		return nil, err
 	}
 	return &taskbody, err
+}
+
+// NewTaskStateFromMap NewTaskStateFromMap
+func NewTaskStateFromMap(basestate *BaseState, data map[string]interface{}) (state *Task, err error) {
+
+	defaltstate := DefaultTask
+	state = &defaltstate
+	// basestate
+	bs, err := NewBaseStateFromMap(data)
+	if err != nil {
+		return
+	}
+	state.BaseState = bs
+
+	err = state.InitByMap(data)
+	return
+}
+
+// TaskTimeout Describe Task Timeout demand
+type TaskTimeout struct {
+	TaskTimeout      time.Time
+	HeartBeatTimeout time.Time
+}
+
+// InitByMap Inititalize TaskState Content
+func (s *TaskState) InitByMap(data map[string]interface{}) error {
+
+	// 数据初始化
+	var err error
+	// 初始化自身
+	err = MapStructDecode(data, s)
+	if err != nil {
+		return err
+	}
+	err = myvalidate.Struct(s)
+	if err != nil {
+		return err
+	}
+	// Retry
+
+	if len(s.Retry) > 0 {
+		// retry 不为空
+		var retrynodes []RetryNode
+		inputretrynodes := data[Fields.Retry].([]interface{})
+		for _, retrynodedata := range inputretrynodes {
+			node := DefaultRetryNode
+			err = MapStructDecode(retrynodedata, &node)
+			if err != nil {
+				return err
+			}
+			retrynodes = append(retrynodes, node)
+		}
+		s.Retry = retrynodes
+	}
+
+	// Catch
+	if len(s.Catch) > 0 {
+		// retry 不为空
+		var catchnodes []CatchNode
+		inputcatchnodes := data[Fields.Catch].([]interface{})
+		for _, catchnodedata := range inputcatchnodes {
+			node := DefaultCatchNode
+			err = MapStructDecode(catchnodedata, &node)
+			if err != nil {
+				return err
+			}
+			catchnodes = append(catchnodes, node)
+		}
+		s.Catch = catchnodes
+	}
+
+	err = s.Init()
+	return err
+
 }
 
 // Validate ...

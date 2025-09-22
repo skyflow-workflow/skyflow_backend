@@ -29,29 +29,50 @@ type NextState struct {
 	RetryIndex int           // Which Indexed Retry strategy hit
 }
 
-func NewStateFromMap(data map[string]interface{}, depth int) (State, error) {
-	var err error
-	var state State
-	switch data["Type"] {
-	case string(StateTypes.Task):
-		state = &Task{}
-	case string(StateTypes.Choice):
-		state = &Choice{}
-	case string(StateTypes.Pass):
-		state = &Pass{}
-	case string(StateTypes.Suspend):
-		state = &Suspend{}
-	case string(StateTypes.Wait):
-		state = &Wait{}
-	case string(StateTypes.Fail):
-		state = &Fail{}
-	case string(StateTypes.Succeed):
-		state = &Succeed{}
+// NewStateFromMap  NewStateFromMap
+func NewStateFromMap(data map[string]interface{}, depth int) (state State, err error) {
+
+	typeKey, ok := data[Fields.Type]
+	if !ok {
+		err = fmt.Errorf(" state lack of field [ Type ] ")
+		return state, err
+	}
+	typeKeyStr, ok := typeKey.(string)
+	if !ok {
+		err = fmt.Errorf(" field [ Type ] field is not string  ")
+		return
+	}
+	switch typeKeyStr {
+	case StateType.Task:
+		state, err = NewTaskStateFromMap(data)
+	case StateType.Choice:
+		state, err = NewChoiceStateFromMap(data)
+	case StateType.Wait:
+		state, err = NewWaitStateFromMap(data)
+	case StateType.Pass:
+		state, err = NewPassStateFromMap(data)
+	case StateType.Fail:
+		state, err = NewFailStateFromMap(data)
+	case StateType.Succeed:
+		state, err = NewSucceedStateFromMap(data)
+	case StateType.Parallel:
+		state, err = NewParallelStateFromMap(data, depth)
+	case StateType.Map:
+		state, err = NewMapStateFromMap(data, depth)
+	case StateType.StateGroup:
+		state, err = NewStateGroupFromMap(data, depth)
 	default:
-		err = fmt.Errorf("state [ %s ] type : [ %s ] not supported", data["Name"], data["Type"])
+		err = fmt.Errorf("%w : %s", vo.ErrorUnrecognizeStatemachineType, typeKeyStr)
+		return
 	}
 	if err != nil {
-		return nil, err
+		return
 	}
-	return state, nil
+	err = state.Init()
+	if err != nil {
+		err = fmt.Errorf("step '%s'  error : %w", state.GetName(), err)
+		return
+	}
+	return
+
 }

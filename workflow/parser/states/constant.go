@@ -245,8 +245,8 @@ var QueryLanguages = struct {
 }
 
 // StateMachine最大深度,防止流程图过度复杂
-// MaxDepth 最大深度， 默认为10
-var MaxDepth = 10
+// MaxDepth 最大深度， 默认为3
+var MaxDepth = 3
 
 // StartDepth 最外层的Depth ,默认为1
 var StartDepth = 1

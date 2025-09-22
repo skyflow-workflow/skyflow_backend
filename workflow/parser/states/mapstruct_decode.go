@@ -5,6 +5,7 @@ import "github.com/mitchellh/mapstructure"
 var mymapdecodeconfig = mapstructure.DecoderConfig{
 	Metadata:             nil,
 	IgnoreUntaggedFields: true,
+	TagName:              "mapstructure",
 }
 
 func MapStructDecode(input interface{}, output interface{}) error {
