@@ -1,7 +1,7 @@
 package states
 
-// Fail  失败节点
-type Fail struct {
+// FailState  失败节点
+type FailState struct {
 	*BaseState
 	*FailBody
 }
@@ -24,8 +24,63 @@ func (fd FailData) String() string {
 	return jsonstr
 }
 
+// NewFailStateFromString NewFailStateFromString
+func NewFailStateFromString(definition string) (state *FailState, err error) {
+
+	data, err := ToMap(definition)
+	if err != nil {
+		return nil, err
+	}
+	state, err = NewFailStateFromMap(data)
+	return state, err
+}
+
+// NewFailStateFromMap Create New Fail State
+func NewFailStateFromMap(data map[string]interface{}) (state *FailState, err error) {
+	// basestate
+	bs, err := NewBaseStateFromMap(data)
+	if err != nil {
+		return state, err
+	}
+	bs.End = true
+
+	body := &FailBody{}
+	err = InitFailBodyByMap(body, data)
+	if err != nil {
+		return state, err
+	}
+	state = &FailState{
+		BaseState: bs,
+		FailBody:  body,
+	}
+	return
+}
+
+func NewFailBodyFromMap(data map[string]interface{}) (*FailBody, error) {
+	var err error
+	failbody := &FailBody{}
+	err = InitFailBodyByMap(failbody, data)
+	if err != nil {
+		return nil, err
+	}
+	return failbody, nil
+}
+
+// InitByMap Inititalize Fail Content
+func InitFailBodyByMap(body *FailBody, data map[string]interface{}) error {
+	err := MapStructDecode(data, body)
+	if err != nil {
+		return err
+	}
+	err = myvalidate.Struct(body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetFailData  return fail state data
-func (s *Fail) GetFailData() FailData {
+func (s *FailState) GetFailData() FailData {
 	fd := FailData{
 		Error: s.Error,
 		Cause: s.Cause,
@@ -33,6 +88,6 @@ func (s *Fail) GetFailData() FailData {
 	return fd
 }
 
-func (s *Fail) GetBaseState() *BaseState {
+func (s *FailState) GetBaseState() *BaseState {
 	return s.BaseState
 }

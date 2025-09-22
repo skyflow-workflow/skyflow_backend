@@ -209,31 +209,57 @@ func TestParseMapStateMachine(t *testing.T) {
 
 }
 
-func TestStateMachineBone(t *testing.T) {
+func TestParseStateMachineBone(t *testing.T) {
 	var testcases = []struct {
+		name      string
 		template  string
+		bone      StateMachineBone
 		wantError bool
 	}{
 		{
+			name: "simple statemachine",
 			template: `
 			{
 				"StartAt":"P1",
 				"States":{
 					"P1":{
 						"Type":"Pass",
+						"Result":{
+							"a":1,
+							"b":2
+						},
 						"End":true
 					}
 				}
 			}
 			`,
+			bone: StateMachineBone{
+				StartAt: "P1",
+				States: map[string]StateBone{
+					"P1": {
+						BaseBone: BaseBone{
+							Type:    "Pass",
+							Name:    "P1",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+				},
+			},
+			wantError: false,
 		},
 		{
+			name: "complicated statemachine",
 			template: `{
 				"Comment": "An example of the Amazon States Language using a choice state.",
 				"StartAt": "FirstState",
 				"States": {
 				  "FirstState": {
 					"Type": "Pass",
+					"Result": {
+					  "foo": "bar"
+					},
 					"Next": "ChoiceState"
 				  },
 				  "ChoiceState": {
@@ -255,10 +281,12 @@ func TestStateMachineBone(t *testing.T) {
 				  },
 				  "FirstMatchState": {
 					"Type": "Pass",
+					"Result": {},
 					"Next": "WaitState"
 				  },
 				  "SecondMatchState": {
 					"Type": "Pass",
+					"Result": {},
 					"Next": "NextState"
 				  },
 				  "DefaultState": {
@@ -277,13 +305,83 @@ func TestStateMachineBone(t *testing.T) {
 				  }
 				}
 			  }`,
+			bone: StateMachineBone{
+				StartAt: "FirstState",
+				States: map[string]StateBone{
+					"FirstState": {
+						BaseBone: BaseBone{
+							Type:    "Pass",
+							Name:    "FirstState",
+							Next:    []string{"ChoiceState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"ChoiceState": {
+						BaseBone: BaseBone{
+							Type:    "Choice",
+							Name:    "ChoiceState",
+							Next:    []string{"FirstMatchState", "SecondMatchState", "DefaultState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"FirstMatchState": {
+						BaseBone: BaseBone{
+							Type:    "Pass",
+							Name:    "FirstMatchState",
+							Next:    []string{"WaitState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"SecondMatchState": {
+						BaseBone: BaseBone{
+							Type:    "Pass",
+							Name:    "SecondMatchState",
+							Next:    []string{"NextState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"DefaultState": {
+						BaseBone: BaseBone{
+							Type:    "Fail",
+							Name:    "DefaultState",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+					"NextState": {
+						BaseBone: BaseBone{
+							Type:    "Succeed",
+							Name:    "NextState",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+					"WaitState": {
+						BaseBone: BaseBone{
+							Type:    "Wait",
+							Name:    "WaitState",
+							Next:    []string{"NextState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+				},
+			},
 		},
 	}
 
 	for _, tt := range testcases {
-		sm, err := NewStateMachineFromString(tt.template)
-		assert.Equal(t, err, nil)
-		bone := sm.GetBone()
-		fmt.Println(bone)
+		t.Run(tt.name, func(t *testing.T) {
+			sm, err := NewStateMachineFromString(tt.template)
+			assert.Equal(t, err, nil)
+			bone := sm.GetBone()
+			assert.Equal(t, bone, tt.bone)
+		})
 	}
 }

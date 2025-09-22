@@ -11,12 +11,13 @@ import (
 func TestParseStateMachineBody(t *testing.T) {
 	var testcases = []struct {
 		name        string
-		body        string
+		definition  string
+		bone        StateMachineBone
 		expectError bool
 	}{
 		{
-			name: "正常解析状态机体的JSON",
-			body: `{
+			name: "无State内容的状态机",
+			definition: `{
 				"Comment": "An example of the Amazon States Language using a choice state.",
 				"StartAt": "FirstState",
 				"TimeoutSeconds": 10,
@@ -25,18 +26,18 @@ func TestParseStateMachineBody(t *testing.T) {
 			expectError: true,
 		},
 		{
-			name:        "空JSON",
-			body:        "{}",
+			name:        "空状态机",
+			definition:  "{}",
 			expectError: true,
 		},
 		{
 			name:        "无效的JSON格式",
-			body:        "{",
+			definition:  "{",
 			expectError: true,
 		},
 		{
 			name: "缺失必填字段",
-			body: `{
+			definition: `{
 				"Comment": "An example of the Amazon States Language using a choice state.",
 				"TimeoutSeconds": 10,
 				"ExecutionInfoPath": "$.execution_info"
@@ -44,8 +45,23 @@ func TestParseStateMachineBody(t *testing.T) {
 			expectError: true,
 		},
 		{
-			name: "测试工作流流转内容",
-			body: `{
+			name: "测试无效Next的工作流流转内容",
+			definition: `{
+				"Comment": "Invalid workflow transitions",
+				"StartAt": "FirstState",
+				"States": {
+					"FirstState": {
+						"Type": "Task",
+						"Resource": "arn:aws:states:us-east-1:123456789012:activity:HelloWorld",
+						"Next": "NonExistentState"
+					}
+				}
+			}`,
+			expectError: true,
+		},
+		{
+			name: "正常工作流流转内容",
+			definition: `{
 				"Comment": "Test workflow transitions",
 				"StartAt": "FirstState",
 				"States": {
@@ -83,33 +99,69 @@ func TestParseStateMachineBody(t *testing.T) {
 					}
 				}
 			}`,
-			expectError: false,
-		},
-		{
-			name: "测试无效的工作流流转内容",
-			body: `{
-				"Comment": "Invalid workflow transitions",
-				"StartAt": "FirstState",
-				"States": {
+			bone: StateMachineBone{
+				StartAt: "FirstState",
+				States: map[string]StateBone{
 					"FirstState": {
-						"Type": "Task",
-						"Resource": "arn:aws:states:us-east-1:123456789012:activity:HelloWorld",
-						"Next": "NonExistentState"
-					}
-				}
-			}`,
-			expectError: true,
+						BaseBone: BaseBone{
+							Type:    "Task",
+							Name:    "FirstState",
+							Next:    []string{"ChoiceState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"ChoiceState": {
+						BaseBone: BaseBone{
+							Type:    "Choice",
+							Name:    "ChoiceState",
+							Next:    []string{"FirstMatchState", "SecondMatchState", "DefaultState"},
+							End:     false,
+							Comment: "",
+						},
+					},
+					"FirstMatchState": {
+						BaseBone: BaseBone{
+							Type:    "Succeed",
+							Name:    "FirstMatchState",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+					"SecondMatchState": {
+						BaseBone: BaseBone{
+							Type:    "Succeed",
+							Name:    "SecondMatchState",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+					"DefaultState": {
+						BaseBone: BaseBone{
+							Type:    "Fail",
+							Name:    "DefaultState",
+							Next:    []string{},
+							End:     true,
+							Comment: "",
+						},
+					},
+				},
+			},
+			expectError: false,
 		},
 	}
 
-	for _, tc := range testcases {
-		t.Run(tc.name, func(t *testing.T) {
-			_, err := NewStateMachineBodyFromString(tc.body, StartDepth)
-			if tc.expectError {
+	for _, tt := range testcases {
+		t.Run(tt.name, func(t *testing.T) {
+			smbody, err := NewStateMachineBodyFromString(tt.definition, StartDepth)
+			if tt.expectError {
 				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
+				return
 			}
+			bone := smbody.GetBone()
+			assert.Equal(t, tt.bone, bone)
 		})
 	}
 }

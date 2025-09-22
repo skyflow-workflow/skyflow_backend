@@ -20,7 +20,7 @@ import (
 // Task Execution Task State
 type Task struct {
 	*ExecutionStep // 继承 ExecutionStep
-	TaskState      *states.Task
+	TaskState      *states.TaskState
 }
 
 // TaskRunningStatus  Task运营状态
@@ -107,7 +107,7 @@ func NewTaskFromData(dbStep *po.Step, executor *Executor) (*Task, error) {
 	if err != nil {
 		return nil, err
 	}
-	state, ok := baseStep.State.(*states.Task)
+	state, ok := baseStep.State.(*states.TaskState)
 	if !ok {
 		return nil, fmt.Errorf("step state is not Task type")
 	}

@@ -22,7 +22,6 @@ func NewStateMachineFromString(data string) (*StateMachine, error) {
 func NewStateMachineFromMap(data map[string]interface{}) (*StateMachine, error) {
 
 	var err error
-	sm := &StateMachine{}
 	header, err := NewStateMachineHeaderFromMap(data)
 	if err != nil {
 		return nil, err
@@ -31,25 +30,16 @@ func NewStateMachineFromMap(data map[string]interface{}) (*StateMachine, error) 
 	if err != nil {
 		return nil, err
 	}
-	sm.StateMachineHeader = header
-	sm.StateMachineBody = body
-	err = sm.Init()
-	if err != nil {
-		return nil, err
+	sm := &StateMachine{
+		StateMachineHeader: header,
+		StateMachineBody:   body,
 	}
+
 	return sm, err
 }
 
 func (sm *StateMachine) Init() (err error) {
-	err = sm.StateMachineHeader.Init()
-	if err != nil {
-		return err
-	}
-	err = sm.StateMachineBody.Init()
-	if err != nil {
-		return err
-	}
-	return
+	return nil
 }
 
 // GetInput  GetInput

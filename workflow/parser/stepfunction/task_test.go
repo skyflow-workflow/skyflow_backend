@@ -15,7 +15,7 @@ func TestDecodeTask(t *testing.T) {
 	var testcases = []struct {
 		name       string
 		definition string
-		expected   *states.Task
+		expected   *states.TaskState
 		wantError  error
 	}{
 		{
@@ -27,7 +27,7 @@ func TestDecodeTask(t *testing.T) {
 				"Next": ""
 			}
 			`,
-			expected: &states.Task{
+			expected: &states.TaskState{
 				BaseState: &states.BaseState{
 					Type:            "Task",
 					Comment:         "add task",
@@ -60,7 +60,7 @@ func TestDecodeTask(t *testing.T) {
 				"Next": "S2"
 			}
 			`,
-			expected: &states.Task{
+			expected: &states.TaskState{
 				BaseState: &states.BaseState{
 					Type:    "Task",
 					Comment: "",

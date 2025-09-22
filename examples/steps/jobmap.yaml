@@ -1,0 +1,32 @@
+Name: "业务组模板变更阶段"
+Comment: "Comment说明"
+InputPath: "$"
+#JobMap 是映射类型。可以根据输入动态产生Jobs
+JobMap:
+  ItemsPath: "$.bizgroup_configs"
+  ItemResultPath: "$.group_config"
+  # 分支并发量
+  MaxConcurrency: 20
+  # 一个分支失败后不继续下一个分支
+  FailContiune: false
+  ItemProcessor:
+    Name : "业务组模板变更"
+    Comment: "Comment说明"
+    Steps:
+      - Name: "查询发布分组ID"
+        Comment: "通过参数查询发布分组ID信息"
+        Type: "Task"
+        Resource: "activity:clouddeploy/QueryAppServiceGroup"
+        Parameters:
+          "bizgroup_id.$": "$.bizgroup_id"
+          "app_name.$": "$.group_config.app_name"
+          "env.$": "$.env"
+          "cluster_id.$": "$.cluster_id"
+          "service_group_name.$": "$.group_config.app_service_group_name"
+        ResultPath: "$.app_service_group"
+      - Name: "变更应用分组环境配置"
+        Type: "Task"
+        Resource: "activity:clouddeploy/ChangeServiceGroupEnviroment"
+        Parameters:
+          "app_service_group_id.$": "$.app_service_group.group_id"
+          "resources.$": "$.group_config.resources"

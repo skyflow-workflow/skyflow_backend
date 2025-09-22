@@ -1,0 +1,105 @@
+Type: "pipeline"
+Version: "v1"
+
+
+# input
+# {
+#   "numbers":[
+#     {
+#       "a": 1,
+#       "b": 2
+#     },
+#     {
+#       "a": 3,
+#       "b": 4
+#     },
+#         {
+#       "a": 5,
+#       "b": 6
+#     },
+#         {
+#       "a": 7,
+#       "b": 9
+#     },
+#   ],
+#   "data1":{
+#     "x": 11,
+#     "y": 12
+#   },
+#   "max":{
+#     "a": 11,
+#     "b": 12
+#   }
+# }
+
+
+
+Stages:
+  - Name: "业务组模板变更阶段"
+    Comment: "Comment说明"
+    InputPath: "$"
+    ResultPath: "$.stage1result"
+    #JobMap 是映射类型。可以根据输入动态产生Jobs
+    JobMap:
+      ItemsPath: "$.numbers"
+      ItemResultPath: "$.number"
+      # 分支并发量
+      MaxConcurrency: 2
+      # 一个分支失败后不继续下一个分支
+      FailContiune: false
+      ItemProcessor:
+        Name : "业务组模板变更"
+        Comment: "Comment说明"
+        Steps:
+          - Name: "查询发布分组ID"
+            Comment: "通过参数查询发布分组ID信息"
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            Parameters:
+              "x.$": "$.number.a"
+              "y.$": "$.number.b"
+            ResultPath: "$.number.c"
+          - Name: "变更应用分组环境配置"
+            Type: "Task"
+            Resource: "activity:unittest/max"
+            Parameters:
+              "x.$": "$.number.c"
+              "y.$": "$.data1.y"
+            ResultPath: "$.max"
+
+
+  - Name: 全量集群发布
+    Jobs:
+      - Name: 集群2的全量发布
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: Pass1
+            Comment: 先不计算
+            Type: Pass
+
+          - Name: MaxCompare
+            Comment: 比较两个数
+            Type: Task
+            Resource: "activity:unittest/max"
+            ResultPath: "$.max.x"
+            Parameters:
+              x.$ : "$.stage1result[0].max"
+              y.$ : "$.max.b"
+      - Name: 集群3的全量发布
+        Steps:
+          - Name: 找到大的数
+            Comment: 先比较，再计算
+            Type: Task
+            Resource: "activity:unittest/max"
+            ResultPath: "$.max.max"
+            Parameters:
+              x.$ : "$.stage1result[1].max"
+              y.$ : "$.max.b"
+          - Name: 生成找到更大的数
+            Comment: 更大的数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            ResultPath: "$.max.max"
+            Parameters:
+              x.$ : "$.max.max"
+              y.$ : "$.max.b"

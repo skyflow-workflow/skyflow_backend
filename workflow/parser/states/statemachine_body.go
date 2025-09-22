@@ -37,9 +37,9 @@ func (smb *StateMachineBody) SetNewStateFunc(f func(data map[string]any, depth i
 	smb._NewStateFunc = f
 }
 
-func NewStateMachineBodyFromString(data string, depth int) (smb *StateMachineBody, err error) {
+func NewStateMachineBodyFromString(definition string, depth int) (smb *StateMachineBody, err error) {
 
-	datamap, err := ToMap(data)
+	datamap, err := ToMap(definition)
 	if err != nil {
 		return
 	}
@@ -99,7 +99,6 @@ func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]any) (err 
 			return
 		}
 		newstate.SetName(name)
-
 		smb.AddState(newstate)
 	}
 	err = smb.Init()
@@ -206,7 +205,7 @@ func (smb *StateMachineBody) Init() (err error) {
 // AddState 添加状态机中的状态
 func (smb *StateMachineBody) AddState(newstate State) {
 	name := newstate.GetName()
-	smb.States[name] = newstate
+	smb._States[name] = newstate
 }
 
 // GetGroupStates 生成状态机中所有的state的group信息，并且拉平

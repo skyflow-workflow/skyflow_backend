@@ -9,14 +9,14 @@ import (
 func TestPassGetResult(t *testing.T) {
 	testcases := []struct {
 		name          string
-		state         *Pass
+		state         *PassState
 		input         any
 		expected      any
 		expectedError error
 	}{
 		{
 			name: "test simple pass",
-			state: &Pass{
+			state: &PassState{
 				BaseState: &BaseState{
 					Name: "test",
 				},
@@ -38,7 +38,7 @@ func TestPassGetResult(t *testing.T) {
 		},
 		{
 			name: "test pass with parameters",
-			state: &Pass{
+			state: &PassState{
 				BaseState: &BaseState{
 					Name: "test",
 				},

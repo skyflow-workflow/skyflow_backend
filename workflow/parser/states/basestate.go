@@ -44,8 +44,13 @@ func NewDefautBaseState() *BaseState {
 // NewBaseStateFromMap NewState from MapData
 func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
 
+	var err error
+	err = ValidateStateFieldOptional(data)
+	if err != nil {
+		return nil, err
+	}
 	bs := NewDefautBaseState()
-	err := InitBaseState(bs, data)
+	err = InitBaseState(bs, data)
 	if err != nil {
 		return nil, err
 	}
@@ -58,8 +63,7 @@ func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
 
 // NewBaseStateFromString  New State From  String
 func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
-	var data = map[string]interface{}{}
-	err = myJson.Unmarshal([]byte(definition), &data)
+	data, err := ToMap(definition)
 	if err != nil {
 		return
 	}
@@ -73,6 +77,12 @@ func InitBaseState(bs *BaseState, data map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	err = myvalidate.Struct(bs)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 
@@ -221,6 +231,13 @@ func (s *BaseState) GetParametersInput(input any) (any, error) {
 		}
 	}
 	return result, nil
+}
+
+// GetInput Get State Real Input by InputData
+// inpupt , origin input,
+// output state input using inputpath , parameters
+func (s *BaseState) GetInput(input any) (any, error) {
+	return s.GetParametersInput(input)
 }
 
 // GenParameters calculate parameters by input data  and parameters
@@ -399,7 +416,8 @@ func ValidateStateFieldOptional(data map[string]any) error {
 	// check nextend
 	// if nextend is deny , next and end should be nil
 	// if nextend is required , one of next or end is not nil and other is nil
-	if stateRequired.NextEnd == FiledRequiredLevel.Deny {
+	switch stateRequired.NextEnd {
+	case FiledRequiredLevel.Deny:
 		if data[StateFieldNames.Next] != nil {
 			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.Next),
 				StateFieldNames.Next)
@@ -408,7 +426,7 @@ func ValidateStateFieldOptional(data map[string]any) error {
 			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.End),
 				StateFieldNames.End)
 		}
-	} else if stateRequired.NextEnd == FiledRequiredLevel.Required {
+	case FiledRequiredLevel.Required:
 		// one of next or end is not nil and other is nil
 		if data[StateFieldNames.Next] == nil && data[StateFieldNames.End] == nil {
 			return NewFieldPathError(fmt.Errorf("%w: %s or %s", ErrorLackOfRequiredField,

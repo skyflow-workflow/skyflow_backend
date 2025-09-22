@@ -5,11 +5,12 @@ package states
 import (
 	"fmt"
 	"time"
+
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
 // State ...
 type State interface {
-	Init() error
 	Validate() error
 	GetName() string
 	SetName(name string)
@@ -32,7 +33,7 @@ type NextState struct {
 // NewStateFromMap  NewStateFromMap
 func NewStateFromMap(data map[string]interface{}, depth int) (state State, err error) {
 
-	typeKey, ok := data[Fields.Type]
+	typeKey, ok := data[StateFieldNames.Type]
 	if !ok {
 		err = fmt.Errorf(" state lack of field [ Type ] ")
 		return state, err
@@ -42,36 +43,31 @@ func NewStateFromMap(data map[string]interface{}, depth int) (state State, err e
 		err = fmt.Errorf(" field [ Type ] field is not string  ")
 		return
 	}
-	switch typeKeyStr {
-	case StateType.Task:
+	switch StateType(typeKeyStr) {
+	case StateTypes.Task:
 		state, err = NewTaskStateFromMap(data)
-	case StateType.Choice:
+	case StateTypes.Choice:
 		state, err = NewChoiceStateFromMap(data)
-	case StateType.Wait:
+	case StateTypes.Wait:
 		state, err = NewWaitStateFromMap(data)
-	case StateType.Pass:
+	case StateTypes.Pass:
 		state, err = NewPassStateFromMap(data)
-	case StateType.Fail:
+	case StateTypes.Fail:
 		state, err = NewFailStateFromMap(data)
-	case StateType.Succeed:
+	case StateTypes.Succeed:
 		state, err = NewSucceedStateFromMap(data)
-	case StateType.Parallel:
-		state, err = NewParallelStateFromMap(data, depth)
-	case StateType.Map:
-		state, err = NewMapStateFromMap(data, depth)
-	case StateType.StateGroup:
-		state, err = NewStateGroupFromMap(data, depth)
+	// case StateTypes.Parallel:
+	// 	state, err = NewParallelStateFromMap(data, depth)
+	// case StateTypes.Map:
+	// 	state, err = NewMapStateFromMap(data, depth)
+
 	default:
-		err = fmt.Errorf("%w : %s", vo.ErrorUnrecognizeStatemachineType, typeKeyStr)
+		err = fmt.Errorf("%w : %s", vo.ErrorUnsupportedStateType, typeKeyStr)
 		return
 	}
+
 	if err != nil {
-		return
-	}
-	err = state.Init()
-	if err != nil {
-		err = fmt.Errorf("step '%s'  error : %w", state.GetName(), err)
-		return
+		return nil, err
 	}
 	return
 

@@ -14,8 +14,8 @@ type TaskBody struct {
 	// if false, the task will be executed automatically
 	Block            bool   `mapstructure:"Block"`
 	Resource         string `mapstructure:"Resource" validate:"required,gt=0"`
-	TimeoutSeconds   uint   `mapstructure:"Resource" validate:"gte=0"`
-	HeartbeatSeconds uint   `mapstructure:"Resource" validate:"gte=0"`
+	TimeoutSeconds   uint   `mapstructure:"TimeoutSeconds" validate:"gte=0"`
+	HeartbeatSeconds uint   `mapstructure:"HeartbeatSeconds" validate:"gte=0"`
 	// Retry for decode
 	Retry []TaskRetryNode `mapstructure:"Retry"`
 	// Catch for decode
@@ -77,69 +77,73 @@ var DefaultTaskBody = TaskBody{
 
 // NewTaskStateFromString  Create New Wait State
 func NewTaskStateFromString(definition string) (state *TaskState, err error) {
-	state, err = NewGenericStateFromString(definition, NewTaskStateFromMap)
+	// state, err = NewGenericStateFromString(definition, NewTaskStateFromMap)
+	mapdata, err := ToMap(definition)
+	if err != nil {
+		return
+	}
+
+	state, err = NewTaskStateFromMap(mapdata)
+	if err != nil {
+		return
+	}
 	return
 }
 
-func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
-
-	var err error
-	taskbody := DefaultTaskBody
-	// mapping data to taskbody
-	err = MapStructDecode(data, &taskbody)
-	if err != nil {
-		return nil, err
-	}
-	// validate taskbody
-	err = taskbody.Validate()
-	if err != nil {
-		return nil, err
-	}
-	return &taskbody, err
-}
-
 // NewTaskStateFromMap NewTaskStateFromMap
-func NewTaskStateFromMap(basestate *BaseState, data map[string]interface{}) (state *Task, err error) {
+func NewTaskStateFromMap(data map[string]interface{}) (state *TaskState, err error) {
 
-	defaltstate := DefaultTask
-	state = &defaltstate
 	// basestate
 	bs, err := NewBaseStateFromMap(data)
 	if err != nil {
 		return
 	}
-	state.BaseState = bs
-
-	err = state.InitByMap(data)
-	return
+	taskbody, err := NewTaskBodyFromMap(data)
+	if err != nil {
+		return
+	}
+	task := &TaskState{
+		BaseState: bs,
+		TaskBody:  taskbody,
+	}
+	err = task.Init()
+	if err != nil {
+		return
+	}
+	return task, err
 }
 
-// TaskTimeout Describe Task Timeout demand
-type TaskTimeout struct {
-	TaskTimeout      time.Time
-	HeartBeatTimeout time.Time
+// NewTaskBodyFromMap  NewTaskBodyFromMap
+func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
+
+	taskbody := DefaultTaskBody
+	err := InitTaskBodyByMap(&taskbody, data)
+	if err != nil {
+		return nil, err
+	}
+	return &taskbody, nil
 }
 
 // InitByMap Inititalize TaskState Content
-func (s *TaskState) InitByMap(data map[string]interface{}) error {
+func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 
 	// 数据初始化
 	var err error
 	// 初始化自身
-	err = MapStructDecode(data, s)
+	err = MapStructDecode(data, body)
 	if err != nil {
 		return err
 	}
-	err = myvalidate.Struct(s)
+	err = myvalidate.Struct(body)
 	if err != nil {
 		return err
 	}
 	// Retry
 
-	if len(s.Retry) > 0 {
+	if len(body.Retry) > 0 {
 		// retry 不为空
-		var retrynodes []RetryNode
-		inputretrynodes := data[Fields.Retry].([]interface{})
+		var retrynodes []TaskRetryNode
+		inputretrynodes := data[StateFieldNames.Retry].([]interface{})
 		for _, retrynodedata := range inputretrynodes {
 			node := DefaultRetryNode
 			err = MapStructDecode(retrynodedata, &node)
@@ -148,14 +152,14 @@ func (s *TaskState) InitByMap(data map[string]interface{}) error {
 			}
 			retrynodes = append(retrynodes, node)
 		}
-		s.Retry = retrynodes
+		body.Retry = retrynodes
 	}
 
 	// Catch
-	if len(s.Catch) > 0 {
+	if len(body.Catch) > 0 {
 		// retry 不为空
-		var catchnodes []CatchNode
-		inputcatchnodes := data[Fields.Catch].([]interface{})
+		var catchnodes []TaskCatchNode
+		inputcatchnodes := data[StateFieldNames.Catch].([]interface{})
 		for _, catchnodedata := range inputcatchnodes {
 			node := DefaultCatchNode
 			err = MapStructDecode(catchnodedata, &node)
@@ -164,12 +168,18 @@ func (s *TaskState) InitByMap(data map[string]interface{}) error {
 			}
 			catchnodes = append(catchnodes, node)
 		}
-		s.Catch = catchnodes
+		body.Catch = catchnodes
 	}
 
-	err = s.Init()
+	err = body.Init()
 	return err
 
+}
+
+// TaskTimeout Describe Task Timeout demand
+type TaskTimeout struct {
+	TaskTimeout      time.Time
+	HeartBeatTimeout time.Time
 }
 
 // Validate ...
@@ -191,24 +201,20 @@ func (body *TaskBody) Init() error {
 	return nil
 }
 
-// Task ...
-type Task struct {
+// TaskState ...
+type TaskState struct {
 	*BaseState
 	*TaskBody
 }
 
-func (t *Task) GetBaseState() *BaseState {
+func (t *TaskState) GetBaseState() *BaseState {
 	return t.BaseState
 }
 
 // Init init task
-func (t *Task) Init() error {
+func (t *TaskState) Init() error {
 
-	err := t.BaseState.Init()
-	if err != nil {
-		return err
-	}
-	err = t.TaskBody.Init()
+	err := t.TaskBody.Init()
 	if err != nil {
 		return err
 	}
@@ -216,12 +222,12 @@ func (t *Task) Init() error {
 }
 
 // Validate ...
-func (t *Task) Validate() error {
+func (t *TaskState) Validate() error {
 	return t.TaskBody.Validate()
 }
 
 // GetBone get bone
-func (t *Task) GetBone() StateBone {
+func (t *TaskState) GetBone() StateBone {
 	bone := t.BaseState.GetBone()
 	for _, catch := range t.TaskBody.Catch {
 		bone.Next = append(bone.Next, catch.Next)
@@ -230,13 +236,13 @@ func (t *Task) GetBone() StateBone {
 }
 
 // GetTaskTimeout  return task timeout
-func (t *Task) GetTaskTimeout() (TaskTimeout, error) {
+func (t *TaskState) GetTaskTimeout() (TaskTimeout, error) {
 	var tt TaskTimeout
 	if t.TimeoutSeconds > 0 {
-		tt.TaskTimeout = time.Duration(t.TimeoutSeconds) * time.Second
+		tt.TaskTimeout = time.Now().Add(time.Duration(t.TimeoutSeconds) * time.Second)
 	}
 	if t.HeartbeatSeconds > 0 {
-		tt.HeartBeatTimeout = time.Duration(t.HeartbeatSeconds) * time.Second
+		tt.HeartBeatTimeout = time.Now().Add(time.Duration(t.HeartbeatSeconds) * time.Second)
 	}
 	return tt, nil
 }
@@ -245,7 +251,7 @@ func (t *Task) GetTaskTimeout() (TaskTimeout, error) {
 // @input state input data
 // @taskdata task send data
 // return next state
-func (t *Task) GetNextState(input any, taskdata TaskSendData) (*NextState, error) {
+func (t *TaskState) GetNextState(input any, taskdata TaskSendData) (*NextState, error) {
 	var err error
 
 	var nextstate NextState

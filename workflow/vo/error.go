@@ -31,6 +31,7 @@ var (
 	ErrorParameterInvalid             = fmt.Errorf("parameter is invalid")
 	ErrorParseWorkflow                = fmt.Errorf("parse workflow failed")
 	ErrorUnrecognizedStatemachineType = fmt.Errorf("unrecognized statemachine type")
+	ErrorUnsupportedStateType         = fmt.Errorf("unsupported state type")
 
 	// ErrorOutputSizeLimitExceeded Output超过限额
 	ErrorOutputSizeLimitExceeded = fmt.Errorf("output size limit exceeded")

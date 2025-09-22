@@ -29,7 +29,7 @@ func (decoder *StepfuncionDecoder) DecodeTaskState(ctx context.Context, basestat
 	if err != nil {
 		return nil, err
 	}
-	task := &states.Task{
+	task := &states.TaskState{
 		BaseState: basestate,
 		TaskBody:  taskbody,
 	}
