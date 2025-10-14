@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dolthub/vitess/go/vt/log"
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -57,7 +57,7 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 
 		if err != nil {
 			err2 := fmt.Errorf("update state '%d ' Status [ Failed ] error : %w", dbStep.ID, err)
-			log.Error(err2.Error())
+			slog.Error(err2.Error())
 			return err2
 		}
 		tx.Commit()
@@ -180,19 +180,18 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 }
 
 // _StartExecution 创建一个Execution
-func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, statemachine states.StateMachine, tx rdb.Tx,
+func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, statemachine *states.StateMachine, tx rdb.Tx,
 ) (resp StartExecutionResponse, err error) {
 
 	var uuids string
 
-	_, err = common.JSONToMap(req.Input)
+	_, err = states.ToMap(req.Input)
 	if err != nil {
 		err = fmt.Errorf("%w: input error: %s", vo.ErrorParameterInvalid, err.Error())
 		return
 	}
 
 	header := statemachine.StateMachineHeader
-	workflowtype := header.GetFlowHeader().Type
 	headerstr, err := states.ToString(header)
 	if err != nil {
 		return
@@ -405,13 +404,13 @@ func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (p
 	svc.SendExecutionEvents(respstop.Events...)
 
 	for _, msg := range respcreate.Messages {
-		err = svc.SendInnerMessage(msg, time.Now())
+		err = svc.SendInnerMessage(msg, nil)
 		if err != nil {
 			return dbNull, err
 		}
 	}
 	// 清理过期的消息
-	err = svc.innerqueue.CleanExecutionMessage(dbExecution.ID)
+	err = svc.InnerQueue.CleanExecutionMessage(dbExecution.ID)
 	if err != nil {
 		return dbNull, err
 	}
@@ -430,11 +429,11 @@ func (svc *executionService) ProcessFindNextState(message queue.InnerMessage) er
 
 	dbStep, err = svc.QueryStepByID(step_id, []string{"id", "name", "group_id", "output", "execution_id"}, nil)
 	if err != nil {
-		log.Error(err.Error())
+		slog.Error(err.Error())
 		return err
 	}
 
-	var fns = FindNextState{}
+	var fns = FindNextStep{}
 	err = json.Unmarshal([]byte(message.Data), &fns)
 	if err != nil {
 		return err
@@ -542,7 +541,7 @@ func (svc *executionService) ProcessReportStepSuspend(message queue.InnerMessage
 
 	dbstep, err = svc.QueryStepByID(step_id, StepFields.L2, nil)
 	if err != nil {
-		log.Error(err.Error())
+		slog.Error(err.Error())
 		return err
 	}
 
@@ -594,7 +593,7 @@ func (svc *executionService) ProcessReportStepBlocked(message queue.InnerMessage
 
 	dbstep, err = svc.QueryStepByID(step_id, StepFields.L2, nil)
 	if err != nil {
-		log.Error(err.Error())
+		slog.Error(err.Error())
 		return err
 	}
 
@@ -1666,7 +1665,7 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
  * @output: 执行输出
  */
 func (svc *executionService) SendTaskSuccess(ctx context.Context, req vo.SendTaskSuccessRequest) error {
-	log.Info(fmt.Sprintf("SendTaskSuccess token: [ %s ] output length: %d", req.TaskToken, len(req.Output)))
+	slog.Info(fmt.Sprintf("SendTaskSuccess token: [ %s ] output length: %d", req.TaskToken, len(req.Output)))
 	requestinfo := vo.GetRequestInfo(ctx)
 	var outputs interface{}
 	outputs, err := toolkit.ToJSON(req.Output)

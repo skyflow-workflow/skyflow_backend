@@ -17,11 +17,13 @@ import (
 type ExecutionService = *executionService
 
 type executionService struct {
-	MetaDB        *rdb.DBClient
-	InnerQueue    queue.InnerMessageQueue
-	Exporter      exporter.ExporterService
-	LockService   lock.LockService
-	DomainService domain.DomainService
+	MetaDB           *rdb.DBClient
+	InnerQueue       queue.InnerMessageQueue
+	Exporter         exporter.ExporterService
+	LockService      lock.LockService
+	DomainService    domain.DomainService
+	StandardExecutor *Executor
+	ExpressExecutor  *Executor
 }
 
 func NewExecutionService(
@@ -36,6 +38,12 @@ func NewExecutionService(
 		LockService:   lock.NewDBLockService(MetaDB),
 		DomainService: domain.DefaultDomainService,
 	}
+	//binding executor
+	StandardExecutor.ExecutionService = svc
+	ExpressExecutor.ExecutionService = svc
+	svc.StandardExecutor = StandardExecutor
+	svc.ExpressExecutor = ExpressExecutor
+
 	return svc
 }
 
@@ -94,12 +102,8 @@ func (svc *executionService) NewStepFromID(step_id int, session rdb.Tx) (Step, e
 	if err != nil {
 		return nil, err
 	}
-	dbExecution, err := svc.QueryExecutionByID(dbStep.ExecutionID, ExecutionFields.L1, tx)
-	if err != nil {
-		return nil, err
-	}
 
-	return NewStepFromData(&dbStep, svc, dbExecution.FlowType)
+	return NewStepFromData(dbStep, svc.StandardExecutor)
 }
 
 // NewTaskFromToken NewTaskFromToken
@@ -109,15 +113,14 @@ func (svc *executionService) NewTaskFromToken(token string, session rdb.Tx) (*Ta
 	var tasktoken = po.TaskToken{
 		Token: token,
 	}
-	var dbstep = po.Step{}
-	var dbexe = po.Execution{}
+	var dbstep = &po.Step{}
 
 	// 增加控制session
-	tx, maker := svc.metadb.NewSessionMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	err = tx.Where(tasktoken).Take(&tasktoken).Error
-	if rdb.IsRecordNotFound(err) {
+	if rdb.IsErrRecordNotFound(err) {
 		return nil, fmt.Errorf("%w: %s", vo.ErrorTaskTokenNotFound, token)
 	}
 	if err != nil {
@@ -129,25 +132,19 @@ func (svc *executionService) NewTaskFromToken(token string, session rdb.Tx) (*Ta
 		return nil, err
 	}
 
-	dbexe, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, tx)
+	state, err := NewTaskFromData(dbstep, svc.StandardExecutor)
 	if err != nil {
 		return nil, err
 	}
-
-	state, err := NewTaskFromData(&dbstep, dbexe.FlowType, svc)
-	if err != nil {
-		return nil, err
-	}
-	state.Token = token
 	return state, err
 }
 
-func (svc *executionService) SendEventsMessages(events []ExecutionEvent, msgs []queue.InnerMessage) error {
+func (svc *executionService) SendEventsMessages(events []vo.ExecutionEvent, msgs []queue.InnerMessageBody) error {
 
 	svc.SendExecutionEvents(events...)
 
 	for _, msg := range msgs {
-		err := svc.innerqueue.SendInnerMessage(msg, time.Now())
+		err := svc.InnerQueue.SendInnerMessage(msg, nil)
 		if err != nil {
 			return err
 		}
@@ -155,12 +152,12 @@ func (svc *executionService) SendEventsMessages(events []ExecutionEvent, msgs []
 	return nil
 }
 
-func (svc *executionService) NewParallelFromID(step_id int, session rdb.Tx) (*Parallel, error) {
+// func (svc *executionService) NewParallelFromID(step_id int, session rdb.Tx) (*Parallel, error) {
 
-	step, err := NewParallelFromID(step_id, svc, session)
-	return step, err
+// 	step, err := NewParallelFromID(step_id, svc, session)
+// 	return step, err
 
-}
+// }
 
 // JudgeExecutionRunningStatus 判断Execution是否是可执行的状态
 func (svc *executionService) JudgeExecutionRunningStatus(execution_id int) error {
