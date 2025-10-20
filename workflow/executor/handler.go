@@ -153,7 +153,7 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 	var err error
 	var dbNull po.Execution
 
-	wf, err := parser.ParseStateMachine(req.StateMachineDefinition)
+	sm, err := parser.ParseStateMachine(req.StateMachineDefinition)
 	if err != nil {
 		return dbNull, err
 	}
@@ -180,7 +180,7 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 }
 
 // _StartExecution 创建一个Execution
-func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, statemachine states.StateMachine, tx rdb.Tx,
+func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, statemachine *states.StateMachine, tx rdb.Tx,
 ) (resp StartExecutionResponse, err error) {
 
 	var uuids string
