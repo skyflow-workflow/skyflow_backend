@@ -327,13 +327,13 @@ func (svc *executionService) StopExecution(req vo.StopExecutionRequest) error {
 }
 
 // RestartExecution 重新创建一个Execution
-func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (po.Execution, error) {
+func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (*po.Execution, error) {
 
 	var err error
-	var dbNull po.Execution
-	var dbExecution po.Execution
+	var dbNull *po.Execution
+	var dbExecution *po.Execution
 
-	dbExecution, err = svc.QueryExecutionByUUID(req.UUID, append(ExecutionFields.L3, "title", "input"), nil)
+	dbExecution, err = svc.QueryExecutionByUUID(req.ExecutionUUID, append(ExecutionFields.L3, "title", "input"), nil)
 	if err != nil {
 		return dbNull, err
 	}
@@ -344,7 +344,7 @@ func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (p
 	}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(dbExecution.ID)
+	lock := svc.LockService.LockExecution(dbExecution.ID)
 	err = lock.Lock()
 	if err != nil {
 		return dbNull, err
@@ -421,7 +421,7 @@ func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (p
 
 // ProcessFindNextState  find next state
 // NOCC:golint/fnsize("设计如此")
-func (svc *executionService) ProcessFindNextState(message queue.InnerMessage) error {
+func (svc *executionService) ProcessFindNextState(message queue.InnerMessageBody) error {
 
 	var dbStep po.Step
 	var err error

@@ -7,6 +7,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
@@ -431,8 +432,8 @@ func (e *Execution) ProcessInit() error {
 }
 
 // InsertStateMachine insert statemachine to db
-func (e *Execution) InsertStateMachine(smb *grammar.StateMachineBody, opt InsertStateMachineOption,
-	tx rdb.Session) (resp InsertStateMachineResponse, err error) {
+func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertStateMachineOption,
+	tx rdb.Tx) (resp InsertStateMachineResponse, err error) {
 
 	var deindex = opt.StartDeindex
 	// offset_groupid GroupID偏移量
@@ -448,7 +449,7 @@ func (e *Execution) InsertStateMachine(smb *grammar.StateMachineBody, opt Insert
 	}
 	type tmpgroup struct {
 		po.StepGroup
-		*grammar.SubGroupState
+		*states.SubGroupState
 	}
 	var groups []tmpgroup
 
@@ -602,7 +603,7 @@ func (e *Execution) ProcessAbortTimeout() error {
 }
 
 // ProcessExecutionFailed  强制 Execution失败
-func (e *Execution) ProcessExecutionFailed(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionFailed(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -626,7 +627,7 @@ func (e *Execution) ProcessExecutionFailed(message queue.InnerMessage) error {
 }
 
 // ProcessExecutionSuspend  Execution Suspend
-func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -648,7 +649,7 @@ func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessage) error {
 }
 
 // ProcessExecutionBlocked  Execution Suspend
-func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -670,7 +671,7 @@ func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessage) error {
 }
 
 // ChangeExecutionStatus 修改Execution状态
-func (e *Execution) ChangeExecutionStatus(status _ExecutionStatusType, session rdb.Session) error {
+func (e *Execution) ChangeExecutionStatus(status _ExecutionStatusType, session rdb.Tx) error {
 
 	var err error
 	// 开始事务
@@ -769,7 +770,7 @@ func (e *Execution) StopExecution(errorcode string, cause string) error {
 }
 
 // _StopExecution 内部使用的state
-func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Session) (
+func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Tx) (
 	resp StopExecutionResponse, err error) {
 
 	var dbexecution_id = e.Data.ID
