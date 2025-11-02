@@ -7,6 +7,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -102,13 +104,12 @@ func (exe *Execution) FullInit() error {
 		return err
 	}
 	// 后面需要计算input
-	exe.Data = &dbexecution
+	exe.Data = dbexecution
 
 	sm, err := parser.ParseStateMachine(exe.Data.Definition)
 	if err != nil {
 		return err
 	}
-	sm := wf.GetNode()
 
 	exe.StateMachine = sm
 
@@ -215,7 +216,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 	// levelconnector  是子流程连接的节点，主要是Parallel/Map 节点
 	var levelconnector = []*po.Step{}
 	// 构建bone
-	StartGroupID := grammar.StartGroupID
+	StartGroupID := states.StartGroupID
 	// GroupBoneMap  group 组内的bone map，
 	// 两层map结构， 第一层是 group_id， 第二层是statename ,都可以从DB钟获得
 	// 通过初始化， GroupBoneMap 按照分层存储所有的节点的Bone。 节点都是 StateBone 类型
@@ -230,7 +231,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		// 存成map
 		dbstepmap[dp.Name] = dp
 		var groupid int
-		newstate, err := NewStepFromData(dp, e.ExecutionService, e.Data.FlowType)
+		newstate, err := NewStepFromData(dp, e.ExecutionService.StandardExecutor)
 		if err != nil {
 			return bone, err
 		}
@@ -314,8 +315,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		StartAt: e.StateMachine.StartAt,
 		States:  GroupBoneMap[StartGroupID],
 	}
-	e.Bone = toplevelStateBone
-	return e.Bone, nil
+	return toplevelStateBone, nil
 }
 
 // ProcessInit  初始化execution
@@ -340,7 +340,7 @@ func (e *Execution) ProcessInit() error {
 	if err != nil {
 		return err
 	}
-	stateinputstr, err := grammar.ToString(stateinput)
+	stateinputstr, err := toolkit.ToString(stateinput)
 	if err != nil {
 		return err
 	}
@@ -404,8 +404,8 @@ func (e *Execution) ProcessInit() error {
 	msg := StepExecuteMessage{
 		Block: false,
 	}
-	message := NewStateMessage(dbexecution.ID, MessageType.StateNewTurn, insmresp.StartStepID, msg)
-	err = e.ExecutionService.innerqueue.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbexecution.ID, MessageType.StateNewTurn, insmresp.StartStepID, msg)
+	err = e.ExecutionService.InnerQueue.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -413,7 +413,8 @@ func (e *Execution) ProcessInit() error {
 	if timeout.Timeout > 0 {
 		// 发送超时事件
 		message = NewExecutionMessage(dbexecution.ID, MessageType.ExecutionTimout, nil)
-		err = e.ExecutionService.innerqueue.SendInnerMessage(message, time.Now().Add(timeout.Timeout))
+		eventTime := time.Now().Add(timeout.Timeout)
+		err = e.ExecutionService.InnerQueue.SendInnerMessage(message, &eventTime)
 		if err != nil {
 			return err
 		}
@@ -421,7 +422,8 @@ func (e *Execution) ProcessInit() error {
 	if timeout.AbortTimeout > 0 {
 		// 发送Abort事件
 		message = NewExecutionMessage(dbexecution.ID, MessageType.ExecutionAbortTimout, nil)
-		err = e.ExecutionService.innerqueue.SendInnerMessage(message, time.Now().Add(timeout.AbortTimeout))
+		eventTime := time.Now().Add(timeout.AbortTimeout)
+		err = e.ExecutionService.InnerQueue.SendInnerMessage(message, &eventTime)
 		if err != nil {
 			return err
 		}
@@ -430,8 +432,8 @@ func (e *Execution) ProcessInit() error {
 }
 
 // InsertStateMachine insert statemachine to db
-func (e *Execution) InsertStateMachine(smb *grammar.StateMachineBody, opt InsertStateMachineOption,
-	tx rdb.Session) (resp InsertStateMachineResponse, err error) {
+func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertStateMachineOption,
+	tx rdb.Tx) (resp InsertStateMachineResponse, err error) {
 
 	var deindex = opt.StartDeindex
 	// offset_groupid GroupID偏移量
@@ -447,7 +449,7 @@ func (e *Execution) InsertStateMachine(smb *grammar.StateMachineBody, opt Insert
 	}
 	type tmpgroup struct {
 		po.StepGroup
-		*grammar.SubGroupState
+		*states.SubGroupState
 	}
 	var groups []tmpgroup
 
@@ -467,7 +469,6 @@ func (e *Execution) InsertStateMachine(smb *grammar.StateMachineBody, opt Insert
 			Depth:        groupState.Depth,
 			Status:       string(StepStatus.Created),
 			Data:         "{}",
-			References:   "{}",
 		}
 		err = tx.Create(&task).Error
 		if err != nil {
@@ -602,7 +603,7 @@ func (e *Execution) ProcessAbortTimeout() error {
 }
 
 // ProcessExecutionFailed  强制 Execution失败
-func (e *Execution) ProcessExecutionFailed(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionFailed(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -626,7 +627,7 @@ func (e *Execution) ProcessExecutionFailed(message queue.InnerMessage) error {
 }
 
 // ProcessExecutionSuspend  Execution Suspend
-func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -648,7 +649,7 @@ func (e *Execution) ProcessExecutionSuspend(message queue.InnerMessage) error {
 }
 
 // ProcessExecutionBlocked  Execution Suspend
-func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessage) error {
+func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
@@ -670,11 +671,11 @@ func (e *Execution) ProcessExecutionBlocked(message queue.InnerMessage) error {
 }
 
 // ChangeExecutionStatus 修改Execution状态
-func (e *Execution) ChangeExecutionStatus(status _ExecutionStatusType, session rdb.Session) error {
+func (e *Execution) ChangeExecutionStatus(status _ExecutionStatusType, session rdb.Tx) error {
 
 	var err error
 	// 开始事务
-	tx, maker := e.ExecutionService.metadb.NewSessionMaker(session)
+	tx, maker := e.ExecutionService.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	updateexecution := po.Execution{
@@ -695,7 +696,7 @@ func (e *Execution) ProcessSucceed(output string) error {
 	starttime := time.Now()
 	var dbexecution po.Execution
 	// 开始事务
-	tx, maker := e.ExecutionService.metadb.NewSessionMaker(nil)
+	tx, maker := e.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	// 查询 output
@@ -743,14 +744,14 @@ func (e *Execution) StopExecution(errorcode string, cause string) error {
 	// var has bool
 
 	// 加锁
-	lock := e.ExecutionService.lockservice.LockExecution(e.Data.ID)
+	lock := e.ExecutionService.LockService.LockExecution(e.Data.ID)
 	err = lock.Lock()
 	if err != nil {
 		return err
 	}
 	defer lock.Unlock()
 	// 开始事务
-	tx, maker := e.ExecutionService.metadb.NewSessionMaker(nil)
+	tx, maker := e.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	resp, err := e._StopExecution(errorcode, cause, tx)
@@ -761,7 +762,7 @@ func (e *Execution) StopExecution(errorcode string, cause string) error {
 
 	e.ExecutionService.SendExecutionEvents(resp.Events...)
 	// 清理过期的消息
-	err = e.ExecutionService.innerqueue.CleanExecutionMessage(e.Data.ID)
+	err = e.ExecutionService.InnerQueue.CleanExecutionMessage(e.Data.ID)
 	if err != nil {
 		return err
 	}
@@ -769,7 +770,7 @@ func (e *Execution) StopExecution(errorcode string, cause string) error {
 }
 
 // _StopExecution 内部使用的state
-func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Session) (
+func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Tx) (
 	resp StopExecutionResponse, err error) {
 
 	var dbexecution_id = e.Data.ID

@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	testDBClient      *rdb.DBClient
-	testKafkaMQ       *mq.KafkaMessageQueue
-	myExecutorService ExecutionService
-	testTestEnvInit   sync.Once
+	testDBClient       *rdb.DBClient
+	testKafkaMQ        *mq.KafkaMessageQueue
+	myExecutionService ExecutionService
+	testTestEnvInit    sync.Once
 )
 
 func TestMain(m *testing.M) {
@@ -29,5 +29,5 @@ func TestMain(m *testing.M) {
 func setupTestEnv() {
 	testDBClient = mock.GetMockDBClient()
 	_ = mock.GetMockKafkaMQ()
-	myExecutorService = NewExecutionService(testDBClient, nil, nil)
+	myExecutionService = NewExecutionService(testDBClient, nil, nil)
 }
