@@ -320,10 +320,9 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 
 // ProcessInit  初始化execution
 // 初始化，是将 Execution 解析成多个Step，并且持久化到 po.Step 中。
-// NOCC:golint/fnsize("设计如此")
 func (e *Execution) ProcessInit() error {
 	var err error
-	var dbexecution *po.Execution
+	var dbExe *po.Execution
 
 	err = e.FullInit()
 	if err != nil {
@@ -331,7 +330,7 @@ func (e *Execution) ProcessInit() error {
 	}
 
 	var sm = e.StateMachine
-	dbexecution = e.Data
+	dbExe = e.Data
 
 	starttime := time.Now()
 
@@ -360,13 +359,13 @@ func (e *Execution) ProcessInit() error {
 		Header:    header.GetDefinition(),
 	}
 
-	err = tx.Where(po.Execution{ID: dbexecution.ID}).Updates(&updateExecution).Error
+	err = tx.Where(po.Execution{ID: dbExe.ID}).Updates(&updateExecution).Error
 	if err != nil {
 		return err
 	}
 
-	insmresp, err := e.InsertStateMachine(&sm.StateMachineBody, InsertStateMachineOption{
-		StartDeindex: -1,
+	inSmResp, err := e.InsertStateMachine(sm.StateMachineBody, InsertStateMachineOption{
+		StartDeIndex: -1,
 		StartDepth:   states.StartDepth,
 		StartGroupID: states.StartGroupID,
 	}, tx)
@@ -378,7 +377,7 @@ func (e *Execution) ProcessInit() error {
 		Status: string(StepStatus.WaitInit),
 	}
 
-	err = tx.Where(po.Step{ID: insmresp.StartStepID}).Updates(&updatetask).Error
+	err = tx.Where(po.Step{ID: inSmResp.StartStepID}).Updates(&updatetask).Error
 	if err != nil {
 		return err
 	}
@@ -388,13 +387,13 @@ func (e *Execution) ProcessInit() error {
 	TaskCreateTime := time.Now()
 	// Create Event
 	event1 := vo.ExecutionEvent{
-		ExecutionID: dbexecution.ID,
+		ExecutionID: dbExe.ID,
 		StepName:    ExecutionEventStateName.Start,
 		StartTime:   starttime,
 		FinishTime:  TaskCreateTime,
 		Data: EventContent_ExecutionStart{
-			Input: dbexecution.Input,
-			URI:   dbexecution.URI,
+			Input: dbExe.Input,
+			URI:   dbExe.URI,
 		},
 	}
 	e.ExecutionService.SendExecutionEvents(event1)
@@ -404,7 +403,7 @@ func (e *Execution) ProcessInit() error {
 	msg := StepExecuteMessage{
 		Block: false,
 	}
-	message := NewStepMessage(dbexecution.ID, MessageType.StateNewTurn, insmresp.StartStepID, msg)
+	message := NewStepMessage(dbExe.ID, MessageType.StateNewTurn, inSmResp.StartStepID, msg)
 	err = e.ExecutionService.InnerQueue.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
@@ -412,7 +411,7 @@ func (e *Execution) ProcessInit() error {
 	timeout := e.StateMachine.GetTimeout()
 	if timeout.Timeout > 0 {
 		// 发送超时事件
-		message = NewExecutionMessage(dbexecution.ID, MessageType.ExecutionTimout, nil)
+		message = NewExecutionMessage(dbExe.ID, MessageType.ExecutionTimout, nil)
 		eventTime := time.Now().Add(timeout.Timeout)
 		err = e.ExecutionService.InnerQueue.SendInnerMessage(message, &eventTime)
 		if err != nil {
@@ -421,7 +420,7 @@ func (e *Execution) ProcessInit() error {
 	}
 	if timeout.AbortTimeout > 0 {
 		// 发送Abort事件
-		message = NewExecutionMessage(dbexecution.ID, MessageType.ExecutionAbortTimout, nil)
+		message = NewExecutionMessage(dbExe.ID, MessageType.ExecutionAbortTimout, nil)
 		eventTime := time.Now().Add(timeout.AbortTimeout)
 		err = e.ExecutionService.InnerQueue.SendInnerMessage(message, &eventTime)
 		if err != nil {
@@ -435,11 +434,11 @@ func (e *Execution) ProcessInit() error {
 func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertStateMachineOption,
 	tx rdb.Tx) (resp InsertStateMachineResponse, err error) {
 
-	var deindex = opt.StartDeindex
-	// offset_groupid GroupID偏移量
-	var offset_groupid = opt.StartGroupID - 1
+	var deIndex = opt.StartDeIndex
+	// offsetGroupId GroupID偏移量
+	var offsetGroupId = opt.StartGroupID - 1
 
-	var dbexecution_id = e.Data.ID
+	var dbExeId = e.Data.ID
 	var max_group_id int
 
 	// 计算GroupState
@@ -447,20 +446,20 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	if err != nil {
 		return
 	}
-	type tmpgroup struct {
+	type tmpGroup struct {
 		po.StepGroup
 		*states.SubGroupState
 	}
-	var groups []tmpgroup
+	var groups []tmpGroup
 
 	// 写入所有的步骤
 	for _, groupState := range groupStates {
 		state := groupState.State
 		statetype := state.GetType()
 		task := po.Step{
-			ExecutionID:  dbexecution_id,
-			ExecuteIndex: deindex,
-			GroupID:      groupState.GroupID + offset_groupid,
+			ExecutionID:  dbExeId,
+			ExecuteIndex: deIndex,
+			GroupID:      groupState.GroupID + offsetGroupId,
 			Name:         groupState.Name,
 			GroupIndex:   groupState.GroupIndex,
 			Type:         statetype,
@@ -482,10 +481,10 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 
 		// 新增stepgroup
 		if groupState.SubGroup != nil {
-			newg := tmpgroup{
+			newg := tmpGroup{
 				po.StepGroup{
 					StepID:      task.ID,
-					ExecutionID: dbexecution_id,
+					ExecutionID: dbExeId,
 					SubGroupID:  groupState.SubGroup.SubGroupID,
 					StartAt:     groupState.SubGroup.SubStartAt,
 					GroupIndex:  groupState.GroupIndex,
@@ -509,16 +508,16 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 		// 	groups = append(groups, newg)
 
 		// }
-		deindex--
+		deIndex--
 	}
 
 	// 从写入的step中查找相关信息, 写入stepgroup
 	var masterstep po.Step
 	for _, g := range groups {
 		masterstep = po.Step{
-			ExecutionID: dbexecution_id,
+			ExecutionID: dbExeId,
 			Name:        g.SubGroupState.MasterName,
-			GroupID:     g.SubGroupState.MasterGroupID + offset_groupid,
+			GroupID:     g.SubGroupState.MasterGroupID + offsetGroupId,
 		}
 		err = tx.Where(masterstep).Select(StepFields.L1).Take(&masterstep).Error
 		if err != nil {
@@ -536,8 +535,8 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	// 获得第一个步骤
 	var exestartstep = po.Step{
 		Name:        smb.StartAt,
-		ExecutionID: dbexecution_id,
-		GroupID:     grammar.StartGroupID + offset_groupid,
+		ExecutionID: dbExeId,
+		GroupID:     states.StartGroupID + offsetGroupId,
 	}
 
 	err = tx.Where(exestartstep).Select(StepFields.L1).Take(&exestartstep).Error
@@ -546,7 +545,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	}
 
 	resp.StartStepID = exestartstep.ID
-	resp.MinDeindex = deindex
+	resp.MinDeindex = deIndex
 	resp.StartGroupID = exestartstep.GroupID
 	resp.MaxGroupID = max_group_id
 
@@ -598,7 +597,7 @@ func (e *Execution) ProcessAbortTimeout() error {
 	}
 	e.ExecutionService.SendExecutionEvents(event1)
 	// 清理过期的消息
-	err = e.ExecutionService.innerqueue.CleanExecutionMessage(e.Data.ID)
+	err = e.ExecutionService.InnerQueue.CleanExecutionMessage(e.Data.ID)
 	return err
 }
 
@@ -694,17 +693,17 @@ func (e *Execution) ProcessSucceed(output string) error {
 
 	var err error
 	starttime := time.Now()
-	var dbexecution po.Execution
+	var dbExe *po.Execution
 	// 开始事务
 	tx, maker := e.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	// 查询 output
-	dbexecution, err = e.ExecutionService.QueryExecutionByID(e.Data.ID, []string{"id", "output"}, tx)
+	dbExe, err = e.ExecutionService.QueryExecutionByID(e.Data.ID, []string{"id", "output"}, tx)
 	if err != nil {
 		return err
 	}
-	// 更新状态为Success, 同时更新Finsishtime
+	// 更新状态为Success, 同时更新Finish Time
 	now := time.Now()
 	updateexecution := po.Execution{
 		FinishTime: &now,
@@ -721,17 +720,17 @@ func (e *Execution) ProcessSucceed(output string) error {
 
 	finishtime := time.Now()
 	event1 := vo.ExecutionEvent{
-		ExecutionID: dbexecution.ID,
+		ExecutionID: dbExe.ID,
 		StepName:    ExecutionEventStateName.End,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_ExecutionSucceeded{
-			Output: dbexecution.Output,
+			Output: dbExe.Output,
 		},
 	}
 	e.ExecutionService.SendExecutionEvents(event1)
 	// 清理过期的消息
-	err = e.ExecutionService.innerqueue.CleanExecutionMessage(dbexecution.ID)
+	err = e.ExecutionService.InnerQueue.CleanExecutionMessage(dbExe.ID)
 	return err
 }
 
@@ -773,12 +772,12 @@ func (e *Execution) StopExecution(errorcode string, cause string) error {
 func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Tx) (
 	resp StopExecutionResponse, err error) {
 
-	var dbexecution_id = e.Data.ID
-	var dbexecution_uuid = e.Data.UUID
+	var dbExeId = e.Data.ID
+	var dbExecutionUuid = e.Data.UUID
 	starttime := time.Now()
 	//避免重复stop
 	if e.Data.Status == string(ExecutionStatus.Aborted) {
-		err = fmt.Errorf("%w : execution [ %s ] has been stopped", ErrorExecutionStatus, dbexecution_uuid)
+		err = fmt.Errorf("%w : execution [ %s ] has been stopped", ErrorExecutionStatus, dbExecutionUuid)
 		return
 	}
 	var exceptData = ExceptionData{
@@ -793,14 +792,14 @@ func (e *Execution) _StopExecution(errorcode string, cause string, tx rdb.Tx) (
 		Exception: exceptDataString,
 	}
 
-	err = tx.Where(po.Execution{ID: dbexecution_id}).Updates(&updateexecution).Error
+	err = tx.Where(po.Execution{ID: dbExeId}).Updates(&updateexecution).Error
 	if err != nil {
 		return
 	}
 
 	finishtime := time.Now()
 	event := vo.ExecutionEvent{
-		ExecutionID: dbexecution_id,
+		ExecutionID: dbExeId,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_ExecutionAbort{

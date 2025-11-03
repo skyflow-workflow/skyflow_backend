@@ -1,10 +1,32 @@
 package executor
 
+/*
+ * @Author: mumangtao@gmail.com
+ * @Date: 2020-08-08 22:12:01
+ * @Last Modified by: mumangtao@gmail.com
+ * @Last Modified time: 2020-08-08 22:18:13
+ */
+
 import (
 	"time"
 
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
+
+// ExecutionEvent event结构
+type ExecutionEvent struct {
+	ID            int
+	ExecutionID   int
+	ExecutionUUID string
+	ExecutionURI  string
+	StepName      string
+	StepID        int
+	EventType     string
+	NanoSeconds   string
+	Data          interface{}
+	StartTime     time.Time
+	FinishTime    time.Time
+}
 
 // EventContent Event Content Base Struct
 type EventContent struct {
@@ -33,6 +55,14 @@ type EventContent_ExecutionSucceeded struct {
 type EventContent_ExecutionFailed struct {
 	Error string `json:"error"`
 	Cause string `json:"cause"`
+}
+
+// EventContent_ExecutionSuspend  Event Content for Execution Suspend
+type EventContent_ExecutionSuspend struct {
+}
+
+// EventContent_ExecutionBlocked  Event Content for Execution Suspend
+type EventContent_ExecutionBlocked struct {
 }
 
 // EventContent_ExecutionContinue  Event Content for Execution Suspend
@@ -92,7 +122,7 @@ type EventContent_StateExited struct {
 	Output interface{} `json:"output"`
 }
 
-// EventContent_StateFailed   state failed
+// EventContent_StateFailed   state faild
 type EventContent_StateFailed struct {
 	Error string `json:"error"`
 	Cause string `json:"cause"`
@@ -193,11 +223,10 @@ type EventContent_StepGroupFailed struct {
 
 // EventContent_ActivityScheduled   activity scheduled
 type EventContent_ActivityScheduled struct {
-	Input            interface{}    `json:"input"`
-	Resource         string         `json:"resource"`
-	TimeoutSeconds   int            `json:"timeout_seconds"`
-	HeartbeatSeconds int            `json:"heartbeat_seconds"`
-	RequestInfo      vo.RequestInfo `json:"requestinfo"`
+	Input       interface{}      `json:"input"`
+	Resource    string           `json:"resource"`
+	Timeout     ActivityTaskData `json:"timeout"`
+	RequestInfo vo.RequestInfo   `json:"requestinfo"`
 }
 
 // EventContent_TaskInitialized   activity scheduled
@@ -208,7 +237,7 @@ type EventContent_TaskInitialized struct {
 	Resource         string
 }
 
-// EventContent_TaskSendHeartbeat   activity scheduled
+// EventContent_TaskSendHeartbeatd   activity scheduled
 type EventContent_TaskSendHeartbeat struct {
 	Message     string         `json:"message"`
 	RequestInfo vo.RequestInfo `json:"requestinfo"`

@@ -23,7 +23,6 @@ import (
 )
 
 // StepErrorProcess state 执行报错时候的处理方式
-// NOCC:golint/fnsize("设计如此")
 func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, msg queue.InnerMessage) error {
 	var err error
 	var tx rdb.Tx
@@ -163,7 +162,7 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 	defer maker.Close(&err)
 
 	tx.Begin()
-	resp, err := svc._StartExecution(req, wf, tx)
+	resp, err := svc._StartExecution(req, sm, tx)
 	if err != nil {
 		return dbNull, err
 	}
@@ -419,9 +418,9 @@ func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (*
 
 }
 
-// ProcessFindNextState  find next state
+// ProcessFindNextStep  find next state
 // NOCC:golint/fnsize("设计如此")
-func (svc *executionService) ProcessFindNextState(message queue.InnerMessageBody) error {
+func (svc *executionService) ProcessFindNextStep(message queue.InnerMessageBody) error {
 
 	var dbStep po.Step
 	var err error
@@ -659,7 +658,7 @@ func (svc *executionService) SendStepSkip(ctx context.Context, req vo.SendStepSk
 	}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(dbstep.ExecutionID)
+	lock := svc.LockService.LockExecution(dbstep.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -791,13 +790,13 @@ func (svc *executionService) SendStepSkip(ctx context.Context, req vo.SendStepSk
 
 	svc.SendExecutionEvents(event1, event2)
 
-	fns := FindNextState{
+	fns := FindNextStep{
 		Name:    req.NextStepName,
 		GroupID: dbstep.GroupID,
 	}
 
 	// 写入message queue ,处理人工干预消息
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextState, req.StepID, fns)
+	message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextStep, req.StepID, fns)
 	err = svc.SendInnerMessage(message, time.Now())
 	if err != nil {
 		return err
@@ -820,7 +819,7 @@ func (svc *executionService) SendStepFailed(step_id int) error {
 	}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(dbstep.ExecutionID)
+	lock := svc.LockService.LockExecution(dbstep.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -890,17 +889,17 @@ func (svc *executionService) SendStepFailed(step_id int) error {
 func (svc *executionService) RedoStep(step_id int) error {
 
 	var err error
-	var dbstep po.Step
-	var dbexecution po.Execution
+	var dbStep *po.Step
+	var dbExecution *po.Execution
 
 	// 初始化查询信息
-	dbstep, err = svc.QueryStepByID(step_id, StepFields.L1, nil)
+	dbStep, err = svc.QueryStepByID(step_id, StepFields.L1, nil)
 	if err != nil {
 		return err
 	}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(dbstep.ExecutionID)
+	lock := svc.LockService.LockExecution(dbStep.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -914,11 +913,11 @@ func (svc *executionService) RedoStep(step_id int) error {
 	starttime := time.Now()
 
 	// L3 包含 definition
-	dbstep, err = svc.QueryStepByID(step_id, StepFields.L2, tx)
+	dbStep, err = svc.QueryStepByID(step_id, StepFields.L2, tx)
 	if err != nil {
 		return err
 	}
-	dbexecution, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, tx)
+	dbExecution, err = svc.QueryExecutionByID(dbStep.ExecutionID, ExecutionFields.L1, tx)
 	if err != nil {
 		return err
 	}
@@ -931,30 +930,30 @@ func (svc *executionService) RedoStep(step_id int) error {
 	// }
 
 	// Execution 是Failed /Running 状态
-	if !slices.Contains([]string{string(ExecutionStatus.Running), string(ExecutionStatus.Failed)}, dbexecution.Status) {
-		err = fmt.Errorf("%w: current execution status '%s' is invalid", vo.ErrorExecutionStatus, dbexecution.Status)
+	if !slices.Contains([]string{string(ExecutionStatus.Running), string(ExecutionStatus.Failed)}, dbExecution.Status) {
+		err = fmt.Errorf("%w: current execution status '%s' is invalid", vo.ErrorExecutionStatus, dbExecution.Status)
 		return err
 	}
 
 	// 清理过期的token
-	err = svc.CleanStepToken(dbstep.ID, tx)
+	err = svc.CleanStepToken(dbStep.ID, tx)
 	if err != nil {
 		return err
 	}
 	// 修改步骤状态
-	err = svc.ChangeStepStatus(dbstep.ID, StepStatus.WaitInit, tx)
+	err = svc.ChangeStepStatus(dbStep.ID, StepStatus.WaitInit, tx)
 	if err != nil {
 		return err
 	}
 
 	// 	递归修改组状态
-	err = svc.ChangeMasterGroupStatus(dbstep.ExecutionID, dbstep.GroupID, ExecutionStatus.Running, tx)
+	err = svc.ChangeMasterGroupStatus(dbStep.ExecutionID, dbStep.GroupID, ExecutionStatus.Running, tx)
 	if err != nil {
 		return err
 	}
 
 	// 更新execution 状态
-	err = svc.ChangeExecutionStatus(dbstep.ExecutionID, ExecutionStatus.Running, tx)
+	err = svc.ChangeExecutionStatus(dbStep.ExecutionID, ExecutionStatus.Running, tx)
 	if err != nil {
 		return err
 	}
@@ -963,21 +962,21 @@ func (svc *executionService) RedoStep(step_id int) error {
 
 	finishtime := time.Now()
 	event := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		ExecutionID: dbStep.ExecutionID,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_RedoStep{
-			ExecuteCount: dbstep.ExecuteCount,
+			ExecuteCount: dbStep.ExecuteCount,
 		},
 	}
 
 	svc.SendExecutionEvents(event)
 
 	//  写入message queue ,发送手动处理消息
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.StateNewTurn, dbstep.ID, nil)
-	err = svc.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateNewTurn, dbStep.ID, nil)
+	err = svc.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -998,7 +997,7 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 		return err
 	}
 
-	lock := svc.lockservice.LockExecution(dbexecution.ID)
+	lock := svc.LockService.LockExecution(dbexecution.ID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -1019,7 +1018,7 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 	suspendstepcond := po.Step{
 		ExecutionID: dbexecution.ID,
 		Status:      string(ExecutionStatus.Suspending),
-		Type:        string(states.StateType.Suspend),
+		Type:        string(states.StateTypes.Suspend),
 	}
 	err = tx.Where(suspendstepcond).Select(StepFields.L2).Find(&dbsteps).Error
 	if err != nil {
@@ -1061,7 +1060,7 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 			return err
 		}
 
-		fns := FindNextState{
+		fns := FindNextStep{
 			Name:    ns.Name,
 			GroupID: dbstep.GroupID,
 		}
@@ -1077,7 +1076,7 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 		}
 
 		events = append(events, event)
-		message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextState, dbstep.ID, fns)
+		message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextStep, dbstep.ID, fns)
 		messages = append(messages, message)
 
 	}
@@ -1122,8 +1121,8 @@ func (svc *executionService) ResumeExecution(execution_id int) error {
 func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 
 	var err error
-	var dbexecution po.Execution
-	var dbstep po.Step
+	var dbExecution *po.Execution
+	var dbstep *po.Step
 
 	// 加Execution 锁
 	// L3 包含 definition
@@ -1132,7 +1131,7 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 		return err
 	}
 
-	lock := svc.lockservice.LockExecution(dbstep.ExecutionID)
+	lock := svc.LockService.LockExecution(dbstep.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -1163,7 +1162,7 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 	if err != nil {
 		return err
 	}
-	dbexecution, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, tx)
+	dbExecution, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, tx)
 	if err != nil {
 		return err
 	}
@@ -1177,8 +1176,8 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 
 	// Execution 是Failed /Running 状态
 	if !slices.Contains([]string{string(ExecutionStatus.Suspending), string(ExecutionStatus.Running)},
-		dbexecution.Status) {
-		err = fmt.Errorf("execution [ %s ]  Status Should Not  Be [ %s ]", dbexecution.UUID, dbexecution.Status)
+		dbExecution.Status) {
+		err = fmt.Errorf("execution [ %s ]  Status Should Not  Be [ %s ]", dbExecution.UUID, dbExecution.Status)
 		return err
 	}
 
@@ -1227,21 +1226,21 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 		StepName:    dbstep.Name,
 		Data: EventContent_ExecutionInfoModified{
 			Field:  DataModifyField.Status,
-			Before: dbexecution.Status,
+			Before: dbExecution.Status,
 			After:  string(ExecutionStatus.Running),
 		},
 	}
 
 	svc.SendExecutionEvents(event1, event2)
 
-	fns := FindNextState{
+	fns := FindNextStep{
 		Name:    ns.Name,
 		GroupID: dbstep.GroupID,
 	}
 
 	// 写入message queue ,处理人工干预消息
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextState, step_id, fns)
-	err = svc.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextStep, step_id, fns)
+	err = svc.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -1253,8 +1252,8 @@ func (svc *executionService) ResumeSuspendingStep(step_id int) error {
 func (svc *executionService) SendStepRetry(step_id int) error {
 
 	var err error
-	var dbstep po.Step
-	var dbexecution po.Execution
+	var dbStep *po.Step
+	var dbExecution *po.Execution
 
 	// 开始事务
 	tx, maker := svc.MetaDB.NewTxMaker(nil)
@@ -1265,26 +1264,26 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 	starttime := time.Now()
 
 	// L3 包含 definition
-	dbstep, err = svc.QueryStepByID(step_id, StepFields.L2, txf)
+	dbStep, err = svc.QueryStepByID(step_id, StepFields.L2, txf)
 	if err != nil {
 		return err
 	}
-	dbexecution, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, tx)
+	dbExecution, err = svc.QueryExecutionByID(dbStep.ExecutionID, ExecutionFields.L1, tx)
 	if err != nil {
 		return err
 	}
 
 	if !slices.Contains([]string{string(ExecutionStatus.Failed), string(ExecutionStatus.Running)},
-		dbexecution.Status) {
-		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorExecutionStatus, dbexecution.Status)
+		dbExecution.Status) {
+		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorExecutionStatus, dbExecution.Status)
 		return err
 	}
-	if dbstep.Status != string(StepStatus.Failed) {
-		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorStepStatus, dbstep.Status)
+	if dbStep.Status != string(StepStatus.Failed) {
+		err = fmt.Errorf("%w: current execution status ' %s'", vo.ErrorStepStatus, dbStep.Status)
 		return err
 	}
-	if dbstep.Type == string(states.StateTypes.Parallel) || dbstep.Type == string(states.StateTypes.Map) || dbstep.Type == string(states.StateTypes.StateGroup) {
-		err = fmt.Errorf("%w: operation: 'Retry' , step type '%s'", vo.ErrorUnsupportOperationForStep, dbstep.Type)
+	if dbStep.Type == string(states.StateTypes.Parallel) || dbStep.Type == string(states.StateTypes.Map) || dbStep.Type == string(states.StateTypes.StateGroup) {
+		err = fmt.Errorf("%w: operation: 'Retry' , step type '%s'", vo.ErrorUnsupportOperationForStep, dbStep.Type)
 		return err
 	}
 
@@ -1301,13 +1300,13 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 	}
 
 	// 	递归修改组状态
-	err = svc.ChangeMasterGroupStatus(dbstep.ExecutionID, dbstep.GroupID, ExecutionStatus.Running, tx)
+	err = svc.ChangeMasterGroupStatus(dbStep.ExecutionID, dbStep.GroupID, ExecutionStatus.Running, tx)
 	if err != nil {
 		return err
 	}
 
 	// 更新execution 状态
-	err = svc.ChangeExecutionStatus(dbstep.ExecutionID, ExecutionStatus.Running, tx)
+	err = svc.ChangeExecutionStatus(dbStep.ExecutionID, ExecutionStatus.Running, tx)
 	if err != nil {
 		return err
 	}
@@ -1315,13 +1314,13 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 
 	finishtime := time.Now()
 	event := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		ExecutionID: dbStep.ExecutionID,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_StepRetry{
-			ExecuteCount: dbstep.ExecuteCount,
+			ExecuteCount: dbStep.ExecuteCount,
 		},
 	}
 
@@ -1331,8 +1330,8 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 		Block: true,
 	}
 	//  写入message queue ,发送手动处理消息
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.StateNewTurn, dbstep.ID, msg)
-	err = svc.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateNewTurn, dbStep.ID, msg)
+	err = svc.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -1421,8 +1420,8 @@ func (svc *executionService) ChangeMasterGroupStatus(execution_id int, group_id 
 func (svc *executionService) ChangeStepGroupStatus(step_id int, status _ExecutionStatusType, tx rdb.Tx) error {
 
 	var err error
-	var dbstep po.Step
-	var dbstepgroup po.StepGroup
+	var dbStep *po.Step
+	var dbStepGroup *po.StepGroup
 	var curstep_id = step_id
 
 	// 开始事务
@@ -1434,12 +1433,12 @@ func (svc *executionService) ChangeStepGroupStatus(step_id int, status _Executio
 	}
 
 	for {
-		dbstep, err = svc.QueryStepByID(curstep_id, StepFields.L2, tx)
+		dbStep, err = svc.QueryStepByID(curstep_id, StepFields.L2, tx)
 		if err != nil {
 			return err
 		}
 		// 如果已经更新了。则说明不需要更新， 说明上层都是Running 预期，可以直接返回
-		if dbstep.Status == string(status) {
+		if dbStep.Status == string(status) {
 			return nil
 		}
 		// 更新step 状态
@@ -1448,30 +1447,30 @@ func (svc *executionService) ChangeStepGroupStatus(step_id int, status _Executio
 			return err
 		}
 		// 如果发现自己在最外层， 就可以返回了
-		if dbstep.GroupID == states.StartGroupID {
+		if dbStep.GroupID == states.StartGroupID {
 			break
 		}
 		// 如果自身是StepGroup， 算出自身的MasterID步骤,更新MasterStep的状态
-		if dbstep.Type == states.StateType.StateGroup {
+		if dbStep.Type == states.StateTypes.StateGroup {
 
 			// 找到MasterStepID
-			dbstepgroup, err = svc.QueryStepGroupByStepID(dbstep.ID, tx)
+			dbStepGroup, err = svc.QueryStepGroupByStepID(dbStep.ID, tx)
 			if err != nil {
 				return err
 			}
-			curstep_id = dbstepgroup.MasterStepID
+			curstep_id = dbStepGroup.MasterStepID
 		} else {
 			// 找到StepGroupID
 			// 如果不是stepgroup ,计算出当前的stepgroup
 			stepgroupcond := po.StepGroup{
-				ExecutionID: dbstep.ExecutionID,
-				SubGroupID:  dbstep.GroupID,
+				ExecutionID: dbStep.ExecutionID,
+				SubGroupID:  dbStep.GroupID,
 			}
-			err = session.Where(stepgroupcond).Take(&dbstepgroup).Error
+			err = tx.Where(stepgroupcond).Take(&dbStepGroup).Error
 			if err != nil {
 				return err
 			}
-			curstep_id = dbstepgroup.StepID
+			curstep_id = dbStepGroup.StepID
 		}
 
 		//如果不是running , 就结束了
@@ -1515,9 +1514,9 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	var activitytaskid int
 	var found = false
 
-	var dbtask po.Step
-	var dbexecution po.Execution
-	var atdata ActivityTaskData
+	var dbTask *po.Step
+	var dbExecution *po.Execution
+	var atData ActivityTaskData
 	var dbActivityTask po.ActivityTask
 
 	starttime := time.Now()
@@ -1541,22 +1540,22 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 		// 加排它锁， 处理activity task
 		err = rdb.ForUpdate(tx).Where(po.ActivityTask{ID: int64(activitytaskid)}).Take(&dbActivityTask).Error
 		// 如果发现不存在，则忽略，尝试下一个
-		if rdb.IsRecordNotFound(err) {
+		if rdb.IsErrRecordNotFound(err) {
 			continue
 		}
 		if err != nil {
 			return
 		}
-		err = tx.Where(po.Step{ID: dbActivityTask.StepID}).Select(append(StepFields.L1, "execute_count")).Take(&dbtask).Error
+		err = tx.Where(po.Step{ID: dbActivityTask.StepID}).Select(append(StepFields.L1, "execute_count")).Take(&dbTask).Error
 		if err != nil {
 			return
 		}
-		err = tx.Where(po.Execution{ID: dbActivityTask.ExecutionID}).Select(ExecutionFields.L1).Take(&dbexecution).Error
+		err = tx.Where(po.Execution{ID: dbActivityTask.ExecutionID}).Select(ExecutionFields.L1).Take(&dbExecution).Error
 		if err != nil {
 			return
 		}
-		if !(dbtask.Status == string(StepStatus.Wait) &&
-			dbexecution.Status == string(ExecutionStatus.Running)) {
+		if !(dbTask.Status == string(StepStatus.Wait) &&
+			dbExecution.Status == string(ExecutionStatus.Running)) {
 			err = tx.Where(po.ActivityTask{ID: dbActivityTask.ID}).Delete(new(po.ActivityTask)).Error
 			if err != nil {
 				tx.Rollback()
@@ -1574,7 +1573,7 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 		err = fmt.Errorf("%w : %s", vo.ErrorActivityTaskNotFound, req.ActivityURI)
 		return
 	}
-	err = json.Unmarshal([]byte(dbActivityTask.Data), &atdata)
+	err = json.Unmarshal([]byte(dbActivityTask.Data), &atData)
 	if err != nil {
 		return
 	}
@@ -1602,13 +1601,13 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	event := vo.ExecutionEvent{
 		ExecutionID: dbActivityTask.ExecutionID,
 		StepID:      dbActivityTask.StepID,
-		StepName:    dbtask.Name,
+		StepName:    dbTask.Name,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_ActivityScheduled{
 			Input:       dbActivityTask.Input,
 			Resource:    dbActivityTask.Resource,
-			Timeout:     atdata,
+			Timeout:     atData,
 			RequestInfo: requestinfo,
 		},
 	}
@@ -1617,19 +1616,19 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 
 	// 发送超时消息
 	mec := TaskTimeoutMessage{
-		HeartbeatCount: atdata.HeartbeatCount,
-		ExecuteCount:   dbtask.ExecuteCount,
+		HeartbeatCount: atData.HeartbeatCount,
+		ExecuteCount:   dbTask.ExecuteCount,
 		TaskToken:      dbActivityTask.Token,
 	}
 	// send mq
 	// 如果设置有有效的超时时间的话，发送超时消息
-	if atdata.TimeoutSeconds > 0 {
+	if atData.TimeoutSeconds > 0 {
 		// send timing message 发送定时消息,
 		// 发送超时事件， 准备做超时处理。
-		timouttime := time.Now().Add(time.Second * time.Duration(atdata.TimeoutSeconds))
+		timouttime := time.Now().Add(time.Second * time.Duration(atData.TimeoutSeconds))
 
 		tasktimeoutMsg := NewStepMessage(dbActivityTask.ExecutionID,
-			MessageType.TaskTimeoutTimeup, dbtask.ID, mec)
+			MessageType.TaskTimeoutTimeup, dbTask.ID, mec)
 		err = svc.SendInnerMessage(tasktimeoutMsg, &timouttime)
 		if err != nil {
 			return
@@ -1637,12 +1636,12 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	}
 
 	// 如果设置有有效的心跳时间的话，发送心跳消息
-	if atdata.HeartbeatSeconds > 0 {
+	if atData.HeartbeatSeconds > 0 {
 		// send timing message 发送定时消息,
 		// 发送超时事件， 准备做超时处理。
-		timouttime := time.Now().Add(time.Second * time.Duration(atdata.HeartbeatSeconds))
+		timouttime := time.Now().Add(time.Second * time.Duration(atData.HeartbeatSeconds))
 		tasktimeoutMsg := NewStepMessage(dbActivityTask.ExecutionID,
-			MessageType.TaskHeartBeatTimeup, dbtask.ID, mec)
+			MessageType.TaskHeartBeatTimeup, dbTask.ID, mec)
 		err = svc.SendInnerMessage(tasktimeoutMsg, &timouttime)
 		if err != nil {
 			return
@@ -1650,12 +1649,12 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	}
 
 	resp = vo.GetActivityTaskResponse{
-		Step:             &dbtask,
-		Execution:        &dbexecution,
+		Step:             dbTask,
+		Execution:        dbExecution,
 		Input:            dbActivityTask.Input,
 		TaskToken:        dbActivityTask.Token,
-		TimeoutSeconds:   atdata.TimeoutSeconds,
-		HeartbeatSeconds: atdata.HeartbeatSeconds,
+		TimeoutSeconds:   atData.TimeoutSeconds,
+		HeartbeatSeconds: atData.HeartbeatSeconds,
 	}
 	return
 }
@@ -1765,7 +1764,7 @@ func (svc *executionService) RetryExecution(execution_id int) error {
 	var dbexecution = po.Execution{}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(execution_id)
+	lock := svc.LockService.LockExecution(execution_id)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -1809,7 +1808,7 @@ func (svc *executionService) RetryExecution(execution_id int) error {
 	}
 
 	var events []ExecutionEvent
-	var messages []queue.InnerMessage
+	var messages []queue.InnerMessageBody
 
 	event := vo.ExecutionEvent{
 		ExecutionID: dbexecution.ID,
@@ -1868,7 +1867,7 @@ func (svc *executionService) RetryExecution(execution_id int) error {
 
 	// 写入message queue ,发送手动处理消息
 	for _, message := range messages {
-		err = svc.SendInnerMessage(message, time.Now())
+		err = svc.SendInnerMessage(message, nil)
 		if err != nil {
 			return err
 		}
@@ -1954,13 +1953,13 @@ func (svc *executionService) LoadTaskData(ctx context.Context, step_id int) (dat
 func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlokcedTaskRequest) error {
 
 	var err error
-	var dbstep po.Step
-	var dbnextstep po.Step
-	var dbexe po.Execution
+	var dbStep *po.Step
+	var dbNextStep *po.Step
+	var dbExe *po.Execution
 	starttime := time.Now()
 	requestinfo := vo.GetRequestInfo(ctx)
 	// 查询不开启事务
-	dbstep, err = svc.QueryStepByID(req.StepID, StepFields.L1, nil)
+	dbStep, err = svc.QueryStepByID(req.StepID, StepFields.L1, nil)
 	if err != nil {
 		return err
 	}
@@ -1968,26 +1967,26 @@ func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlo
 	tx, maker := svc.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 	txf := rdb.ForUpdate(tx)
-	dbexe, err = svc.QueryExecutionByID(dbstep.ExecutionID, ExecutionFields.L1, txf)
+	dbExe, err = svc.QueryExecutionByID(dbStep.ExecutionID, ExecutionFields.L1, txf)
 	if err != nil {
 		return err
 	}
-	dbstep, err = svc.QueryStepByID(req.StepID, append(StepFields.L1, "group_id", "group_index"), nil)
+	dbStep, err = svc.QueryStepByID(req.StepID, append(StepFields.L1, "group_id", "group_index"), nil)
 	if err != nil {
 		return err
 	}
-	if !(dbexe.Status == string(ExecutionStatus.Blocked) && dbstep.Status == string(StepStatus.Blocked)) {
-		err = fmt.Errorf("%w: current execution status '%s' step status '%s'", vo.ErrorExecutionStatus, dbexe.Status, dbstep.Status)
+	if !(dbExe.Status == string(ExecutionStatus.Blocked) && dbStep.Status == string(StepStatus.Blocked)) {
+		err = fmt.Errorf("%w: current execution status '%s' step status '%s'", vo.ErrorExecutionStatus, dbExe.Status, dbStep.Status)
 		return err
 	}
 
 	nextstepquery := po.Step{
-		ExecutionID: dbstep.ExecutionID,
-		GroupID:     dbstep.GroupID,
-		GroupIndex:  dbstep.GroupIndex + 1,
+		ExecutionID: dbStep.ExecutionID,
+		GroupID:     dbStep.GroupID,
+		GroupIndex:  dbStep.GroupIndex + 1,
 	}
-	err = tx.Where(nextstepquery).Select(StepFields.L1).Take(&dbnextstep).Error
-	if err != nil && !rdb.IsRecordNotFound(err) {
+	err = tx.Where(nextstepquery).Select(StepFields.L1).Take(&dbNextStep).Error
+	if err != nil && !rdb.IsErrRecordNotFound(err) {
 		return err
 	}
 
@@ -1997,29 +1996,29 @@ func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlo
 		Output:     "{}",
 		FinishTime: &now,
 	}
-	err = tx.Where(po.Step{ID: dbstep.ID}).Updates(&updatestep).Error
+	err = tx.Where(po.Step{ID: dbStep.ID}).Updates(&updatestep).Error
 	if err != nil {
 		return err
 	}
-	err = svc.ChangeMasterGroupStatus(dbstep.ExecutionID, dbstep.GroupID, ExecutionStatus.Running, tx)
+	err = svc.ChangeMasterGroupStatus(dbStep.ExecutionID, dbStep.GroupID, ExecutionStatus.Running, tx)
 	if err != nil {
 		return err
 	}
 
-	err = tx.Where(po.Execution{ID: dbexe.ID}).Updates(po.Execution{Status: string(ExecutionStatus.Running)}).Error
+	err = tx.Where(po.Execution{ID: dbExe.ID}).Updates(po.Execution{Status: string(ExecutionStatus.Running)}).Error
 	if err != nil {
 		return err
 	}
 	tx.Commit()
 
-	fns := FindNextState{
-		Name:    dbnextstep.Name,
-		GroupID: dbstep.GroupID,
+	fns := FindNextStep{
+		Name:    dbNextStep.Name,
+		GroupID: dbStep.GroupID,
 	}
 
 	// 写入message queue ,处理人工干预消息
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.FindNextState, req.StepID, fns)
-	err = svc.SendInnerMessage(message, time.Now())
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextState, req.StepID, fns)
+	err = svc.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -2027,9 +2026,9 @@ func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlo
 	finishtime := time.Now()
 
 	event1 := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		ExecutionID: dbStep.ExecutionID,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 
@@ -2041,14 +2040,14 @@ func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlo
 	}
 
 	event2 := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
+		ExecutionID: dbStep.ExecutionID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		Data: EventContent_ExecutionInfoModified{
 			Field:  DataModifyField.Status,
-			Before: dbexe.Status,
+			Before: dbExe.Status,
 			After:  string(ExecutionStatus.Running),
 		},
 	}
@@ -2112,7 +2111,7 @@ func (svc *executionService) UnblockTask(ctx context.Context, req vo.UnblockTask
 		Block: true,
 	}
 	msg := NewStepMessage(dbstep.ExecutionID, MessageType.StateExecute, dbstep.ID, msgdata)
-	err = svc.SendInnerMessage(msg, time.Now())
+	err = svc.SendInnerMessage(msg, nil)
 	if err != nil {
 		return err
 	}
@@ -2140,10 +2139,10 @@ func (svc *executionService) UnblockExecution(ctx context.Context, execution_id 
 	var err error
 	starttime := time.Now()
 	requestinfo := vo.GetRequestInfo(ctx)
-	var dbexecution = po.Execution{}
+	var dbexecution = &po.Execution{}
 
 	// 加锁
-	lock := svc.lockservice.LockExecution(execution_id)
+	lock := svc.LockService.LockExecution(execution_id)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -2176,9 +2175,12 @@ func (svc *executionService) UnblockExecution(ctx context.Context, execution_id 
 	// 需要处理的失败节点列表
 	waitingtates := []po.Step{}
 	for _, dbstep := range dbsteps {
-		if dbstep.Type == states.StateType.Parallel || dbstep.Type == states.StateType.Map || dbstep.Type == states.StateType.StateGroup {
+		if slices.Contains(
+			[]string{string(states.StateTypes.Parallel), string(states.StateTypes.Map), string(states.StateTypes.StateGroup)},
+			dbstep.Type) {
 			continue
 		}
+
 		waitingtates = append(waitingtates, dbstep)
 	}
 

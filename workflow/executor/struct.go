@@ -79,8 +79,8 @@ type ChangeStepStatusRequest struct {
 type InsertStateMachineOption struct {
 	// StartGroupID 可以使用的状态组ID
 	StartGroupID int
-	//StartDeindex 可以使用的开始状态递减索引
-	StartDeindex int
+	//StartDeIndex 可以使用的开始状态递减索引
+	StartDeIndex int
 	// StartDepth 可以使用的开始状态深度
 	StartDepth int
 }
