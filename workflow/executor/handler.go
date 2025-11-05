@@ -184,7 +184,7 @@ func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, state
 
 	var uuids string
 
-	_, err = states.ToMap(req.Input)
+	_, err = states.StringToMap(req.Input)
 	if err != nil {
 		err = fmt.Errorf("%w: input error: %s", vo.ErrorParameterInvalid, err.Error())
 		return

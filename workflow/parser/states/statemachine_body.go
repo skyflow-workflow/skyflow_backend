@@ -39,7 +39,7 @@ func (smb *StateMachineBody) SetNewStateFunc(f func(data map[string]any, depth i
 
 func NewStateMachineBodyFromString(definition string, depth int) (smb *StateMachineBody, err error) {
 
-	datamap, err := ToMap(definition)
+	datamap, err := StringToMap(definition)
 	if err != nil {
 		return
 	}

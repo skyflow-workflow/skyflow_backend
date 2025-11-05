@@ -63,7 +63,7 @@ func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
 
 // NewBaseStateFromString  New State From  String
 func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return
 	}
@@ -73,7 +73,7 @@ func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
 
 func InitBaseState(bs *BaseState, data map[string]interface{}) error {
 
-	err := MapStructDecode(data, bs)
+	err := DecodeMapToStruct(data, bs)
 	if err != nil {
 		return err
 	}

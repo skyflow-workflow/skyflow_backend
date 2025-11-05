@@ -8,7 +8,7 @@ type SucceedState struct {
 // NewSucceedStateFromString NewSucceedStateFromString
 func NewSucceedStateFromString(definition string) (state *SucceedState, err error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return nil, err
 	}

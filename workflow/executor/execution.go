@@ -3,6 +3,7 @@ package executor
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"slices"
 	"sort"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
-	"trpc.group/trpc-go/tnet/log"
 )
 
 // Execution  StateMachine 执行实例
@@ -39,15 +39,15 @@ type ExecutionInfo struct {
 func NewExecutionFromID(id int, svc ExecutionService) (*Execution, error) {
 
 	var err error
-	var dbexe *po.Execution
+	var dbExe *po.Execution
 
 	// 使用最小的数据集来来初始化
-	dbexe, err = svc.QueryExecutionByID(id, ExecutionFields.L1, nil)
+	dbExe, err = svc.QueryExecutionByID(id, ExecutionFields.L1, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	exe, err := NewExecutionFromData(dbexe, svc)
+	exe, err := NewExecutionFromData(dbExe, svc)
 	return exe, err
 }
 
@@ -87,6 +87,7 @@ func NewExecutionFromData(data *po.Execution, svc ExecutionService) (exe *Execut
 }
 
 // FullInit 全量初始化
+// 从数据库中查询到Execution 的所有信息， 解析StateMachine， 并初始化StateMachine 结构
 func (exe *Execution) FullInit() error {
 	// 如果已经初始化， 则忽略
 	var err error
@@ -94,17 +95,17 @@ func (exe *Execution) FullInit() error {
 		return nil
 	}
 
-	var dbexecution *po.Execution
+	var dbExecution *po.Execution
 	id := exe.Data.ID
 
 	// 查询到全量的数据
-	dbexecution, err = exe.ExecutionService.QueryExecutionByID(id, []string{}, nil)
+	dbExecution, err = exe.ExecutionService.QueryExecutionByID(id, []string{}, nil)
 
 	if err != nil {
 		return err
 	}
 	// 后面需要计算input
-	exe.Data = dbexecution
+	exe.Data = dbExecution
 
 	sm, err := parser.ParseStateMachine(exe.Data.Definition)
 	if err != nil {
@@ -129,9 +130,9 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 	defer lock.Unlock()
 	tx := lock.GetTx()
 
-	var dbexe *po.Execution
+	var dbExe *po.Execution
 
-	dbexe, err = exe.ExecutionService.QueryExecutionByID(msg.ExecutionID, []string{"id", "status"}, tx)
+	dbExe, err = exe.ExecutionService.QueryExecutionByID(msg.ExecutionID, []string{"id", "status"}, tx)
 	if err != nil {
 		return err
 	}
@@ -140,10 +141,10 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 	// 如果状态在规则中， 则检查状态，如果不在， 则忽略不检查
 	if ok {
 		// 如果不在预期状态中， 忽略事件
-		if !slices.Contains(checkstatus, dbexe.Status) {
+		if !slices.Contains(checkstatus, dbExe.Status) {
 			msg := fmt.Sprintf("execution '%d' process event '%s' current status '%s' not match ",
-				msg.ExecutionID, msg.Type, dbexe.Status)
-			log.Error(msg)
+				msg.ExecutionID, msg.Type, dbExe.Status)
+			slog.Error(msg)
 			return nil
 		}
 	}
@@ -161,7 +162,7 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 	// case MessageType.ExecutionSucceed:
 	// 	err = exe.ProcessSucceed()
 	default:
-		err = fmt.Errorf("unrecognize event '%s' ", msg.Type)
+		err = fmt.Errorf("unrecognized event '%s' ", msg.Type)
 	}
 
 	if err != nil {
@@ -171,6 +172,7 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 }
 
 // GetInput GetInput
+// 计算Execution 的input, 计算ExecutionPath 之后 的input
 func (e *Execution) GetInput() (interface{}, error) {
 	var inputdata, newinputdata interface{}
 	var err error
@@ -196,19 +198,19 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 
 	var bone ExecutionBone
 	var err error
-	var dbsteps []po.Step
-	var dbstepgroups []po.StepGroup
+	var dbSteps []po.Step
+	var dbStepGroups []po.StepGroup
 	//
-	var dbstepmap = map[string]*po.Step{}
+	var dbStepMap = map[string]*po.Step{}
 
 	// 查询数据
 	tx := e.ExecutionService.MetaDB.DB()
-	err = tx.Where(po.Step{ExecutionID: e.Data.ID}).Find(&dbsteps).Error
+	err = tx.Where(po.Step{ExecutionID: e.Data.ID}).Find(&dbSteps).Error
 	if err != nil {
 		return bone, err
 	}
 
-	err = tx.Where(po.StepGroup{ExecutionID: e.Data.ID}).Find(&dbstepgroups).Error
+	err = tx.Where(po.StepGroup{ExecutionID: e.Data.ID}).Find(&dbStepGroups).Error
 	if err != nil {
 		return bone, err
 	}
@@ -226,10 +228,10 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 	// StateBoneMap  按照step_id 生成的 Map
 	var StateMap = map[int]Step{}
 
-	for di := range dbsteps {
-		dp := &dbsteps[di]
+	for di := range dbSteps {
+		dp := &dbSteps[di]
 		// 存成map
-		dbstepmap[dp.Name] = dp
+		dbStepMap[dp.Name] = dp
 		var groupid int
 		newstate, err := NewStepFromData(dp, e.ExecutionService.StandardExecutor)
 		if err != nil {
@@ -257,12 +259,12 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 	// sgmap  StepGroup 按照start_id 进行分组
 	var sgmap = map[int][]*po.StepGroup{}
 	var step_id int
-	for index := range dbstepgroups {
-		step_id = dbstepgroups[index].StepID
+	for index := range dbStepGroups {
+		step_id = dbStepGroups[index].StepID
 		if sgg, ok := sgmap[step_id]; ok {
-			sgmap[step_id] = append(sgg, &(dbstepgroups[index]))
+			sgmap[step_id] = append(sgg, &(dbStepGroups[index]))
 		} else {
-			sgmap[step_id] = []*po.StepGroup{&(dbstepgroups[index])}
+			sgmap[step_id] = []*po.StepGroup{&(dbStepGroups[index])}
 		}
 	}
 	// 排序， 每个 子流程内的多个group 按照index 进行排序
@@ -294,7 +296,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 
 		for _, subgroup := range sg {
 			subgroupid := subgroup.SubGroupID
-			startatnode, ok := dbstepmap[subgroup.StartAt]
+			startatnode, ok := dbStepMap[subgroup.StartAt]
 			if !ok {
 				return bone, fmt.Errorf("state data error: startat state not found ")
 			}
@@ -430,7 +432,8 @@ func (e *Execution) ProcessInit() error {
 	return nil
 }
 
-// InsertStateMachine insert statemachine to db
+// InsertStateMachine 将StateMachine包含的Step 插入到数据库中
+// 根据StateMachineBody 生成Steps, 并且插入到数据库中
 func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertStateMachineOption,
 	tx rdb.Tx) (resp InsertStateMachineResponse, err error) {
 
@@ -545,7 +548,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	}
 
 	resp.StartStepID = exestartstep.ID
-	resp.MinDeindex = deIndex
+	resp.MinDeIndex = deIndex
 	resp.StartGroupID = exestartstep.GroupID
 	resp.MaxGroupID = max_group_id
 

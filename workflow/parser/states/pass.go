@@ -18,7 +18,7 @@ func (p *PassBody) GetOutput(input any) (any, error) {
 // NewPassStateFromString  Create New Pass State From String
 func NewPassStateFromString(definition string) (state *PassState, err error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return
 	}
@@ -49,7 +49,7 @@ func NewPassStateFromMap(data map[string]interface{}) (state *PassState, err err
 
 func NewPassBodyFromMap(data map[string]interface{}) (*PassBody, error) {
 	body := &PassBody{}
-	err := MapStructDecode(data, body)
+	err := DecodeMapToStruct(data, body)
 	if err != nil {
 		return nil, err
 	}

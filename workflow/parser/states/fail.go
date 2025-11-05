@@ -27,7 +27,7 @@ func (fd FailData) String() string {
 // NewFailStateFromString NewFailStateFromString
 func NewFailStateFromString(definition string) (state *FailState, err error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func NewFailBodyFromMap(data map[string]interface{}) (*FailBody, error) {
 
 // InitByMap Inititalize Fail Content
 func InitFailBodyByMap(body *FailBody, data map[string]interface{}) error {
-	err := MapStructDecode(data, body)
+	err := DecodeMapToStruct(data, body)
 	if err != nil {
 		return err
 	}

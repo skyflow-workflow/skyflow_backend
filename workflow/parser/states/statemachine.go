@@ -8,7 +8,7 @@ type StateMachine struct {
 
 func NewStateMachineFromString(data string) (*StateMachine, error) {
 
-	mapdata, err := ToMap(data)
+	mapdata, err := StringToMap(data)
 	if err != nil {
 		return nil, err
 	}

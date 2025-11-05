@@ -352,7 +352,7 @@ func TestRunChoice(t *testing.T) {
 			assert.Equal(t, err == nil, true)
 			bone := cc.GetBone()
 			assert.Equal(t, tt.wantBone, bone)
-			inputmap, err := ToMap(tt.input)
+			inputmap, err := StringToMap(tt.input)
 			assert.Equal(t, err == nil, true)
 			next, err := cc.GetNextState(inputmap)
 			assert.Equal(t, err == nil, true)

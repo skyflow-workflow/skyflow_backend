@@ -18,8 +18,8 @@ func init() {
 	}.Froze()
 }
 
-// ToMap 转换成map
-func ToMap(s string) (map[string]interface{}, error) {
+// StringToMap 转换成map
+func StringToMap(s string) (map[string]interface{}, error) {
 
 	var v map[string]interface{}
 

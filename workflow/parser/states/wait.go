@@ -27,7 +27,7 @@ type WaitState struct {
 // NewWaitStateFromString Create New Wait State
 func NewWaitStateFromString(definition string) (state *WaitState, err error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return
 	}
@@ -61,7 +61,7 @@ func NewWaitBodyFromMap(data map[string]interface{}) (state *WaitBody, err error
 		TimestampPath: "",
 	}
 
-	err = MapStructDecode(data, state)
+	err = DecodeMapToStruct(data, state)
 	if err != nil {
 		return
 	}
@@ -73,7 +73,7 @@ func NewWaitBodyFromMap(data map[string]interface{}) (state *WaitBody, err error
 func InitWaitBodyByMap(body *WaitBody, data map[string]interface{}) (err error) {
 
 	// 初始化自身
-	err = MapStructDecode(data, body)
+	err = DecodeMapToStruct(data, body)
 	if err != nil {
 		return err
 	}
@@ -203,4 +203,9 @@ func (w *WaitState) GetNextState(input interface{}) (NextState, error) {
 		Output: input,
 	}
 	return ns, nil
+}
+
+func (w *WaitState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(w)
+	return data, err
 }

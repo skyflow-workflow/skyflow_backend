@@ -23,7 +23,7 @@ func TestToMap(t *testing.T) {
 	}
 	for idx, tt := range testcases {
 		fmt.Println("index :", idx)
-		val, err := ToMap(tt.template)
+		val, err := StringToMap(tt.template)
 		fmt.Println(err)
 		fmt.Println(val)
 		assert.Equal(t, err != nil, tt.wantError)

@@ -8,6 +8,15 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
+// ExceptionData Step异常数据结构
+type ExceptionData struct {
+	Cause      string      `json:"cause"`       // Detail of the failure
+	Error      string      `json:"error"`       // Error Code of the failure
+	ErrorMatch []string    `json:"error_match"` // Error Code match list
+	Output     interface{} `json:"output"`      // Output of state
+	Extra      string      `json:"extra"`       // Extra information about exception
+}
+
 // StartExecutionResponse function StartExecution Return struct
 type StartExecutionResponse struct {
 	Data     *po.Execution
@@ -94,7 +103,7 @@ type InsertStateMachineResponse struct {
 	// 已插入的状态机 最大的 GroupID
 	MaxGroupID int
 	// 已插入的状态机 最小的 Deindex
-	MinDeindex int
+	MinDeIndex int
 }
 
 var DefaultStepExecuteMessage = StepExecuteMessage{

@@ -12,7 +12,7 @@ func (s *SuspendState) GetBaseState() *BaseState {
 // NewSuspendStateFromString NewSuspendStateFromString
 func NewSuspendStateFromString(definition string) (state *SuspendState, err error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return nil, err
 	}

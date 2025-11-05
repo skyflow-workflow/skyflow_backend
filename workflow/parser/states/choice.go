@@ -80,7 +80,7 @@ func InitChoiceBodyByMap(body *ChoiceBody, data map[string]interface{}) error {
 
 	var err error
 	// 初始化自身
-	err = MapStructDecode(data, body)
+	err = DecodeMapToStruct(data, body)
 	if err != nil {
 		return err
 	}

@@ -78,7 +78,7 @@ var DefaultTaskBody = TaskBody{
 // NewTaskStateFromString  Create New Wait State
 func NewTaskStateFromString(definition string) (state *TaskState, err error) {
 	// state, err = NewGenericStateFromString(definition, NewTaskStateFromMap)
-	mapdata, err := ToMap(definition)
+	mapdata, err := StringToMap(definition)
 	if err != nil {
 		return
 	}
@@ -130,7 +130,7 @@ func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 	// 数据初始化
 	var err error
 	// 初始化自身
-	err = MapStructDecode(data, body)
+	err = DecodeMapToStruct(data, body)
 	if err != nil {
 		return err
 	}
@@ -144,9 +144,13 @@ func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 		// retry 不为空
 		var retrynodes []TaskRetryNode
 		inputretrynodes := data[StateFieldNames.Retry].([]interface{})
-		for _, retrynodedata := range inputretrynodes {
+		for idx, retrynodedata := range inputretrynodes {
+			retrynodeMapData, ok := retrynodedata.(map[string]interface{})
+			if !ok {
+				return fmt.Errorf("'Retry' Node [ %d ] data should be map", idx+1)
+			}
 			node := DefaultRetryNode
-			err = MapStructDecode(retrynodedata, &node)
+			err = DecodeMapToStruct(retrynodeMapData, &node)
 			if err != nil {
 				return err
 			}
@@ -160,9 +164,13 @@ func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 		// retry 不为空
 		var catchnodes []TaskCatchNode
 		inputcatchnodes := data[StateFieldNames.Catch].([]interface{})
-		for _, catchnodedata := range inputcatchnodes {
+		for idx, catchnodedata := range inputcatchnodes {
+			catchnodedata, ok := catchnodedata.(map[string]interface{})
+			if !ok {
+				return fmt.Errorf("'Catch' Node [ %d ] data should be map", idx+1)
+			}
 			node := DefaultCatchNode
-			err = MapStructDecode(catchnodedata, &node)
+			err = DecodeMapToStruct(catchnodedata, &node)
 			if err != nil {
 				return err
 			}
@@ -309,6 +317,11 @@ func (t *TaskState) GetNextState(input any, taskdata TaskSendData) (*NextState, 
 	}
 	err = fmt.Errorf("can't match any strategy")
 	return nil, err
+}
+
+func (t *TaskState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(t)
+	return data, err
 }
 
 // HasIntersection  return  if x and y have common elements

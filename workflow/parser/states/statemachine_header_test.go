@@ -139,7 +139,7 @@ func TestParserHeaderInput(t *testing.T) {
 		fmt.Println(state)
 		// asset
 		assert.Equal(t, err == nil, true)
-		input, err := ToMap(tt.input)
+		input, err := StringToMap(tt.input)
 		assert.Equal(t, err == nil, true)
 		innerinput, err := state.GetInput(input, mockexecution)
 		assert.Equal(t, err != nil, tt.wantError)

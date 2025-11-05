@@ -135,7 +135,7 @@ func (header *StateMachineHeader) Init() error {
 // NewStateMachineHeaderFromString NewStateMachineHeaderFromString
 func NewStateMachineHeaderFromString(definition string) (*StateMachineHeader, error) {
 
-	data, err := ToMap(definition)
+	data, err := StringToMap(definition)
 	if err != nil {
 		return nil, err
 	}
