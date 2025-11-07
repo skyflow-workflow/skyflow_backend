@@ -103,3 +103,8 @@ func (p *PassState) GetNextState(input any) (NextState, error) {
 	ns, err = p.BaseState.GetNextState(input, result)
 	return ns, err
 }
+
+func (p *PassState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(p)
+	return data, err
+}

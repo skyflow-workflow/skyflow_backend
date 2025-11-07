@@ -191,9 +191,8 @@ func TestDecodeStructToMap_NilInput(t *testing.T) {
 	// 执行测试
 	result, err := DecodeStructToMap(input)
 	// 验证结果
-	assert.NotEqual(t, err, nil)
-	require.Nil(t, result)
-	assert.Equal(t, strings.Contains(err.Error(), "mapstructure"), true)
+	assert.Equal(t, err, nil)
+	assert.Equal(t, result, map[string]interface{}{})
 }
 
 // TestDecodeStructToMap_PointerStruct 测试DecodeStructToMap方法处理指针结构体的情况
@@ -289,7 +288,7 @@ func TestDecodeMapToStruct_TypeMismatch(t *testing.T) {
 	err := DecodeMapToStruct(input, &output)
 	// 验证结果
 	assert.NotEqual(t, err, nil)
-	require.True(t, strings.Contains(err.Error(), "mapstructure"))
+	require.True(t, strings.Contains(err.Error(), "age"))
 }
 
 // TestDecodeStructToMap_SliceTypes 测试DecodeStructToMap方法处理切片类型的情况

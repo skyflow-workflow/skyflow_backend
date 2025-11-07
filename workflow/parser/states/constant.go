@@ -10,6 +10,7 @@ package states
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 )
 
 // myValidate self define validator
@@ -253,3 +254,5 @@ var StartDepth = 1
 
 // StartGroupID 最外层的Group ID， 默认为 1
 var StartGroupID = 1
+
+var ParserQuota = config.DefaultQuota

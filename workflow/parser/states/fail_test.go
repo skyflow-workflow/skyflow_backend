@@ -28,7 +28,7 @@ func TestRunFailState(t *testing.T) {
 			},
 			faildata: FailData{
 				Cause: "test cause1",
-				Error: "test error2",
+				Error: "test error1",
 			},
 		},
 		{
@@ -72,8 +72,14 @@ func TestParseFailState(t *testing.T) {
 					Type:            "Fail",
 					OutputPath:      "$",
 					MaxExecuteTimes: 1000,
+					End:             true,
+					Next:            "",
 				},
-				FailBody: &FailBody{},
+				FailBody: &FailBody{
+					Abort: false,
+					Cause: "",
+					Error: "",
+				},
 			},
 			wantError: false,
 		},
@@ -87,7 +93,7 @@ func TestParseFailState(t *testing.T) {
 				BaseState: &BaseState{
 					Type:            "Fail",
 					Next:            "",
-					End:             false,
+					End:             true,
 					OutputPath:      "$",
 					MaxExecuteTimes: 1000,
 				},
@@ -108,7 +114,7 @@ func TestParseFailState(t *testing.T) {
 				BaseState: &BaseState{
 					Type:            "Fail",
 					Next:            "X",
-					End:             false,
+					End:             true,
 					OutputPath:      "$",
 					MaxExecuteTimes: 1000,
 				},

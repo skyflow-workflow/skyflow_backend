@@ -47,18 +47,18 @@ func NewStateFromMap(data map[string]interface{}, depth int) (state State, err e
 	switch StateType(typeKeyStr) {
 	case StateTypes.Task:
 		state, err = NewTaskStateFromMap(data)
-	// case StateTypes.Choice:
-	// state, err = NewChoiceStateFromMap(data)
+	case StateTypes.Choice:
+		state, err = NewChoiceStateFromMap(data)
 	case StateTypes.Wait:
 		state, err = NewWaitStateFromMap(data)
 	case StateTypes.Pass:
-	// 	state, err = NewPassStateFromMap(data)
-	// case StateTypes.Fail:
-	// 	state, err = NewFailStateFromMap(data)
-	// case StateTypes.Succeed:
-	// 	state, err = NewSucceedStateFromMap(data)
-	// case StateTypes.Parallel:
-	// 	state, err = NewParallelStateFromMap(data, depth)
+		state, err = NewPassStateFromMap(data)
+	case StateTypes.Fail:
+		state, err = NewFailStateFromMap(data)
+	case StateTypes.Succeed:
+		state, err = NewSucceedStateFromMap(data)
+	case StateTypes.Parallel:
+		state, err = NewParallelStateFromMap(data, depth)
 	// case StateTypes.Map:
 	// 	state, err = NewMapStateFromMap(data, depth)
 

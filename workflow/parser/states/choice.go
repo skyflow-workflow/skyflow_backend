@@ -176,3 +176,8 @@ func (choice *ChoiceState) ChoiceNextState(input any) string {
 func (choice *ChoiceState) IsEnd() bool {
 	return false
 }
+
+func (choice *ChoiceState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(choice)
+	return data, err
+}

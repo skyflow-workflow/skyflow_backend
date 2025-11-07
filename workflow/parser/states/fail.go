@@ -91,3 +91,8 @@ func (s *FailState) GetFailData() FailData {
 func (s *FailState) GetBaseState() *BaseState {
 	return s.BaseState
 }
+
+func (s *FailState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(s)
+	return data, err
+}

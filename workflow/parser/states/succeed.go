@@ -38,3 +38,8 @@ func (s *SucceedState) IsEnd() bool {
 func (s *SucceedState) GetBaseState() *BaseState {
 	return s.BaseState
 }
+
+func (s *SucceedState) GetDefinition() (map[string]any, error) {
+	data, err := DecodeStructToMap(s)
+	return data, err
+}
