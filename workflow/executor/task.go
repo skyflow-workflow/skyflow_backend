@@ -640,7 +640,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 			GroupID: dbStep.GroupID,
 		}
 		// message queue send create message
-		message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextState, dbStep.ID, fns)
+		message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextStep, dbStep.ID, fns)
 		err = t.Executor.SendInnerMessage(message, nil)
 
 		if err != nil {

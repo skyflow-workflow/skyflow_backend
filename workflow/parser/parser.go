@@ -58,6 +58,10 @@ func ParseStateMachine(definition string) (*states.StateMachine, error) {
 	return StandardParser.ParseStateMachine(definition)
 }
 
+func ParseState(definition string) (states.State, error) {
+	return StandardParser.ParseState(definition)
+}
+
 func GenerateActivityURI(namespace string, activityName string) string {
 	return StandardParser.GenerateActivityURI(namespace, activityName)
 }

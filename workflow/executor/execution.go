@@ -445,7 +445,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	var max_group_id int
 
 	// 计算GroupState
-	groupStates, err := smb.GetGroupStates()
+	groupStates, err := smb.GetGroupStates(opt.StartGroupID)
 	if err != nil {
 		return
 	}
