@@ -445,7 +445,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	var max_group_id int
 
 	// 计算GroupState
-	groupStates, err := smb.GetGroupStates()
+	groupStates, err := smb.GetGroupStates(opt.StartGroupID)
 	if err != nil {
 		return
 	}
@@ -455,10 +455,23 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	}
 	var groups []tmpGroup
 
+	var stateDefinition any
+	var stateDefinitionStr string
+
 	// 写入所有的步骤
 	for _, groupState := range groupStates {
 		state := groupState.State
 		statetype := state.GetType()
+
+		stateDefinition, err = state.GetDefinition()
+		if err != nil {
+			return resp, err
+		}
+		stateDefinitionStr, err = toolkit.ToString(stateDefinition)
+		if err != nil {
+			return resp, err
+		}
+		deIndex++
 		task := po.Step{
 			ExecutionID:  dbExeId,
 			ExecuteIndex: deIndex,
@@ -467,7 +480,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 			GroupIndex:   groupState.GroupIndex,
 			Type:         statetype,
 			ExecuteCount: 0, //初始化执行次数为0
-			Definition:   state.GetDefinition(),
+			Definition:   stateDefinitionStr,
 			Depth:        groupState.Depth,
 			Status:       string(StepStatus.Created),
 			Data:         "{}",

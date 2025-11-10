@@ -367,7 +367,7 @@ func (svc *executionService) RestartExecution(req vo.RestartExecutionRequest) (*
 	}
 
 	// 创建Execution Object
-	exe, err := NewExecutionFromData(&dbExecution, svc)
+	exe, err := NewExecutionFromData(dbExecution, svc)
 	if err != nil {
 		return dbNull, err
 	}

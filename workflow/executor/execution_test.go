@@ -1,14 +1,12 @@
 package executor
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -16,7 +14,6 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 	"gopkg.in/go-playground/assert.v1"
 )
 
@@ -45,23 +42,23 @@ func (m *MockExecutionService) StartExecution(req vo.StartExecutionRequest) (*po
 	return args.Get(0).(*po.Execution), args.Error(1)
 }
 
-func (m *MockExecutionService) DomainService interface{} {
+func (m *MockExecutionService) DomainService() interface{} {
 	return nil
 }
 
-func (m *MockExecutionService) LockService interface{} {
+func (m *MockExecutionService) LockService() interface{} {
 	return nil
 }
 
-func (m *MockExecutionService) MetaDB interface{} {
+func (m *MockExecutionService) MetaDB() interface{} {
 	return nil
 }
 
-func (m *MockExecutionService) InnerQueue interface{} {
+func (m *MockExecutionService) InnerQueue() interface{} {
 	return nil
 }
 
-func (m *MockExecutionService) StandardExecutor interface{} {
+func (m *MockExecutionService) StandardExecutor() interface{} {
 	return nil
 }
 
@@ -89,11 +86,11 @@ func (m *MockStateMachine) GetTimeout() states.Timeout {
 	return args.Get(0).(states.Timeout)
 }
 
-func (m *MockStateMachine) StateMachineHeader interface{} {
+func (m *MockStateMachine) StateMachineHeader() interface{} {
 	return nil
 }
 
-func (m *MockStateMachine) StartAt string {
+func (m *MockStateMachine) StartAt() string {
 	return ""
 }
 
@@ -355,8 +352,8 @@ func TestGetInput_NormalCase(t *testing.T) {
 	// 创建Execution实例
 	execution := &Execution{
 		Data: &po.Execution{
-			UUID:   "test-uuid-123",
-			Input:  `{"name": "test", "value": 123}`,
+			UUID:  "test-uuid-123",
+			Input: `{"name": "test", "value": 123}`,
 		},
 		StateMachine:     mockStateMachine,
 		ExecutionService: mockService,
