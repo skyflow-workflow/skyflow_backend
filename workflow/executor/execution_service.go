@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/cache"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/domain"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -24,6 +25,7 @@ type executionService struct {
 	DomainService    domain.DomainService
 	StandardExecutor *Executor
 	ExpressExecutor  *Executor
+	CacheService     cache.TaskCacheService
 }
 
 func NewExecutionService(

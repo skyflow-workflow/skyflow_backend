@@ -35,22 +35,21 @@ func NewWorkflowService(dbClient *rdb.DBClient, innerQueue queue.InnerMessageQue
 	if err != nil {
 		return nil, err
 	}
+	executionService := executor.NewExecutionService(dbClient, innerQueue, exporterService)
 
 	standardExecutor := executor.StandardExecutor
-	standardExecutor.MetaDB = dbClient
-	standardExecutor.InnerQueue = innerQueue
-	standardExecutor.Exporter = exporterService
+
+	standardExecutor.ExecutionService = executionService
 
 	expressExecutor := executor.ExpressExecutor
-	expressExecutor.MetaDB = dbClient
-	expressExecutor.InnerQueue = innerQueue
-	expressExecutor.Exporter = exporterService
+	expressExecutor.ExecutionService = executionService
 
 	svc := &workflowService{
 		DBClient:         dbClient,
 		TemplateService:  templateService,
 		InnerQueue:       innerQueue,
 		Exporter:         exporterService,
+		ExecutionService: executionService,
 		standardExecutor: standardExecutor,
 		expressExecutor:  expressExecutor,
 	}

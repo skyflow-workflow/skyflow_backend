@@ -2,11 +2,15 @@ package dispatcher
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"log/slog"
 
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 )
 
 // DispatcherService start schedular worker
@@ -20,8 +24,8 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 		defer svc.receiverwg.Done()
 		//从 innerqueue 接收消息,发送消息 workerpool，并发处理
 		slog.Info("Dispatcher Message Receiver Start Running.")
-		var message queue.InnerMessageInterface
-		messagechan, err := svc.workflowService.Innerqueue.ReceiveInnerMessage()
+		var message queue.InnerMessage
+		messagechan, err := svc.workflowService.InnerQueue.ReceiveInnerMessage()
 		if err != nil {
 			slog.Error("Acquire Inner Message Channel Failed:", err.Error())
 			return
@@ -31,7 +35,7 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 			// 如果内存检查不通过，等待1秒
 			if svc.memlimiter != nil && !svc.memlimiter.CheckAvailable() {
 				slog.Error("current memory size: %d mb, limit size: %d mb",
-					int(svc.memlimiter.GetCurrentMemoryByte()/1024/1024), int(svc.memlimiter.LimitSizeByte/1024/1024))
+					int(svc.memlimiter.GetCurrentUsedMemoryByte()/1024/1024), int(svc.memlimiter.LimitSizeByte/1024/1024))
 				time.Sleep(1 * time.Second)
 				continue
 			}
@@ -54,16 +58,16 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 
 }
 
-func innerMsgLog(prefix string, msg queue.InnerMessage, err error) string {
+func innerMsgLog(prefix string, msg queue.InnerMessageBody, err error) string {
 	if err != nil {
-		return fmt.Sprintf("%s, msg_id %s, ExecutionID %d, StepID %d, Priority %s, Type %s, ErrorDetail: %s",
-			prefix, msg.ID, msg.ExecutionID, msg.StepID, msg.Class, msg.Type, err.Error())
+		return fmt.Sprintf("%s, ExecutionID %d, StepID %d, Priority %s, Type %s, ErrorDetail: %s",
+			prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type, err.Error())
 	}
 	return fmt.Sprintf("%s,msg_id %s, ExecutionID %d, StepID %d, Priority %s, Type %s",
-		prefix, msg.ID, msg.ExecutionID, msg.StepID, msg.Class, msg.Type)
+		prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type)
 }
 
-func loggermsg(prefix string, msg queue.InnerMessage) {
+func loggermsg(prefix string, msg queue.InnerMessageBody) {
 	msgstr := innerMsgLog(prefix, msg, nil)
 	slog.Debug(msgstr)
 }
@@ -75,7 +79,7 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 	defer svc.eventwg.Done()
 	starttime := time.Now()
 	// 如果不是innermessage ，忽略消息
-	message, ok := i.(queue.InnerMessageInterface)
+	message, ok := i.(queue.InnerMessage)
 	if !ok {
 		return
 	}
@@ -87,8 +91,7 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 
 	// var has bool
 	defer func() {
-		// 计算处理时间到监控系统
-		processEventDuration.Set(time.Since(starttime).Seconds())
+		loggermsg("ProcessMessage Finish: ", msgbody)
 		// Ack Message
 		err = message.Ack()
 		if err != nil {
@@ -133,20 +136,20 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 
 // 调用step接口处理消息
 // NOCC:golint/fnsize("设计如此")
-func (svc *DispatcherService) processInnerMessage(msgbody queue.InnerMessage) (err error) {
+func (svc *DispatcherService) processInnerMessage(msgbody queue.InnerMessageBody) (err error) {
 
-	var dbstep po.Step
-	var dbexecution po.Execution
+	var dbstep *po.Step
+	var dbexecution *po.Execution
 
-	dbexecution, err = svc.workflowService.ExecutionService.QueryExecutionByID(msgbody.ExecutionID, execution.ExecutionFields.L1, nil)
+	dbexecution, err = svc.workflowService.ExecutionService.QueryExecutionByID(msgbody.ExecutionID, executor.ExecutionFields.L1, nil)
 	if err != nil {
 		slog.Error(err.Error())
 		return
 	}
 
 	// 如果 消息类型是正常消息， 而 Execution状态不在 [ created  running ] , 忽略消息。 不能接收Failed/Abort/Success 等其他状态的消息
-	if !toolkit.StringInSlice(
-		[]string{string(execution.ExecutionStatus.Running), string(execution.ExecutionStatus.Created)},
+	if !slices.Contains(
+		[]string{string(executor.ExecutionStatus.Running), string(executor.ExecutionStatus.Created)},
 		dbexecution.Status) {
 		msg := fmt.Sprintf("Execution Status Is [ %s ] , Ignore This Message: ", dbexecution.Status)
 		logStr := innerMsgLog(msg, msgbody, nil)
@@ -155,35 +158,35 @@ func (svc *DispatcherService) processInnerMessage(msgbody queue.InnerMessage) (e
 	}
 	// 根据消息类型做出响应的动作
 	if msgbody.Class == queue.MessageClass.Execution {
-		exe, err := svc.ExecutionService.NewExecutionFromID(msgbody.ExecutionID, execution.ExecutionFields.L1, nil)
+		exe, err := svc.ExecutionService.NewExecutionFromID(msgbody.ExecutionID, executor.ExecutionFields.L1, nil)
 		if err != nil {
 			return err
 		}
 		// 如果是状态异常，忽略消息
-		if err == execution.ErrorExecutionStatus {
+		if err == executor.ErrorExecutionStatus {
 			slog.Error(fmt.Sprintf("%w : %s ", err, msgbody))
 			return nil
 		}
 		err = exe.ProcessEvent(msgbody)
 		return err
-	} else if msgbody.Class == queue.MessageClass.State {
+	} else if msgbody.Class == queue.MessageClass.Step {
 
 		// 如果StateID == 0 , 忽略消息
 		if msgbody.StepID == 0 {
 			return
 		}
 		// 先查询最小数据，判断 step 的状态。是否符合预期。
-		dbstep, err = svc.ExecutionService.QueryStepByID(msgbody.StepID, execution.StepFields.L1, nil)
+		dbstep, err = svc.ExecutionService.QueryStepByID(msgbody.StepID, executor.StepFields.L1, nil)
 		if err != nil {
 			slog.Error(err.Error())
 			return
 		}
 
 		//判断State 状态 是否符合预期， 增加对重复消息的可用性判断
-		candState, ok := execution.StateEventEventCheckStatus[msgbody.Type]
+		candState, ok := executor.StateEventEventCheckStatus[msgbody.Type]
 		if ok {
 			// 如果State状态 不在预期的event 状态， 忽略该消息
-			if !toolkit.StringInSlice(candState, dbstep.Status) {
+			if !slices.Contains(candState, dbstep.Status) {
 				jstr, _ := toolkit.ToString(msgbody)
 				msg := fmt.Sprintf("Ignore This Message, StateID : %d , Current State: %s ,   Message Content: %s ",
 					dbstep.ID, dbstep.Status, jstr)
@@ -191,34 +194,34 @@ func (svc *DispatcherService) processInnerMessage(msgbody queue.InnerMessage) (e
 				return
 			}
 		}
-		var step execution.Step
+		var step executor.Step
 		// 查询全量数据， 初始化 step
-		dbstep, err = svc.ExecutionService.QueryStepByID(msgbody.StepID, execution.StepFields.L5, nil)
+		dbstep, err = svc.ExecutionService.QueryStepByID(msgbody.StepID, executor.StepFields.L5, nil)
 		if err != nil {
 			slog.Error(err.Error())
 			return
 		}
-		step, err = execution.NewStepFromData(&dbstep, svc.workflowService.ExecutionService, dbexecution.FlowType)
+		step, err = executor.NewStepFromData(dbstep, svc.ExecutionService.StandardExecutor)
 		if err != nil {
 			return err
 		}
 
-		if msgbody.Type == execution.MessageType.StateNewTurn {
+		if msgbody.Type == executor.MessageType.StateNewTurn {
 			err = step.Init(msgbody)
-		} else if msgbody.Type == execution.MessageType.StateExecute {
+		} else if msgbody.Type == executor.MessageType.StateExecute {
 			err = step.Run(msgbody)
-		} else if msgbody.Type == execution.MessageType.FindNextState {
-			err = svc.workflowService.ExecutionService.ProcessFindNextState(msgbody)
-		} else if msgbody.Type == execution.MessageType.ReportStepSuspend {
+		} else if msgbody.Type == executor.MessageType.FindNextStep {
+			err = svc.workflowService.ExecutionService.ProcessFindNextStep(msgbody)
+		} else if msgbody.Type == executor.MessageType.ReportStepSuspend {
 			err = svc.workflowService.ExecutionService.ProcessReportStepSuspend(msgbody)
-		} else if msgbody.Type == execution.MessageType.ReportStepBlocked {
+		} else if msgbody.Type == executor.MessageType.ReportStepBlocked {
 			err = svc.workflowService.ExecutionService.ProcessReportStepBlocked(msgbody)
 		} else {
 			err = step.ProcessEvent(msgbody)
 		}
 		if err != nil {
 
-			err = svc.workflowService.ExecutionService.StepErrorProcess(err, &dbstep, msgbody)
+			err = svc.workflowService.ExecutionService.StepErrorProcess(err, dbstep, msgbody)
 		}
 		return err
 	}

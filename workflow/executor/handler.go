@@ -23,7 +23,7 @@ import (
 )
 
 // StepErrorProcess state 执行报错时候的处理方式
-func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, msg queue.InnerMessage) error {
+func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, msg queue.InnerMessageBody) error {
 	var err error
 	var tx rdb.Tx
 	var maker *rdb.TxMaker
@@ -1506,7 +1506,6 @@ func (svc *executionService) ChangeExecutionStatus(execution_id int, status _Exe
 */
 // NOCC:golint/fnsize("设计如此")
 func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActivityTaskRequest) (resp vo.GetActivityTaskResponse, err error) {
-	var activityTaskId int
 	var found = false
 
 	var dbTask *po.Step
@@ -1517,8 +1516,6 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	starttime := time.Now()
 	requestinfo := vo.GetRequestInfo(ctx)
 
-	cm := svc.cachemap
-
 	// 增加控制session
 	tx, maker := svc.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
@@ -1526,8 +1523,8 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	for i := 0; i < 3; i++ {
 		// 最大尝试3次
 
-		activityTaskId = cm.Pop(req.ActivityURI)
-		if activityTaskId == 0 {
+		activityTaskId, ok := svc.CacheService.Get(req.ActivityURI)
+		if !ok {
 			continue
 		}
 		//加锁查询
@@ -1942,7 +1939,7 @@ func (svc *executionService) LoadTaskData(ctx context.Context, step_id int) (dat
 }
 
 // SkipBlokcedTask 跳过阻塞的任务
-func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlokcedTaskRequest) error {
+func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlockedTaskRequest) error {
 
 	var err error
 	var dbStep *po.Step

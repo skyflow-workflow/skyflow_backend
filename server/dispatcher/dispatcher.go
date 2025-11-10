@@ -10,6 +10,7 @@ import (
 	"github.com/mmtbak/microlibrary/limiter"
 	"github.com/panjf2000/ants/v2"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 	"trpc.group/trpc-go/tnet/log"
 )
 
@@ -17,7 +18,7 @@ import (
 type DispatcherService struct {
 	wire.BaseService
 	workflowService  workflow.WorkflowService
-	ExecutionService execution.ExecutionService
+	ExecutionService executor.ExecutionService
 	ctx              context.Context
 	cancelfunc       context.CancelFunc
 	// 消息接收器的waitgroup
@@ -50,7 +51,7 @@ func NewDispatcher(workflowsvc workflow.WorkflowService, option Option) (*Dispat
 
 	var err error
 	// check config reasonability
-	if option.Concurrency > workflowsvc.MetaRepo.Client.GetOption().MaxOpenConn {
+	if option.Concurrency > workflowsvc.DBClient.DB().MaxOpenConn {
 		err = fmt.Errorf("dispatcher config invalid, concurrency should less than metadb maxopenconn")
 		return nil, err
 	}
@@ -115,7 +116,6 @@ func (svc *DispatcherService) Stop() error {
 // 性能计数器， 用于统计事件数量
 func (svc *DispatcherService) IncreaseEventCounter() {
 	atomic.AddUint64(&svc.EventCounter, 1)
-	totalProcessEvents.Inc()
 }
 
 // GetEventCounter get event counter

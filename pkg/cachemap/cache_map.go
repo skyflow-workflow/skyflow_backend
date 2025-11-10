@@ -92,6 +92,5 @@ func (cm *CacheMap) Refresh(data map[string][]int) error {
 		ca := cm.data[k]
 		ca.Refresh([]int{})
 	}
-
 	return nil
 }
