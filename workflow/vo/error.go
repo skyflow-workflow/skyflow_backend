@@ -73,5 +73,9 @@ var (
 	ErrorUnsupportedOperationForExecution = fmt.Errorf("unsupported operation for execution")
 
 	// ErrorAKSKInvalid AKSK 不合法
-	ErrorAKSKInvalid = fmt.Errorf("aksk is invalid")
+	ErrorAKSKInvalid      = fmt.Errorf("aksk is invalid")
+	ErrorParameterMissing = fmt.Errorf("parameter is missing")
+	ErrorParamterTooLong  = fmt.Errorf("parameter is too long")
+	// ErrorNonsupportOperationForStep 不支持的操作
+	ErrorNonsupportOperationForStep = fmt.Errorf("nonsupport operation for step")
 )

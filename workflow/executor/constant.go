@@ -298,7 +298,7 @@ var MessageType = struct {
 	StepGroupBlocked     string // Execution Group
 	ParallelStateFinish  string //ParallelState 执行完成
 	MapStateFinish       string //MapState 执行完成
-	FindNextState        string // 查找下一个节点
+	FindNextStep         string // 查找下一个节点
 	ReportStepSuspend    string // 查找下一个节点
 	ReportStepBlocked    string // 查找下一个节点
 
@@ -333,7 +333,7 @@ var MessageType = struct {
 	StepGroupBlocked:    "StepGroupBlocked",
 	ParallelStateFinish: "ParallelStateFinish",
 	MapStateFinish:      "MapStateFinish",
-	FindNextState:       "FindNextState",
+	FindNextStep:        "FindNextStep",
 	ReportStepSuspend:   "ReportStepSuspend",
 	ReportStepBlocked:   "ReportStepBlocked",
 	//人工干预消息
@@ -395,7 +395,7 @@ var TimeSeriesNodeType = struct {
 var StateEventEventCheckStatus = map[string][]string{
 	//normal message
 	MessageType.StateNewTurn:        {string(StepStatus.WaitInit)},
-	MessageType.FindNextState:       {string(StepStatus.Skip), string(StepStatus.Success)},
+	MessageType.FindNextStep:        {string(StepStatus.Skip), string(StepStatus.Success)},
 	MessageType.StateExecute:        {string(StepStatus.Initialize), string(StepStatus.Wakeup), string(StepStatus.Unblocking)},
 	MessageType.TaskStateSend:       {string(StepStatus.Running)},
 	MessageType.TaskStateWakeup:     {string(StepStatus.Sleep)},
