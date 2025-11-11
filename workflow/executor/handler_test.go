@@ -107,7 +107,7 @@ func TestStartExecutionPipeline(t *testing.T) {
 func TestSendTaskSkip(t *testing.T) {
 
 	step_id := 2479
-	task, err := NewTaskFromID(step_id, myExecutionService)
+	task, err := NewTaskFromID(step_id, myExecutionService.StandardExecutor)
 	fmt.Println(err)
 	assert.Equal(t, err, nil)
 	fmt.Println(task)
@@ -144,9 +144,6 @@ func TestGetActivityTask(t *testing.T) {
 	for i := 0; i < 3; i++ {
 
 		uri := "activity:unittest/add"
-		// go myExecutionService.RefreshCacheMap()
-		cm := myExecutionService.cachemap
-		fmt.Println(cm)
 		time.Sleep(1 * time.Second)
 		resp, err := myExecutionService.GetActivityTask(ctx, vo.GetActivityTaskRequest{
 			ActivityURI: uri,

@@ -63,7 +63,7 @@ func innerMsgLog(prefix string, msg queue.InnerMessageBody, err error) string {
 		return fmt.Sprintf("%s, ExecutionID %d, StepID %d, Priority %s, Type %s, ErrorDetail: %s",
 			prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type, err.Error())
 	}
-	return fmt.Sprintf("%s,msg_id %s, ExecutionID %d, StepID %d, Priority %s, Type %s",
+	return fmt.Sprintf("%s, ExecutionID %d, StepID %d, Priority %s, Type %s",
 		prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type)
 }
 

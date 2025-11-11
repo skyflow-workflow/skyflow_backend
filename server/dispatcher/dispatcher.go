@@ -51,7 +51,7 @@ func NewDispatcher(workflowsvc workflow.WorkflowService, option Option) (*Dispat
 
 	var err error
 	// check config reasonability
-	if option.Concurrency > workflowsvc.DBClient.DB().MaxOpenConn {
+	if option.Concurrency > workflowsvc.DBClient.GetConfig().MaxOpenConns {
 		err = fmt.Errorf("dispatcher config invalid, concurrency should less than metadb maxopenconn")
 		return nil, err
 	}
