@@ -9,6 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mmtbak/microlibrary/paging"
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/mock"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 	"gopkg.in/go-playground/assert.v1"
@@ -36,7 +37,7 @@ func TestNamespaceOperation(t *testing.T) {
 
 	var err error
 
-	myTemplateService := NewTemplateService(getTestDBClient())
+	myTemplateService := NewTemplateService(mock.GetMockDBClient())
 	err = myTemplateService.CleanTestTableData(context.Background(), nil, &po.Namespace{})
 	assert.Equal(t, err, nil)
 
@@ -68,7 +69,7 @@ func TestActivityOperation(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestDBClient())
+	myTemplateService := NewTemplateService(mock.GetMockDBClient())
 	err = myTemplateService.CleanTestTableData(context.Background(), nil, new(po.Activity))
 	assert.Equal(t, err, nil)
 	unittestNsName := "unittest_namespace"
@@ -151,7 +152,7 @@ func TestStateMachineOperation(t *testing.T) {
 	var err error
 	ctx := context.Background()
 
-	myTemplateService := NewTemplateService(getTestDBClient())
+	myTemplateService := NewTemplateService(mock.GetMockDBClient())
 	err = myTemplateService.CleanTestTableData(context.Background(), nil, &po.StateMachine{})
 	assert.Equal(t, err, nil)
 

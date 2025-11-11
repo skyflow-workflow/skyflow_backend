@@ -8,6 +8,7 @@ import (
 	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/mock"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
 var (
@@ -28,6 +29,9 @@ func TestMain(m *testing.M) {
 
 func setupTestEnv() {
 	testDBClient = mock.GetMockDBClient()
+	// 删除所有表
+	testDBClient.DropTables(po.GetExecutionTables())
+	testDBClient.SyncTables(po.GetExecutionTables())
 	_ = mock.GetMockKafkaMQ()
 	myExecutionService = NewExecutionService(testDBClient, nil, nil)
 }

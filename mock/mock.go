@@ -13,7 +13,7 @@ var (
 	MockKafkaMQ  *mq.KafkaMessageQueue
 )
 var LocalUnitTestMySQLConfig = rdb.Config{
-	DSN:          "mysql://root:rootpassword@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
+	DSN:          "mysql://root:password@tcp(127.0.0.1:3306)/testdb?charset=utf8&parseTime=True&loc=Local",
 	LogLevel:     "info",
 	MaxOpenConns: 200,
 	MaxIdleConns: 200,

@@ -9,13 +9,13 @@ import (
 
 func TestCreateDispatcherService(t *testing.T) {
 
-	var wfsvc workflow.WorkflowService
+	var wfSvc workflow.WorkflowService
 
-	dpsvc, err := NewDispatcher(wfsvc, DefaultOption)
+	dpSvc, err := NewDispatcher(wfSvc, DefaultOption)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(dpsvc)
+	fmt.Println(dpSvc)
 
 }

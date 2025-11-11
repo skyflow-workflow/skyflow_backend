@@ -131,10 +131,10 @@ func TestSendTaskSkip(t *testing.T) {
 
 func TestCreateUUID(t *testing.T) {
 
-	uuidstr, err := toolkit.CreateUUID()
+	uuidStr, err := toolkit.CreateUUID()
 	fmt.Println(err)
 	assert.Equal(t, err == nil, true)
-	fmt.Println(uuidstr)
+	fmt.Println(uuidStr)
 
 }
 

@@ -378,7 +378,7 @@ func TestRunTask(t *testing.T) {
 	taskjson := `{
 		"Type": "Task",
 		"Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:FUNCTION_NAME",
-		"InputPath" : "$.mydata",	
+		"InputPath" : "$.mydata",
 		"Parameters" : {
 			"abc.$" : "$.foo",
 			"123": [{
@@ -390,14 +390,14 @@ func TestRunTask(t *testing.T) {
 		"MaxExecuteTimes":10,
 		"Retry":[
 			{
-			  "ErrorEquals": [ "ErrorA", "ErrorB" ],			  
+			  "ErrorEquals": [ "ErrorA", "ErrorB" ],
 			  "IntervalSeconds": 1,
 			  "BackoffRate": 2.0,
 			  "MaxAttempts": 2
 			},
 			{
 			  "ErrorEquals": [ "ErrorC" ],
-			  "IntervalSeconds": 5	
+			  "IntervalSeconds": 5
 			}
 		  ],
 		  "Catch": [

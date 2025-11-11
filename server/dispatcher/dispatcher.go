@@ -3,6 +3,7 @@ package dispatcher
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"sync"
 	"sync/atomic"
 
@@ -11,7 +12,6 @@ import (
 	"github.com/panjf2000/ants/v2"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
-	"trpc.group/trpc-go/tnet/log"
 )
 
 // DispatcherService  message dispatcher
@@ -22,9 +22,9 @@ type DispatcherService struct {
 	ctx              context.Context
 	cancelfunc       context.CancelFunc
 	// 消息接收器的waitgroup
-	receiverwg sync.WaitGroup
+	receiverWg sync.WaitGroup
 	// 用于等待所有worker完成
-	eventwg    sync.WaitGroup
+	eventWg    sync.WaitGroup
 	workerPool *ants.PoolWithFunc
 	option     Option
 	// event counter for performance
@@ -47,12 +47,12 @@ var DefaultOption = Option{
 }
 
 // NewDispatcher create a new dispatcher
-func NewDispatcher(workflowsvc workflow.WorkflowService, option Option) (*DispatcherService, error) {
+func NewDispatcher(workflowSvc workflow.WorkflowService, option Option) (*DispatcherService, error) {
 
 	var err error
 	// check config reasonability
-	if option.Concurrency > workflowsvc.DBClient.GetConfig().MaxOpenConns {
-		err = fmt.Errorf("dispatcher config invalid, concurrency should less than metadb maxopenconn")
+	if option.Concurrency > workflowSvc.DBClient.GetConfig().MaxOpenConns {
+		err = fmt.Errorf("dispatcher config invalid, concurrency should less than MetaDB maxopenconn")
 		return nil, err
 	}
 
@@ -60,10 +60,10 @@ func NewDispatcher(workflowsvc workflow.WorkflowService, option Option) (*Dispat
 	ctx, cancel := context.WithCancel(context.Background())
 
 	dispather := &DispatcherService{
-		workflowService:  workflowsvc,
-		ExecutionService: workflowsvc.ExecutionService,
-		receiverwg:       sync.WaitGroup{},
-		eventwg:          sync.WaitGroup{},
+		workflowService:  workflowSvc,
+		ExecutionService: workflowSvc.ExecutionService,
+		receiverWg:       sync.WaitGroup{},
+		eventWg:          sync.WaitGroup{},
 		ctx:              ctx,
 		cancelfunc:       cancel,
 		option:           option,
@@ -74,7 +74,7 @@ func NewDispatcher(workflowsvc workflow.WorkflowService, option Option) (*Dispat
 
 // Start start schedular worker
 func (svc *DispatcherService) Start() error {
-	log.Info("start run dispatcher ")
+	slog.Info("start run dispatcher ")
 	//
 	var err error
 	var workerPool *ants.PoolWithFunc
@@ -92,23 +92,23 @@ func (svc *DispatcherService) Start() error {
 
 	svc.StartSchedularWorkerManager()
 
-	log.Info("start run dispatcher success")
+	slog.Info("start run dispatcher success")
 	return nil
 }
 
 // Stop return stopfinish chan
 func (svc *DispatcherService) Stop() error {
-	log.Info("try to stop dispatcher ")
+	slog.Info("try to stop dispatcher ")
 	svc.cancelfunc()
-	svc.receiverwg.Wait()
-	log.Info("stop event receiver success")
-	svc.eventwg.Wait()
-	log.Info("stop event worker success")
+	svc.receiverWg.Wait()
+	slog.Info("stop event receiver success")
+	svc.eventWg.Wait()
+	slog.Info("stop event worker success")
 
 	// 关闭Limiter
 	svc.memlimiter.Close()
 	svc.workerPool.Release()
-	log.Info("stop dispatcher success")
+	slog.Info("stop dispatcher success")
 	return nil
 }
 

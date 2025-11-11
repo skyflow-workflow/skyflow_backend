@@ -83,25 +83,25 @@ func NewDBMessageQueue(client *rdb.DBClient, option DBQueueOption) *DBMessageQue
 	return dbmq
 }
 
-func (dbmq *DBMessageQueue) SyncSchema() error {
+func (dbMQ *DBMessageQueue) SyncSchema() error {
 
 	var err error
 	tables := []interface{}{
 		new(po.MessageQueue),
 	}
-	err = dbmq.dbClient.SyncTables(tables)
+	err = dbMQ.dbClient.SyncTables(tables)
 	return err
 }
 
-func (dbmq *DBMessageQueue) SetLogger(logger *slog.Logger) {
-	dbmq.logger = logger
+func (dbMQ *DBMessageQueue) SetLogger(logger *slog.Logger) {
+	dbMQ.logger = logger
 }
 
 // CleanExecutionMessage  清理ExecutionMessage
-func (dbmq *DBMessageQueue) CleanExecutionMessage(execution_id int) error {
+func (dbMQ *DBMessageQueue) CleanExecutionMessage(execution_id int) error {
 
 	var err error
-	tx, maker := dbmq.dbClient.NewTxMaker(nil)
+	tx, maker := dbMQ.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	tx = tx.Where("execution_id = ?", execution_id).Delete(new(po.MessageQueue))
 	err = tx.Error
@@ -109,16 +109,16 @@ func (dbmq *DBMessageQueue) CleanExecutionMessage(execution_id int) error {
 }
 
 // SetOption  设置option选项
-func (dbmq *DBMessageQueue) SetOption(opt DBQueueOption) {
-	dbmq.option = opt
+func (dbMQ *DBMessageQueue) SetOption(opt DBQueueOption) {
+	dbMQ.option = opt
 }
 
 // SendInnerMessage Send InnerMessage ,Save message  in DB
-func (mq *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *time.Time) error {
+func (dbMQ *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *time.Time) error {
 
 	var err error
 
-	tx, maker := mq.dbClient.NewTxMaker(nil)
+	tx, maker := dbMQ.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	var dbMessage = po.MessageQueue{
 		ExecutionID: message.ExecutionID,
@@ -145,22 +145,22 @@ func (mq *DBMessageQueue) SendInnerMessage(message InnerMessageBody, sendTime *t
 }
 
 // ReceiveInnerMessage return  chan with type InnerMessage
-func (dbmq *DBMessageQueue) ReceiveInnerMessage() (<-chan InnerMessage, error) {
+func (dbMQ *DBMessageQueue) ReceiveInnerMessage() (<-chan InnerMessage, error) {
 
-	return dbmq.msgChan, nil
+	return dbMQ.msgChan, nil
 }
 
 // GetUnreadMessageIDsOnce 获得所有未处理的消息列表
-func (mq *DBMessageQueue) GetUnreadMessageIDsOnce() ([]int, error) {
+func (dbMQ *DBMessageQueue) GetUnreadMessageIDsOnce() ([]int, error) {
 
 	var err error
-	tx, maker := mq.dbClient.NewTxMaker(nil)
+	tx, maker := dbMQ.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	var MsgIDs []int
 	err = tx.Model(&po.MessageQueue{}).Select("id").Where(
 		"status = ? and send_time <= ? ", DBMessageStatus.Created, time.Now()).Order("id asc").
-		Limit(mq.option.PollingLimit).Find(&MsgIDs).Error
+		Limit(dbMQ.option.PollingLimit).Find(&MsgIDs).Error
 
 	if err != nil {
 		tx.Rollback()
@@ -171,11 +171,11 @@ func (mq *DBMessageQueue) GetUnreadMessageIDsOnce() ([]int, error) {
 }
 
 // DispatchInnerMessage dispatch message to forward queue
-func (mq *DBMessageQueue) DispatchInnerMessage(msgID int) error {
+func (dbMQ *DBMessageQueue) DispatchInnerMessage(msgID int) error {
 	var err error
 	freshMsg := po.MessageQueue{}
 
-	tx := mq.dbClient.DB()
+	tx := dbMQ.dbClient.DB()
 	// user non-blocking transaction
 	conditionMessage := po.MessageQueue{
 		ID:     int64(msgID),
@@ -206,21 +206,21 @@ func (mq *DBMessageQueue) DispatchInnerMessage(msgID int) error {
 		Data:        freshMsg.Data,
 	}
 
-	if mq.forwardQueue != nil {
-		err = mq.forwardQueue.SendInnerMessage(newMsg, nil)
+	if dbMQ.forwardQueue != nil {
+		err = dbMQ.forwardQueue.SendInnerMessage(newMsg, nil)
 		if err != nil {
 			return err
 		}
 	} else {
 		// if forwardQueue is nil, send message to msgChan
 		// this is for testing purpose, in production, forwardQueue should not be nil
-		mq.msgChan <- &DBQueueMessage{
+		dbMQ.msgChan <- &DBQueueMessage{
 			id:   int(freshMsg.ID),
 			body: &newMsg,
 		}
 	}
 
-	tx, maker := mq.dbClient.NewTxMaker(nil)
+	tx, maker := dbMQ.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	// 处理成功， 更新状态
 	tx = tx.Model(po.MessageQueue{ID: freshMsg.ID}).Delete(&po.MessageQueue{})
@@ -235,41 +235,41 @@ func (mq *DBMessageQueue) DispatchInnerMessage(msgID int) error {
 	return nil
 }
 
-func (mq *DBMessageQueue) SetForwardQueue(forwardQueue InnerMessageQueue) {
-	mq.forwardQueue = forwardQueue
+func (dbMQ *DBMessageQueue) SetForwardQueue(forwardQueue InnerMessageQueue) {
+	dbMQ.forwardQueue = forwardQueue
 }
 
-func (mq *DBMessageQueue) StartPolling() {
-	go mq.once.Do(mq.RunPollingInnerMessage)
+func (dbMQ *DBMessageQueue) StartPolling() {
+	go dbMQ.once.Do(dbMQ.RunPollingInnerMessage)
 }
 
 // PollingInnerMessage polling inner message from db and send to channel
 // masterQueue is the queue that will receive the message
 
-func (mq *DBMessageQueue) RunPollingInnerMessage() {
-	mq.logger.Info("PollingInnerMessage Started.")
+func (dbMQ *DBMessageQueue) RunPollingInnerMessage() {
+	dbMQ.logger.Info("PollingInnerMessage Started.")
 
 	var fetchmsg = func() {
 
-		msgids, err := mq.GetUnreadMessageIDsOnce()
+		msgids, err := dbMQ.GetUnreadMessageIDsOnce()
 		if err != nil {
-			mq.logger.Error("get unread message ids failed", "error", err.Error())
+			dbMQ.logger.Error("get unread message ids failed", "error", err.Error())
 			return
 		}
 		for _, msgID := range msgids {
-			err = mq.DispatchInnerMessage(msgID)
+			err = dbMQ.DispatchInnerMessage(msgID)
 			if err != nil {
-				mq.logger.Error("dispatch innermessage failed", "error", err.Error())
+				dbMQ.logger.Error("dispatch innermessage failed", "error", err.Error())
 			}
 		}
 	}
 
-	ticker := time.NewTicker(mq.option.PollingDuration)
+	ticker := time.NewTicker(dbMQ.option.PollingDuration)
 	defer ticker.Stop()
 
 	for {
 		select {
-		case <-mq.ctx.Done():
+		case <-dbMQ.ctx.Done():
 			return
 		case <-ticker.C:
 			fetchmsg()
@@ -278,9 +278,9 @@ func (mq *DBMessageQueue) RunPollingInnerMessage() {
 }
 
 // Close stop async task message queue
-func (mq *DBMessageQueue) Close() error {
-	close(mq.msgChan)
-	mq.cancel()
+func (dbMQ *DBMessageQueue) Close() error {
+	close(dbMQ.msgChan)
+	dbMQ.cancel()
 	return nil
 }
 
