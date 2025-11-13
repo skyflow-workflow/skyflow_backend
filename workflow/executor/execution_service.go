@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"context"
 	"fmt"
 	"slices"
 	"time"
@@ -49,6 +50,20 @@ func NewExecutionService(
 	return svc
 }
 
+func (svc *executionService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
+	var err error
+
+	tx, maker := svc.MetaDB.NewTxMaker(tx)
+	defer maker.Close(&err)
+
+	err = tx.AutoMigrate(po.GetExecutionTables()...)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
 // SendExecutionEvents 发送event
 func (svc *executionService) SendExecutionEvents(events ...vo.ExecutionEvent) {
 	if svc.Exporter == nil {
@@ -64,7 +79,6 @@ func (svc *executionService) SendInnerMessage(message queue.InnerMessageBody, se
 		return fmt.Errorf("inner queue is not initialized")
 	}
 	return svc.InnerQueue.SendInnerMessage(message, sendtime)
-
 }
 
 // NewExecutionFromID Create Execution by execution id

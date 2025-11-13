@@ -13,8 +13,6 @@ type APIServer struct {
 	workflowSvc workflow.WorkflowService
 }
 
-var skyflowConfigFilePath string = "./skyflow.yaml"
-
 // NewAPIServer creates a new API server.
 func NewAPIServer(server *server.Server, svc workflow.WorkflowService) *APIServer {
 	pb.RegisterCommonServiceService(server, &CommonServiceHandler{})

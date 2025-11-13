@@ -61,7 +61,22 @@ func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pb.P
 
 // StartExecution implements pb.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pb.StartExecutionRequest) (*pb.StartExecutionResponse, error) {
-	panic("unimplemented")
+	voReq := vo.StartExecutionRequest{
+		StateMachineURI:        req.StatemachineUri,
+		Input:                  req.Input,
+		StateMachineDefinition: req.Definition,
+		Title:                  req.Title,
+		ExecutionUUID:          req.ExecutionName,
+	}
+	dbExecution, err := s.wfSvc.ExecutionService.StartExecution(voReq)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pb.StartExecutionResponse{
+		ExecutionUuid: dbExecution.UUID,
+		CreateTime:    dbExecution.CreateTime.String(),
+	}
+	return resp, nil
 }
 
 // StopExecution implements pb.SkyflowV1ServiceService.

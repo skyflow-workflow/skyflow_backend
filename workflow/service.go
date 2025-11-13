@@ -67,10 +67,15 @@ func (svc *workflowService) SyncSchema() error {
 	if err != nil {
 		return err
 	}
+	err = svc.ExecutionService.SyncSchema(ctx, nil)
+	if err != nil {
+		return err
+	}
 	err = svc.InnerQueue.SyncSchema()
 	if err != nil {
 		return err
 	}
+
 	// TODO: sync executor schema
 	return nil
 }
