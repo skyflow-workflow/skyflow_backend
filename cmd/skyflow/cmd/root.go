@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"log/slog"
 	"os"
@@ -17,13 +16,9 @@ var (
 	Version string
 )
 
-func init() {
-	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
-}
-
 var (
 	format              = outputformats.Text // Output format for the command, e.g., json, yaml
-	trpc_conf    string = "./trpc_go.yaml"   // Configuration file for the TRPC framework
+	frame_conf   string = "./framework.yaml" // Configuration file for the TRPC framework
 	skyflow_conf string = "./skyflow.yaml"   // Configuration file for the skyflow server
 )
 
@@ -63,9 +58,8 @@ func rootCmdAddFlag() {
 	rootCmd.PersistentFlags().StringVarP(&format, "format", "f", outputformats.Text,
 		"Output format for the command. Supported formats: text, json. Default is 'text'.")
 	rootCmd.PersistentFlags().SortFlags = false // Disable sorting of flags
-	rootCmd.PersistentFlags().StringVarP(&trpc_conf, "trpc_config", "c", "./trpc_go.yaml", " trpc configuration file, default is ./trpc_go.yaml")
+	rootCmd.PersistentFlags().StringVarP(&frame_conf, "framework_config", "c", "./framework.yaml", " framework configuration file, default is ./framework_go.yaml")
 	rootCmd.PersistentFlags().StringVarP(&skyflow_conf, "skyflow_config", "", "./skyflow.yaml", " skyflow configuration file, default is ./skyflow.yaml")
-
 }
 
 var rootCmd = &cobra.Command{

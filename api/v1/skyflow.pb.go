@@ -4612,16 +4612,21 @@ const file_skyflow_proto_rawDesc = "" +
 	"\rCommonService\x125\n" +
 	"\x06Paging\x12\x14.skyflow.PageRequest\x1a\x15.skyflow.PageResponse\x12<\n" +
 	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\x127\n" +
-	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\x002\xae\x13\n" +
+	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\x002\xe9\x15\n" +
 	"\x10SkyflowV1Service\x12\x89\x01\n" +
 	"\x0fCreateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"3\xbaG\x0e\n" +
-	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/CreateNamespace\x12^\n" +
-	"\x17CreateOrUpdateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"\x00\x12S\n" +
-	"\x0eListNamespaces\x12\x1e.skyflow.ListNamespacesRequest\x1a\x1f.skyflow.ListNamespacesResponse\"\x00\x12L\n" +
-	"\x0fDeleteNamespace\x12\x1f.skyflow.DeleteNamespaceRequest\x1a\x16.google.protobuf.Empty\"\x00\x12S\n" +
-	"\x0eCreateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\x00\x12[\n" +
-	"\x16CreateOrUpdateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\x00\x12S\n" +
-	"\x0eListActivities\x12\x1e.skyflow.ListActivitiesRequest\x1a\x1f.skyflow.ListActivitiesResponse\"\x00\x12Y\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/CreateNamespace\x12\x99\x01\n" +
+	"\x17CreateOrUpdateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\";\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/api/v1/CreateOrUpdateNamespace\x12\x85\x01\n" +
+	"\x0eListNamespaces\x12\x1e.skyflow.ListNamespacesRequest\x1a\x1f.skyflow.ListNamespacesResponse\"2\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListNamespaces\x12\x7f\n" +
+	"\x0fDeleteNamespace\x12\x1f.skyflow.DeleteNamespaceRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/DeleteNamespace\x12\x85\x01\n" +
+	"\x0eCreateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"2\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/CreateActivity\x12[\n" +
+	"\x16CreateOrUpdateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\x00\x12\x85\x01\n" +
+	"\x0eListActivities\x12\x1e.skyflow.ListActivitiesRequest\x1a\x1f.skyflow.ListActivitiesResponse\"2\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListActivities\x12Y\n" +
 	"\x10DescribeActivity\x12 .skyflow.DescribeActivityRequest\x1a!.skyflow.DescribeActivityResponse\"\x00\x12S\n" +
 	"\x0eDeleteActivity\x12\x1e.skyflow.DeleteActivityRequest\x1a\x1f.skyflow.DeleteActivityResponse\"\x00\x12_\n" +
 	"\x12CreateStateMachine\x12\".skyflow.CreateStateMachineRequest\x1a#.skyflow.CreateStateMachineResponse\"\x00\x12g\n" +
@@ -4631,8 +4636,9 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x14DescribeStateMachine\x12$.skyflow.DescribeStateMachineRequest\x1a%.skyflow.DescribeStateMachineResponse\"\x00\x12_\n" +
 	"\x12UpdateStateMachine\x12\".skyflow.UpdateStateMachineRequest\x1a#.skyflow.UpdateStateMachineResponse\"\x00\x12\\\n" +
 	"\x11ParseStateMachine\x12!.skyflow.ParseStateMachineRequest\x1a\".skyflow.ParseStateMachineResponse\"\x00\x12\x83\x01\n" +
-	"\x1eValidateStateMachineDefinition\x12..skyflow.ValidateStateMachineDefinitionRequest\x1a/.skyflow.ValidateStateMachineDefinitionResponse\"\x00\x12S\n" +
-	"\x0eStartExecution\x12\x1e.skyflow.StartExecutionRequest\x1a\x1f.skyflow.StartExecutionResponse\"\x00\x12\\\n" +
+	"\x1eValidateStateMachineDefinition\x12..skyflow.ValidateStateMachineDefinitionRequest\x1a/.skyflow.ValidateStateMachineDefinitionResponse\"\x00\x12\x85\x01\n" +
+	"\x0eStartExecution\x12\x1e.skyflow.StartExecutionRequest\x1a\x1f.skyflow.StartExecutionResponse\"2\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/StartExecution\x12\\\n" +
 	"\x11DescribeExecution\x12!.skyflow.DescribeExecutionRequest\x1a\".skyflow.DescribeExecutionResponse\"\x00\x12h\n" +
 	"\x15DescribeExecutionBone\x12%.skyflow.DescribeExecutionBoneRequest\x1a&.skyflow.DescribeExecutionBoneResponse\"\x00\x12H\n" +
 	"\rStopExecution\x12\x1d.skyflow.StopExecutionRequest\x1a\x16.google.protobuf.Empty\"\x00\x12S\n" +

@@ -9,10 +9,9 @@ POST  {{host}}/api/v1/StartExecution
 Content-Type: {{contentType}}
 
 {
-  "title": "example-execution",
-  "statemachine_uri": "statemachine://example-statemachine"
-  
+  "statemachine_uri": "statemachine:example-statemachine"
 }
+
 
 ### StopExecution
 POST  {{host}}/api/v1/StopExecution
@@ -21,4 +20,13 @@ Content-Type: {{contentType}}
 {
   "title": "example-execution",
   "statemachine_uri": "statemachine://example-statemachine"
+}
+
+### CreateNamespace
+POST  {{host}}/api/v1/CreateNamespace
+Content-Type: {{contentType}}
+
+{
+  "name": "example-namespace",
+  "description": "This is a namespace to test the functionality"
 }

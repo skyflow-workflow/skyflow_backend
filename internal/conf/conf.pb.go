@@ -23,18 +23,10 @@ const (
 )
 
 type Bootstrap struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Server            *Server                `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
-	Data              *Data                  `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	Persistence       *Persistence           `protobuf:"bytes,3,opt,name=persistence,proto3" json:"persistence,omitempty"`
-	MessageQueue      *MessageQueue          `protobuf:"bytes,4,opt,name=message_queue,json=messageQueue,proto3" json:"message_queue,omitempty"`
-	DelayMessageQueue *MessageQueue          `protobuf:"bytes,5,opt,name=delay_message_queue,json=delayMessageQueue,proto3" json:"delay_message_queue,omitempty"`
-	Api               *API                   `protobuf:"bytes,6,opt,name=api,proto3" json:"api,omitempty"`
-	Dispatcher        *Dispatcher            `protobuf:"bytes,7,opt,name=dispatcher,proto3" json:"dispatcher,omitempty"`
-	Exporter          *Exporter              `protobuf:"bytes,8,opt,name=exporter,proto3" json:"exporter,omitempty"`
-	Resource          *Resource              `protobuf:"bytes,9,opt,name=resource,proto3" json:"resource,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Server        *Server                `protobuf:"bytes,1,opt,name=server,proto3" json:"server,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Bootstrap) Reset() {
@@ -70,62 +62,6 @@ func (*Bootstrap) Descriptor() ([]byte, []int) {
 func (x *Bootstrap) GetServer() *Server {
 	if x != nil {
 		return x.Server
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetData() *Data {
-	if x != nil {
-		return x.Data
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetPersistence() *Persistence {
-	if x != nil {
-		return x.Persistence
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetMessageQueue() *MessageQueue {
-	if x != nil {
-		return x.MessageQueue
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetDelayMessageQueue() *MessageQueue {
-	if x != nil {
-		return x.DelayMessageQueue
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetApi() *API {
-	if x != nil {
-		return x.Api
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetDispatcher() *Dispatcher {
-	if x != nil {
-		return x.Dispatcher
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetExporter() *Exporter {
-	if x != nil {
-		return x.Exporter
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetResource() *Resource {
-	if x != nil {
-		return x.Resource
 	}
 	return nil
 }
@@ -182,378 +118,6 @@ func (x *Server) GetGrpc() *Server_GRPC {
 	return nil
 }
 
-type Data struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Database      *Data_Database         `protobuf:"bytes,1,opt,name=database,proto3" json:"database,omitempty"`
-	Redis         *Data_Redis            `protobuf:"bytes,2,opt,name=redis,proto3" json:"redis,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Data) Reset() {
-	*x = Data{}
-	mi := &file_conf_conf_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Data) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Data) ProtoMessage() {}
-
-func (x *Data) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Data.ProtoReflect.Descriptor instead.
-func (*Data) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *Data) GetDatabase() *Data_Database {
-	if x != nil {
-		return x.Database
-	}
-	return nil
-}
-
-func (x *Data) GetRedis() *Data_Redis {
-	if x != nil {
-		return x.Redis
-	}
-	return nil
-}
-
-type Persistence struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dsn           string                 `protobuf:"bytes,1,opt,name=dsn,proto3" json:"dsn,omitempty"`
-	MaxIdleConns  int32                  `protobuf:"varint,2,opt,name=max_idle_conns,json=maxIdleConns,proto3" json:"max_idle_conns,omitempty"`
-	MaxOpenConns  int32                  `protobuf:"varint,3,opt,name=max_open_conns,json=maxOpenConns,proto3" json:"max_open_conns,omitempty"`
-	LogLevel      string                 `protobuf:"bytes,4,opt,name=log_level,json=logLevel,proto3" json:"log_level,omitempty"`
-	MaxIdleTime   *durationpb.Duration   `protobuf:"bytes,5,opt,name=max_idle_time,json=maxIdleTime,proto3" json:"max_idle_time,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Persistence) Reset() {
-	*x = Persistence{}
-	mi := &file_conf_conf_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Persistence) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Persistence) ProtoMessage() {}
-
-func (x *Persistence) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Persistence.ProtoReflect.Descriptor instead.
-func (*Persistence) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *Persistence) GetDsn() string {
-	if x != nil {
-		return x.Dsn
-	}
-	return ""
-}
-
-func (x *Persistence) GetMaxIdleConns() int32 {
-	if x != nil {
-		return x.MaxIdleConns
-	}
-	return 0
-}
-
-func (x *Persistence) GetMaxOpenConns() int32 {
-	if x != nil {
-		return x.MaxOpenConns
-	}
-	return 0
-}
-
-func (x *Persistence) GetLogLevel() string {
-	if x != nil {
-		return x.LogLevel
-	}
-	return ""
-}
-
-func (x *Persistence) GetMaxIdleTime() *durationpb.Duration {
-	if x != nil {
-		return x.MaxIdleTime
-	}
-	return nil
-}
-
-type MessageQueue struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Dsn           string                 `protobuf:"bytes,1,opt,name=dsn,proto3" json:"dsn,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MessageQueue) Reset() {
-	*x = MessageQueue{}
-	mi := &file_conf_conf_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MessageQueue) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MessageQueue) ProtoMessage() {}
-
-func (x *MessageQueue) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use MessageQueue.ProtoReflect.Descriptor instead.
-func (*MessageQueue) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *MessageQueue) GetDsn() string {
-	if x != nil {
-		return x.Dsn
-	}
-	return ""
-}
-
-type API struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	QpsLimit      int32                  `protobuf:"varint,1,opt,name=qps_limit,json=qpsLimit,proto3" json:"qps_limit,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *API) Reset() {
-	*x = API{}
-	mi := &file_conf_conf_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *API) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*API) ProtoMessage() {}
-
-func (x *API) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use API.ProtoReflect.Descriptor instead.
-func (*API) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *API) GetQpsLimit() int32 {
-	if x != nil {
-		return x.QpsLimit
-	}
-	return 0
-}
-
-type Dispatcher struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	MaxConcurrency int32                  `protobuf:"varint,1,opt,name=max_concurrency,json=maxConcurrency,proto3" json:"max_concurrency,omitempty"`
-	MaxQueueSize   int32                  `protobuf:"varint,2,opt,name=max_queue_size,json=maxQueueSize,proto3" json:"max_queue_size,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *Dispatcher) Reset() {
-	*x = Dispatcher{}
-	mi := &file_conf_conf_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Dispatcher) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Dispatcher) ProtoMessage() {}
-
-func (x *Dispatcher) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Dispatcher.ProtoReflect.Descriptor instead.
-func (*Dispatcher) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *Dispatcher) GetMaxConcurrency() int32 {
-	if x != nil {
-		return x.MaxConcurrency
-	}
-	return 0
-}
-
-func (x *Dispatcher) GetMaxQueueSize() int32 {
-	if x != nil {
-		return x.MaxQueueSize
-	}
-	return 0
-}
-
-type Exporter struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Listeners     []string               `protobuf:"bytes,1,rep,name=listeners,proto3" json:"listeners,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Exporter) Reset() {
-	*x = Exporter{}
-	mi := &file_conf_conf_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Exporter) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Exporter) ProtoMessage() {}
-
-func (x *Exporter) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Exporter.ProtoReflect.Descriptor instead.
-func (*Exporter) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *Exporter) GetListeners() []string {
-	if x != nil {
-		return x.Listeners
-	}
-	return nil
-}
-
-type Resource struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	MemoryRequest string                 `protobuf:"bytes,1,opt,name=memory_request,json=memoryRequest,proto3" json:"memory_request,omitempty"`
-	CpuRequest    int32                  `protobuf:"varint,2,opt,name=cpu_request,json=cpuRequest,proto3" json:"cpu_request,omitempty"`
-	Rate          int32                  `protobuf:"varint,3,opt,name=rate,proto3" json:"rate,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Resource) Reset() {
-	*x = Resource{}
-	mi := &file_conf_conf_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Resource) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Resource) ProtoMessage() {}
-
-func (x *Resource) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Resource.ProtoReflect.Descriptor instead.
-func (*Resource) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *Resource) GetMemoryRequest() string {
-	if x != nil {
-		return x.MemoryRequest
-	}
-	return ""
-}
-
-func (x *Resource) GetCpuRequest() int32 {
-	if x != nil {
-		return x.CpuRequest
-	}
-	return 0
-}
-
-func (x *Resource) GetRate() int32 {
-	if x != nil {
-		return x.Rate
-	}
-	return 0
-}
-
 type Server_HTTP struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
@@ -565,7 +129,7 @@ type Server_HTTP struct {
 
 func (x *Server_HTTP) Reset() {
 	*x = Server_HTTP{}
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -577,7 +141,7 @@ func (x *Server_HTTP) String() string {
 func (*Server_HTTP) ProtoMessage() {}
 
 func (x *Server_HTTP) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[9]
+	mi := &file_conf_conf_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -625,7 +189,7 @@ type Server_GRPC struct {
 
 func (x *Server_GRPC) Reset() {
 	*x = Server_GRPC{}
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -637,7 +201,7 @@ func (x *Server_GRPC) String() string {
 func (*Server_GRPC) ProtoMessage() {}
 
 func (x *Server_GRPC) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[10]
+	mi := &file_conf_conf_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -674,144 +238,14 @@ func (x *Server_GRPC) GetTimeout() *durationpb.Duration {
 	return nil
 }
 
-type Data_Database struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Driver        string                 `protobuf:"bytes,1,opt,name=driver,proto3" json:"driver,omitempty"`
-	Source        string                 `protobuf:"bytes,2,opt,name=source,proto3" json:"source,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Data_Database) Reset() {
-	*x = Data_Database{}
-	mi := &file_conf_conf_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Data_Database) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Data_Database) ProtoMessage() {}
-
-func (x *Data_Database) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Data_Database.ProtoReflect.Descriptor instead.
-func (*Data_Database) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{2, 0}
-}
-
-func (x *Data_Database) GetDriver() string {
-	if x != nil {
-		return x.Driver
-	}
-	return ""
-}
-
-func (x *Data_Database) GetSource() string {
-	if x != nil {
-		return x.Source
-	}
-	return ""
-}
-
-type Data_Redis struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Network       string                 `protobuf:"bytes,1,opt,name=network,proto3" json:"network,omitempty"`
-	Addr          string                 `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
-	ReadTimeout   *durationpb.Duration   `protobuf:"bytes,3,opt,name=read_timeout,json=readTimeout,proto3" json:"read_timeout,omitempty"`
-	WriteTimeout  *durationpb.Duration   `protobuf:"bytes,4,opt,name=write_timeout,json=writeTimeout,proto3" json:"write_timeout,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Data_Redis) Reset() {
-	*x = Data_Redis{}
-	mi := &file_conf_conf_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Data_Redis) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Data_Redis) ProtoMessage() {}
-
-func (x *Data_Redis) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_conf_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Data_Redis.ProtoReflect.Descriptor instead.
-func (*Data_Redis) Descriptor() ([]byte, []int) {
-	return file_conf_conf_proto_rawDescGZIP(), []int{2, 1}
-}
-
-func (x *Data_Redis) GetNetwork() string {
-	if x != nil {
-		return x.Network
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetAddr() string {
-	if x != nil {
-		return x.Addr
-	}
-	return ""
-}
-
-func (x *Data_Redis) GetReadTimeout() *durationpb.Duration {
-	if x != nil {
-		return x.ReadTimeout
-	}
-	return nil
-}
-
-func (x *Data_Redis) GetWriteTimeout() *durationpb.Duration {
-	if x != nil {
-		return x.WriteTimeout
-	}
-	return nil
-}
-
 var File_conf_conf_proto protoreflect.FileDescriptor
 
 const file_conf_conf_proto_rawDesc = "" +
 	"\n" +
 	"\x0fconf/conf.proto\x12\n" +
-	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"\xe0\x03\n" +
+	"kratos.api\x1a\x1egoogle/protobuf/duration.proto\"7\n" +
 	"\tBootstrap\x12*\n" +
-	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\x12$\n" +
-	"\x04data\x18\x02 \x01(\v2\x10.kratos.api.DataR\x04data\x129\n" +
-	"\vpersistence\x18\x03 \x01(\v2\x17.kratos.api.PersistenceR\vpersistence\x12=\n" +
-	"\rmessage_queue\x18\x04 \x01(\v2\x18.kratos.api.MessageQueueR\fmessageQueue\x12H\n" +
-	"\x13delay_message_queue\x18\x05 \x01(\v2\x18.kratos.api.MessageQueueR\x11delayMessageQueue\x12!\n" +
-	"\x03api\x18\x06 \x01(\v2\x0f.kratos.api.APIR\x03api\x126\n" +
-	"\n" +
-	"dispatcher\x18\a \x01(\v2\x16.kratos.api.DispatcherR\n" +
-	"dispatcher\x120\n" +
-	"\bexporter\x18\b \x01(\v2\x14.kratos.api.ExporterR\bexporter\x120\n" +
-	"\bresource\x18\t \x01(\v2\x14.kratos.api.ResourceR\bresource\"\xb8\x02\n" +
+	"\x06server\x18\x01 \x01(\v2\x12.kratos.api.ServerR\x06server\"\xb8\x02\n" +
 	"\x06Server\x12+\n" +
 	"\x04http\x18\x01 \x01(\v2\x17.kratos.api.Server.HTTPR\x04http\x12+\n" +
 	"\x04grpc\x18\x02 \x01(\v2\x17.kratos.api.Server.GRPCR\x04grpc\x1ai\n" +
@@ -822,39 +256,7 @@ const file_conf_conf_proto_rawDesc = "" +
 	"\x04GRPC\x12\x18\n" +
 	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
 	"\x04addr\x18\x02 \x01(\tR\x04addr\x123\n" +
-	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeout\"\xdd\x02\n" +
-	"\x04Data\x125\n" +
-	"\bdatabase\x18\x01 \x01(\v2\x19.kratos.api.Data.DatabaseR\bdatabase\x12,\n" +
-	"\x05redis\x18\x02 \x01(\v2\x16.kratos.api.Data.RedisR\x05redis\x1a:\n" +
-	"\bDatabase\x12\x16\n" +
-	"\x06driver\x18\x01 \x01(\tR\x06driver\x12\x16\n" +
-	"\x06source\x18\x02 \x01(\tR\x06source\x1a\xb3\x01\n" +
-	"\x05Redis\x12\x18\n" +
-	"\anetwork\x18\x01 \x01(\tR\anetwork\x12\x12\n" +
-	"\x04addr\x18\x02 \x01(\tR\x04addr\x12<\n" +
-	"\fread_timeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\vreadTimeout\x12>\n" +
-	"\rwrite_timeout\x18\x04 \x01(\v2\x19.google.protobuf.DurationR\fwriteTimeout\"\xc7\x01\n" +
-	"\vPersistence\x12\x10\n" +
-	"\x03dsn\x18\x01 \x01(\tR\x03dsn\x12$\n" +
-	"\x0emax_idle_conns\x18\x02 \x01(\x05R\fmaxIdleConns\x12$\n" +
-	"\x0emax_open_conns\x18\x03 \x01(\x05R\fmaxOpenConns\x12\x1b\n" +
-	"\tlog_level\x18\x04 \x01(\tR\blogLevel\x12=\n" +
-	"\rmax_idle_time\x18\x05 \x01(\v2\x19.google.protobuf.DurationR\vmaxIdleTime\" \n" +
-	"\fMessageQueue\x12\x10\n" +
-	"\x03dsn\x18\x01 \x01(\tR\x03dsn\"\"\n" +
-	"\x03API\x12\x1b\n" +
-	"\tqps_limit\x18\x01 \x01(\x05R\bqpsLimit\"[\n" +
-	"\n" +
-	"Dispatcher\x12'\n" +
-	"\x0fmax_concurrency\x18\x01 \x01(\x05R\x0emaxConcurrency\x12$\n" +
-	"\x0emax_queue_size\x18\x02 \x01(\x05R\fmaxQueueSize\"(\n" +
-	"\bExporter\x12\x1c\n" +
-	"\tlisteners\x18\x01 \x03(\tR\tlisteners\"f\n" +
-	"\bResource\x12%\n" +
-	"\x0ememory_request\x18\x01 \x01(\tR\rmemoryRequest\x12\x1f\n" +
-	"\vcpu_request\x18\x02 \x01(\x05R\n" +
-	"cpuRequest\x12\x12\n" +
-	"\x04rate\x18\x03 \x01(\x05R\x04rateB$Z\"skyflow_backend/internal/conf;confb\x06proto3"
+	"\atimeout\x18\x03 \x01(\v2\x19.google.protobuf.DurationR\atimeoutB$Z\"skyflow_backend/internal/conf;confb\x06proto3"
 
 var (
 	file_conf_conf_proto_rawDescOnce sync.Once
@@ -868,47 +270,25 @@ func file_conf_conf_proto_rawDescGZIP() []byte {
 	return file_conf_conf_proto_rawDescData
 }
 
-var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
+var file_conf_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_conf_conf_proto_goTypes = []any{
 	(*Bootstrap)(nil),           // 0: kratos.api.Bootstrap
 	(*Server)(nil),              // 1: kratos.api.Server
-	(*Data)(nil),                // 2: kratos.api.Data
-	(*Persistence)(nil),         // 3: kratos.api.Persistence
-	(*MessageQueue)(nil),        // 4: kratos.api.MessageQueue
-	(*API)(nil),                 // 5: kratos.api.API
-	(*Dispatcher)(nil),          // 6: kratos.api.Dispatcher
-	(*Exporter)(nil),            // 7: kratos.api.Exporter
-	(*Resource)(nil),            // 8: kratos.api.Resource
-	(*Server_HTTP)(nil),         // 9: kratos.api.Server.HTTP
-	(*Server_GRPC)(nil),         // 10: kratos.api.Server.GRPC
-	(*Data_Database)(nil),       // 11: kratos.api.Data.Database
-	(*Data_Redis)(nil),          // 12: kratos.api.Data.Redis
-	(*durationpb.Duration)(nil), // 13: google.protobuf.Duration
+	(*Server_HTTP)(nil),         // 2: kratos.api.Server.HTTP
+	(*Server_GRPC)(nil),         // 3: kratos.api.Server.GRPC
+	(*durationpb.Duration)(nil), // 4: google.protobuf.Duration
 }
 var file_conf_conf_proto_depIdxs = []int32{
-	1,  // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
-	2,  // 1: kratos.api.Bootstrap.data:type_name -> kratos.api.Data
-	3,  // 2: kratos.api.Bootstrap.persistence:type_name -> kratos.api.Persistence
-	4,  // 3: kratos.api.Bootstrap.message_queue:type_name -> kratos.api.MessageQueue
-	4,  // 4: kratos.api.Bootstrap.delay_message_queue:type_name -> kratos.api.MessageQueue
-	5,  // 5: kratos.api.Bootstrap.api:type_name -> kratos.api.API
-	6,  // 6: kratos.api.Bootstrap.dispatcher:type_name -> kratos.api.Dispatcher
-	7,  // 7: kratos.api.Bootstrap.exporter:type_name -> kratos.api.Exporter
-	8,  // 8: kratos.api.Bootstrap.resource:type_name -> kratos.api.Resource
-	9,  // 9: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
-	10, // 10: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
-	11, // 11: kratos.api.Data.database:type_name -> kratos.api.Data.Database
-	12, // 12: kratos.api.Data.redis:type_name -> kratos.api.Data.Redis
-	13, // 13: kratos.api.Persistence.max_idle_time:type_name -> google.protobuf.Duration
-	13, // 14: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
-	13, // 15: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
-	13, // 16: kratos.api.Data.Redis.read_timeout:type_name -> google.protobuf.Duration
-	13, // 17: kratos.api.Data.Redis.write_timeout:type_name -> google.protobuf.Duration
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	1, // 0: kratos.api.Bootstrap.server:type_name -> kratos.api.Server
+	2, // 1: kratos.api.Server.http:type_name -> kratos.api.Server.HTTP
+	3, // 2: kratos.api.Server.grpc:type_name -> kratos.api.Server.GRPC
+	4, // 3: kratos.api.Server.HTTP.timeout:type_name -> google.protobuf.Duration
+	4, // 4: kratos.api.Server.GRPC.timeout:type_name -> google.protobuf.Duration
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_conf_conf_proto_init() }
@@ -922,7 +302,7 @@ func file_conf_conf_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_conf_proto_rawDesc), len(file_conf_conf_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   13,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

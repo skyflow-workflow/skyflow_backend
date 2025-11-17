@@ -9,6 +9,7 @@ import (
 
 // CommonServiceHandler is a service that provides common functions.
 type CommonServiceHandler struct {
+	pbv1.UnimplementedCommonServiceServer
 }
 
 // Ping implements pb.CommonServiceService.

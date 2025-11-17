@@ -77,17 +77,52 @@ service SkyflowV1Service {
     }
     // CreateOrUpdateNamespace 创建/更新一个命名空间
     rpc CreateOrUpdateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/CreateOrUpdateNamespace"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // ListNamespaces 获得命名空间列表
     rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ListNamespaces"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // DeleteNamespace 删除一个命名空间
     // 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
     rpc DeleteNamespace(DeleteNamespaceRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/api/v1/DeleteNamespace"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // CreateActivity 创建一个活动
     rpc CreateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/CreateActivity"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // CreateOrUpdateActivity 创建/更新一个活动
     rpc CreateOrUpdateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
@@ -95,6 +130,15 @@ service SkyflowV1Service {
 
     // ListActivities 获得活动列表
     rpc ListActivities(ListActivitiesRequest) returns (ListActivitiesResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ListActivities"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // DescribeActivity 获得一个活动的描述
     rpc DescribeActivity(DescribeActivityRequest) returns (DescribeActivityResponse) {
@@ -133,6 +177,15 @@ service SkyflowV1Service {
     // 任务管理
     // StartExecution 创建一个执行任务
     rpc StartExecution(StartExecutionRequest) returns (StartExecutionResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/StartExecution"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     // DescribeExecution 获得一个执行的描述
     rpc DescribeExecution(DescribeExecutionRequest) returns (DescribeExecutionResponse) {

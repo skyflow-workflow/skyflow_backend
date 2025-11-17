@@ -32,28 +32,35 @@ func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionListItem {
 		resp.StartTime = in.StartTime.Unix()
 	}
 	if in.FinishTime != nil {
-		resp.FinishTime = in.StartTime.Unix()
+		resp.FinishTime = in.FinishTime.Unix()
 	}
 	return resp
 }
 
 func ToVOPageRequest(req *pbv1.PageRequest) paging.PageRequest {
 
-	var voreq = paging.DefaultPageRequest
+	var voReq = paging.DefaultPageRequest
 	if req != nil {
 		if req.PageSize > 0 {
-			voreq.PageSize = int(req.PageSize)
+			voReq.PageSize = int(req.PageSize)
 		}
 		// 单页不能超过最大值
 		if req.PageSize > int64(MaxPageSize) {
-			voreq.PageNumber = MaxPageSize
+			voReq.PageSize = MaxPageSize
+		}
+		// 验证页码和页大小的合理性
+		if req.PageNumber < 1 {
+			voReq.PageNumber = 1
+		}
+		if req.PageSize < 1 {
+			voReq.PageSize = 10 // 默认页大小
 		}
 		if req.PageNumber > 0 {
-			voreq.PageNumber = int(req.PageNumber)
+			voReq.PageNumber = int(req.PageNumber)
 		}
 	}
 
-	return voreq
+	return voReq
 }
 
 func ToPBPageResponse(req paging.PageResponse) *pbv1.PageResponse {
@@ -145,7 +152,11 @@ func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineInfo {
 //
 // fmt.Println(out) // ["1", "2", "3"]
 func DataTransferArray[TI any, TO any](in []TI, f func(TI) TO) []TO {
-	var out = []TO{}
+	if len(in) == 0 {
+		return []TO{}
+	}
+	// 预分配容量避免多次内存重分配
+	out := make([]TO, 0, len(in))
 	for _, d := range in {
 		out = append(out, f(d))
 	}

@@ -2,17 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"log/slog"
 
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/trpclog"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 
-	"trpc.group/trpc-go/trpc-go"
 	tconfig "trpc.group/trpc-go/trpc-go/config"
-	"trpc.group/trpc-go/trpc-go/server"
 )
 
 func LoadConfig(customConfigFilePath string) (*config.SkyflowConfig, error) {
@@ -73,20 +69,4 @@ func LoadService(conf *config.SkyflowConfig) (workflow.WorkflowService, error) {
 		return nil, fmt.Errorf("failed to create workflow service: %w", err)
 	}
 	return workflowService, nil
-}
-
-func InitializeTrpcSever(trpc_conf string) *server.Server {
-	if trpc_conf != "" {
-		trpc.ServerConfigPath = trpc_conf // Set the TRPC server configuration path
-	}
-
-	// load TRPC server configuration
-	s := trpc.NewServer()
-
-	// load trpc logger config and transform it to slog logger
-	logger := trpclog.NewHandlerFromTrpcLogger(nil)
-	slog.SetDefault(slog.New(logger))
-	slog.Info("Initializing TRPC server", "configPath", trpc_conf)
-
-	return s
 }

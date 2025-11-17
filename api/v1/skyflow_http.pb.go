@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,16 +20,42 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationSkyflowV1ServiceCreateActivity = "/skyflow.SkyflowV1Service/CreateActivity"
 const OperationSkyflowV1ServiceCreateNamespace = "/skyflow.SkyflowV1Service/CreateNamespace"
+const OperationSkyflowV1ServiceCreateOrUpdateNamespace = "/skyflow.SkyflowV1Service/CreateOrUpdateNamespace"
+const OperationSkyflowV1ServiceDeleteNamespace = "/skyflow.SkyflowV1Service/DeleteNamespace"
+const OperationSkyflowV1ServiceListActivities = "/skyflow.SkyflowV1Service/ListActivities"
+const OperationSkyflowV1ServiceListNamespaces = "/skyflow.SkyflowV1Service/ListNamespaces"
+const OperationSkyflowV1ServiceStartExecution = "/skyflow.SkyflowV1Service/StartExecution"
 
 type SkyflowV1ServiceHTTPServer interface {
+	// CreateActivity CreateActivity 创建一个活动
+	CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
+	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
+	CreateOrUpdateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	// 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(context.Context, *DeleteNamespaceRequest) (*emptypb.Empty, error)
+	// ListActivities ListActivities 获得活动列表
+	ListActivities(context.Context, *ListActivitiesRequest) (*ListActivitiesResponse, error)
+	// ListNamespaces ListNamespaces 获得命名空间列表
+	ListNamespaces(context.Context, *ListNamespacesRequest) (*ListNamespacesResponse, error)
+	// StartExecution 任务管理
+	// StartExecution 创建一个执行任务
+	StartExecution(context.Context, *StartExecutionRequest) (*StartExecutionResponse, error)
 }
 
 func RegisterSkyflowV1ServiceHTTPServer(s *http.Server, srv SkyflowV1ServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/CreateNamespace", _SkyflowV1Service_CreateNamespace0_HTTP_Handler(srv))
+	r.POST("/api/v1/CreateOrUpdateNamespace", _SkyflowV1Service_CreateOrUpdateNamespace0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListNamespaces", _SkyflowV1Service_ListNamespaces0_HTTP_Handler(srv))
+	r.POST("/api/v1/DeleteNamespace", _SkyflowV1Service_DeleteNamespace0_HTTP_Handler(srv))
+	r.POST("/api/v1/CreateActivity", _SkyflowV1Service_CreateActivity0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListActivities", _SkyflowV1Service_ListActivities0_HTTP_Handler(srv))
+	r.POST("/api/v1/StartExecution", _SkyflowV1Service_StartExecution0_HTTP_Handler(srv))
 }
 
 func _SkyflowV1Service_CreateNamespace0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
@@ -53,9 +80,155 @@ func _SkyflowV1Service_CreateNamespace0_HTTP_Handler(srv SkyflowV1ServiceHTTPSer
 	}
 }
 
+func _SkyflowV1Service_CreateOrUpdateNamespace0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateNamespaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceCreateOrUpdateNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateOrUpdateNamespace(ctx, req.(*CreateNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateNamespaceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListNamespaces0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListNamespacesRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListNamespaces)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListNamespaces(ctx, req.(*ListNamespacesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListNamespacesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DeleteNamespace0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteNamespaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDeleteNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteNamespace(ctx, req.(*DeleteNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_CreateActivity0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateActivityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceCreateActivity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateActivity(ctx, req.(*CreateActivityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateActivityResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListActivities0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListActivitiesRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListActivities)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListActivities(ctx, req.(*ListActivitiesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListActivitiesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_StartExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in StartExecutionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceStartExecution)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.StartExecution(ctx, req.(*StartExecutionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StartExecutionResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type SkyflowV1ServiceHTTPClient interface {
+	// CreateActivity CreateActivity 创建一个活动
+	CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...http.CallOption) (rsp *CreateActivityResponse, err error)
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...http.CallOption) (rsp *CreateNamespaceResponse, err error)
+	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
+	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...http.CallOption) (rsp *CreateNamespaceResponse, err error)
+	// DeleteNamespace DeleteNamespace 删除一个命名空间
+	// 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// ListActivities ListActivities 获得活动列表
+	ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...http.CallOption) (rsp *ListActivitiesResponse, err error)
+	// ListNamespaces ListNamespaces 获得命名空间列表
+	ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...http.CallOption) (rsp *ListNamespacesResponse, err error)
+	// StartExecution 任务管理
+	// StartExecution 创建一个执行任务
+	StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...http.CallOption) (rsp *StartExecutionResponse, err error)
 }
 
 type SkyflowV1ServiceHTTPClientImpl struct {
@@ -66,12 +239,98 @@ func NewSkyflowV1ServiceHTTPClient(client *http.Client) SkyflowV1ServiceHTTPClie
 	return &SkyflowV1ServiceHTTPClientImpl{client}
 }
 
+// CreateActivity CreateActivity 创建一个活动
+func (c *SkyflowV1ServiceHTTPClientImpl) CreateActivity(ctx context.Context, in *CreateActivityRequest, opts ...http.CallOption) (*CreateActivityResponse, error) {
+	var out CreateActivityResponse
+	pattern := "/api/v1/CreateActivity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateActivity))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // CreateNamespace CreateNamespace 创建一个命名空间
 func (c *SkyflowV1ServiceHTTPClientImpl) CreateNamespace(ctx context.Context, in *CreateNamespaceRequest, opts ...http.CallOption) (*CreateNamespaceResponse, error) {
 	var out CreateNamespaceResponse
 	pattern := "/api/v1/CreateNamespace"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
+func (c *SkyflowV1ServiceHTTPClientImpl) CreateOrUpdateNamespace(ctx context.Context, in *CreateNamespaceRequest, opts ...http.CallOption) (*CreateNamespaceResponse, error) {
+	var out CreateNamespaceResponse
+	pattern := "/api/v1/CreateOrUpdateNamespace"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateOrUpdateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteNamespace DeleteNamespace 删除一个命名空间
+// 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+func (c *SkyflowV1ServiceHTTPClientImpl) DeleteNamespace(ctx context.Context, in *DeleteNamespaceRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/DeleteNamespace"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDeleteNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListActivities ListActivities 获得活动列表
+func (c *SkyflowV1ServiceHTTPClientImpl) ListActivities(ctx context.Context, in *ListActivitiesRequest, opts ...http.CallOption) (*ListActivitiesResponse, error) {
+	var out ListActivitiesResponse
+	pattern := "/api/v1/ListActivities"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListActivities))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListNamespaces ListNamespaces 获得命名空间列表
+func (c *SkyflowV1ServiceHTTPClientImpl) ListNamespaces(ctx context.Context, in *ListNamespacesRequest, opts ...http.CallOption) (*ListNamespacesResponse, error) {
+	var out ListNamespacesResponse
+	pattern := "/api/v1/ListNamespaces"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListNamespaces))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// StartExecution 任务管理
+// StartExecution 创建一个执行任务
+func (c *SkyflowV1ServiceHTTPClientImpl) StartExecution(ctx context.Context, in *StartExecutionRequest, opts ...http.CallOption) (*StartExecutionResponse, error) {
+	var out StartExecutionResponse
+	pattern := "/api/v1/StartExecution"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceStartExecution))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

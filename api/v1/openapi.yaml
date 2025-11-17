@@ -6,6 +6,26 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /api/v1/CreateActivity:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateActivity 创建一个活动
+            operationId: SkyflowV1Service_CreateActivity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.CreateActivityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.CreateActivityResponse'
     /api/v1/CreateNamespace:
         post:
             tags:
@@ -26,6 +46,107 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/skyflow.CreateNamespaceResponse'
+    /api/v1/CreateOrUpdateNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateOrUpdateNamespace 创建/更新一个命名空间
+            operationId: SkyflowV1Service_CreateOrUpdateNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.CreateNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.CreateNamespaceResponse'
+    /api/v1/DeleteNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: |-
+                DeleteNamespace 删除一个命名空间
+                 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+            operationId: SkyflowV1Service_DeleteNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.DeleteNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/ListActivities:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ListActivities 获得活动列表
+            operationId: SkyflowV1Service_ListActivities
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.ListActivitiesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.ListActivitiesResponse'
+    /api/v1/ListNamespaces:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ListNamespaces 获得命名空间列表
+            operationId: SkyflowV1Service_ListNamespaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.ListNamespacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.ListNamespacesResponse'
+    /api/v1/StartExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: |-
+                任务管理
+                 StartExecution 创建一个执行任务
+            operationId: SkyflowV1Service_StartExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.StartExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.StartExecutionResponse'
     /helloworld/{name}:
         get:
             tags:
@@ -53,6 +174,54 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        skyflow.ActivityListItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 活动名字
+                description:
+                    type: string
+                    description: description 活动描述
+                activityUri:
+                    type: string
+                    description: activity_uri 活动uri
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: ActivityListItem ...
+        skyflow.CreateActivityRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name activity name
+                description:
+                    type: string
+                    description: description activity description
+                namespace:
+                    type: string
+                    description: namespace activity namespace
+                parameters:
+                    type: string
+                    description: parameters activity parameters
+            description: CreateActivityRequest 创建一个活动请求结构
+        skyflow.CreateActivityResponse:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: activity uri
+                createTime:
+                    type: string
+                    description: create_time create time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: CreateActivityResponse 创建一个活动返回结构
         skyflow.CreateNamespaceRequest:
             type: object
             properties:
@@ -79,6 +248,138 @@ components:
                     type: string
                     description: update_time  update time timestample
             description: CreateNamespaceResponse 创建一个命名空间返回结构
+        skyflow.DeleteNamespaceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+            description: DeleteNamespaceRequest 删除一个命名空间
+        skyflow.ListActivitiesRequest:
+            type: object
+            properties:
+                namespace:
+                    type: string
+                    description: namespace 活动命名空间
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/skyflow.PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListActivitiesRequest 获得活动列表请求结构
+        skyflow.ListActivitiesResponse:
+            type: object
+            properties:
+                activities:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/skyflow.ActivityListItem'
+                    description: 查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/skyflow.PageResponse'
+                    description: 分页信息
+            description: ListActivitiesResponse 获得活动列表请求返回
+        skyflow.ListNamespacesRequest:
+            type: object
+            properties:
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/skyflow.PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListNamespacesRequest 获得命名空间列表
+        skyflow.ListNamespacesResponse:
+            type: object
+            properties:
+                namespaces:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/skyflow.NamespaceListItem'
+                    description: data  查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/skyflow.PageResponse'
+                    description: 分页信息
+            description: ListNamespacesResponse 获得命名空间列表返回
+        skyflow.NamespaceListItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+                description:
+                    type: string
+                    description: description 命名空间描述
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: NamespaceInfo 命名空间信息
+        skyflow.PageRequest:
+            type: object
+            properties:
+                pageSize:
+                    type: string
+                    description: 请求分页大小
+                pageNumber:
+                    type: string
+                    description: 请求页号
+                orderBy:
+                    type: string
+                    description: 请求排序字段
+            description: 分页请求结构
+        skyflow.PageResponse:
+            type: object
+            properties:
+                count:
+                    type: string
+                    description: 总数量
+                pageSize:
+                    type: string
+                    description: 请求分页大小
+                pageNumber:
+                    type: string
+                    description: 请求页号
+                pageCount:
+                    type: string
+                    description: 总页数
+            description: 分页返回结构
+        skyflow.StartExecutionRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+                    description: 状态机模板URI，可选，statemachine_uri 与definition 必须指定一个
+                definition:
+                    type: string
+                    description: 流程模板定义，JSON/YAML格式的流程模板定义，可选
+                title:
+                    type: string
+                    description: 状态机执行的标题，可为空
+                input:
+                    type: string
+                    description: 状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'
+                executionName:
+                    type: string
+                    description: 状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid
+            description: |-
+                创建一个执行的请求体
+                 参数约束：
+                 statemachine_uri 是指注册到 skyflowflow的 模板引用路径，
+                 definition是自定义的StateMachine定义,json/yaml格式
+                 statemachine_uri与definition 二选一。
+                 execution_name：用户自定义的执行唯一名称，可选， 如果指定，自动生成一个新的uuid .
+        skyflow.StartExecutionResponse:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: 返回的执行的唯一ID
+                createTime:
+                    type: string
+                    description: 执行创建的时间
+            description: 创建一个执行的请求返回结构
 tags:
     - name: Greeter
       description: The greeting service definition.

@@ -2,6 +2,8 @@ package apiserver
 
 import (
 	"context"
+	"errors"
+	"log/slog"
 
 	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
@@ -11,7 +13,15 @@ import (
 
 // SkyflowServiceHandler skyflow service handler
 type SkyflowServiceHandler struct {
+	pbv1.UnimplementedSkyflowV1ServiceServer
 	wfSvc workflow.WorkflowService
+}
+
+// NewSkyflowServiceHandler creates a new SkyflowServiceHandler
+func NewSkyflowServiceHandler(wfSvc workflow.WorkflowService) *SkyflowServiceHandler {
+	return &SkyflowServiceHandler{
+		wfSvc: wfSvc,
+	}
 }
 
 // ValidateStateMachineDefinition implements pbv1.SkyflowV1ServiceService.
@@ -61,6 +71,17 @@ func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pbv1
 
 // StartExecution implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.StartExecutionRequest) (*pbv1.StartExecutionResponse, error) {
+	// 输入验证
+	if req == nil {
+		return nil, errors.New("request cannot be nil")
+	}
+	if req.StatemachineUri == "" {
+		return nil, errors.New("state machine URI is required")
+	}
+	if req.Definition == "" {
+		return nil, errors.New("state machine definition is required")
+	}
+
 	voReq := vo.StartExecutionRequest{
 		StateMachineURI:        req.StatemachineUri,
 		Input:                  req.Input,
@@ -68,6 +89,7 @@ func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.St
 		Title:                  req.Title,
 		ExecutionUUID:          req.ExecutionName,
 	}
+	slog.Info("Enter StartExecution2")
 	dbExecution, err := s.wfSvc.ExecutionService.StartExecution(voReq)
 	if err != nil {
 		return nil, err

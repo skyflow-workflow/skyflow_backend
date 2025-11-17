@@ -62,17 +62,16 @@ Content-Type: application/json
 
 ### ListActivities
 POST  {{host}}/api/v1/ListActivities
-Accept: application/json
+Content-Type: application/json
 
 {
     "namespace": "example-namespace"
 }
 
 
-
-
 ### GetEvents
 POST http://127.0.0.1:8080/api/v1/ListActivities/namespace
+
 Accept: application/json
 {
     "namespace": "namespace"

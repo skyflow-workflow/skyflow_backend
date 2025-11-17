@@ -1,13 +1,24 @@
 package kratos
 
 import (
-	"log"
+	"os"
 
+	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/skyflow-workflow/skyflow_backbend/internal/conf"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/config"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+)
+
+var (
+	Name    string
+	Version string
 )
 
 // NewGRPCServer new a gRPC server.
@@ -47,6 +58,82 @@ func NewHTTPServer(c *conf.Server, logger log.Logger) *http.Server {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	// v1.RegisterGreeterHTTPServer(srv, greeter)
 	return srv
+}
+
+func GetDefaultLogger() log.Logger {
+	id := getHostname()
+	defaultlogger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+		"trace.id", tracing.TraceID(),
+		"span.id", tracing.SpanID(),
+	)
+
+	return defaultlogger
+}
+
+func GetBootstrapConfig(configPath string) (*conf.Bootstrap, error) {
+	c := config.New(
+		config.WithSource(
+			file.NewSource(configPath),
+		),
+	)
+	defer c.Close()
+
+	if err := c.Load(); err != nil {
+		return nil, err
+	}
+
+	var bc conf.Bootstrap
+	if err := c.Scan(&bc); err != nil {
+		return nil, err
+	}
+	return &bc, nil
+}
+
+// Server  kratos 服务
+type Server struct {
+	grpcServer *grpc.Server
+	httpServer *http.Server
+	wfSvc      workflow.WorkflowService
+	logger     log.Logger
+	app        *kratos.App
+}
+
+type ServerOption func(*Server)
+
+type ServerOptions struct {
+}
+
+func NewServer(conf string, svc workflow.WorkflowService) (*Server, error) {
+
+	logger := GetDefaultLogger()
+	bootstrap, err := GetBootstrapConfig(conf)
+	if err != nil {
+		return nil, err
+	}
+
+	grpcServer := NewGRPCServer(bootstrap.Server)
+	httpServer := NewHTTPServer(bootstrap.Server, logger)
+
+	InitAppServer(grpcServer, httpServer, svc)
+	app := NewApp(Name, Version, logger, grpcServer, httpServer)
+	return &Server{
+		grpcServer: grpcServer,
+		httpServer: httpServer,
+		wfSvc:      svc,
+		logger:     logger,
+		app:        app,
+	}, nil
+}
+
+func (s *Server) Start() error {
+	return s.app.Run()
+}
+func (s *Server) Stop() error {
+	return nil
 }
