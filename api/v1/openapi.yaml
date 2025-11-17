@@ -1,0 +1,86 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /api/v1/CreateNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateNamespace 创建一个命名空间
+            operationId: SkyflowV1Service_CreateNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.CreateNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/skyflow.CreateNamespaceResponse'
+    /helloworld/{name}:
+        get:
+            tags:
+                - Greeter
+            description: Sends a greeting
+            operationId: Greeter_SayHello
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+components:
+    schemas:
+        helloworld.v1.HelloReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The response message containing the greetings
+        skyflow.CreateNamespaceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+                description:
+                    type: string
+                    description: description 命名空间描述
+            description: CreateNamespaceRequest 创建一个命名空间
+        skyflow.CreateNamespaceResponse:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name namespace name
+                description:
+                    type: string
+                    description: description 命名空间描述
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time  update time timestample
+            description: CreateNamespaceResponse 创建一个命名空间返回结构
+tags:
+    - name: Greeter
+      description: The greeting service definition.
+    - name: SkyflowV1Service
+      description: SkyflowV1Service workflow Service

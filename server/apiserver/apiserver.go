@@ -1,7 +1,7 @@
 package apiserver
 
 import (
-	pb "github.com/skyflow-workflow/skyflow_backbend/gen/pb"
+	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"trpc.group/trpc-go/trpc-go/log"
 	"trpc.group/trpc-go/trpc-go/server"
@@ -15,8 +15,8 @@ type APIServer struct {
 
 // NewAPIServer creates a new API server.
 func NewAPIServer(server *server.Server, svc workflow.WorkflowService) *APIServer {
-	pb.RegisterCommonServiceService(server, &CommonServiceHandler{})
-	pb.RegisterSkyflowV1ServiceService(server, &SkyflowServiceHandler{
+	pbv1.RegisterCommonServiceService(server, &CommonServiceHandler{})
+	pbv1.RegisterSkyflowV1ServiceService(server, &SkyflowServiceHandler{
 		wfSvc: svc,
 	})
 

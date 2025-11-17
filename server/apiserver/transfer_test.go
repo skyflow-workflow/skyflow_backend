@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/paging"
-	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
+	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,7 +25,7 @@ func TestToPBExecutionItem(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    po.Execution
-		expected *pb.ExecutionListItem
+		expected *pbv1.ExecutionListItem
 	}{
 		{
 			name: "WithStartAndFinishTime",
@@ -38,7 +38,7 @@ func TestToPBExecutionItem(t *testing.T) {
 				StartTime:  &startTime,
 				FinishTime: &finishTime,
 			},
-			expected: &pb.ExecutionListItem{
+			expected: &pbv1.ExecutionListItem{
 				ExecutionUuid: "test-uuid",
 				Status:        "running",
 				Title:         "test-title",
@@ -57,7 +57,7 @@ func TestToPBExecutionItem(t *testing.T) {
 				Definition: "test-definition",
 				CreateTime: createTime,
 			},
-			expected: &pb.ExecutionListItem{
+			expected: &pbv1.ExecutionListItem{
 				ExecutionUuid: "test-uuid",
 				Status:        "completed",
 				Title:         "test-title",
@@ -78,7 +78,7 @@ func TestToPBExecutionItem(t *testing.T) {
 func TestToVOPageRequest(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    *pb.PageRequest
+		input    *pbv1.PageRequest
 		expected paging.PageRequest
 	}{
 		{
@@ -88,7 +88,7 @@ func TestToVOPageRequest(t *testing.T) {
 		},
 		{
 			name: "ValidInput",
-			input: &pb.PageRequest{
+			input: &pbv1.PageRequest{
 				PageSize:   10,
 				PageNumber: 2,
 			},
@@ -99,7 +99,7 @@ func TestToVOPageRequest(t *testing.T) {
 		},
 		{
 			name: "ExceedsMaxPageSize",
-			input: &pb.PageRequest{
+			input: &pbv1.PageRequest{
 				PageSize:   3000,
 				PageNumber: 1,
 			},
@@ -126,7 +126,7 @@ func TestToPBPageResponse(t *testing.T) {
 		PageCount:  10,
 	}
 
-	expected := &pb.PageResponse{
+	expected := &pbv1.PageResponse{
 		PageSize:   10,
 		PageNumber: 2,
 		Count:      100,

@@ -3,7 +3,7 @@ package apiserver
 import (
 	"context"
 
-	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
+	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -12,16 +12,16 @@ type CommonServiceHandler struct {
 }
 
 // Ping implements pb.CommonServiceService.
-func (c *CommonServiceHandler) Ping(ctx context.Context, req *emptypb.Empty) (*pb.PingResponse, error) {
-	resp := &pb.PingResponse{
+func (c *CommonServiceHandler) Ping(ctx context.Context, req *emptypb.Empty) (*pbv1.PingResponse, error) {
+	resp := &pbv1.PingResponse{
 		Message: "Pong",
 	}
 	return resp, nil
 }
 
 // HTTP implements pb.CommonService.
-func (c *CommonServiceHandler) HTTP(ctx context.Context, req *emptypb.Empty) (*pb.HTTPResponseMessage, error) {
-	resp := &pb.HTTPResponseMessage{
+func (c *CommonServiceHandler) HTTP(ctx context.Context, req *emptypb.Empty) (*pbv1.HTTPResponseMessage, error) {
+	resp := &pbv1.HTTPResponseMessage{
 		Retcode: 0,
 		Message: "Hello, world!",
 	}
@@ -29,9 +29,9 @@ func (c *CommonServiceHandler) HTTP(ctx context.Context, req *emptypb.Empty) (*p
 }
 
 // Paging implements pb.CommonService.
-func (c *CommonServiceHandler) Paging(ctx context.Context, req *pb.PageRequest) (*pb.PageResponse, error) {
+func (c *CommonServiceHandler) Paging(ctx context.Context, req *pbv1.PageRequest) (*pbv1.PageResponse, error) {
 
-	resp := &pb.PageResponse{
+	resp := &pbv1.PageResponse{
 		Count:      100,
 		PageSize:   10,
 		PageNumber: 100,

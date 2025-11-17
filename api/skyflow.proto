@@ -1,0 +1,782 @@
+// AWS State Functions API Reference
+// https://docs.amazonaws.cn/en_us/step-functions/latest/apireference/Welcome.html
+syntax = "proto3";
+
+package skyflow;
+
+// import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/skyflow/skyflow_backbend/api/v1;v1";
+
+// CommonService 通用服务
+service CommonService {
+    // Paging 分页格式
+    rpc Paging(PageRequest) returns (PageResponse);
+    // HTTPReturn  HTTP API接口返回值格式
+    rpc HTTP(google.protobuf.Empty) returns(HTTPResponseMessage);
+    // Ping ping service
+    rpc Ping(google.protobuf.Empty) returns(PingResponse){
+    };
+}
+
+// 分页请求结构
+message PageRequest{
+    // 请求分页大小
+    int64 page_size = 1;
+    // 请求页号
+    int64 page_number = 2;
+    // 请求排序字段
+    string order_by = 3;
+}
+// 分页返回结构
+message PageResponse{
+    // 总数量
+    int64 count = 1;
+    // 请求分页大小
+    int64 page_size = 2;
+    // 请求页号
+    int64 page_number = 3;
+    // 总页数
+    int64 page_count = 4;
+}
+
+// PingResponse ping返回
+message PingResponse {
+    // 返回码，0为正常，非0为异常
+    int32 retcode = 1;
+    // 异常信息说明
+    string message = 2;
+}
+
+// HTTPResponseMessage HTTP API接口返回值格式
+message HTTPResponseMessage {
+    // 返回码，0为正常，非0为异常
+    int32 retcode = 1;
+    // 异常信息说明
+    string message = 2;
+}
+
+// SkyflowV1Service workflow Service
+service SkyflowV1Service {
+
+    // CreateNamespace 创建一个命名空间
+    rpc CreateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/CreateNamespace"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
+    }
+    // CreateOrUpdateNamespace 创建/更新一个命名空间
+    rpc CreateOrUpdateNamespace(CreateNamespaceRequest) returns (CreateNamespaceResponse) {
+    }
+    // ListNamespaces 获得命名空间列表
+    rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {
+    }
+    // DeleteNamespace 删除一个命名空间
+    // 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+    rpc DeleteNamespace(DeleteNamespaceRequest) returns (google.protobuf.Empty) {
+    }
+    // CreateActivity 创建一个活动
+    rpc CreateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
+
+    }
+    // CreateOrUpdateActivity 创建/更新一个活动
+    rpc CreateOrUpdateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
+    }
+
+    // ListActivities 获得活动列表
+    rpc ListActivities(ListActivitiesRequest) returns (ListActivitiesResponse) {
+    }
+    // DescribeActivity 获得一个活动的描述
+    rpc DescribeActivity(DescribeActivityRequest) returns (DescribeActivityResponse) {
+    }
+    // DeleteActivity 删除一个活动
+    rpc DeleteActivity(DeleteActivityRequest) returns (DeleteActivityResponse) {
+
+    }
+    // CreateStateMachine 创建一个状态机
+    rpc CreateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+    }
+    // CreateOrUpdateStateMachine 创建/更新一个状态机
+    rpc CreateOrUpdateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+    }
+    // DeleteStateMachine 删除一个状态机
+    rpc DeleteStateMachine(DeleteStateMachineRequest) returns (DeleteStateMachineResponse) {
+    }
+    // ListStateMachines 获得状态机列表
+    rpc ListStateMachines(ListStateMachinesRequest) returns (ListStateMachinesResponse) {
+    }
+    // DescribeStateMachine 获得一个状态机的描述
+    rpc DescribeStateMachine(DescribeStateMachineRequest) returns (DescribeStateMachineResponse) {
+    }
+    // UpdateStateMachine 更新一个状态机
+    rpc UpdateStateMachine(UpdateStateMachineRequest) returns (UpdateStateMachineResponse) {
+    }
+    // ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+    // 验证definition的合法性
+    rpc ParseStateMachine(ParseStateMachineRequest) returns (ParseStateMachineResponse) {
+    }
+
+    //ValidateStateMachineDefinition 验证状态机定义的合法性
+    rpc ValidateStateMachineDefinition(ValidateStateMachineDefinitionRequest) returns (ValidateStateMachineDefinitionResponse) {
+    }
+
+    // 任务管理
+    // StartExecution 创建一个执行任务
+    rpc StartExecution(StartExecutionRequest) returns (StartExecutionResponse) {
+    }
+    // DescribeExecution 获得一个执行的描述
+    rpc DescribeExecution(DescribeExecutionRequest) returns (DescribeExecutionResponse) {
+
+    }
+    // DescribeExecutionBone 获得一个执行的执行的Bone信息
+    // Bone信息用于前段展示执行的流程图
+    rpc DescribeExecutionBone(DescribeExecutionBoneRequest) returns (DescribeExecutionBoneResponse) {
+
+    }
+    // StopExecution 终止一个执行
+    rpc StopExecution(StopExecutionRequest) returns (google.protobuf.Empty) {
+
+    }
+    // ListExecutions 获得execution列表
+    rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse) {
+
+    }
+    // ListExecutionEvents 获得一个执行的Event列表
+    rpc ListExecutionEvents(ListExecutionEventsRequest) returns (ListExecutionEventsResponse) {
+
+    }
+
+    rpc DescribeStep(DescribeStepRequest) returns (DescribeStepResponse) {
+
+    }
+    rpc ListStepEvents(ListStepEventsRequest) returns (ListExecutionEventsResponse) {
+    }
+    rpc GetActivityTask(GetActivityTaskRequest) returns (GetActivityTaskResponse) {
+    }
+}
+// NamespaceInfo 命名空间信息
+message NamespaceListItem {
+    // name 命名空间名字
+    string name = 1;
+    // description 命名空间描述
+    string description = 2;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// CreateNamespaceRequest 创建一个命名空间
+message CreateNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // description 命名空间描述
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+// CreateNamespaceResponse 创建一个命名空间返回结构
+message CreateNamespaceResponse {
+    // name namespace name
+    string name = 1;
+    // description 命名空间描述
+    string description = 2;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time  update time timestample
+    int64 update_time = 12;
+}
+
+// ListNamespacesRequest 获得命名空间列表
+message ListNamespacesRequest {
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 1;
+}
+
+// ListNamespacesResponse 获得命名空间列表返回
+message ListNamespacesResponse {
+
+    // data  查询到的执行列表
+    repeated NamespaceListItem namespaces = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
+// DescribeNamespaceRequest 获得一个命名空间的描述
+message DescribeNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+}
+
+// DescribeNamespaceResponse 获得一个命名空间的描述返回
+message DescribeNamespaceResponse {
+    // name 命名空间名字
+    string name = 1;
+    // description 命名空间描述
+    string description = 2;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+
+// DeleteNamespaceRequest 删除一个命名空间
+message DeleteNamespaceRequest {
+    // name 命名空间名字
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+}
+
+
+
+// CreateActivityRequest 创建一个活动请求结构
+message CreateActivityRequest {
+    // name activity name
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // description activity description
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    // namespace activity namespace
+    string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // parameters activity parameters
+    string parameters = 4 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+//CreateActivityResponse 创建一个活动返回结构
+message CreateActivityResponse {
+    // activity uri
+    string activity_uri = 1;
+    // create_time create time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// DescribeActivityRequest 获得活动详情
+message DescribeActivityRequest {
+    // activity uri
+    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// DescribeActivityResponse 获得活动列表请求返回
+message DescribeActivityResponse {
+    // name activity name
+    string name = 1;
+    // description activity description
+    string description = 2;
+    // activity_uri activity uri
+    string activity_uri = 3;
+    // create_time create time timestample
+    int64 create_time = 11;
+    // update_time  update time timestample
+    int64 update_time = 12;
+}
+
+message DeleteActivityRequest {
+    // activity uri
+    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// 删除活动请求返回， 占位符
+message DeleteActivityResponse {
+}
+
+// ListActivitiesRequest 获得活动列表请求结构
+message ListActivitiesRequest {
+    // namespace 活动命名空间
+    string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 2;
+}
+
+// ActivityListItem ...
+message ActivityListItem {
+    // name 活动名字
+    string name = 1;
+    // description 活动描述
+    string description = 2;
+    // activity_uri 活动uri
+    string activity_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// ListActivitiesResponse 获得活动列表请求返回
+message ListActivitiesResponse {
+    // 查询到的执行列表
+    repeated ActivityListItem activities = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
+
+// CreateStateMachineRequest 创建一个状态机请求结构
+message CreateStateMachineRequest {
+    string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    string definition = 4 [(validate.rules).string = {min_bytes: 1}];
+}
+//CreateStateMachineResponse 创建一个状态机返回结构
+message CreateStateMachineResponse {
+    StateMachineInfo data = 1 ;
+}
+
+// DescribeActivityRequest 获得状态机详情返回结构
+message DescribeStateMachineRequest {
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// DescribeStateMachineResponse 获得活动列表请求返回结构
+message DescribeStateMachineResponse {
+    StateMachineInfo data = 1;
+}
+
+// DeleteStateMachineRequest 删除一个状态机请求结构
+message DeleteStateMachineRequest {
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// DeleteStateMachineResponse 删除一个状态机返回结构
+message DeleteStateMachineResponse {
+}
+
+// UpdateStateMachineRequest 更新一个状态机请求结构
+message UpdateStateMachineRequest {
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    string name = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    string description = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string definition = 4 [(validate.rules).string = {min_bytes: 1}];
+}
+
+// UpdateStateMachineResponse 更新一个状态机返回结构
+message UpdateStateMachineResponse {
+}
+
+// ListStateMachinesRequest 获得状态机列表请求结构
+message ListStateMachinesRequest {
+    string namespace = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 2;
+}
+
+// ListStateMachinesResponse 获得状态机列表请求返回
+message ListStateMachinesResponse {
+    // 查询到的执行列表
+    repeated StateMachineListItem statemachines = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
+message StateMachineListItem {
+    // name 状态机名字
+    string name = 1;
+    // description 状态机描述
+    string description = 2;
+    // statemachine_uri 状态机uri
+    string statemachine_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// ExecutionListItem execution info in ListExecutionsResponse
+message ExecutionListItem {
+    // execution_uuid
+    string execution_uuid = 1;
+    // status execution status
+    string status = 2 ;
+    // title execution title
+    string title = 3 ;
+    string definition = 4 ;
+    // create_time timestample
+    int64 create_time = 11;
+    // start_time timestample
+    int64 start_time = 12;
+    // finish_time timestample
+    int64 finish_time = 13;
+}
+
+// StepInfo 一个Step的状态描述
+message StepInfo {
+    int64 id = 1;
+    string status = 2 ;
+    string definition = 4 ;
+    string input = 5 ;
+    string output = 6;
+    string create_time = 11;
+    string start_time = 12;
+    string finish_time = 13;
+}
+
+// ExecutionEventInfo 执行事件
+message ExecutionEventInfo {
+    // step id
+    int64 step_id = 2 ;
+    string step_name = 3;
+    string event_type = 4;
+    string data = 5;
+    string create_time = 11;
+    string start_time = 12;
+    string finish_time = 13;
+}
+
+
+// ActivityInfo 活动信息
+message ActivityInfo {
+    string name = 1;
+    string description = 2;
+    string activity_uri = 3;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// StateMachineInfo 状态机信息
+message StateMachineInfo {
+    string name = 1;
+    string description = 2;
+    string statemachine_uri = 3;
+    string definition = 4;
+    // type : standard / express
+    string type = 5 ;
+    // create_time timestample
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+}
+
+// ParseStateMachineRequest 解析一个状态机请求结构`
+message ParseStateMachineRequest{
+    // statemachine definition
+    string definition = 1;
+}
+
+// ParseStateMachineResponse 解析一个状态机返回结构
+message ParseStateMachineResponse{
+    // statemachine type
+    string type = 1 ;
+    // flow 详细定义
+    string definition =2 ;
+}
+
+// ValidateStateMachineDefinitionRequest 验证状态机定义请求结构
+message ValidateStateMachineDefinitionRequest{
+    // statemachine definition
+    string definition = 1;
+    int32 max_results = 2;
+    string severity = 3;
+    string type = 4;
+
+}
+// ValidateStateMachineDefinitionResponse 验证状态机定义返回结构
+message ValidateStateMachineDefinitionResponse{
+    // 是否合法
+    repeated ValidateStateMachineDefinitionDiagnostic diagnostics = 1;
+    string result = 2 ;
+    string truncated = 3 ;
+}
+
+// ValidateStateMachineDefinitionDiagnostic 验证状态机定义返回的错误信息
+message ValidateStateMachineDefinitionDiagnostic{
+    string code = 1;
+    string message = 2;
+    string severity = 3;
+    string location = 4;
+}
+
+// 创建一个执行的请求体
+// 参数约束：
+// statemachine_uri 是指注册到 skyflowflow的 模板引用路径，
+// definition是自定义的StateMachine定义,json/yaml格式
+// statemachine_uri与definition 二选一。
+// execution_name：用户自定义的执行唯一名称，可选， 如果指定，自动生成一个新的uuid .
+message StartExecutionRequest {
+    // 状态机模板URI，可选，statemachine_uri 与definition 必须指定一个
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}] ;
+    // 流程模板定义，JSON/YAML格式的流程模板定义，可选
+    string definition = 2 ;
+    // 状态机执行的标题，可为空
+    string title = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
+    // 状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'
+    string input = 4 ;
+    // 状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid
+    string execution_name = 5 [(validate.rules).string = {min_bytes: 0, max_bytes: 100}];
+}
+
+// 创建一个执行的请求返回结构
+message StartExecutionResponse {
+    // 返回的执行的唯一ID
+    string execution_uuid = 1;
+    // 执行创建的时间
+    string create_time = 2;
+
+}
+
+// 获得一个执行的描述请求结构
+message DescribeExecutionRequest {
+    // execution uuid 必选
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+}
+
+// 获得一个执行的描述的返回结构
+message DescribeExecutionResponse {
+    // ExecutionInfo execution = 1 ;
+}
+
+// 获得一个执行的执行的Bone请求结构
+message DescribeExecutionBoneRequest {
+    // execution uuid 必选
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+}
+
+// 获得一个执行的描述d的返回结构
+message DescribeExecutionBoneResponse {
+    // bone execution bone
+    string bone  = 2 ;
+}
+
+// 终止一个执行
+message StopExecutionRequest {
+    // execution uuid， 必选
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // Error 错误类型，用来匹配异常, 必选
+    string error = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    // cause， error的文本描述， 可选
+    string cause = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+// ListExecutionsRequest 获得execution列表请求结构
+message ListExecutionsRequest {
+    // 流程名字, 按照名字查询， 可选
+    string statemachine_uri = 1 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
+    // uuid 列表，指定的uuid列表查询， 可选, 最大100个
+    repeated string execution_uuids = 2 [(validate.rules).repeated = {min_items: 0, max_items: 100}];
+    // 状态，按照状态查询， 可选
+    string status = 3 ;
+    //title按照title 关键字查询，可选。title like "%${title}%"
+    string title = 4 [(validate.rules).string = {min_bytes: 0, max_bytes: 200}];
+    // 分页请求，默认 每分页大小 = 50条
+    PageRequest page_request = 10;
+}
+
+// ListExecutionsResponse 获得execution列表返回值
+message ListExecutionsResponse {
+    // 查询到的执行列表
+    repeated ExecutionListItem executions = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
+// ListExecutionEventsRequest  获得一个执行的Event列表请求结构
+message ListExecutionEventsRequest {
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    PageRequest page_request = 2;
+}
+
+// ListExecutionEventsResponse 获得一个执行的Event列表返回值
+message ListExecutionEventsResponse {
+    // 返回Event列表
+    repeated ExecutionEventInfo data = 1 ;
+    // 分页信息
+    PageResponse page_response = 2;
+}
+
+// DescribeStepRequest 获得一个Step的信息请求结构
+message DescribeStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+// DescribeStepResponse 获得一个Step的信息返回结构
+message DescribeStepResponse {
+    // 返回的Step 状态信息
+    StepInfo data = 1 ;
+    // execution uuid
+    string execution_uuid = 2;
+}
+
+// ListStepEventsRequest 获得一个Step的执行事件列表请求机构
+message ListStepEventsRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+    // 分页信息
+    PageRequest page_request = 2;
+
+}
+
+// GetActivityTaskRequest 通过URI查询是否有一个需要执行的task
+message GetActivityTaskRequest {
+    // task uri
+    string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+}
+
+// GetActivityTaskResponse 返回查询到的结构
+message GetActivityTaskResponse {
+    // ExtraInfo 附加信息
+    message ExtraInfo {
+        // Step id
+        int64 step_id = 1;
+        // execution uuid
+        string execution_uuid = 2;
+    }
+
+    // task_uri
+    string activity_uri = 1 ;
+    // task_token
+    string task_token = 2 ;
+    // task 的输入，需要worker自己解码
+    string input= 3 ;
+    // Deprecated: 该字段已经废弃，使用timeout_seconds
+    // task 的超时时间，单位(s), 0表示不超时
+    int64 timeout_second = 4;
+    // Deprecated: 该字段已经废弃，使用heartbeat_seconds
+    // task 心跳超时时间，单位(s), 0 表示不超时
+    int64 heartbeat_timeout_second = 5;
+    // task 的超时时间，单位(s), 0表示不超时
+    int64 timeout_seconds = 6;
+    // task 心跳超时时间，单位(s), 0 表示不超时
+    int64 heartbeat_seconds = 7;
+    // task 的额外信息
+    ExtraInfo extra_info = 10;
+
+}
+
+// SendTaskSuccessRequest 发送task 成功
+message SendTaskSuccessRequest {
+    // task token
+    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // output task 执行的output， json 类型
+    string output = 2 ;
+}
+
+// SendTaskFailureRequest 发送task 失败
+message SendTaskFailureRequest {
+    // task token
+    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // error 错误类型，用来匹配异常
+    string error  = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    // cause， error的文本描述
+    string cause = 3  [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+// SendTaskHeartbeatRequest 发送task 心跳
+message SendTaskHeartbeatRequest {
+    // task token
+    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // task 可以附带的message
+    string message = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
+}
+
+//
+message SendTaskReferenceRequest {
+    // task token
+    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    //  task 关联的链接描述
+    string title = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    // task关联的链接url
+    string url  = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
+}
+
+// StoreTaskDataRequest 存储task 临时数据
+message StoreTaskDataRequest {
+    // task token
+    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    //  task 临时数据
+    string data = 2 [(validate.rules).string = {min_bytes: 1}];
+}
+
+// LoadTaskDataRequest 获得task 临时数据
+message LoadTaskDataRequest {
+    // State id
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+
+
+// LoadTaskDataResponse 获得task 临时数据
+message LoadTaskDataResponse {
+    //  task 临时数据
+    string data = 1 [(validate.rules).string = {min_bytes: 1}];
+}
+
+
+// SendStateSuccessRequest 发送State 成功
+message SendStateSkipRequest {
+    // State id
+    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];;
+    // 下一个步骤名
+    string next_state = 2;
+    // output 当天步骤的输出
+    string output = 3;
+}
+
+// ErrorCode 错误码定义
+//  11XXX  system error
+//  12XXX   template error
+//  13XXX   execution error
+enum ErrorCode {
+    // OK 正常
+    OK  = 0;
+    // UnknownError 未知错误
+    UnknownError = 11000;
+    // InternalError 内部错误
+    InternalError = 11001;
+    // ResourceLimitExceeded 资源限制超出
+    ResourceLimitExceeded = 11002;
+    // The provided URI is not valid.
+    InvalidURI = 11003;
+
+    //template error
+    ActivityAlreadyExists = 12001;
+    ActivityDoesNotExist = 12002;
+    StateMachineAlreadyExists = 12003;
+    StateMachineDoesNotExist = 12004;
+    NameSpaceAlreadyExists = 12005;
+    NameSpaceDoesNotExist = 12006;
+
+    // execution error
+    ExecutionAlreadyExists = 13001;
+    ExecutionDoesNotExist = 13002;
+    // StateNotFound State 不存在
+    StateNotFound = 1003;
+    // StateGroupNotFound Stategroup 不存在
+    StateGroupNotFound = 1004;
+    // TaskTokenNotFound TaskToken 不存在
+    TaskTokenNotFound = 1005;
+    // NamespaceNotFound 不存在
+    NamespaceNotFound = 1006;
+    // ActivityNotFound activity 不存在
+    ActivityNotFound = 1007;
+    // StateMachineNotFound StateMachine 不存在
+    StateMachineNotFound = 1008;
+    // ExecutionUUIDExisted Execution UUID 已经存在
+    ExecutionUUIDExisted = 1009;
+    // ActivityTaskNotFound activity  task 不存在
+    ActivityTaskNotFound = 1010;
+    // StepStatusError Step 状态错误
+    StepStatusError = 1011;
+    // ExecutionStatusError execution 状态错误
+    ExecutionStatusError = 1012;
+    // ParameterIsValid parameter is valid
+    ParameterIsValid = 1013;
+    // ParameterLimitExceeded parameter limit exceeded
+    ParameterLimitExceeded = 1014;
+    // InputLimitExceeded input limit exceeded
+    InputLimitExceeded = 1015;
+    // OutputLimitExceeded output limit exceed
+    OutputLimitExceeded = 1016;
+    // StateMachineDeinitionInvalid StateMachine definition invalid
+    StateMachineDeinitionInvalid = 1017;
+
+}

@@ -1,12 +1,25 @@
 package cmd
 
 import (
+	"flag"
 	"fmt"
 	"log/slog"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+// go build -ldflags "-X main.Version=x.y.z"
+var (
+	// Name is the name of the compiled software.
+	Name string
+	// Version is the version of the compiled software.
+	Version string
+)
+
+func init() {
+	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+}
 
 var (
 	format              = outputformats.Text // Output format for the command, e.g., json, yaml
