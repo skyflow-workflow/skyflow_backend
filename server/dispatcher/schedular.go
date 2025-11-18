@@ -60,18 +60,19 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 
 }
 
-func innerMsgLog(prefix string, msg queue.InnerMessageBody, err error) string {
-	if err != nil {
-		return fmt.Sprintf("%s, ExecutionID %d, StepID %d, Priority %s, Type %s, ErrorDetail: %s",
-			prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type, err.Error())
-	}
-	return fmt.Sprintf("%s, ExecutionID %d, StepID %d, Priority %s, Type %s",
-		prefix, msg.ExecutionID, msg.StepID, msg.Class, msg.Type)
-}
+func LogMessageEvent(msgBody queue.InnerMessageBody, err error) []any {
 
-func loggermsg(prefix string, msg queue.InnerMessageBody) {
-	msgstr := innerMsgLog(prefix, msg, nil)
-	slog.Debug(msgstr)
+	args := []any{
+		"ExecutionID", msgBody.ExecutionID,
+		"StepID", msgBody.StepID,
+		"Class", msgBody.Class,
+		"Type", msgBody.Type,
+		"Data", msgBody.Data,
+	}
+	if err != nil {
+		args = append(args, "Error", err.Error())
+	}
+	return args
 }
 
 // ProcessMessage 处理消息
@@ -93,12 +94,11 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 
 	// var has bool
 	defer func() {
-		loggermsg("ProcessMessage Finish: ", msgbody)
+		slog.Info("ProcessMessage Finish", LogMessageEvent(msgbody, nil)...)
 		// Ack Message
 		err = message.Ack()
 		if err != nil {
-			errStr := innerMsgLog("Ack Message Failed: ", msgbody, err)
-			slog.Error(errStr)
+			slog.Error("Ack Message Failed", LogMessageEvent(msgbody, err)...)
 			// panic(fmt.Errorf(errStr))
 		}
 		if svc.config.Debug {
@@ -117,25 +117,25 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 		// 如果panic 了。 捕获panic
 		if r := recover(); r != nil {
 			slog.Error(fmt.Sprintf("%v", r))
-			err = svc.workflowService.ExecutionService.ExecutionErrorProcess(err, msgbody.ExecutionID)
-			slog.Error(fmt.Sprintf("Panic Process Error %v", err))
+			err = svc.workflowService.ExecutionService.ExecutionErrorProcess(err, msgbody)
+			slog.Error("Panic Process Error", "error", err.Error())
 		}
 	}()
 	// debug info
-	slog.Info(fmt.Sprintf("Start ProcessMessage :  %v", msgbody))
+	slog.Debug("Start ProcessMessage", LogMessageEvent(msgbody, nil)...)
 	// 交给具体执行函数
 	err = svc.processInnerMessage(msgbody)
 	slog.Info(fmt.Sprintf("Finish ProcessMessage :  %v, err: %v", msgbody, err))
 
 	if err != nil {
-		errStr := innerMsgLog("Process Event ProcessFailed Failed: ", msgbody, err)
-		slog.Error(errStr)
+		slog.Error("Process Event ProcessFailed Failed: ", LogMessageEvent(msgbody, err)...)
 		// 处理不了就失败整个任务
-		err2 := svc.ExecutionService.ExecutionErrorProcess(err, msgbody.ExecutionID)
+		err2 := svc.ExecutionService.ExecutionErrorProcess(err, msgbody)
 		if err2 != nil {
 			slog.Error(err2.Error())
 			return
 		}
+
 	}
 
 }
@@ -158,8 +158,7 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		[]string{string(executor.ExecutionStatus.Running), string(executor.ExecutionStatus.Created)},
 		dbExecution.Status) {
 		msg := fmt.Sprintf("Execution Status Is [ %s ] , Ignore This Message: ", dbExecution.Status)
-		logStr := innerMsgLog(msg, msgBody, nil)
-		slog.Info(logStr)
+		slog.Info(msg, LogMessageEvent(msgBody, nil)...)
 		return
 	}
 	// 根据消息类型做出响应的动作
@@ -172,12 +171,7 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		// 如果是状态异常，忽略消息
 		if err == executor.ErrorExecutionStatus {
 
-			slog.Error("Execution Status is unexpect , Ignore This Message.",
-				"ExecutionID", msgBody.ExecutionID,
-				"ExecutionStatus", dbExecution.Status,
-				"MessageType", msgBody.Type,
-				"error", err,
-			)
+			slog.Error("Execution Status is unexpect , Ignore This Message.", LogMessageEvent(msgBody, err)...)
 			return nil
 		}
 		err = exe.ProcessEvent(msgBody)
@@ -221,6 +215,8 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		}
 		step, err = executor.NewStepFromData(dbStep, svc.ExecutionService.StandardExecutor)
 		if err != nil {
+			slog.Debug("destep", "step", dbStep)
+			slog.Error(err.Error())
 			return err
 		}
 
@@ -239,12 +235,10 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 			err = step.ProcessEvent(msgBody)
 		}
 		if err != nil {
-
 			err = svc.workflowService.ExecutionService.StepErrorProcess(err, dbStep, msgBody)
 		}
 		return err
 	}
-
 	return nil
 
 }

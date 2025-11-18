@@ -19,7 +19,7 @@ type State interface {
 	IsEnd() bool
 	GetNext() []string
 	GetBaseState() *BaseState
-	GetDefinition() (map[string]any, error)
+	GetDefinition() (string, error)
 }
 
 // NextState next state info

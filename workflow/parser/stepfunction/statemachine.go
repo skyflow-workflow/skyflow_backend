@@ -13,7 +13,7 @@ type StateMachineBody struct {
 }
 
 // DecodeStateMachine ...
-func (decoder *StepfuncionDecoder) DecodeStateMachine(ctx context.Context, data map[string]any) (*states.StateMachine, error) {
+func (decoder *StepFunctionDecoder) DecodeStateMachine(ctx context.Context, data map[string]any) (*states.StateMachine, error) {
 
 	sm, err := states.NewStateMachineFromMap(data)
 	if err != nil {

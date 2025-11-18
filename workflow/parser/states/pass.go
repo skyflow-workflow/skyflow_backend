@@ -1,5 +1,7 @@
 package states
 
+import "github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
+
 // PassBody ...
 type PassBody struct {
 	Result map[string]any `mapstructure:"Result" validate:"required"`
@@ -7,8 +9,8 @@ type PassBody struct {
 
 // PassState ...
 type PassState struct {
-	*BaseState
-	*PassBody
+	*BaseState `json:",inline"`
+	*PassBody  `json:",inline"`
 }
 
 func (p *PassBody) GetOutput(input any) (any, error) {
@@ -104,7 +106,7 @@ func (p *PassState) GetNextState(input any) (NextState, error) {
 	return ns, err
 }
 
-func (p *PassState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(p)
+func (p *PassState) GetDefinition() (string, error) {
+	data, err := toolkit.ToString(p)
 	return data, err
 }

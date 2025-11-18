@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/mitchellh/mapstructure"
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 )
 
 // DecodeStateMachineHeader ...
-func (sfdecoder *StepfuncionDecoder) DecodeStateMachineHeader(ctx context.Context, data map[string]interface{}) (
+func (sfdecoder *StepFunctionDecoder) DecodeStateMachineHeader(ctx context.Context, data map[string]interface{}) (
 	*states.StateMachineHeader, error) {
 	// Parse the state machine
 	var err error
@@ -26,11 +27,10 @@ func (sfdecoder *StepfuncionDecoder) DecodeStateMachineHeader(ctx context.Contex
 }
 
 // DecodeStateMachineHeaderDefintion ...
-func (sfdecoder *StepfuncionDecoder) DecodeStateMachineHeaderDefintion(definition string) (*states.StateMachineHeader, error) {
+func (sfdecoder *StepFunctionDecoder) DecodeStateMachineHeaderDefinition(definition string) (*states.StateMachineHeader, error) {
 
 	var err error
-	datamap := make(map[string]interface{})
-	err = sfdecoder.JSONUnmarshal(definition, &datamap)
+	datamap, err := toolkit.DecodeStringToMap(definition)
 	if err != nil {
 		return nil, err
 	}

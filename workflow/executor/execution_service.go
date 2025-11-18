@@ -66,9 +66,6 @@ func (svc *executionService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 
 // SendExecutionEvents 发送event
 func (svc *executionService) SendExecutionEvents(events ...vo.ExecutionEvent) {
-	if svc.Exporter == nil {
-		return
-	}
 	svc.Exporter.SendExecutionEvents(events)
 }
 

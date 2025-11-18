@@ -12,8 +12,6 @@ var myMapdecodeconfig = mapstructure.DecoderConfig{
 	TagName:              "mapstructure",
 }
 
-var myMapDecoder *mapstructure.Decoder
-
 func DecodeMapToStruct(input map[string]interface{}, output interface{}) error {
 
 	config := myMapdecodeconfig

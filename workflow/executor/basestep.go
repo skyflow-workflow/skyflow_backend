@@ -60,7 +60,7 @@ func (step *ExecutionStep) GetBone() StepBone {
 // ProcessEvent process step event
 // ProcessEvent is a placeholder method for processing events.
 // It currently returns an error indicating that the method is not implemented.
-func (step *ExecutionStep) ProcessEvent(message queue.InnerMessage) error {
+func (step *ExecutionStep) ProcessEvent(message queue.InnerMessageBody) error {
 	return fmt.Errorf("method not implement")
 }
 

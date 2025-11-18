@@ -211,8 +211,8 @@ func (body *TaskBody) Init() error {
 
 // TaskState ...
 type TaskState struct {
-	*BaseState
-	*TaskBody
+	*BaseState `json:",inline"`
+	*TaskBody  `json:",inline"`
 }
 
 func (t *TaskState) GetBaseState() *BaseState {
@@ -319,8 +319,8 @@ func (t *TaskState) GetNextState(input any, taskdata TaskSendData) (*NextState, 
 	return nil, err
 }
 
-func (t *TaskState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(t)
+func (t *TaskState) GetDefinition() (string, error) {
+	data, err := ToString(t)
 	return data, err
 }
 

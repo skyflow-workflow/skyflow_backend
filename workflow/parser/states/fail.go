@@ -2,8 +2,8 @@ package states
 
 // FailState  失败节点
 type FailState struct {
-	*BaseState
-	*FailBody
+	*BaseState `json:",inline"`
+	*FailBody  `json:",inline"`
 }
 
 type FailBody struct {
@@ -92,7 +92,7 @@ func (s *FailState) GetBaseState() *BaseState {
 	return s.BaseState
 }
 
-func (s *FailState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(s)
+func (s *FailState) GetDefinition() (string, error) {
+	data, err := ToString(s)
 	return data, err
 }

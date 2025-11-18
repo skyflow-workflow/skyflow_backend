@@ -25,15 +25,15 @@ type Step interface {
 func NewStepFromData(dbStep *po.Step, executor *Executor) (Step, error) {
 	var step Step
 	var err error
-	switch dbStep.Type {
-	case string(states.StateTypes.Task):
+	switch states.StateType(dbStep.Type) {
+	case states.StateTypes.Task:
 		step, err = NewTaskFromData(dbStep, executor)
 	// case grammar.StateType.Choice:
 	// 	step, err = NewChoiceFromState(dbStep, node.(*grammar.ChoiceState), svc)
 	// case grammar.StateType.Map:
 	// 	step, err = NewMapFromState(dbStep, node, svc)
-	// case grammar.StateType.Pass:
-	// 	step, err = NewPassFromState(dbStep, node.(*grammar.PassState), svc)
+	case states.StateTypes.Pass:
+		step, err = NewPassFromData(dbStep, executor)
 	// case grammar.StateType.Parallel:
 	// 	step, err = NewParallelFromState(dbStep, node.(*grammar.ParallelState), svc)
 	// case grammar.StateType.StateGroup:
@@ -47,7 +47,8 @@ func NewStepFromData(dbStep *po.Step, executor *Executor) (Step, error) {
 	// case grammer.StateType.Succeed:
 	// 	state, err = NewSucceedFromData(dbstep)
 	default:
-		err = fmt.Errorf("state [ %s ] type : [ %s ] not supported", dbStep.Name, dbStep.Type)
+		err = fmt.Errorf("step id: %d  name: %s type: %s  not supported",
+			dbStep.ID, dbStep.Name, dbStep.Type)
 
 	}
 	return step, err

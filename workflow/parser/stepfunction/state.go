@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 )
 
-// DecodeBaseState ...
-func (sfDecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data map[string]any) (states.State, error) {
+// DecodeBaseState decodes a base state from the given data map
+func (sfDecoder *StepFunctionDecoder) DecodeBaseState(ctx context.Context, data map[string]any) (states.State, error) {
 
 	var err error
 	basestate := states.BaseState{}
@@ -37,11 +38,10 @@ func (sfDecoder *StepfuncionDecoder) DecodeBaseState(ctx context.Context, data m
 	return state, err
 }
 
-// DecodeStateDefintion ...
-func (sfDecoder *StepfuncionDecoder) DecodeStateDefintion(ctx context.Context, definition string) (states.State, error) {
+// DecodeStateDefinition decodes a state definition from JSON string
+func (sfDecoder *StepFunctionDecoder) DecodeStateDefinition(ctx context.Context, definition string) (states.State, error) {
 	var err error
-	datamap := make(map[string]any)
-	err = sfDecoder.JSONUnmarshal(definition, &datamap)
+	datamap, err := toolkit.DecodeStringToMap(definition)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +53,8 @@ func (sfDecoder *StepfuncionDecoder) DecodeStateDefintion(ctx context.Context, d
 
 }
 
-// DecodeState ...
-func (decoder *StepfuncionDecoder) DecodeState(ctx context.Context, data map[string]any) (states.State, error) {
+// DecodeState decodes a state from the given data map
+func (decoder *StepFunctionDecoder) DecodeState(ctx context.Context, data map[string]any) (states.State, error) {
 
 	state, err := states.NewStateFromMap(data, states.StartDepth)
 	if err != nil {

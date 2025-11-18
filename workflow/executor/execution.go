@@ -118,11 +118,11 @@ func (exe *Execution) FullInit() error {
 }
 
 // ProcessEvent 处理事件
-func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
+func (exe *Execution) ProcessEvent(msgBody queue.InnerMessageBody) error {
 
 	var err error
 
-	lock := exe.ExecutionService.LockService.LockExecution(msg.ExecutionID)
+	lock := exe.ExecutionService.LockService.LockExecution(msgBody.ExecutionID)
 	err = lock.Lock()
 	if err != nil {
 		return err
@@ -132,24 +132,24 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 
 	var dbExe *po.Execution
 
-	dbExe, err = exe.ExecutionService.QueryExecutionByID(msg.ExecutionID, []string{"id", "status"}, tx)
+	dbExe, err = exe.ExecutionService.QueryExecutionByID(msgBody.ExecutionID, []string{"id", "status"}, tx)
 	if err != nil {
 		return err
 	}
 
-	checkstatus, ok := ExecutionEventCheckStatus[msg.Type]
+	checkstatus, ok := ExecutionEventCheckStatus[msgBody.Type]
 	// 如果状态在规则中， 则检查状态，如果不在， 则忽略不检查
 	if ok {
 		// 如果不在预期状态中， 忽略事件
 		if !slices.Contains(checkstatus, dbExe.Status) {
 			msg := fmt.Sprintf("execution '%d' process event '%s' current status '%s' not match ",
-				msg.ExecutionID, msg.Type, dbExe.Status)
+				msgBody.ExecutionID, msgBody.Type, dbExe.Status)
 			slog.Error(msg)
 			return nil
 		}
 	}
 
-	switch msg.Type {
+	switch msgBody.Type {
 	case MessageType.ExecutionInit:
 		err = exe.ProcessInit()
 	case MessageType.ExecutionTimout:
@@ -162,11 +162,11 @@ func (exe *Execution) ProcessEvent(msg queue.InnerMessageBody) error {
 	// case MessageType.ExecutionSucceed:
 	// 	err = exe.ProcessSucceed()
 	default:
-		err = fmt.Errorf("unrecognized event '%s' ", msg.Type)
+		err = fmt.Errorf("unrecognized event '%s' ", msgBody.Type)
 	}
 
 	if err != nil {
-		err = exe.ExecutionService.ExecutionErrorProcess(err, exe.Data.ID)
+		err = exe.ExecutionService.ExecutionErrorProcess(err, msgBody)
 	}
 	return err
 }
@@ -455,8 +455,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 	}
 	var groups []tmpGroup
 
-	var stateDefinition any
-	var stateDefinitionStr string
+	var stateDefinition string
 
 	// 写入所有的步骤
 	for _, groupState := range groupStates {
@@ -464,10 +463,6 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 		statetype := state.GetType()
 
 		stateDefinition, err = state.GetDefinition()
-		if err != nil {
-			return resp, err
-		}
-		stateDefinitionStr, err = toolkit.ToString(stateDefinition)
 		if err != nil {
 			return resp, err
 		}
@@ -480,7 +475,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 			GroupIndex:   groupState.GroupIndex,
 			Type:         statetype,
 			ExecuteCount: 0, //初始化执行次数为0
-			Definition:   stateDefinitionStr,
+			Definition:   stateDefinition,
 			Depth:        groupState.Depth,
 			Status:       string(StepStatus.Created),
 			Data:         "{}",

@@ -2,7 +2,7 @@ package states
 
 // SucceedState  失败节点
 type SucceedState struct {
-	*BaseState
+	*BaseState `json:",inline"`
 }
 
 // NewSucceedStateFromString NewSucceedStateFromString
@@ -39,7 +39,7 @@ func (s *SucceedState) GetBaseState() *BaseState {
 	return s.BaseState
 }
 
-func (s *SucceedState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(s)
+func (s *SucceedState) GetDefinition() (string, error) {
+	data, err := ToString(s)
 	return data, err
 }

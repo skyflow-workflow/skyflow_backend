@@ -23,7 +23,7 @@ import (
 )
 
 // StepErrorProcess state 执行报错时候的处理方式
-func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, msg queue.InnerMessageBody) error {
+func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, msgBody queue.InnerMessageBody) error {
 	var err error
 	var tx rdb.Tx
 	var maker *rdb.TxMaker
@@ -33,7 +33,7 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 
 	// 如果是状态异常，忽略消息
 	if errors.Is(catcherr, vo.ErrorStepStatus) {
-		slog.Error(fmt.Sprintln(err, msg))
+		slog.Error(fmt.Sprintln(err, msgBody))
 		return nil
 	}
 
@@ -61,7 +61,7 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 		}
 		tx.Commit()
 
-		err = svc.ExecutionErrorProcess(catcherr, dbStep.ExecutionID)
+		err = svc.ExecutionErrorProcess(catcherr, msgBody)
 		return err
 	}
 
@@ -104,8 +104,9 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 		StepID:      dbStep.ID,
 		StepName:    dbStep.Name,
 		Data: EventContent_StateFailed{
-			Error: StandardErrorNames.StatesRuntime,
-			Cause: catcherr.Error(),
+			EventType: msgBody.Type,
+			Error:     StandardErrorNames.StatesRuntime,
+			Cause:     catcherr.Error(),
 		},
 	}
 	events = append(events, event1)
@@ -121,12 +122,12 @@ func (svc *executionService) StepErrorProcess(catcherr error, dbStep *po.Step, m
 }
 
 // ExecutionErrorProcess  ExecutionErrorProcess
-func (svc *executionService) ExecutionErrorProcess(catcherr error, execution_id int) error {
+func (svc *executionService) ExecutionErrorProcess(catcherr error, msgBody queue.InnerMessageBody) error {
 
 	var err error
 	starttime := time.Now()
 
-	exe, err := svc.NewExecutionFromID(execution_id, ExecutionFields.L1, nil)
+	exe, err := svc.NewExecutionFromID(msgBody.ExecutionID, ExecutionFields.L1, nil)
 	if err != nil {
 		return err
 	}
@@ -138,12 +139,17 @@ func (svc *executionService) ExecutionErrorProcess(catcherr error, execution_id 
 	finishtime := time.Now()
 
 	event1 := vo.ExecutionEvent{
-		ExecutionID: execution_id,
+		ExecutionID: msgBody.ExecutionID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
-		Data:        EventContent_ExecutionFailed{Error: "", Cause: catcherr.Error()},
+		Data: EventContent_ExecutionFailed{
+			Error:     "",
+			Cause:     catcherr.Error(),
+			EventType: msgBody.Type,
+		},
 	}
 	svc.SendExecutionEvents(event1)
+	slog.Info("send execution error process event", "event_type", msgBody.Type)
 	return nil
 }
 

@@ -20,8 +20,8 @@ type WaitBody struct {
 
 // WaitState ...
 type WaitState struct {
-	*BaseState
-	*WaitBody
+	*BaseState `json:",inline"`
+	*WaitBody  `json:",inline"`
 }
 
 // NewWaitStateFromString Create New Wait State
@@ -205,7 +205,7 @@ func (w *WaitState) GetNextState(input interface{}) (NextState, error) {
 	return ns, nil
 }
 
-func (w *WaitState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(w)
+func (w *WaitState) GetDefinition() (string, error) {
+	data, err := ToString(w)
 	return data, err
 }

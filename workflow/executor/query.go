@@ -4,6 +4,7 @@ package executor
 
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -15,6 +16,7 @@ func (svc *executionService) QueryStepByID(step_id int, fields []string, session
 
 	var dbStep po.Step
 	var err error
+	slog.Debug("dbclinet", "dbclient", svc.MetaDB)
 	// 增加控制session
 	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)

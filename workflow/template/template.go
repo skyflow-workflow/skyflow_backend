@@ -347,7 +347,7 @@ func (svc *templateService) CreateStateMachine(ctx context.Context,
 	var err error
 	var sm po.StateMachine
 
-	err = parser.ValdateStateMachine(req.Definition)
+	err = parser.ValidateStateMachine(req.Definition)
 	if err != nil {
 		nerr := pberror.NewPBError(pbv1.ErrorCode_StateMachineDeinitionInvalid, err.Error())
 		return vo.CreateStateMachineResponse{}, nerr

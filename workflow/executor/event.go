@@ -53,8 +53,9 @@ type EventContent_ExecutionSucceeded struct {
 
 // EventContent_ExecutionFailed  Event Content for Execution start
 type EventContent_ExecutionFailed struct {
-	Error string `json:"error"`
-	Cause string `json:"cause"`
+	EventType string `json:"event_type"`
+	Error     string `json:"error"`
+	Cause     string `json:"cause"`
 }
 
 // EventContent_ExecutionSuspend  Event Content for Execution Suspend
@@ -124,8 +125,9 @@ type EventContent_StateExited struct {
 
 // EventContent_StateFailed   state faild
 type EventContent_StateFailed struct {
-	Error string `json:"error"`
-	Cause string `json:"cause"`
+	EventType string `json:"event_type"`
+	Error     string `json:"error"`
+	Cause     string `json:"cause"`
 }
 
 // EventContent_StateInfoModified  Event content for State Exited
@@ -319,4 +321,9 @@ type EventContent_SuspendStepResume struct {
 
 // EventContent_SuspendStateTimeout EventContent_SuspendStepResumeTimeout
 type EventContent_SuspendStepResumeTimeout struct {
+}
+
+type EventContent_ProcessEventFailed struct {
+	Error     string `json:"error"`
+	EventType string `json:"event_type"`
 }

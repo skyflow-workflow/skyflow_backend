@@ -51,9 +51,9 @@ import (
 
 // ParallelState 并行状态
 type ParallelState struct {
-	*BaseState
-	*ParallelBody
-	_Depth int
+	*BaseState    `json:",inline"`
+	*ParallelBody `json:",inline"`
+	_Depth        int
 }
 
 type ParallelBody struct {
@@ -165,7 +165,7 @@ func (s *ParallelState) GetDepth() int {
 	return s._Depth
 }
 
-func (s *ParallelState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(s)
+func (s *ParallelState) GetDefinition() (string, error) {
+	data, err := ToString(s)
 	return data, err
 }

@@ -1,6 +1,7 @@
 package kratos
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -121,16 +122,20 @@ func NewServer(conf string, svc workflow.WorkflowService) (*Server, error) {
 
 	grpcServer := NewGRPCServer(bootstrap.Server)
 	httpServer := NewHTTPServer(bootstrap.Server, logger)
-
 	InitAppServer(grpcServer, httpServer, svc)
+
+	// config slogger
+	ConfigSlogger()
+
 	app := NewApp(Name, Version, logger, grpcServer, httpServer)
-	return &Server{
+	server := &Server{
 		grpcServer: grpcServer,
 		httpServer: httpServer,
 		wfSvc:      svc,
 		logger:     logger,
 		app:        app,
-	}, nil
+	}
+	return server, nil
 }
 
 func (s *Server) Start() error {
@@ -138,4 +143,16 @@ func (s *Server) Start() error {
 }
 func (s *Server) Stop() error {
 	return nil
+}
+
+func ConfigSlogger() {
+
+	l := slog.New(
+		slog.NewJSONHandler(os.Stdout,
+			&slog.HandlerOptions{
+				Level:     slog.LevelDebug,
+				AddSource: true,
+			}),
+	)
+	slog.SetDefault(l)
 }

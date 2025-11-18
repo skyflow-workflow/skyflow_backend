@@ -72,3 +72,27 @@ func TestPassGetResult(t *testing.T) {
 		})
 	}
 }
+
+func TestPass_GetDefinition(t *testing.T) {
+
+	rawdata := `
+	{
+		"Type": "Pass",
+		"Result": {
+		  "result_key1.$": "$.input_key1",
+		  "result_key2.$": "$.input_key2"
+		},
+		"ResultPath": "$.result",
+		"Next": "NextState"
+	  }
+	`
+	expect := "{\"Type\":\"Pass\",\"OutputPath\":\"$\",\"ResultPath\":\"$.result\",\"MaxExecuteTimes\":1000,\"Next\":\"NextState\",\"Result\":{\"result_key1.$\":\"$.input_key1\",\"result_key2.$\":\"$.input_key2\"}}"
+	state, err := NewPassStateFromString(rawdata)
+	if err != nil {
+		t.Fatal(err)
+	}
+	def, err := state.GetDefinition()
+	assert.Equal(t, err, nil)
+	assert.Equal(t, def, expect)
+
+}

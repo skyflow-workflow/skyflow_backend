@@ -29,8 +29,8 @@ type ChoiceBody struct {
 
 // ChoiceState ...
 type ChoiceState struct {
-	*BaseState
-	*ChoiceBody
+	*BaseState  `json:",inline"`
+	*ChoiceBody `json:",inline"`
 }
 
 // NewChoiceStateFromString NewChoiceStateFromString
@@ -177,7 +177,7 @@ func (choice *ChoiceState) IsEnd() bool {
 	return false
 }
 
-func (choice *ChoiceState) GetDefinition() (map[string]any, error) {
-	data, err := DecodeStructToMap(choice)
+func (choice *ChoiceState) GetDefinition() (string, error) {
+	data, err := ToString(choice)
 	return data, err
 }

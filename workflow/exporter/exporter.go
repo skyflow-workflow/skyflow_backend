@@ -29,7 +29,7 @@ func NewExporterService(lis *DBListener) (*exporterService, error) {
 	exporter := &exporterService{
 		WorkerPool: nil,
 		DBListener: lis,
-		Listeners:  []Listener{},
+		Listeners:  []Listener{lis},
 	}
 	workerPool, err := ants.NewPoolWithFunc(DefaultPoolSize, exporter.AsyncSendExecutionEvents, ants.WithNonblocking(false))
 	if err != nil {
