@@ -24,8 +24,8 @@ type Quota struct {
 	MaxExecuteTimes int
 	// MaxExecutionUUIDSize specifies the maximum size of the execution UUID.
 	MaxExecutionUUIDSize int
-	//  MaxWorkflowSize specifies the maximum size of the workflow.
-	MaxWorkflowSize int
+	//  MaxStateMachineSize specifies the maximum size of the workflow.
+	MaxStateMachineSize int
 	// MaxWorkflowURISize specifies the maximum size of the workflow URI.
 	MaxWorkflowURISize int
 	// MaxStepNameSize specifies the maximum size of the step name.
@@ -60,7 +60,7 @@ var DefaultQuota = Quota{
 	MaxExecuteTimes:            10000,
 	MaxExecutionUUIDSize:       200,
 	// max workflow size 512KB
-	MaxWorkflowSize:     512 * 1024,
+	MaxStateMachineSize: 512 * 1024,
 	MaxWorkflowURISize:  200,
 	MaxStepNameSize:     200,
 	MaxRunningExecution: 1000,

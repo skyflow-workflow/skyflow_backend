@@ -15,11 +15,40 @@ option go_package = "github.com/skyflow/skyflow_backbend/api/v1;v1";
 // CommonService 通用服务
 service CommonService {
     // Paging 分页格式
-    rpc Paging(PageRequest) returns (PageResponse);
+    rpc Paging(PageRequest) returns (PageResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/Paging"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "通用服务"
+            ]
+        };
+    }
     // HTTPReturn  HTTP API接口返回值格式
-    rpc HTTP(google.protobuf.Empty) returns(HTTPResponseMessage);
+    rpc HTTP(google.protobuf.Empty) returns (HTTPResponseMessage) {
+        option (google.api.http) = {
+            post: "/api/v1/HTTP"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "通用服务"
+            ]
+        };
+    }
     // Ping ping service
-    rpc Ping(google.protobuf.Empty) returns(PingResponse){
+    rpc Ping(google.protobuf.Empty) returns (PingResponse){
+        option (google.api.http) = {
+            post: "/api/v1/Ping"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "通用服务"
+            ]
+        };
     };
 }
 
@@ -126,6 +155,15 @@ service SkyflowV1Service {
     }
     // CreateOrUpdateActivity 创建/更新一个活动
     rpc CreateOrUpdateActivity(CreateActivityRequest) returns (CreateActivityResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/CreateOrUpdateActivity"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
 
     // ListActivities 获得活动列表
@@ -142,36 +180,125 @@ service SkyflowV1Service {
     }
     // DescribeActivity 获得一个活动的描述
     rpc DescribeActivity(DescribeActivityRequest) returns (DescribeActivityResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/DescribeActivity"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // DeleteActivity 删除一个活动
     rpc DeleteActivity(DeleteActivityRequest) returns (DeleteActivityResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/DeleteActivity"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // CreateStateMachine 创建一个状态机
     rpc CreateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/CreateStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // CreateOrUpdateStateMachine 创建/更新一个状态机
     rpc CreateOrUpdateStateMachine(CreateStateMachineRequest) returns (CreateStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/CreateOrUpdateStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // DeleteStateMachine 删除一个状态机
     rpc DeleteStateMachine(DeleteStateMachineRequest) returns (DeleteStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/DeleteStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // ListStateMachines 获得状态机列表
     rpc ListStateMachines(ListStateMachinesRequest) returns (ListStateMachinesResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ListStateMachines"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // DescribeStateMachine 获得一个状态机的描述
     rpc DescribeStateMachine(DescribeStateMachineRequest) returns (DescribeStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/DescribeStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // UpdateStateMachine 更新一个状态机
     rpc UpdateStateMachine(UpdateStateMachineRequest) returns (UpdateStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/UpdateStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
     // ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
     // 验证definition的合法性
     rpc ParseStateMachine(ParseStateMachineRequest) returns (ParseStateMachineResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ParseStateMachine"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
 
     //ValidateStateMachineDefinition 验证状态机定义的合法性
     rpc ValidateStateMachineDefinition(ValidateStateMachineDefinitionRequest) returns (ValidateStateMachineDefinitionResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ValidateStateMachineDefinition"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "模板管理"
+            ]
+        };
     }
 
     // 任务管理
@@ -189,32 +316,98 @@ service SkyflowV1Service {
     }
     // DescribeExecution 获得一个执行的描述
     rpc DescribeExecution(DescribeExecutionRequest) returns (DescribeExecutionResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/DescribeExecution"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     // DescribeExecutionBone 获得一个执行的执行的Bone信息
     // Bone信息用于前段展示执行的流程图
     rpc DescribeExecutionBone(DescribeExecutionBoneRequest) returns (DescribeExecutionBoneResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/DescribeExecutionBone"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     // StopExecution 终止一个执行
     rpc StopExecution(StopExecutionRequest) returns (google.protobuf.Empty) {
-
+        option (google.api.http) = {
+            post: "/api/v1/StopExecution"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     // ListExecutions 获得execution列表
     rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/ListExecutions"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     // ListExecutionEvents 获得一个执行的Event列表
     rpc ListExecutionEvents(ListExecutionEventsRequest) returns (ListExecutionEventsResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/ListExecutionEvents"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
 
     rpc DescribeStep(DescribeStepRequest) returns (DescribeStepResponse) {
-
+        option (google.api.http) = {
+            post: "/api/v1/DescribeStep"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     rpc ListStepEvents(ListStepEventsRequest) returns (ListExecutionEventsResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/ListStepEvents"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
     rpc GetActivityTask(GetActivityTaskRequest) returns (GetActivityTaskResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/GetActivityTask"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
     }
 }
 // NamespaceInfo 命名空间信息
@@ -633,7 +826,7 @@ message ListExecutionsResponse {
     PageResponse page_response = 2;
 }
 
-// ListExecutionEventsRequest  获得一个执行的Event列表请求结构
+// ListExecutionEventsRequest  获得一个执行的Event列表请求结构
 message ListExecutionEventsRequest {
     string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
     PageRequest page_request = 2;

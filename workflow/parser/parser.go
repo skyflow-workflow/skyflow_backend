@@ -27,6 +27,10 @@ func NewParser(config *config.Config) *Parser {
 // ValdateStateMachine ...
 func ValdateStateMachine(definition string) error {
 	// Validate the state machine
+	_, err := StandardParser.ParseStateMachine(definition)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

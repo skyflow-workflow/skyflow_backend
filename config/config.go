@@ -20,8 +20,9 @@ type APIConfig struct {
 }
 
 type DispatcherConfig struct {
-	MaxConcurrency int `yaml:"max_concurrency"`
-	MaxQueueSize   int `yaml:"max_queue_size"`
+	MaxConcurrency int  `yaml:"max_concurrency"`
+	MaxQueueSize   int  `yaml:"max_queue_size"`
+	Debug          bool `yaml:"debug"`
 }
 
 type ExporterConfig struct {

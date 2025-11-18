@@ -10,6 +10,7 @@ import (
 	"github.com/goodaye/wire"
 	"github.com/mmtbak/microlibrary/limiter"
 	"github.com/panjf2000/ants/v2"
+	"github.com/skyflow-workflow/skyflow_backbend/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 )
@@ -26,7 +27,7 @@ type DispatcherService struct {
 	// 用于等待所有worker完成
 	eventWg    sync.WaitGroup
 	workerPool *ants.PoolWithFunc
-	option     Option
+	config     *config.DispatcherConfig
 	// event counter for performance
 	// 记录已经处理过的事件数量
 	EventCounter uint64
@@ -47,11 +48,11 @@ var DefaultOption = Option{
 }
 
 // NewDispatcher create a new dispatcher
-func NewDispatcher(workflowSvc workflow.WorkflowService, option Option) (*DispatcherService, error) {
+func NewDispatcher(workflowSvc workflow.WorkflowService, config *config.DispatcherConfig) (*DispatcherService, error) {
 
 	var err error
 	// check config reasonability
-	if option.Concurrency > workflowSvc.DBClient.GetConfig().MaxOpenConns {
+	if config.MaxConcurrency > workflowSvc.DBClient.GetConfig().MaxOpenConns {
 		err = fmt.Errorf("dispatcher config invalid, concurrency should less than MetaDB maxopenconn")
 		return nil, err
 	}
@@ -66,7 +67,7 @@ func NewDispatcher(workflowSvc workflow.WorkflowService, option Option) (*Dispat
 		eventWg:          sync.WaitGroup{},
 		ctx:              ctx,
 		cancelfunc:       cancel,
-		option:           option,
+		config:           config,
 		EventCounter:     0,
 	}
 	return dispather, nil
@@ -79,7 +80,7 @@ func (svc *DispatcherService) Start() error {
 	var err error
 	var workerPool *ants.PoolWithFunc
 	// Pool
-	workerPool, err = ants.NewPoolWithFunc(svc.option.Concurrency, svc.ProcessMessage, ants.WithNonblocking(false))
+	workerPool, err = ants.NewPoolWithFunc(svc.config.MaxConcurrency, svc.ProcessMessage, ants.WithNonblocking(false))
 	if err != nil {
 		return err
 	}

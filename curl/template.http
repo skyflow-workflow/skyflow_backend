@@ -71,8 +71,19 @@ Content-Type: application/json
 
 ### GetEvents
 POST http://127.0.0.1:8080/api/v1/ListActivities/namespace
+Content-Type: application/json
 
-Accept: application/json
 {
     "namespace": "namespace"
+}
+
+### CreateStateMachine
+POST  {{host}}/api/v1/CreateStateMachine
+Content-Type: {{contentType}}
+
+{
+  "name": "example-state-machine",
+  "description": "This is a state machine to test the functionality",
+  "namespace": "example-namespace",
+  "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
 }

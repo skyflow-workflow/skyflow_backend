@@ -148,13 +148,12 @@ func (svc *executionService) ExecutionErrorProcess(catcherr error, execution_id 
 }
 
 // StartExecution 创建一个Execution
-func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Execution, error) {
+func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (*po.Execution, error) {
 	var err error
-	var dbNull po.Execution
 
 	sm, err := parser.ParseStateMachine(req.StateMachineDefinition)
 	if err != nil {
-		return dbNull, err
+		return nil, err
 	}
 
 	// 准备插入Execution
@@ -164,7 +163,7 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 	tx.Begin()
 	resp, err := svc._StartExecution(req, sm, tx)
 	if err != nil {
-		return dbNull, err
+		return nil, err
 	}
 	tx.Commit()
 
@@ -172,10 +171,10 @@ func (svc *executionService) StartExecution(req vo.StartExecutionRequest) (po.Ex
 	for _, msg := range resp.Messages {
 		err = svc.SendInnerMessage(msg, nil)
 		if err != nil {
-			return dbNull, err
+			return nil, err
 		}
 	}
-	return *resp.Data, nil
+	return resp.Data, nil
 }
 
 // _StartExecution 创建一个Execution

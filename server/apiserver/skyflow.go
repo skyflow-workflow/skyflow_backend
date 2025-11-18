@@ -3,7 +3,6 @@ package apiserver
 import (
 	"context"
 	"errors"
-	"log/slog"
 
 	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
@@ -75,11 +74,11 @@ func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.St
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
-	if req.StatemachineUri == "" {
-		return nil, errors.New("state machine URI is required")
-	}
-	if req.Definition == "" {
+	if req.StatemachineUri == "" && req.Definition == "" {
 		return nil, errors.New("state machine definition is required")
+	}
+	if req.Input == "" {
+		req.Input = "{}"
 	}
 
 	voReq := vo.StartExecutionRequest{
@@ -89,8 +88,7 @@ func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.St
 		Title:                  req.Title,
 		ExecutionUUID:          req.ExecutionName,
 	}
-	slog.Info("Enter StartExecution2")
-	dbExecution, err := s.wfSvc.ExecutionService.StartExecution(voReq)
+	dbExecution, err := s.wfSvc.StartExecution(ctx, voReq)
 	if err != nil {
 		return nil, err
 	}
@@ -251,9 +249,10 @@ func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req
 		return nil, err
 	}
 	resp := pbv1.CreateNamespaceResponse{
-		Name:       voResp.Data.Name,
-		CreateTime: voResp.Data.CreateTime.Unix(),
-		UpdateTime: voResp.Data.UpdateTime.Unix(),
+		Name:        voResp.Data.Name,
+		Description: voResp.Data.Description,
+		CreateTime:  voResp.Data.CreateTime.Unix(),
+		UpdateTime:  voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }
@@ -289,9 +288,10 @@ func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pbv1.C
 		return nil, err
 	}
 	resp := pbv1.CreateNamespaceResponse{
-		Name:       voResp.Data.Name,
-		CreateTime: voResp.Data.CreateTime.Unix(),
-		UpdateTime: voResp.Data.UpdateTime.Unix(),
+		Name:        voResp.Data.Name,
+		Description: voResp.Data.Description,
+		CreateTime:  voResp.Data.CreateTime.Unix(),
+		UpdateTime:  voResp.Data.UpdateTime.Unix(),
 	}
 	return &resp, nil
 }

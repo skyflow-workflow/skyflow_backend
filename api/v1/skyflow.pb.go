@@ -3303,7 +3303,7 @@ func (x *ListExecutionsResponse) GetPageResponse() *PageResponse {
 	return nil
 }
 
-// ListExecutionEventsRequest  获得一个执行的Event列表请求结构
+// ListExecutionEventsRequest  获得一个执行的Event列表请求结构
 type ListExecutionEventsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ExecutionUuid string                 `protobuf:"bytes,1,opt,name=execution_uuid,json=executionUuid,proto3" json:"execution_uuid,omitempty"`
@@ -4608,11 +4608,14 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x16ParameterLimitExceeded\x10\xf6\a\x12\x17\n" +
 	"\x12InputLimitExceeded\x10\xf7\a\x12\x18\n" +
 	"\x13OutputLimitExceeded\x10\xf8\a\x12!\n" +
-	"\x1cStateMachineDeinitionInvalid\x10\xf9\a2\xbd\x01\n" +
-	"\rCommonService\x125\n" +
-	"\x06Paging\x12\x14.skyflow.PageRequest\x1a\x15.skyflow.PageResponse\x12<\n" +
-	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\x127\n" +
-	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"\x002\xe9\x15\n" +
+	"\x1cStateMachineDeinitionInvalid\x10\xf9\a2\xbb\x02\n" +
+	"\rCommonService\x12a\n" +
+	"\x06Paging\x12\x14.skyflow.PageRequest\x1a\x15.skyflow.PageResponse\"*\xbaG\x0e\n" +
+	"\f通用服务\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/api/v1/Paging\x12f\n" +
+	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\"(\xbaG\x0e\n" +
+	"\f通用服务\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/HTTP\x12_\n" +
+	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"(\xbaG\x0e\n" +
+	"\f通用服务\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/Ping2\xfa\x1d\n" +
 	"\x10SkyflowV1Service\x12\x89\x01\n" +
 	"\x0fCreateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"3\xbaG\x0e\n" +
 	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/CreateNamespace\x12\x99\x01\n" +
@@ -4623,30 +4626,49 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x0fDeleteNamespace\x12\x1f.skyflow.DeleteNamespaceRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
 	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/DeleteNamespace\x12\x85\x01\n" +
 	"\x0eCreateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"2\xbaG\x0e\n" +
-	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/CreateActivity\x12[\n" +
-	"\x16CreateOrUpdateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\"\x00\x12\x85\x01\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/CreateActivity\x12\x95\x01\n" +
+	"\x16CreateOrUpdateActivity\x12\x1e.skyflow.CreateActivityRequest\x1a\x1f.skyflow.CreateActivityResponse\":\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/CreateOrUpdateActivity\x12\x85\x01\n" +
 	"\x0eListActivities\x12\x1e.skyflow.ListActivitiesRequest\x1a\x1f.skyflow.ListActivitiesResponse\"2\xbaG\x0e\n" +
-	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListActivities\x12Y\n" +
-	"\x10DescribeActivity\x12 .skyflow.DescribeActivityRequest\x1a!.skyflow.DescribeActivityResponse\"\x00\x12S\n" +
-	"\x0eDeleteActivity\x12\x1e.skyflow.DeleteActivityRequest\x1a\x1f.skyflow.DeleteActivityResponse\"\x00\x12_\n" +
-	"\x12CreateStateMachine\x12\".skyflow.CreateStateMachineRequest\x1a#.skyflow.CreateStateMachineResponse\"\x00\x12g\n" +
-	"\x1aCreateOrUpdateStateMachine\x12\".skyflow.CreateStateMachineRequest\x1a#.skyflow.CreateStateMachineResponse\"\x00\x12_\n" +
-	"\x12DeleteStateMachine\x12\".skyflow.DeleteStateMachineRequest\x1a#.skyflow.DeleteStateMachineResponse\"\x00\x12\\\n" +
-	"\x11ListStateMachines\x12!.skyflow.ListStateMachinesRequest\x1a\".skyflow.ListStateMachinesResponse\"\x00\x12e\n" +
-	"\x14DescribeStateMachine\x12$.skyflow.DescribeStateMachineRequest\x1a%.skyflow.DescribeStateMachineResponse\"\x00\x12_\n" +
-	"\x12UpdateStateMachine\x12\".skyflow.UpdateStateMachineRequest\x1a#.skyflow.UpdateStateMachineResponse\"\x00\x12\\\n" +
-	"\x11ParseStateMachine\x12!.skyflow.ParseStateMachineRequest\x1a\".skyflow.ParseStateMachineResponse\"\x00\x12\x83\x01\n" +
-	"\x1eValidateStateMachineDefinition\x12..skyflow.ValidateStateMachineDefinitionRequest\x1a/.skyflow.ValidateStateMachineDefinitionResponse\"\x00\x12\x85\x01\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListActivities\x12\x8d\x01\n" +
+	"\x10DescribeActivity\x12 .skyflow.DescribeActivityRequest\x1a!.skyflow.DescribeActivityResponse\"4\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/api/v1/DescribeActivity\x12\x85\x01\n" +
+	"\x0eDeleteActivity\x12\x1e.skyflow.DeleteActivityRequest\x1a\x1f.skyflow.DeleteActivityResponse\"2\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/DeleteActivity\x12\x95\x01\n" +
+	"\x12CreateStateMachine\x12\".skyflow.CreateStateMachineRequest\x1a#.skyflow.CreateStateMachineResponse\"6\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/CreateStateMachine\x12\xa5\x01\n" +
+	"\x1aCreateOrUpdateStateMachine\x12\".skyflow.CreateStateMachineRequest\x1a#.skyflow.CreateStateMachineResponse\">\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/CreateOrUpdateStateMachine\x12\x95\x01\n" +
+	"\x12DeleteStateMachine\x12\".skyflow.DeleteStateMachineRequest\x1a#.skyflow.DeleteStateMachineResponse\"6\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/DeleteStateMachine\x12\x91\x01\n" +
+	"\x11ListStateMachines\x12!.skyflow.ListStateMachinesRequest\x1a\".skyflow.ListStateMachinesResponse\"5\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/ListStateMachines\x12\x9d\x01\n" +
+	"\x14DescribeStateMachine\x12$.skyflow.DescribeStateMachineRequest\x1a%.skyflow.DescribeStateMachineResponse\"8\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/DescribeStateMachine\x12\x95\x01\n" +
+	"\x12UpdateStateMachine\x12\".skyflow.UpdateStateMachineRequest\x1a#.skyflow.UpdateStateMachineResponse\"6\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/UpdateStateMachine\x12\x91\x01\n" +
+	"\x11ParseStateMachine\x12!.skyflow.ParseStateMachineRequest\x1a\".skyflow.ParseStateMachineResponse\"5\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/ParseStateMachine\x12\xc5\x01\n" +
+	"\x1eValidateStateMachineDefinition\x12..skyflow.ValidateStateMachineDefinitionRequest\x1a/.skyflow.ValidateStateMachineDefinitionResponse\"B\xbaG\x0e\n" +
+	"\f模板管理\x82\xd3\xe4\x93\x02+:\x01*\"&/api/v1/ValidateStateMachineDefinition\x12\x85\x01\n" +
 	"\x0eStartExecution\x12\x1e.skyflow.StartExecutionRequest\x1a\x1f.skyflow.StartExecutionResponse\"2\xbaG\x0e\n" +
-	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/StartExecution\x12\\\n" +
-	"\x11DescribeExecution\x12!.skyflow.DescribeExecutionRequest\x1a\".skyflow.DescribeExecutionResponse\"\x00\x12h\n" +
-	"\x15DescribeExecutionBone\x12%.skyflow.DescribeExecutionBoneRequest\x1a&.skyflow.DescribeExecutionBoneResponse\"\x00\x12H\n" +
-	"\rStopExecution\x12\x1d.skyflow.StopExecutionRequest\x1a\x16.google.protobuf.Empty\"\x00\x12S\n" +
-	"\x0eListExecutions\x12\x1e.skyflow.ListExecutionsRequest\x1a\x1f.skyflow.ListExecutionsResponse\"\x00\x12b\n" +
-	"\x13ListExecutionEvents\x12#.skyflow.ListExecutionEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"\x00\x12M\n" +
-	"\fDescribeStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x1d.skyflow.DescribeStepResponse\"\x00\x12X\n" +
-	"\x0eListStepEvents\x12\x1e.skyflow.ListStepEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"\x00\x12V\n" +
-	"\x0fGetActivityTask\x12\x1f.skyflow.GetActivityTaskRequest\x1a .skyflow.GetActivityTaskResponse\"\x00B/Z-github.com/skyflow/skyflow_backbend/api/v1;v1b\x06proto3"
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/StartExecution\x12\x91\x01\n" +
+	"\x11DescribeExecution\x12!.skyflow.DescribeExecutionRequest\x1a\".skyflow.DescribeExecutionResponse\"5\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/DescribeExecution\x12\xa1\x01\n" +
+	"\x15DescribeExecutionBone\x12%.skyflow.DescribeExecutionBoneRequest\x1a&.skyflow.DescribeExecutionBoneResponse\"9\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/api/v1/DescribeExecutionBone\x12y\n" +
+	"\rStopExecution\x12\x1d.skyflow.StopExecutionRequest\x1a\x16.google.protobuf.Empty\"1\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/StopExecution\x12\x85\x01\n" +
+	"\x0eListExecutions\x12\x1e.skyflow.ListExecutionsRequest\x1a\x1f.skyflow.ListExecutionsResponse\"2\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListExecutions\x12\x99\x01\n" +
+	"\x13ListExecutionEvents\x12#.skyflow.ListExecutionEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"7\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/ListExecutionEvents\x12}\n" +
+	"\fDescribeStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x1d.skyflow.DescribeStepResponse\"0\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/DescribeStep\x12\x8a\x01\n" +
+	"\x0eListStepEvents\x12\x1e.skyflow.ListStepEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"2\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListStepEvents\x12\x89\x01\n" +
+	"\x0fGetActivityTask\x12\x1f.skyflow.GetActivityTaskRequest\x1a .skyflow.GetActivityTaskResponse\"3\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/GetActivityTaskB/Z-github.com/skyflow/skyflow_backbend/api/v1;v1b\x06proto3"
 
 var (
 	file_skyflow_proto_rawDescOnce sync.Once

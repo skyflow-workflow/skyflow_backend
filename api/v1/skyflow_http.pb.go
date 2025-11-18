@@ -20,31 +20,232 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationCommonServiceHTTP = "/skyflow.CommonService/HTTP"
+const OperationCommonServicePaging = "/skyflow.CommonService/Paging"
+const OperationCommonServicePing = "/skyflow.CommonService/Ping"
+
+type CommonServiceHTTPServer interface {
+	// HTTP HTTPReturn  HTTP API接口返回值格式
+	HTTP(context.Context, *emptypb.Empty) (*HTTPResponseMessage, error)
+	// Paging Paging 分页格式
+	Paging(context.Context, *PageRequest) (*PageResponse, error)
+	// Ping Ping ping service
+	Ping(context.Context, *emptypb.Empty) (*PingResponse, error)
+}
+
+func RegisterCommonServiceHTTPServer(s *http.Server, srv CommonServiceHTTPServer) {
+	r := s.Route("/")
+	r.POST("/api/v1/Paging", _CommonService_Paging0_HTTP_Handler(srv))
+	r.POST("/api/v1/HTTP", _CommonService_HTTP0_HTTP_Handler(srv))
+	r.POST("/api/v1/Ping", _CommonService_Ping0_HTTP_Handler(srv))
+}
+
+func _CommonService_Paging0_HTTP_Handler(srv CommonServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PageRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCommonServicePaging)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Paging(ctx, req.(*PageRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PageResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _CommonService_HTTP0_HTTP_Handler(srv CommonServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCommonServiceHTTP)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.HTTP(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*HTTPResponseMessage)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _CommonService_Ping0_HTTP_Handler(srv CommonServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCommonServicePing)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Ping(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PingResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+type CommonServiceHTTPClient interface {
+	// HTTP HTTPReturn  HTTP API接口返回值格式
+	HTTP(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *HTTPResponseMessage, err error)
+	// Paging Paging 分页格式
+	Paging(ctx context.Context, req *PageRequest, opts ...http.CallOption) (rsp *PageResponse, err error)
+	// Ping Ping ping service
+	Ping(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *PingResponse, err error)
+}
+
+type CommonServiceHTTPClientImpl struct {
+	cc *http.Client
+}
+
+func NewCommonServiceHTTPClient(client *http.Client) CommonServiceHTTPClient {
+	return &CommonServiceHTTPClientImpl{client}
+}
+
+// HTTP HTTPReturn  HTTP API接口返回值格式
+func (c *CommonServiceHTTPClientImpl) HTTP(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*HTTPResponseMessage, error) {
+	var out HTTPResponseMessage
+	pattern := "/api/v1/HTTP"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationCommonServiceHTTP))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Paging Paging 分页格式
+func (c *CommonServiceHTTPClientImpl) Paging(ctx context.Context, in *PageRequest, opts ...http.CallOption) (*PageResponse, error) {
+	var out PageResponse
+	pattern := "/api/v1/Paging"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationCommonServicePaging))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Ping Ping ping service
+func (c *CommonServiceHTTPClientImpl) Ping(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*PingResponse, error) {
+	var out PingResponse
+	pattern := "/api/v1/Ping"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationCommonServicePing))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 const OperationSkyflowV1ServiceCreateActivity = "/skyflow.SkyflowV1Service/CreateActivity"
 const OperationSkyflowV1ServiceCreateNamespace = "/skyflow.SkyflowV1Service/CreateNamespace"
+const OperationSkyflowV1ServiceCreateOrUpdateActivity = "/skyflow.SkyflowV1Service/CreateOrUpdateActivity"
 const OperationSkyflowV1ServiceCreateOrUpdateNamespace = "/skyflow.SkyflowV1Service/CreateOrUpdateNamespace"
+const OperationSkyflowV1ServiceCreateOrUpdateStateMachine = "/skyflow.SkyflowV1Service/CreateOrUpdateStateMachine"
+const OperationSkyflowV1ServiceCreateStateMachine = "/skyflow.SkyflowV1Service/CreateStateMachine"
+const OperationSkyflowV1ServiceDeleteActivity = "/skyflow.SkyflowV1Service/DeleteActivity"
 const OperationSkyflowV1ServiceDeleteNamespace = "/skyflow.SkyflowV1Service/DeleteNamespace"
+const OperationSkyflowV1ServiceDeleteStateMachine = "/skyflow.SkyflowV1Service/DeleteStateMachine"
+const OperationSkyflowV1ServiceDescribeActivity = "/skyflow.SkyflowV1Service/DescribeActivity"
+const OperationSkyflowV1ServiceDescribeExecution = "/skyflow.SkyflowV1Service/DescribeExecution"
+const OperationSkyflowV1ServiceDescribeExecutionBone = "/skyflow.SkyflowV1Service/DescribeExecutionBone"
+const OperationSkyflowV1ServiceDescribeStateMachine = "/skyflow.SkyflowV1Service/DescribeStateMachine"
+const OperationSkyflowV1ServiceDescribeStep = "/skyflow.SkyflowV1Service/DescribeStep"
+const OperationSkyflowV1ServiceGetActivityTask = "/skyflow.SkyflowV1Service/GetActivityTask"
 const OperationSkyflowV1ServiceListActivities = "/skyflow.SkyflowV1Service/ListActivities"
+const OperationSkyflowV1ServiceListExecutionEvents = "/skyflow.SkyflowV1Service/ListExecutionEvents"
+const OperationSkyflowV1ServiceListExecutions = "/skyflow.SkyflowV1Service/ListExecutions"
 const OperationSkyflowV1ServiceListNamespaces = "/skyflow.SkyflowV1Service/ListNamespaces"
+const OperationSkyflowV1ServiceListStateMachines = "/skyflow.SkyflowV1Service/ListStateMachines"
+const OperationSkyflowV1ServiceListStepEvents = "/skyflow.SkyflowV1Service/ListStepEvents"
+const OperationSkyflowV1ServiceParseStateMachine = "/skyflow.SkyflowV1Service/ParseStateMachine"
 const OperationSkyflowV1ServiceStartExecution = "/skyflow.SkyflowV1Service/StartExecution"
+const OperationSkyflowV1ServiceStopExecution = "/skyflow.SkyflowV1Service/StopExecution"
+const OperationSkyflowV1ServiceUpdateStateMachine = "/skyflow.SkyflowV1Service/UpdateStateMachine"
+const OperationSkyflowV1ServiceValidateStateMachineDefinition = "/skyflow.SkyflowV1Service/ValidateStateMachineDefinition"
 
 type SkyflowV1ServiceHTTPServer interface {
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
+	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
+	CreateOrUpdateActivity(context.Context, *CreateActivityRequest) (*CreateActivityResponse, error)
 	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
 	CreateOrUpdateNamespace(context.Context, *CreateNamespaceRequest) (*CreateNamespaceResponse, error)
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
+	CreateOrUpdateStateMachine(context.Context, *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
+	// CreateStateMachine CreateStateMachine 创建一个状态机
+	CreateStateMachine(context.Context, *CreateStateMachineRequest) (*CreateStateMachineResponse, error)
+	// DeleteActivity DeleteActivity 删除一个活动
+	DeleteActivity(context.Context, *DeleteActivityRequest) (*DeleteActivityResponse, error)
 	// DeleteNamespace DeleteNamespace 删除一个命名空间
 	// 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
 	DeleteNamespace(context.Context, *DeleteNamespaceRequest) (*emptypb.Empty, error)
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
+	DeleteStateMachine(context.Context, *DeleteStateMachineRequest) (*DeleteStateMachineResponse, error)
+	// DescribeActivity DescribeActivity 获得一个活动的描述
+	DescribeActivity(context.Context, *DescribeActivityRequest) (*DescribeActivityResponse, error)
+	// DescribeExecution DescribeExecution 获得一个执行的描述
+	DescribeExecution(context.Context, *DescribeExecutionRequest) (*DescribeExecutionResponse, error)
+	// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+	// Bone信息用于前段展示执行的流程图
+	DescribeExecutionBone(context.Context, *DescribeExecutionBoneRequest) (*DescribeExecutionBoneResponse, error)
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
+	DescribeStateMachine(context.Context, *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
+	DescribeStep(context.Context, *DescribeStepRequest) (*DescribeStepResponse, error)
+	GetActivityTask(context.Context, *GetActivityTaskRequest) (*GetActivityTaskResponse, error)
 	// ListActivities ListActivities 获得活动列表
 	ListActivities(context.Context, *ListActivitiesRequest) (*ListActivitiesResponse, error)
+	// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+	ListExecutionEvents(context.Context, *ListExecutionEventsRequest) (*ListExecutionEventsResponse, error)
+	// ListExecutions ListExecutions 获得execution列表
+	ListExecutions(context.Context, *ListExecutionsRequest) (*ListExecutionsResponse, error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(context.Context, *ListNamespacesRequest) (*ListNamespacesResponse, error)
+	// ListStateMachines ListStateMachines 获得状态机列表
+	ListStateMachines(context.Context, *ListStateMachinesRequest) (*ListStateMachinesResponse, error)
+	ListStepEvents(context.Context, *ListStepEventsRequest) (*ListExecutionEventsResponse, error)
+	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+	// 验证definition的合法性
+	ParseStateMachine(context.Context, *ParseStateMachineRequest) (*ParseStateMachineResponse, error)
 	// StartExecution 任务管理
 	// StartExecution 创建一个执行任务
 	StartExecution(context.Context, *StartExecutionRequest) (*StartExecutionResponse, error)
+	// StopExecution StopExecution 终止一个执行
+	StopExecution(context.Context, *StopExecutionRequest) (*emptypb.Empty, error)
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
+	UpdateStateMachine(context.Context, *UpdateStateMachineRequest) (*UpdateStateMachineResponse, error)
+	// ValidateStateMachineDefinitionValidateStateMachineDefinition 验证状态机定义的合法性
+	ValidateStateMachineDefinition(context.Context, *ValidateStateMachineDefinitionRequest) (*ValidateStateMachineDefinitionResponse, error)
 }
 
 func RegisterSkyflowV1ServiceHTTPServer(s *http.Server, srv SkyflowV1ServiceHTTPServer) {
@@ -54,8 +255,27 @@ func RegisterSkyflowV1ServiceHTTPServer(s *http.Server, srv SkyflowV1ServiceHTTP
 	r.POST("/api/v1/ListNamespaces", _SkyflowV1Service_ListNamespaces0_HTTP_Handler(srv))
 	r.POST("/api/v1/DeleteNamespace", _SkyflowV1Service_DeleteNamespace0_HTTP_Handler(srv))
 	r.POST("/api/v1/CreateActivity", _SkyflowV1Service_CreateActivity0_HTTP_Handler(srv))
+	r.POST("/api/v1/CreateOrUpdateActivity", _SkyflowV1Service_CreateOrUpdateActivity0_HTTP_Handler(srv))
 	r.POST("/api/v1/ListActivities", _SkyflowV1Service_ListActivities0_HTTP_Handler(srv))
+	r.POST("/api/v1/DescribeActivity", _SkyflowV1Service_DescribeActivity0_HTTP_Handler(srv))
+	r.POST("/api/v1/DeleteActivity", _SkyflowV1Service_DeleteActivity0_HTTP_Handler(srv))
+	r.POST("/api/v1/CreateStateMachine", _SkyflowV1Service_CreateStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/CreateOrUpdateStateMachine", _SkyflowV1Service_CreateOrUpdateStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/DeleteStateMachine", _SkyflowV1Service_DeleteStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListStateMachines", _SkyflowV1Service_ListStateMachines0_HTTP_Handler(srv))
+	r.POST("/api/v1/DescribeStateMachine", _SkyflowV1Service_DescribeStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/UpdateStateMachine", _SkyflowV1Service_UpdateStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/ParseStateMachine", _SkyflowV1Service_ParseStateMachine0_HTTP_Handler(srv))
+	r.POST("/api/v1/ValidateStateMachineDefinition", _SkyflowV1Service_ValidateStateMachineDefinition0_HTTP_Handler(srv))
 	r.POST("/api/v1/StartExecution", _SkyflowV1Service_StartExecution0_HTTP_Handler(srv))
+	r.POST("/api/v1/DescribeExecution", _SkyflowV1Service_DescribeExecution0_HTTP_Handler(srv))
+	r.POST("/api/v1/DescribeExecutionBone", _SkyflowV1Service_DescribeExecutionBone0_HTTP_Handler(srv))
+	r.POST("/api/v1/StopExecution", _SkyflowV1Service_StopExecution0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListExecutions", _SkyflowV1Service_ListExecutions0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListExecutionEvents", _SkyflowV1Service_ListExecutionEvents0_HTTP_Handler(srv))
+	r.POST("/api/v1/DescribeStep", _SkyflowV1Service_DescribeStep0_HTTP_Handler(srv))
+	r.POST("/api/v1/ListStepEvents", _SkyflowV1Service_ListStepEvents0_HTTP_Handler(srv))
+	r.POST("/api/v1/GetActivityTask", _SkyflowV1Service_GetActivityTask0_HTTP_Handler(srv))
 }
 
 func _SkyflowV1Service_CreateNamespace0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
@@ -168,6 +388,28 @@ func _SkyflowV1Service_CreateActivity0_HTTP_Handler(srv SkyflowV1ServiceHTTPServ
 	}
 }
 
+func _SkyflowV1Service_CreateOrUpdateActivity0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateActivityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceCreateOrUpdateActivity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateOrUpdateActivity(ctx, req.(*CreateActivityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateActivityResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _SkyflowV1Service_ListActivities0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListActivitiesRequest
@@ -186,6 +428,226 @@ func _SkyflowV1Service_ListActivities0_HTTP_Handler(srv SkyflowV1ServiceHTTPServ
 			return err
 		}
 		reply := out.(*ListActivitiesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DescribeActivity0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DescribeActivityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDescribeActivity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DescribeActivity(ctx, req.(*DescribeActivityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DescribeActivityResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DeleteActivity0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteActivityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDeleteActivity)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteActivity(ctx, req.(*DeleteActivityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteActivityResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_CreateStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceCreateStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateStateMachine(ctx, req.(*CreateStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_CreateOrUpdateStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceCreateOrUpdateStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateOrUpdateStateMachine(ctx, req.(*CreateStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DeleteStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDeleteStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteStateMachine(ctx, req.(*DeleteStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListStateMachines0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListStateMachinesRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListStateMachines)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListStateMachines(ctx, req.(*ListStateMachinesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListStateMachinesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DescribeStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DescribeStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDescribeStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DescribeStateMachine(ctx, req.(*DescribeStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DescribeStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_UpdateStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceUpdateStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateStateMachine(ctx, req.(*UpdateStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ParseStateMachine0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ParseStateMachineRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceParseStateMachine)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ParseStateMachine(ctx, req.(*ParseStateMachineRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ParseStateMachineResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ValidateStateMachineDefinition0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ValidateStateMachineDefinitionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceValidateStateMachineDefinition)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ValidateStateMachineDefinition(ctx, req.(*ValidateStateMachineDefinitionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ValidateStateMachineDefinitionResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -212,23 +674,236 @@ func _SkyflowV1Service_StartExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServ
 	}
 }
 
+func _SkyflowV1Service_DescribeExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DescribeExecutionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDescribeExecution)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DescribeExecution(ctx, req.(*DescribeExecutionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DescribeExecutionResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DescribeExecutionBone0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DescribeExecutionBoneRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDescribeExecutionBone)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DescribeExecutionBone(ctx, req.(*DescribeExecutionBoneRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DescribeExecutionBoneResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_StopExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in StopExecutionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceStopExecution)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.StopExecution(ctx, req.(*StopExecutionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListExecutions0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListExecutionsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListExecutions)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListExecutions(ctx, req.(*ListExecutionsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListExecutionsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListExecutionEvents0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListExecutionEventsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListExecutionEvents)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListExecutionEvents(ctx, req.(*ListExecutionEventsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListExecutionEventsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_DescribeStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DescribeStepRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceDescribeStep)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DescribeStep(ctx, req.(*DescribeStepRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DescribeStepResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ListStepEvents0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListStepEventsRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceListStepEvents)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListStepEvents(ctx, req.(*ListStepEventsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListExecutionEventsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_GetActivityTask0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetActivityTaskRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceGetActivityTask)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetActivityTask(ctx, req.(*GetActivityTaskRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetActivityTaskResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type SkyflowV1ServiceHTTPClient interface {
 	// CreateActivity CreateActivity 创建一个活动
 	CreateActivity(ctx context.Context, req *CreateActivityRequest, opts ...http.CallOption) (rsp *CreateActivityResponse, err error)
 	// CreateNamespace CreateNamespace 创建一个命名空间
 	CreateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...http.CallOption) (rsp *CreateNamespaceResponse, err error)
+	// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
+	CreateOrUpdateActivity(ctx context.Context, req *CreateActivityRequest, opts ...http.CallOption) (rsp *CreateActivityResponse, err error)
 	// CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
 	CreateOrUpdateNamespace(ctx context.Context, req *CreateNamespaceRequest, opts ...http.CallOption) (rsp *CreateNamespaceResponse, err error)
+	// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
+	CreateOrUpdateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...http.CallOption) (rsp *CreateStateMachineResponse, err error)
+	// CreateStateMachine CreateStateMachine 创建一个状态机
+	CreateStateMachine(ctx context.Context, req *CreateStateMachineRequest, opts ...http.CallOption) (rsp *CreateStateMachineResponse, err error)
+	// DeleteActivity DeleteActivity 删除一个活动
+	DeleteActivity(ctx context.Context, req *DeleteActivityRequest, opts ...http.CallOption) (rsp *DeleteActivityResponse, err error)
 	// DeleteNamespace DeleteNamespace 删除一个命名空间
 	// 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
 	DeleteNamespace(ctx context.Context, req *DeleteNamespaceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// DeleteStateMachine DeleteStateMachine 删除一个状态机
+	DeleteStateMachine(ctx context.Context, req *DeleteStateMachineRequest, opts ...http.CallOption) (rsp *DeleteStateMachineResponse, err error)
+	// DescribeActivity DescribeActivity 获得一个活动的描述
+	DescribeActivity(ctx context.Context, req *DescribeActivityRequest, opts ...http.CallOption) (rsp *DescribeActivityResponse, err error)
+	// DescribeExecution DescribeExecution 获得一个执行的描述
+	DescribeExecution(ctx context.Context, req *DescribeExecutionRequest, opts ...http.CallOption) (rsp *DescribeExecutionResponse, err error)
+	// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+	// Bone信息用于前段展示执行的流程图
+	DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest, opts ...http.CallOption) (rsp *DescribeExecutionBoneResponse, err error)
+	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
+	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...http.CallOption) (rsp *DescribeStateMachineResponse, err error)
+	DescribeStep(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *DescribeStepResponse, err error)
+	GetActivityTask(ctx context.Context, req *GetActivityTaskRequest, opts ...http.CallOption) (rsp *GetActivityTaskResponse, err error)
 	// ListActivities ListActivities 获得活动列表
 	ListActivities(ctx context.Context, req *ListActivitiesRequest, opts ...http.CallOption) (rsp *ListActivitiesResponse, err error)
+	// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+	ListExecutionEvents(ctx context.Context, req *ListExecutionEventsRequest, opts ...http.CallOption) (rsp *ListExecutionEventsResponse, err error)
+	// ListExecutions ListExecutions 获得execution列表
+	ListExecutions(ctx context.Context, req *ListExecutionsRequest, opts ...http.CallOption) (rsp *ListExecutionsResponse, err error)
 	// ListNamespaces ListNamespaces 获得命名空间列表
 	ListNamespaces(ctx context.Context, req *ListNamespacesRequest, opts ...http.CallOption) (rsp *ListNamespacesResponse, err error)
+	// ListStateMachines ListStateMachines 获得状态机列表
+	ListStateMachines(ctx context.Context, req *ListStateMachinesRequest, opts ...http.CallOption) (rsp *ListStateMachinesResponse, err error)
+	ListStepEvents(ctx context.Context, req *ListStepEventsRequest, opts ...http.CallOption) (rsp *ListExecutionEventsResponse, err error)
+	// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+	// 验证definition的合法性
+	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest, opts ...http.CallOption) (rsp *ParseStateMachineResponse, err error)
 	// StartExecution 任务管理
 	// StartExecution 创建一个执行任务
 	StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...http.CallOption) (rsp *StartExecutionResponse, err error)
+	// StopExecution StopExecution 终止一个执行
+	StopExecution(ctx context.Context, req *StopExecutionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// UpdateStateMachine UpdateStateMachine 更新一个状态机
+	UpdateStateMachine(ctx context.Context, req *UpdateStateMachineRequest, opts ...http.CallOption) (rsp *UpdateStateMachineResponse, err error)
+	// ValidateStateMachineDefinitionValidateStateMachineDefinition 验证状态机定义的合法性
+	ValidateStateMachineDefinition(ctx context.Context, req *ValidateStateMachineDefinitionRequest, opts ...http.CallOption) (rsp *ValidateStateMachineDefinitionResponse, err error)
 }
 
 type SkyflowV1ServiceHTTPClientImpl struct {
@@ -267,12 +942,68 @@ func (c *SkyflowV1ServiceHTTPClientImpl) CreateNamespace(ctx context.Context, in
 	return &out, nil
 }
 
+// CreateOrUpdateActivity CreateOrUpdateActivity 创建/更新一个活动
+func (c *SkyflowV1ServiceHTTPClientImpl) CreateOrUpdateActivity(ctx context.Context, in *CreateActivityRequest, opts ...http.CallOption) (*CreateActivityResponse, error) {
+	var out CreateActivityResponse
+	pattern := "/api/v1/CreateOrUpdateActivity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateOrUpdateActivity))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // CreateOrUpdateNamespace CreateOrUpdateNamespace 创建/更新一个命名空间
 func (c *SkyflowV1ServiceHTTPClientImpl) CreateOrUpdateNamespace(ctx context.Context, in *CreateNamespaceRequest, opts ...http.CallOption) (*CreateNamespaceResponse, error) {
 	var out CreateNamespaceResponse
 	pattern := "/api/v1/CreateOrUpdateNamespace"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateOrUpdateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateOrUpdateStateMachine CreateOrUpdateStateMachine 创建/更新一个状态机
+func (c *SkyflowV1ServiceHTTPClientImpl) CreateOrUpdateStateMachine(ctx context.Context, in *CreateStateMachineRequest, opts ...http.CallOption) (*CreateStateMachineResponse, error) {
+	var out CreateStateMachineResponse
+	pattern := "/api/v1/CreateOrUpdateStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateOrUpdateStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// CreateStateMachine CreateStateMachine 创建一个状态机
+func (c *SkyflowV1ServiceHTTPClientImpl) CreateStateMachine(ctx context.Context, in *CreateStateMachineRequest, opts ...http.CallOption) (*CreateStateMachineResponse, error) {
+	var out CreateStateMachineResponse
+	pattern := "/api/v1/CreateStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceCreateStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DeleteActivity DeleteActivity 删除一个活动
+func (c *SkyflowV1ServiceHTTPClientImpl) DeleteActivity(ctx context.Context, in *DeleteActivityRequest, opts ...http.CallOption) (*DeleteActivityResponse, error) {
+	var out DeleteActivityResponse
+	pattern := "/api/v1/DeleteActivity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDeleteActivity))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -296,12 +1027,137 @@ func (c *SkyflowV1ServiceHTTPClientImpl) DeleteNamespace(ctx context.Context, in
 	return &out, nil
 }
 
+// DeleteStateMachine DeleteStateMachine 删除一个状态机
+func (c *SkyflowV1ServiceHTTPClientImpl) DeleteStateMachine(ctx context.Context, in *DeleteStateMachineRequest, opts ...http.CallOption) (*DeleteStateMachineResponse, error) {
+	var out DeleteStateMachineResponse
+	pattern := "/api/v1/DeleteStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDeleteStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DescribeActivity DescribeActivity 获得一个活动的描述
+func (c *SkyflowV1ServiceHTTPClientImpl) DescribeActivity(ctx context.Context, in *DescribeActivityRequest, opts ...http.CallOption) (*DescribeActivityResponse, error) {
+	var out DescribeActivityResponse
+	pattern := "/api/v1/DescribeActivity"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDescribeActivity))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DescribeExecution DescribeExecution 获得一个执行的描述
+func (c *SkyflowV1ServiceHTTPClientImpl) DescribeExecution(ctx context.Context, in *DescribeExecutionRequest, opts ...http.CallOption) (*DescribeExecutionResponse, error) {
+	var out DescribeExecutionResponse
+	pattern := "/api/v1/DescribeExecution"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDescribeExecution))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DescribeExecutionBone DescribeExecutionBone 获得一个执行的执行的Bone信息
+// Bone信息用于前段展示执行的流程图
+func (c *SkyflowV1ServiceHTTPClientImpl) DescribeExecutionBone(ctx context.Context, in *DescribeExecutionBoneRequest, opts ...http.CallOption) (*DescribeExecutionBoneResponse, error) {
+	var out DescribeExecutionBoneResponse
+	pattern := "/api/v1/DescribeExecutionBone"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDescribeExecutionBone))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
+func (c *SkyflowV1ServiceHTTPClientImpl) DescribeStateMachine(ctx context.Context, in *DescribeStateMachineRequest, opts ...http.CallOption) (*DescribeStateMachineResponse, error) {
+	var out DescribeStateMachineResponse
+	pattern := "/api/v1/DescribeStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDescribeStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SkyflowV1ServiceHTTPClientImpl) DescribeStep(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*DescribeStepResponse, error) {
+	var out DescribeStepResponse
+	pattern := "/api/v1/DescribeStep"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceDescribeStep))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SkyflowV1ServiceHTTPClientImpl) GetActivityTask(ctx context.Context, in *GetActivityTaskRequest, opts ...http.CallOption) (*GetActivityTaskResponse, error) {
+	var out GetActivityTaskResponse
+	pattern := "/api/v1/GetActivityTask"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceGetActivityTask))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ListActivities ListActivities 获得活动列表
 func (c *SkyflowV1ServiceHTTPClientImpl) ListActivities(ctx context.Context, in *ListActivitiesRequest, opts ...http.CallOption) (*ListActivitiesResponse, error) {
 	var out ListActivitiesResponse
 	pattern := "/api/v1/ListActivities"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListActivities))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListExecutionEvents ListExecutionEvents 获得一个执行的Event列表
+func (c *SkyflowV1ServiceHTTPClientImpl) ListExecutionEvents(ctx context.Context, in *ListExecutionEventsRequest, opts ...http.CallOption) (*ListExecutionEventsResponse, error) {
+	var out ListExecutionEventsResponse
+	pattern := "/api/v1/ListExecutionEvents"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListExecutionEvents))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ListExecutions ListExecutions 获得execution列表
+func (c *SkyflowV1ServiceHTTPClientImpl) ListExecutions(ctx context.Context, in *ListExecutionsRequest, opts ...http.CallOption) (*ListExecutionsResponse, error) {
+	var out ListExecutionsResponse
+	pattern := "/api/v1/ListExecutions"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListExecutions))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -324,6 +1180,48 @@ func (c *SkyflowV1ServiceHTTPClientImpl) ListNamespaces(ctx context.Context, in 
 	return &out, nil
 }
 
+// ListStateMachines ListStateMachines 获得状态机列表
+func (c *SkyflowV1ServiceHTTPClientImpl) ListStateMachines(ctx context.Context, in *ListStateMachinesRequest, opts ...http.CallOption) (*ListStateMachinesResponse, error) {
+	var out ListStateMachinesResponse
+	pattern := "/api/v1/ListStateMachines"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListStateMachines))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *SkyflowV1ServiceHTTPClientImpl) ListStepEvents(ctx context.Context, in *ListStepEventsRequest, opts ...http.CallOption) (*ListExecutionEventsResponse, error) {
+	var out ListExecutionEventsResponse
+	pattern := "/api/v1/ListStepEvents"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceListStepEvents))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ParseStateMachine ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+// 验证definition的合法性
+func (c *SkyflowV1ServiceHTTPClientImpl) ParseStateMachine(ctx context.Context, in *ParseStateMachineRequest, opts ...http.CallOption) (*ParseStateMachineResponse, error) {
+	var out ParseStateMachineResponse
+	pattern := "/api/v1/ParseStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceParseStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // StartExecution 任务管理
 // StartExecution 创建一个执行任务
 func (c *SkyflowV1ServiceHTTPClientImpl) StartExecution(ctx context.Context, in *StartExecutionRequest, opts ...http.CallOption) (*StartExecutionResponse, error) {
@@ -331,6 +1229,48 @@ func (c *SkyflowV1ServiceHTTPClientImpl) StartExecution(ctx context.Context, in 
 	pattern := "/api/v1/StartExecution"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSkyflowV1ServiceStartExecution))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// StopExecution StopExecution 终止一个执行
+func (c *SkyflowV1ServiceHTTPClientImpl) StopExecution(ctx context.Context, in *StopExecutionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/StopExecution"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceStopExecution))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// UpdateStateMachine UpdateStateMachine 更新一个状态机
+func (c *SkyflowV1ServiceHTTPClientImpl) UpdateStateMachine(ctx context.Context, in *UpdateStateMachineRequest, opts ...http.CallOption) (*UpdateStateMachineResponse, error) {
+	var out UpdateStateMachineResponse
+	pattern := "/api/v1/UpdateStateMachine"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceUpdateStateMachine))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// ValidateStateMachineDefinitionValidateStateMachineDefinition 验证状态机定义的合法性
+func (c *SkyflowV1ServiceHTTPClientImpl) ValidateStateMachineDefinition(ctx context.Context, in *ValidateStateMachineDefinitionRequest, opts ...http.CallOption) (*ValidateStateMachineDefinitionResponse, error) {
+	var out ValidateStateMachineDefinitionResponse
+	pattern := "/api/v1/ValidateStateMachineDefinition"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceValidateStateMachineDefinition))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

@@ -7,6 +7,8 @@ import (
 
 	"github.com/goodaye/wire"
 	"github.com/skyflow-workflow/skyflow_backbend/cmd/skyflow/kratos"
+	"github.com/skyflow-workflow/skyflow_backbend/config"
+	"github.com/skyflow-workflow/skyflow_backbend/server/dispatcher"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow"
 	"github.com/spf13/cobra"
 )
@@ -60,7 +62,7 @@ func StartCommand(cmd *cobra.Command, args []string) {
 			go func() {
 				defer wg.Done()
 				slog.Info("Starting Dispatcher...")
-				StartDispatcher(wfSvc)
+				StartDispatcher(wfSvc, sfConfig.Dispatcher)
 			}()
 		default:
 			err = fmt.Errorf("unknown command:  %s", arg)
@@ -84,14 +86,18 @@ func StartCommand(cmd *cobra.Command, args []string) {
 
 }
 
-func StartDispatcher(wfSvc workflow.WorkflowService) {
-	// // Initialize the dispatcher
-	// dispatcher := dispatcher.NewDispatcher(trpc_conf)
-
-	// // Start the dispatcher
-	// if err := dispatcher.Start(); err != nil {
-	// 	fmt.Println("Failed to start dispatcher:", err)
-	// }
+func StartDispatcher(wfSvc workflow.WorkflowService, conf *config.DispatcherConfig) {
+	// Initialize the dispatcher
+	dispatcher, err := dispatcher.NewDispatcher(wfSvc, conf)
+	if err != nil {
+		slog.Error("Failed to initialize dispatcher:", "error", err)
+		panic(err)
+	}
+	// Start the dispatcher
+	if err = dispatcher.Start(); err != nil {
+		slog.Error("Failed to start dispatcher", "error", err)
+		panic(err)
+	}
 }
 
 func NewFrameworkAPIServer(framework_conf string, wfSvc workflow.WorkflowService) (FrameWorkAPIServer, error) {

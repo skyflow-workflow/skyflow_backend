@@ -12,6 +12,7 @@ func GetExecutionTables() []any {
 		new(TaskToken),
 		new(StepGroup),
 		new(MessageQueue),
+		new(ExecutionShade),
 	}
 }
 

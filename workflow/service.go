@@ -2,12 +2,16 @@ package workflow
 
 import (
 	"context"
+	"fmt"
+	"log/slog"
 
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/template"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
 // WorkflowService Service provides workflow related services
@@ -76,6 +80,61 @@ func (svc *workflowService) SyncSchema() error {
 		return err
 	}
 
-	// TODO: sync executor schema
 	return nil
+}
+
+func (svc *workflowService) ValidateStartExecutionRequest(ctx context.Context, req *vo.StartExecutionRequest) (err error) {
+
+	var dbsm po.StateMachine
+	// Request Limit Check
+	if len(req.Input) > svc.ExecutionService.StandardExecutor.Config.Quota.MaxInputSize {
+		err = vo.ErrorStartExecutionInputSizeLimitExceeded
+		return
+	}
+	if len(req.Title) > svc.ExecutionService.StandardExecutor.Config.Quota.MaxTitleSize {
+		err = vo.ErrorTitleSizeLimitExceeded
+		return
+	}
+	if len(req.ExecutionUUID) > svc.ExecutionService.StandardExecutor.Config.Quota.MaxExecutionUUIDSize {
+		err = vo.ErrorExecutionUUIDSizeLimitExceed
+		return
+	}
+
+	// 优先看definition
+	if req.StateMachineDefinition != "" {
+		// Request Limit Check
+		if len(req.StateMachineDefinition) > svc.ExecutionService.StandardExecutor.Config.Quota.MaxStateMachineSize {
+			err = vo.ErrorStateMachineSizeLimitExceeded
+			return
+		}
+		req.StateMachineURI = ""
+	} else if req.StateMachineURI != "" {
+		// 再看URI
+		// URI 长度验证通过proto validate
+		dbsm, err = svc.TemplateService.DescribeStateMachine(ctx,
+			vo.DescribeStateMachineRequest{
+				StateMachineURI: req.StateMachineURI,
+			}, nil)
+		if err != nil {
+			return
+		}
+		req.StateMachineDefinition = dbsm.Definition
+	} else {
+		err = fmt.Errorf("%w: must indicate statemachine_defintion/statemachine_uri", vo.ErrorParameterInvalid)
+		return
+	}
+	return
+}
+
+func (svc *workflowService) StartExecution(ctx context.Context, req vo.StartExecutionRequest) (dbexe *po.Execution, err error) {
+	slog.Info("start execution ", req)
+	err = svc.ValidateStartExecutionRequest(ctx, &req)
+	if err != nil {
+		return
+	}
+	dbexe, err = svc.ExecutionService.StartExecution(req)
+	if err != nil {
+		return
+	}
+	return
 }

@@ -101,7 +101,7 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 			slog.Error(errStr)
 			// panic(fmt.Errorf(errStr))
 		}
-		if svc.option.Debug {
+		if svc.config.Debug {
 			finishtime := time.Now()
 			duration := finishtime.Sub(starttime)
 			msgBodyStr, err := toolkit.ToString(msgbody)

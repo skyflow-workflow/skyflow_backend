@@ -9,7 +9,8 @@ POST  {{host}}/api/v1/StartExecution
 Content-Type: {{contentType}}
 
 {
-  "statemachine_uri": "statemachine:example-statemachine"
+  "statemachine_uri": "statemachine:example-namespace/example-state-machine"
+  
 }
 
 

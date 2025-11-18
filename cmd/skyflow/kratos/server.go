@@ -57,6 +57,8 @@ func NewHTTPServer(c *conf.Server, logger log.Logger) *http.Server {
 	if c.Http.Timeout != nil {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
+	opts = append(opts, http.ResponseEncoder(CustomResponseEncoder))
+	opts = append(opts, http.ErrorEncoder(CustomErrorHandler))
 	srv := http.NewServer(opts...)
 	return srv
 }

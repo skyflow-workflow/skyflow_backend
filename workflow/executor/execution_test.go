@@ -145,7 +145,7 @@ func TestCreateExecution(t *testing.T) {
 			Type:        MessageType.ExecutionInit,
 		}
 
-		exe, err := NewExecutionFromData(&dbExe, myExecutionService)
+		exe, err := NewExecutionFromData(dbExe, myExecutionService)
 		fmt.Println(err)
 		assert.Equal(t, err == nil, true)
 		err = exe.ProcessEvent(msg)
@@ -192,7 +192,7 @@ func TestExecutionProcessMessage(t *testing.T) {
 		fmt.Println("execution id :", execution_id)
 
 		// exe, err := NewExecutionFromID(dbexe.ID)
-		exe, err := NewExecutionFromData(&dbExe, myExecutionService)
+		exe, err := NewExecutionFromData(dbExe, myExecutionService)
 		fmt.Println(err)
 		assert.Equal(t, err == nil, true)
 		msg := queue.InnerMessageBody{
