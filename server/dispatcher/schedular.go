@@ -104,13 +104,9 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 		if svc.config.Debug {
 			finishtime := time.Now()
 			duration := finishtime.Sub(starttime)
-			msgBodyStr, err := toolkit.ToString(msgbody)
-			if err != nil {
-				slog.Error("ProcessMessage Failed: ", "error", err.Error())
-				return
-			}
-			msg := fmt.Sprintf("ProcessMessage Speed  %s , Message Content %s", duration.String(), msgBodyStr)
-			slog.Debug(msg)
+			args := LogMessageEvent(msgbody, nil)
+			args = append(args, "Duration", duration.String())
+			slog.Debug("ProcessMessage Speed", args...)
 		}
 	}()
 	defer func() {
@@ -125,10 +121,10 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 	slog.Debug("Start ProcessMessage", LogMessageEvent(msgbody, nil)...)
 	// 交给具体执行函数
 	err = svc.processInnerMessage(msgbody)
-	slog.Info(fmt.Sprintf("Finish ProcessMessage :  %v, err: %v", msgbody, err))
+	slog.Info("Finish ProcessMessage", LogMessageEvent(msgbody, err)...)
 
 	if err != nil {
-		slog.Error("Process Event ProcessFailed Failed: ", LogMessageEvent(msgbody, err)...)
+		slog.Error("Process Message Failed Failed: ", LogMessageEvent(msgbody, err)...)
 		// 处理不了就失败整个任务
 		err2 := svc.ExecutionService.ExecutionErrorProcess(err, msgbody)
 		if err2 != nil {
@@ -180,6 +176,7 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 
 		// 如果StateID == 0 , 忽略消息
 		if msgBody.StepID == 0 {
+			slog.Error("StepID is 0 , Ignore This Message.", LogMessageEvent(msgBody, err)...)
 			return
 		}
 		// 先查询最小数据，判断 step 的状态。是否符合预期。
@@ -215,7 +212,6 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		}
 		step, err = executor.NewStepFromData(dbStep, svc.ExecutionService.StandardExecutor)
 		if err != nil {
-			slog.Debug("destep", "step", dbStep)
 			slog.Error(err.Error())
 			return err
 		}

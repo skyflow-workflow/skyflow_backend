@@ -40,12 +40,32 @@ func (s *SkyflowServiceHandler) DescribeExecutionBone(ctx context.Context, req *
 
 // DescribeStep implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*pbv1.DescribeStepResponse, error) {
+
 	panic("unimplemented")
 }
 
 // GetActivityTask implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pbv1.GetActivityTaskRequest) (*pbv1.GetActivityTaskResponse, error) {
-	panic("unimplemented")
+
+	if req.ActivityUri == "" {
+		return nil, errors.New("activity uri is required")
+	}
+	voReq := DefaultGetActivityRequest
+	// 如果没有设置超时时间，则使用默认的超时时间
+	voReq.ActivityURI = req.ActivityUri
+
+	voResp, err := s.wfSvc.ExecutionService.GetActivityTask(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pbv1.GetActivityTaskResponse{
+		ActivityUri:      voResp.Resource,
+		TaskToken:        voResp.TaskToken,
+		Input:            voResp.Input,
+		TimeoutSeconds:   int64(voResp.TimeoutSeconds),
+		HeartbeatSeconds: int64(voResp.HeartbeatSeconds),
+	}
+	return resp, nil
 }
 
 // ListExecutionEvents implements pbv1.SkyflowV1ServiceService.
@@ -65,6 +85,7 @@ func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pbv1.Li
 
 // ParseStateMachine implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pbv1.ParseStateMachineRequest) (*pbv1.ParseStateMachineResponse, error) {
+
 	panic("unimplemented")
 }
 
@@ -101,12 +122,26 @@ func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.St
 
 // StopExecution implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) StopExecution(ctx context.Context, req *pbv1.StopExecutionRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.StopExecutionRequest{
+		ExecutionUUID: req.ExecutionUuid,
+	}
+	err := s.wfSvc.ExecutionService.StopExecution(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // DeleteNamespace implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pbv1.DeleteNamespaceRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.DeleteNamespaceRequest{
+		Name: req.Name,
+	}
+	err := s.wfSvc.TemplateService.DeleteNamespace(ctx, voReq, nil)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // CreateOrUpdateStateMachine implements pbv1.SkyflowV1ServiceService.

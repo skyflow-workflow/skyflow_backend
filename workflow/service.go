@@ -6,6 +6,7 @@ import (
 	"log/slog"
 
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -33,9 +34,9 @@ type workflowService struct {
 	expressExecutor  *executor.Executor
 }
 
-func NewWorkflowService(dbClient *rdb.DBClient, innerQueue queue.InnerMessageQueue) (WorkflowService, error) {
+func NewWorkflowService(dbClient *rdb.DBClient, innerQueue queue.InnerMessageQueue, conf *config.SkyflowConfig) (WorkflowService, error) {
 	templateService := template.NewTemplateService(dbClient)
-	exporterService, err := exporter.NewExporterService(exporter.NewDBListener(dbClient))
+	exporterService, err := exporter.NewExporterService(dbClient, conf.Exporter)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +86,7 @@ func (svc *workflowService) SyncSchema() error {
 
 func (svc *workflowService) ValidateStartExecutionRequest(ctx context.Context, req *vo.StartExecutionRequest) (err error) {
 
-	var dbsm po.StateMachine
+	var dbSM po.StateMachine
 	// Request Limit Check
 	if len(req.Input) > svc.ExecutionService.StandardExecutor.Config.Quota.MaxInputSize {
 		err = vo.ErrorStartExecutionInputSizeLimitExceeded
@@ -111,14 +112,14 @@ func (svc *workflowService) ValidateStartExecutionRequest(ctx context.Context, r
 	} else if req.StateMachineURI != "" {
 		// 再看URI
 		// URI 长度验证通过proto validate
-		dbsm, err = svc.TemplateService.DescribeStateMachine(ctx,
+		dbSM, err = svc.TemplateService.DescribeStateMachine(ctx,
 			vo.DescribeStateMachineRequest{
 				StateMachineURI: req.StateMachineURI,
 			}, nil)
 		if err != nil {
 			return
 		}
-		req.StateMachineDefinition = dbsm.Definition
+		req.StateMachineDefinition = dbSM.Definition
 	} else {
 		err = fmt.Errorf("%w: must indicate statemachine_defintion/statemachine_uri", vo.ErrorParameterInvalid)
 		return
@@ -126,13 +127,13 @@ func (svc *workflowService) ValidateStartExecutionRequest(ctx context.Context, r
 	return
 }
 
-func (svc *workflowService) StartExecution(ctx context.Context, req vo.StartExecutionRequest) (dbexe *po.Execution, err error) {
+func (svc *workflowService) StartExecution(ctx context.Context, req vo.StartExecutionRequest) (dbExe *po.Execution, err error) {
 	slog.Info("start execution ", req)
 	err = svc.ValidateStartExecutionRequest(ctx, &req)
 	if err != nil {
 		return
 	}
-	dbexe, err = svc.ExecutionService.StartExecution(req)
+	dbExe, err = svc.ExecutionService.StartExecution(req)
 	if err != nil {
 		return
 	}

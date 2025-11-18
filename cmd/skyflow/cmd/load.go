@@ -50,8 +50,8 @@ func LoadService(conf *config.SkyflowConfig) (workflow.WorkflowService, error) {
 
 	var delayMQ queue.InnerMessageQueue
 	// delay message queue is optional
-	if conf.DelayMesageQueue != nil {
-		delayMQ, err = queue.NewInnerMessageQueueFromConfig(conf.MessageQueue.DSN)
+	if conf.DelayMesageQueue != nil && conf.DelayMesageQueue.DSN != "" {
+		delayMQ, err = queue.NewInnerMessageQueueFromConfig(conf.DelayMesageQueue.DSN)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create delay message queue: %w", err)
 		}
@@ -64,7 +64,7 @@ func LoadService(conf *config.SkyflowConfig) (workflow.WorkflowService, error) {
 		return nil, fmt.Errorf("failed to create inner message queue group: %w", err)
 	}
 
-	workflowService, err := workflow.NewWorkflowService(dbClient, innerMQGroup)
+	workflowService, err := workflow.NewWorkflowService(dbClient, innerMQGroup, conf)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create workflow service: %w", err)
 	}

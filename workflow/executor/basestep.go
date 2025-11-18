@@ -18,7 +18,7 @@ import (
 // ExecutionStep execution step
 type ExecutionStep struct {
 	Data             *po.Step
-	ExecutionService executionService
+	ExecutionService ExecutionService
 	Executor         *Executor
 	State            states.State
 	// BaseState        *states.BaseState
@@ -33,9 +33,10 @@ func NewExecutionStep(dbStep *po.Step, executor *Executor) (*ExecutionStep, erro
 		return nil, err
 	}
 	exeStep := &ExecutionStep{
-		State:    state,
-		Executor: executor,
-		Data:     dbStep,
+		State:            state,
+		Executor:         executor,
+		Data:             dbStep,
+		ExecutionService: executor.ExecutionService,
 	}
 	return exeStep, nil
 
@@ -116,21 +117,21 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 	starttime := time.Now()
 
 	var dbStep *po.Step
-	var basedbstep *po.Step
+	var baseDBStep *po.Step
 	var dbExecution *po.Execution
 
-	var stateexemsg = StepExecuteMessage{
+	var stateExeMsg = StepExecuteMessage{
 		Block: false,
 	}
 	// 兼容历史消息
 	if msg.Data != "" {
-		err = json.Unmarshal([]byte(msg.Data), &stateexemsg)
+		err = json.Unmarshal([]byte(msg.Data), &stateExeMsg)
 		if err != nil {
 			return err
 		}
 	}
 	// 提前取出 Input字段， 避免在事务中查询
-	basedbstep, err = step.ExecutionService.QueryStepByID(step.Data.ID, append(StepFields.L1, "input"), nil)
+	baseDBStep, err = step.ExecutionService.QueryStepByID(step.Data.ID, append(StepFields.L1, "input"), nil)
 
 	if err != nil {
 		log.Error(err.Error())
@@ -242,17 +243,17 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 	event0 := vo.ExecutionEvent{
 		ExecutionID: dbStep.ExecutionID,
 		StepID:      dbStep.ID,
-		StepName:    basedbstep.Name,
+		StepName:    baseDBStep.Name,
 		StartTime:   starttime,
 		FinishTime:  now,
 		Data: EventContent_StateEntered{
-			Input: basedbstep.Input,
+			Input: baseDBStep.Input,
 		},
 	}
 	event1 := vo.ExecutionEvent{
 		ExecutionID: dbStep.ExecutionID,
 		StepID:      dbStep.ID,
-		StepName:    basedbstep.Name,
+		StepName:    baseDBStep.Name,
 		StartTime:   starttime,
 		FinishTime:  now,
 		Data: EventContent_StateInit{
@@ -264,7 +265,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 	step.ExecutionService.SendExecutionEvents(event0, event1)
 
 	// message queue send create message
-	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateexemsg)
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateExeMsg)
 	err = step.ExecutionService.SendInnerMessage(message, nil)
 	if err != nil {
 		return err

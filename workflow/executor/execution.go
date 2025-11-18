@@ -466,7 +466,6 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 		if err != nil {
 			return resp, err
 		}
-		deIndex++
 		task := po.Step{
 			ExecutionID:  dbExeId,
 			ExecuteIndex: deIndex,
@@ -492,7 +491,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 
 		// 新增stepgroup
 		if groupState.SubGroup != nil {
-			newg := tmpGroup{
+			neSg := tmpGroup{
 				po.StepGroup{
 					StepID:      task.ID,
 					ExecutionID: dbExeId,
@@ -502,7 +501,7 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 				},
 				groupState.SubGroup,
 			}
-			groups = append(groups, newg)
+			groups = append(groups, neSg)
 		}
 
 		// for idx, g := range groupState.SubGroup {

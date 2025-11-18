@@ -283,6 +283,8 @@ func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, state
 		ExecutionID: dbExecution.ID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
+		StepName:    "CreateExecution",
+		StepID:      0,
 		Data:        EventContent_ExecutionCreated{Input: req.Input},
 	}
 
@@ -297,7 +299,7 @@ func (svc *executionService) _StartExecution(req vo.StartExecutionRequest, state
 }
 
 // StopExecution stop certain execution
-func (svc *executionService) StopExecution(req vo.StopExecutionRequest) error {
+func (svc *executionService) StopExecution(_ context.Context, req vo.StopExecutionRequest) error {
 
 	var err error
 
@@ -1648,6 +1650,7 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	resp = vo.GetActivityTaskResponse{
 		Step:             dbTask,
 		Execution:        dbExecution,
+		Resource:         dbActivityTask.Resource,
 		Input:            dbActivityTask.Input,
 		TaskToken:        dbActivityTask.Token,
 		TimeoutSeconds:   atData.TimeoutSeconds,

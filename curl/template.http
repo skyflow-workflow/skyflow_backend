@@ -27,7 +27,7 @@ Content-Type: {{contentType}}
 
 ### ListNamespaces
 POST  {{host}}/api/v1/ListNamespaces
-Accept: application/json
+Content-Type: {{contentType}}
 
 {
     "page_request": {

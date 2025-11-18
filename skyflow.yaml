@@ -8,7 +8,7 @@ persistence:
 message_queue:
   dsn: kafka://localhost:9092/?topics=skyflow-events&numpartition=3&numreplica=1&autocommitsecond=1&initial=oldest&version=1.1.1
 delay_message_queue:
-  dsn: redis://host:port/db
+  dsn:
 api:
   qps_limit: 1000
 dispatcher:
@@ -16,6 +16,7 @@ dispatcher:
   max_queue_size: 100
   debug: true
 exporter:
+  cache_size_mb: 100
   listeners:
     - "http://localhost:8080/export"
 resource:

@@ -16,7 +16,10 @@ func (svc *executionService) QueryStepByID(step_id int, fields []string, session
 
 	var dbStep po.Step
 	var err error
-	slog.Debug("dbclinet", "dbclient", svc.MetaDB)
+	slog.Debug("QueryStepByID",
+		"step_id", step_id,
+		"fields", fields,
+	)
 	// 增加控制session
 	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)

@@ -56,13 +56,15 @@ type StateWakeupMessage struct {
 
 // GetActivityTaskRequest ...
 type GetActivityTaskRequest struct {
-	ActivityURI string
+	ActivityURI    string
+	TimeoutSeconds int
 }
 
 // GetActivityTaskResponse ...
 type GetActivityTaskResponse struct {
 	Step             *po.Step
 	Execution        *po.Execution
+	Resource         string
 	Input            string
 	TaskToken        string
 	TimeoutSeconds   int

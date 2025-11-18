@@ -12,6 +12,8 @@
             },
             "Resource": "activity:unittest/Testadd",
             "ResultPath": "$.z",
+            "TimeoutSeconds": 600,
+            "HeartbeatSeconds": 60,
             "Next": "S2"
         },
         "S2": {
@@ -36,6 +38,7 @@
         "S4": {
             "Type": "Pass",
             "Resource": "activity:unittest/TestaddActivity2",
+            "Result": {},
             "End": true
         }
     }
