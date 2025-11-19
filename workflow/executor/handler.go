@@ -1527,7 +1527,9 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	tx, maker := svc.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
-	for i := 0; i < 3; i++ {
+	// 最大尝试次数
+	var maxattempt = 3
+	for range maxattempt {
 		// 最大尝试3次
 
 		activityTaskId, ok := svc.CacheService.Get(req.ActivityURI)

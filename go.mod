@@ -7,6 +7,7 @@ toolchain go1.24.10
 require (
 	github.com/coocood/freecache v1.2.4
 	github.com/dolthub/go-mysql-server v0.19.0
+	github.com/dolthub/vitess v0.0.0-20241211024425-b00987f7ba54
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
 	github.com/go-kratos/kratos/v2 v2.9.1
 	github.com/go-playground/assert/v2 v2.2.0
@@ -50,7 +51,6 @@ require (
 	github.com/dolthub/flatbuffers/v23 v23.3.3-dh.2 // indirect
 	github.com/dolthub/go-icu-regex v0.0.0-20241215010122-db690dd53c90 // indirect
 	github.com/dolthub/jsonpath v0.0.2-0.20240227200619-19675ab05c71 // indirect
-	github.com/dolthub/vitess v0.0.0-20241211024425-b00987f7ba54 // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect

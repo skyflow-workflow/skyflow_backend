@@ -24,10 +24,20 @@ Content-Type: {{contentType}}
 }
 
 ### CreateNamespace
-POST  {{host}}/api/v1/CreateNamespace
+POST  {{host}}/api/v1/GetActivityTask
 Content-Type: {{contentType}}
 
 {
-  "name": "example-namespace",
-  "description": "This is a namespace to test the functionality"
+  "activity_uri": "activity:unittest/Testadd"
+}
+
+
+### SendTaskSuccess 
+POST {{host}}/api/v1/SendTaskSuccess
+Content-Type: {{contentType}}
+
+
+{
+  "task_token": "",
+  "output": ""
 }

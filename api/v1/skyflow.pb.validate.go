@@ -4644,9 +4644,7 @@ func (m *ParseStateMachineResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Type
-
-	// no validation rules for Definition
+	// no validation rules for Bone
 
 	if len(errors) > 0 {
 		return ParseStateMachineResponseMultiError(errors)
@@ -6973,6 +6971,17 @@ func (m *GetActivityTaskRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if val := m.GetTimeoutSeconds(); val <= 0 || val >= 60 {
+		err := GetActivityTaskRequestValidationError{
+			field:  "TimeoutSeconds",
+			reason: "value must be inside range (0, 60)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
 		return GetActivityTaskRequestMultiError(errors)
 	}
@@ -7853,9 +7862,9 @@ func (m *LoadTaskDataRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetStateId() <= 0 {
+	if m.GetStepId() <= 0 {
 		err := LoadTaskDataRequestValidationError{
-			field:  "StateId",
+			field:  "StepId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -8057,31 +8066,31 @@ var _ interface {
 	ErrorName() string
 } = LoadTaskDataResponseValidationError{}
 
-// Validate checks the field values on SendStateSkipRequest with the rules
+// Validate checks the field values on SkipFailedStepRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *SendStateSkipRequest) Validate() error {
+func (m *SkipFailedStepRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on SendStateSkipRequest with the rules
+// ValidateAll checks the field values on SkipFailedStepRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// SendStateSkipRequestMultiError, or nil if none found.
-func (m *SendStateSkipRequest) ValidateAll() error {
+// SkipFailedStepRequestMultiError, or nil if none found.
+func (m *SkipFailedStepRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *SendStateSkipRequest) validate(all bool) error {
+func (m *SkipFailedStepRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if m.GetStateId() <= 0 {
-		err := SendStateSkipRequestValidationError{
-			field:  "StateId",
+	if m.GetStepId() <= 0 {
+		err := SkipFailedStepRequestValidationError{
+			field:  "StepId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -8095,19 +8104,19 @@ func (m *SendStateSkipRequest) validate(all bool) error {
 	// no validation rules for Output
 
 	if len(errors) > 0 {
-		return SendStateSkipRequestMultiError(errors)
+		return SkipFailedStepRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// SendStateSkipRequestMultiError is an error wrapping multiple validation
-// errors returned by SendStateSkipRequest.ValidateAll() if the designated
+// SkipFailedStepRequestMultiError is an error wrapping multiple validation
+// errors returned by SkipFailedStepRequest.ValidateAll() if the designated
 // constraints aren't met.
-type SendStateSkipRequestMultiError []error
+type SkipFailedStepRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m SendStateSkipRequestMultiError) Error() string {
+func (m SkipFailedStepRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -8116,11 +8125,11 @@ func (m SendStateSkipRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m SendStateSkipRequestMultiError) AllErrors() []error { return m }
+func (m SkipFailedStepRequestMultiError) AllErrors() []error { return m }
 
-// SendStateSkipRequestValidationError is the validation error returned by
-// SendStateSkipRequest.Validate if the designated constraints aren't met.
-type SendStateSkipRequestValidationError struct {
+// SkipFailedStepRequestValidationError is the validation error returned by
+// SkipFailedStepRequest.Validate if the designated constraints aren't met.
+type SkipFailedStepRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -8128,24 +8137,24 @@ type SendStateSkipRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e SendStateSkipRequestValidationError) Field() string { return e.field }
+func (e SkipFailedStepRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e SendStateSkipRequestValidationError) Reason() string { return e.reason }
+func (e SkipFailedStepRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e SendStateSkipRequestValidationError) Cause() error { return e.cause }
+func (e SkipFailedStepRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e SendStateSkipRequestValidationError) Key() bool { return e.key }
+func (e SkipFailedStepRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e SendStateSkipRequestValidationError) ErrorName() string {
-	return "SendStateSkipRequestValidationError"
+func (e SkipFailedStepRequestValidationError) ErrorName() string {
+	return "SkipFailedStepRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e SendStateSkipRequestValidationError) Error() string {
+func (e SkipFailedStepRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -8157,14 +8166,14 @@ func (e SendStateSkipRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sSendStateSkipRequest.%s: %s%s",
+		"invalid %sSkipFailedStepRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = SendStateSkipRequestValidationError{}
+var _ error = SkipFailedStepRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -8172,7 +8181,233 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = SendStateSkipRequestValidationError{}
+} = SkipFailedStepRequestValidationError{}
+
+// Validate checks the field values on UnblockTaskRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UnblockTaskRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UnblockTaskRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UnblockTaskRequestMultiError, or nil if none found.
+func (m *UnblockTaskRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UnblockTaskRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetStepId() <= 0 {
+		err := UnblockTaskRequestValidationError{
+			field:  "StepId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UnblockTaskRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UnblockTaskRequestMultiError is an error wrapping multiple validation errors
+// returned by UnblockTaskRequest.ValidateAll() if the designated constraints
+// aren't met.
+type UnblockTaskRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UnblockTaskRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UnblockTaskRequestMultiError) AllErrors() []error { return m }
+
+// UnblockTaskRequestValidationError is the validation error returned by
+// UnblockTaskRequest.Validate if the designated constraints aren't met.
+type UnblockTaskRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UnblockTaskRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UnblockTaskRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UnblockTaskRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UnblockTaskRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UnblockTaskRequestValidationError) ErrorName() string {
+	return "UnblockTaskRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UnblockTaskRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUnblockTaskRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UnblockTaskRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UnblockTaskRequestValidationError{}
+
+// Validate checks the field values on SkipBlockedTaskRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SkipBlockedTaskRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SkipBlockedTaskRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SkipBlockedTaskRequestMultiError, or nil if none found.
+func (m *SkipBlockedTaskRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SkipBlockedTaskRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetStepId() <= 0 {
+		err := SkipBlockedTaskRequestValidationError{
+			field:  "StepId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return SkipBlockedTaskRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SkipBlockedTaskRequestMultiError is an error wrapping multiple validation
+// errors returned by SkipBlockedTaskRequest.ValidateAll() if the designated
+// constraints aren't met.
+type SkipBlockedTaskRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SkipBlockedTaskRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SkipBlockedTaskRequestMultiError) AllErrors() []error { return m }
+
+// SkipBlockedTaskRequestValidationError is the validation error returned by
+// SkipBlockedTaskRequest.Validate if the designated constraints aren't met.
+type SkipBlockedTaskRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SkipBlockedTaskRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SkipBlockedTaskRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SkipBlockedTaskRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SkipBlockedTaskRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SkipBlockedTaskRequestValidationError) ErrorName() string {
+	return "SkipBlockedTaskRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SkipBlockedTaskRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSkipBlockedTaskRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SkipBlockedTaskRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SkipBlockedTaskRequestValidationError{}
 
 // Validate checks the field values on GetActivityTaskResponse_ExtraInfo with
 // the rules defined in the proto definition for this message. If any rules

@@ -387,6 +387,7 @@ service SkyflowV1Service {
             ]
         };
     }
+    // ListStepEvents 获得一个执行的StepEvent列表
     rpc ListStepEvents(ListStepEventsRequest) returns (ListExecutionEventsResponse) {
         option (google.api.http) = {
             post: "/api/v1/ListStepEvents"
@@ -398,6 +399,7 @@ service SkyflowV1Service {
             ]
         };
     }
+    // GetActivityTask 获得一个需要执行的task
     rpc GetActivityTask(GetActivityTaskRequest) returns (GetActivityTaskResponse) {
         option (google.api.http) = {
             post: "/api/v1/GetActivityTask"
@@ -405,7 +407,145 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务管理"
+                "任务操作"
+            ]
+        };
+    }
+    // SendTaskSuccess 发送task执行成功
+    rpc SendTaskSuccess(SendTaskSuccessRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SendTaskSuccess"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+
+    // SendTaskFailure 发送task执行失败
+    rpc SendTaskFailure(SendTaskFailureRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SendTaskFailure"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // SendTaskHeartbeat 发送task 执行心跳
+    rpc SendTaskHeartbeat(SendTaskHeartbeatRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SendTaskHeartbeat"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // SendTaskReference 发送task执行关联信息
+    rpc SendTaskReference(SendTaskReferenceRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SendTaskReference"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // SkipFailedStep 跳过失败的步骤
+    rpc SkipFailedStep(SkipFailedStepRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SkipFailedStep"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+
+    // UnblockTask 解锁阻塞任务
+    rpc UnblockTask(UnblockTaskRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/UnblockTask"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+
+    // SkipBlockedTask 跳过阻塞任务
+    rpc SkipBlockedTask(SkipBlockedTaskRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SkipBlockedTask"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+
+    // RetryFailedStep 重试失败的步骤
+    rpc RetryFailedStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+        post : "/api/v1/SendStepRetry"
+        body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // SendStepFailed 强制Running步骤失败
+    rpc SendStepFailed(DescribeStepRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/SendStepFailed"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // RedoStep 强制重做一个步骤
+    // 不判断步骤状态，直接重做
+    rpc RedoStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/RedoStep"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
+            ]
+        };
+    }
+    // ResumeSuspendingStep 继续一个处于暂停状态的步骤，
+    // 需要 Step Type:Suspend, Status: Suspending
+    rpc ResumeSuspendingStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post : "/api/v1/ResumeSuspendingStep"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务操作"
             ]
         };
     }
@@ -712,10 +852,10 @@ message ParseStateMachineRequest{
 
 // ParseStateMachineResponse 解析一个状态机返回结构
 message ParseStateMachineResponse{
-    // statemachine type
-    string type = 1 ;
-    // flow 详细定义
-    string definition =2 ;
+    // statemachine bone 
+    string bone =1 ;
+    // 
+
 }
 
 // ValidateStateMachineDefinitionRequest 验证状态机定义请求结构
@@ -866,6 +1006,8 @@ message ListStepEventsRequest {
 message GetActivityTaskRequest {
     // task uri
     string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    //  timeout_seconds
+    int32 timeout_seconds = 2 [(validate.rules).int32 = {gt: 0, lt: 60}];
 }
 
 // GetActivityTaskResponse 返回查询到的结构
@@ -946,7 +1088,7 @@ message StoreTaskDataRequest {
 // LoadTaskDataRequest 获得task 临时数据
 message LoadTaskDataRequest {
     // State id
-    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 
 
@@ -957,14 +1099,26 @@ message LoadTaskDataResponse {
 }
 
 
-// SendStateSuccessRequest 发送State 成功
-message SendStateSkipRequest {
-    // State id
-    int64 state_id = 1 [(validate.rules).int64 = {gt: 0}];;
+// SkipFailedStepRequest 跳过失败的步骤
+message SkipFailedStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
     // 下一个步骤名
     string next_state = 2;
     // output 当天步骤的输出
     string output = 3;
+}
+
+// UnblockTaskRequest 解除任务阻塞请求
+message UnblockTaskRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+
+// SkipBlockedTaskRequest 跳过阻塞任务请求
+message SkipBlockedTaskRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 
 // ErrorCode 错误码定义

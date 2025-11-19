@@ -237,6 +237,17 @@ const (
 	SkyflowV1Service_DescribeStep_FullMethodName                   = "/skyflow.SkyflowV1Service/DescribeStep"
 	SkyflowV1Service_ListStepEvents_FullMethodName                 = "/skyflow.SkyflowV1Service/ListStepEvents"
 	SkyflowV1Service_GetActivityTask_FullMethodName                = "/skyflow.SkyflowV1Service/GetActivityTask"
+	SkyflowV1Service_SendTaskSuccess_FullMethodName                = "/skyflow.SkyflowV1Service/SendTaskSuccess"
+	SkyflowV1Service_SendTaskFailure_FullMethodName                = "/skyflow.SkyflowV1Service/SendTaskFailure"
+	SkyflowV1Service_SendTaskHeartbeat_FullMethodName              = "/skyflow.SkyflowV1Service/SendTaskHeartbeat"
+	SkyflowV1Service_SendTaskReference_FullMethodName              = "/skyflow.SkyflowV1Service/SendTaskReference"
+	SkyflowV1Service_SkipFailedStep_FullMethodName                 = "/skyflow.SkyflowV1Service/SkipFailedStep"
+	SkyflowV1Service_UnblockTask_FullMethodName                    = "/skyflow.SkyflowV1Service/UnblockTask"
+	SkyflowV1Service_SkipBlockedTask_FullMethodName                = "/skyflow.SkyflowV1Service/SkipBlockedTask"
+	SkyflowV1Service_RetryFailedStep_FullMethodName                = "/skyflow.SkyflowV1Service/RetryFailedStep"
+	SkyflowV1Service_SendStepFailed_FullMethodName                 = "/skyflow.SkyflowV1Service/SendStepFailed"
+	SkyflowV1Service_RedoStep_FullMethodName                       = "/skyflow.SkyflowV1Service/RedoStep"
+	SkyflowV1Service_ResumeSuspendingStep_FullMethodName           = "/skyflow.SkyflowV1Service/ResumeSuspendingStep"
 )
 
 // SkyflowV1ServiceClient is the client API for SkyflowV1Service service.
@@ -296,8 +307,34 @@ type SkyflowV1ServiceClient interface {
 	// ListExecutionEvents 获得一个执行的Event列表
 	ListExecutionEvents(ctx context.Context, in *ListExecutionEventsRequest, opts ...grpc.CallOption) (*ListExecutionEventsResponse, error)
 	DescribeStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*DescribeStepResponse, error)
+	// ListStepEvents 获得一个执行的StepEvent列表
 	ListStepEvents(ctx context.Context, in *ListStepEventsRequest, opts ...grpc.CallOption) (*ListExecutionEventsResponse, error)
+	// GetActivityTask 获得一个需要执行的task
 	GetActivityTask(ctx context.Context, in *GetActivityTaskRequest, opts ...grpc.CallOption) (*GetActivityTaskResponse, error)
+	// SendTaskSuccess 发送task执行成功
+	SendTaskSuccess(ctx context.Context, in *SendTaskSuccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SendTaskFailure 发送task执行失败
+	SendTaskFailure(ctx context.Context, in *SendTaskFailureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SendTaskHeartbeat 发送task 执行心跳
+	SendTaskHeartbeat(ctx context.Context, in *SendTaskHeartbeatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SendTaskReference 发送task执行关联信息
+	SendTaskReference(ctx context.Context, in *SendTaskReferenceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SkipFailedStep 跳过失败的步骤
+	SkipFailedStep(ctx context.Context, in *SkipFailedStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UnblockTask 解锁阻塞任务
+	UnblockTask(ctx context.Context, in *UnblockTaskRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SkipBlockedTask 跳过阻塞任务
+	SkipBlockedTask(ctx context.Context, in *SkipBlockedTaskRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// RetryFailedStep 重试失败的步骤
+	RetryFailedStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SendStepFailed 强制Running步骤失败
+	SendStepFailed(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// RedoStep 强制重做一个步骤
+	// 不判断步骤状态，直接重做
+	RedoStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ResumeSuspendingStep 继续一个处于暂停状态的步骤，
+	// 需要 Step Type:Suspend, Status: Suspending
+	ResumeSuspendingStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type skyflowV1ServiceClient struct {
@@ -568,6 +605,116 @@ func (c *skyflowV1ServiceClient) GetActivityTask(ctx context.Context, in *GetAct
 	return out, nil
 }
 
+func (c *skyflowV1ServiceClient) SendTaskSuccess(ctx context.Context, in *SendTaskSuccessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SendTaskSuccess_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SendTaskFailure(ctx context.Context, in *SendTaskFailureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SendTaskFailure_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SendTaskHeartbeat(ctx context.Context, in *SendTaskHeartbeatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SendTaskHeartbeat_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SendTaskReference(ctx context.Context, in *SendTaskReferenceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SendTaskReference_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SkipFailedStep(ctx context.Context, in *SkipFailedStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SkipFailedStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) UnblockTask(ctx context.Context, in *UnblockTaskRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_UnblockTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SkipBlockedTask(ctx context.Context, in *SkipBlockedTaskRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SkipBlockedTask_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) RetryFailedStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_RetryFailedStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) SendStepFailed(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_SendStepFailed_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) RedoStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_RedoStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *skyflowV1ServiceClient) ResumeSuspendingStep(ctx context.Context, in *DescribeStepRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SkyflowV1Service_ResumeSuspendingStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SkyflowV1ServiceServer is the server API for SkyflowV1Service service.
 // All implementations must embed UnimplementedSkyflowV1ServiceServer
 // for forward compatibility.
@@ -625,8 +772,34 @@ type SkyflowV1ServiceServer interface {
 	// ListExecutionEvents 获得一个执行的Event列表
 	ListExecutionEvents(context.Context, *ListExecutionEventsRequest) (*ListExecutionEventsResponse, error)
 	DescribeStep(context.Context, *DescribeStepRequest) (*DescribeStepResponse, error)
+	// ListStepEvents 获得一个执行的StepEvent列表
 	ListStepEvents(context.Context, *ListStepEventsRequest) (*ListExecutionEventsResponse, error)
+	// GetActivityTask 获得一个需要执行的task
 	GetActivityTask(context.Context, *GetActivityTaskRequest) (*GetActivityTaskResponse, error)
+	// SendTaskSuccess 发送task执行成功
+	SendTaskSuccess(context.Context, *SendTaskSuccessRequest) (*emptypb.Empty, error)
+	// SendTaskFailure 发送task执行失败
+	SendTaskFailure(context.Context, *SendTaskFailureRequest) (*emptypb.Empty, error)
+	// SendTaskHeartbeat 发送task 执行心跳
+	SendTaskHeartbeat(context.Context, *SendTaskHeartbeatRequest) (*emptypb.Empty, error)
+	// SendTaskReference 发送task执行关联信息
+	SendTaskReference(context.Context, *SendTaskReferenceRequest) (*emptypb.Empty, error)
+	// SkipFailedStep 跳过失败的步骤
+	SkipFailedStep(context.Context, *SkipFailedStepRequest) (*emptypb.Empty, error)
+	// UnblockTask 解锁阻塞任务
+	UnblockTask(context.Context, *UnblockTaskRequest) (*emptypb.Empty, error)
+	// SkipBlockedTask 跳过阻塞任务
+	SkipBlockedTask(context.Context, *SkipBlockedTaskRequest) (*emptypb.Empty, error)
+	// RetryFailedStep 重试失败的步骤
+	RetryFailedStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	// SendStepFailed 强制Running步骤失败
+	SendStepFailed(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	// RedoStep 强制重做一个步骤
+	// 不判断步骤状态，直接重做
+	RedoStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	// ResumeSuspendingStep 继续一个处于暂停状态的步骤，
+	// 需要 Step Type:Suspend, Status: Suspending
+	ResumeSuspendingStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedSkyflowV1ServiceServer()
 }
 
@@ -714,6 +887,39 @@ func (UnimplementedSkyflowV1ServiceServer) ListStepEvents(context.Context, *List
 }
 func (UnimplementedSkyflowV1ServiceServer) GetActivityTask(context.Context, *GetActivityTaskRequest) (*GetActivityTaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetActivityTask not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SendTaskSuccess(context.Context, *SendTaskSuccessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTaskSuccess not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SendTaskFailure(context.Context, *SendTaskFailureRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTaskFailure not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SendTaskHeartbeat(context.Context, *SendTaskHeartbeatRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTaskHeartbeat not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SendTaskReference(context.Context, *SendTaskReferenceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendTaskReference not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SkipFailedStep(context.Context, *SkipFailedStepRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SkipFailedStep not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) UnblockTask(context.Context, *UnblockTaskRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnblockTask not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SkipBlockedTask(context.Context, *SkipBlockedTaskRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SkipBlockedTask not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) RetryFailedStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetryFailedStep not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) SendStepFailed(context.Context, *DescribeStepRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendStepFailed not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) RedoStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RedoStep not implemented")
+}
+func (UnimplementedSkyflowV1ServiceServer) ResumeSuspendingStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResumeSuspendingStep not implemented")
 }
 func (UnimplementedSkyflowV1ServiceServer) mustEmbedUnimplementedSkyflowV1ServiceServer() {}
 func (UnimplementedSkyflowV1ServiceServer) testEmbeddedByValue()                          {}
@@ -1204,6 +1410,204 @@ func _SkyflowV1Service_GetActivityTask_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SkyflowV1Service_SendTaskSuccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTaskSuccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SendTaskSuccess(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SendTaskSuccess_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SendTaskSuccess(ctx, req.(*SendTaskSuccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SendTaskFailure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTaskFailureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SendTaskFailure(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SendTaskFailure_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SendTaskFailure(ctx, req.(*SendTaskFailureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SendTaskHeartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTaskHeartbeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SendTaskHeartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SendTaskHeartbeat_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SendTaskHeartbeat(ctx, req.(*SendTaskHeartbeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SendTaskReference_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendTaskReferenceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SendTaskReference(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SendTaskReference_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SendTaskReference(ctx, req.(*SendTaskReferenceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SkipFailedStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SkipFailedStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SkipFailedStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SkipFailedStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SkipFailedStep(ctx, req.(*SkipFailedStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_UnblockTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnblockTaskRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).UnblockTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_UnblockTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).UnblockTask(ctx, req.(*UnblockTaskRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SkipBlockedTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SkipBlockedTaskRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SkipBlockedTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SkipBlockedTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SkipBlockedTask(ctx, req.(*SkipBlockedTaskRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_RetryFailedStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).RetryFailedStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_RetryFailedStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).RetryFailedStep(ctx, req.(*DescribeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_SendStepFailed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).SendStepFailed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_SendStepFailed_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).SendStepFailed(ctx, req.(*DescribeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_RedoStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).RedoStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_RedoStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).RedoStep(ctx, req.(*DescribeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SkyflowV1Service_ResumeSuspendingStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SkyflowV1ServiceServer).ResumeSuspendingStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SkyflowV1Service_ResumeSuspendingStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SkyflowV1ServiceServer).ResumeSuspendingStep(ctx, req.(*DescribeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SkyflowV1Service_ServiceDesc is the grpc.ServiceDesc for SkyflowV1Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1314,6 +1718,50 @@ var SkyflowV1Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetActivityTask",
 			Handler:    _SkyflowV1Service_GetActivityTask_Handler,
+		},
+		{
+			MethodName: "SendTaskSuccess",
+			Handler:    _SkyflowV1Service_SendTaskSuccess_Handler,
+		},
+		{
+			MethodName: "SendTaskFailure",
+			Handler:    _SkyflowV1Service_SendTaskFailure_Handler,
+		},
+		{
+			MethodName: "SendTaskHeartbeat",
+			Handler:    _SkyflowV1Service_SendTaskHeartbeat_Handler,
+		},
+		{
+			MethodName: "SendTaskReference",
+			Handler:    _SkyflowV1Service_SendTaskReference_Handler,
+		},
+		{
+			MethodName: "SkipFailedStep",
+			Handler:    _SkyflowV1Service_SkipFailedStep_Handler,
+		},
+		{
+			MethodName: "UnblockTask",
+			Handler:    _SkyflowV1Service_UnblockTask_Handler,
+		},
+		{
+			MethodName: "SkipBlockedTask",
+			Handler:    _SkyflowV1Service_SkipBlockedTask_Handler,
+		},
+		{
+			MethodName: "RetryFailedStep",
+			Handler:    _SkyflowV1Service_RetryFailedStep_Handler,
+		},
+		{
+			MethodName: "SendStepFailed",
+			Handler:    _SkyflowV1Service_SendStepFailed_Handler,
+		},
+		{
+			MethodName: "RedoStep",
+			Handler:    _SkyflowV1Service_RedoStep_Handler,
+		},
+		{
+			MethodName: "ResumeSuspendingStep",
+			Handler:    _SkyflowV1Service_ResumeSuspendingStep_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/cachemap"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/cache"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/domain"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
@@ -34,12 +35,18 @@ func NewExecutionService(
 	InnerQueue queue.InnerMessageQueue,
 	Exporter exporter.ExporterService,
 ) ExecutionService {
+
+	//
+	cm := cachemap.NewCacheMap()
+	cacheService := cache.NewTaskCacheService(cm)
+
 	var svc = &executionService{
 		MetaDB:        MetaDB,
 		InnerQueue:    InnerQueue,
 		Exporter:      Exporter,
 		LockService:   lock.NewDBLockService(MetaDB),
 		DomainService: domain.DefaultDomainService,
+		CacheService:  cacheService,
 	}
 	//binding executor
 	StandardExecutor.ExecutionService = svc
@@ -47,6 +54,7 @@ func NewExecutionService(
 	svc.StandardExecutor = StandardExecutor
 	svc.ExpressExecutor = ExpressExecutor
 
+	go svc.RefreshCacheMap()
 	return svc
 }
 

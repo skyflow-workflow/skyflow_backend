@@ -290,7 +290,8 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务管理
+                - 任务操作
+            description: GetActivityTask 获得一个需要执行的task
             operationId: SkyflowV1Service_GetActivityTask
             requestBody:
                 content:
@@ -428,6 +429,7 @@ paths:
             tags:
                 - SkyflowV1Service
                 - 任务管理
+            description: ListStepEvents 获得一个执行的StepEvent列表
             operationId: SkyflowV1Service_ListStepEvents
             requestBody:
                 content:
@@ -502,6 +504,180 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/skyflow.PingResponse'
+    /api/v1/RedoStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: |-
+                RedoStep 强制重做一个步骤
+                 不判断步骤状态，直接重做
+            operationId: SkyflowV1Service_RedoStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/ResumeSuspendingStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: |-
+                ResumeSuspendingStep 继续一个处于暂停状态的步骤，
+                 需要 Step Type:Suspend, Status: Suspending
+            operationId: SkyflowV1Service_ResumeSuspendingStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendStepFailed:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendStepFailed 强制Running步骤失败
+            operationId: SkyflowV1Service_SendStepFailed
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendStepRetry:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: RetryFailedStep 重试失败的步骤
+            operationId: SkyflowV1Service_RetryFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendTaskFailure:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskFailure 发送task执行失败
+            operationId: SkyflowV1Service_SendTaskFailure
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SendTaskFailureRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendTaskHeartbeat:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskHeartbeat 发送task 执行心跳
+            operationId: SkyflowV1Service_SendTaskHeartbeat
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SendTaskHeartbeatRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendTaskReference:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskReference 发送task执行关联信息
+            operationId: SkyflowV1Service_SendTaskReference
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SendTaskReferenceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SendTaskSuccess:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskSuccess 发送task执行成功
+            operationId: SkyflowV1Service_SendTaskSuccess
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SendTaskSuccessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SkipBlockedTask:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SkipBlockedTask 跳过阻塞任务
+            operationId: SkyflowV1Service_SkipBlockedTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SkipBlockedTaskRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/SkipFailedStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SkipFailedStep 跳过失败的步骤
+            operationId: SkyflowV1Service_SkipFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.SkipFailedStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /api/v1/StartExecution:
         post:
             tags:
@@ -536,6 +712,23 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/skyflow.StopExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/UnblockTask:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: UnblockTask 解锁阻塞任务
+            operationId: SkyflowV1Service_UnblockTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.UnblockTaskRequest'
                 required: true
             responses:
                 "200":
@@ -857,6 +1050,10 @@ components:
                 activityUri:
                     type: string
                     description: task uri
+                timeoutSeconds:
+                    type: integer
+                    description: timeout_seconds
+                    format: int32
             description: GetActivityTaskRequest 通过URI查询是否有一个需要执行的task
         skyflow.GetActivityTaskResponse:
             type: object
@@ -1102,12 +1299,9 @@ components:
         skyflow.ParseStateMachineResponse:
             type: object
             properties:
-                type:
+                bone:
                     type: string
-                    description: statemachine type
-                definition:
-                    type: string
-                    description: flow 详细定义
+                    description: statemachine bone
             description: ParseStateMachineResponse 解析一个状态机返回结构
         skyflow.PingResponse:
             type: object
@@ -1120,6 +1314,71 @@ components:
                     type: string
                     description: 异常信息说明
             description: PingResponse ping返回
+        skyflow.SendTaskFailureRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                error:
+                    type: string
+                    description: error 错误类型，用来匹配异常
+                cause:
+                    type: string
+                    description: cause， error的文本描述
+            description: SendTaskFailureRequest 发送task 失败
+        skyflow.SendTaskHeartbeatRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                message:
+                    type: string
+                    description: task 可以附带的message
+            description: SendTaskHeartbeatRequest 发送task 心跳
+        skyflow.SendTaskReferenceRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                title:
+                    type: string
+                    description: task 关联的链接描述
+                url:
+                    type: string
+                    description: task关联的链接url
+        skyflow.SendTaskSuccessRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                output:
+                    type: string
+                    description: output task 执行的output， json 类型
+            description: SendTaskSuccessRequest 发送task 成功
+        skyflow.SkipBlockedTaskRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: SkipBlockedTaskRequest 跳过阻塞任务请求
+        skyflow.SkipFailedStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                nextState:
+                    type: string
+                    description: 下一个步骤名
+                output:
+                    type: string
+                    description: output 当天步骤的输出
+            description: SkipFailedStepRequest 跳过失败的步骤
         skyflow.StartExecutionRequest:
             type: object
             properties:
@@ -1227,6 +1486,13 @@ components:
                     type: string
                     description: cause， error的文本描述， 可选
             description: 终止一个执行
+        skyflow.UnblockTaskRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: UnblockTaskRequest 解除任务阻塞请求
         skyflow.UpdateStateMachineRequest:
             type: object
             properties:
