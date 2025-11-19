@@ -5,9 +5,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/stepfunction"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/stepfunction"
 )
 
 // Parser parser configuration for workflow definitions
@@ -29,11 +29,11 @@ func ValidateStateMachine(definition string) error {
 	if definition == "" {
 		return fmt.Errorf("definition cannot be empty")
 	}
-	
+
 	if StandardParser == nil {
 		return fmt.Errorf("StandardParser is not initialized")
 	}
-	
+
 	// Validate the state machine
 	_, err := StandardParser.ParseStateMachine(definition)
 	if err != nil {
@@ -64,7 +64,7 @@ func (parser *Parser) ParseState(definition string) (states.State, error) {
 	if definition == "" {
 		return nil, fmt.Errorf("definition cannot be empty")
 	}
-	
+
 	// Parse the step definition
 	state, err := parser.stepfunctionDecoder.DecodeStateDefinition(context.Background(), definition)
 	return state, err
@@ -75,11 +75,11 @@ func ParseStateMachine(definition string) (*states.StateMachine, error) {
 	if definition == "" {
 		return nil, fmt.Errorf("definition cannot be empty")
 	}
-	
+
 	if StandardParser == nil {
 		return nil, fmt.Errorf("StandardParser is not initialized")
 	}
-	
+
 	return StandardParser.ParseStateMachine(definition)
 }
 
@@ -88,11 +88,11 @@ func ParseState(definition string) (states.State, error) {
 	if definition == "" {
 		return nil, fmt.Errorf("definition cannot be empty")
 	}
-	
+
 	if StandardParser == nil {
 		return nil, fmt.Errorf("StandardParser is not initialized")
 	}
-	
+
 	return StandardParser.ParseState(definition)
 }
 
@@ -101,7 +101,7 @@ func GenerateActivityURI(namespace string, activityName string) string {
 	if StandardParser == nil {
 		return ""
 	}
-	
+
 	return StandardParser.GenerateActivityURI(namespace, activityName)
 }
 
@@ -110,6 +110,6 @@ func GenerateStateMachineURI(namespace string, stateMachineName string) string {
 	if StandardParser == nil {
 		return ""
 	}
-	
+
 	return StandardParser.GenerateStateMachineURI(namespace, stateMachineName)
 }

@@ -3,7 +3,7 @@ package pberror
 import (
 	"fmt"
 
-	v1pb "github.com/skyflow-workflow/skyflow_backbend/api/v1"
+	v1pb "github.com/skyflow-workflow/skyflow_backend/api/v1"
 )
 
 type PBError struct {

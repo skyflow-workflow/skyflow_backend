@@ -1,4 +1,4 @@
-module github.com/skyflow-workflow/skyflow_backbend
+module github.com/skyflow-workflow/skyflow_backend
 
 go 1.24.6
 

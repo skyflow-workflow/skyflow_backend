@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 var TimeFormatCommon = "2006-01-02 15:04:05"

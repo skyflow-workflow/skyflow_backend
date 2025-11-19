@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 
 	tconfig "trpc.group/trpc-go/trpc-go/config"
 )

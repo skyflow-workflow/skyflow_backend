@@ -10,9 +10,9 @@ import (
 	"github.com/goodaye/wire"
 	"github.com/mmtbak/microlibrary/limiter"
 	"github.com/panjf2000/ants/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/executor"
 )
 
 // DispatcherService  message dispatcher

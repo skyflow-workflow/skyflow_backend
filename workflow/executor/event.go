@@ -10,7 +10,7 @@ package executor
 import (
 	"time"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 // ExecutionEvent event结构

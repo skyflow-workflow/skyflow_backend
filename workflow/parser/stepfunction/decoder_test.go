@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
 )
 
 func TestParserStateMachine(t *testing.T) {

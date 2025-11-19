@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
 )
 
 func TestCreateInnerQueueGroup(t *testing.T) {

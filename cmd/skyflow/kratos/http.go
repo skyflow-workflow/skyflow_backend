@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/go-kratos/kratos/v2/errors"
-	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/pberror"
+	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/pberror"
 )
 
 // Response Http服务返回通用结构

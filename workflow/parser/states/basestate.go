@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 // BaseState is a struct that defines the base state of a state machine, with default values

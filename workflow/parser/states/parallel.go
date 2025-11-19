@@ -3,7 +3,7 @@ package states
 import (
 	"fmt"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 /*

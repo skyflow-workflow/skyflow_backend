@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/expression/stepfunction"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/expression/stepfunction"
 )
 
 func TestValidateParsedChoice(t *testing.T) {

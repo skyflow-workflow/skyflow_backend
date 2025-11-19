@@ -1,6 +1,6 @@
 package states
 
-import "github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
+import "github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 
 // PassBody ...
 type PassBody struct {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 var (

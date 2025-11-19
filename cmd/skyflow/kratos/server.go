@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/skyflow-workflow/skyflow_backbend/internal/conf"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/internal/conf"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"

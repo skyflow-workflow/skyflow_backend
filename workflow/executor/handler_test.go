@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"gopkg.in/go-playground/assert.v1"
 )
 

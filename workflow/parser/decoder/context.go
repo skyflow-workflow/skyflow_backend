@@ -3,7 +3,7 @@ package decoder
 import (
 	"context"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 )
 
 // DecoderPath ...

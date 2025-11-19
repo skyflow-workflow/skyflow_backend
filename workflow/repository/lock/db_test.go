@@ -9,8 +9,8 @@ import (
 
 	"github.com/go-playground/assert/v2"
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 var dbClient *rdb.DBClient

@@ -6,9 +6,9 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	v1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
-	"github.com/skyflow-workflow/skyflow_backbend/server/apiserver"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	v1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/server/apiserver"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 
 	"github.com/go-kratos/kratos/v2/log"
 )

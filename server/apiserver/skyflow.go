@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

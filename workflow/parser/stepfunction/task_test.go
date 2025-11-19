@@ -7,8 +7,8 @@ import (
 	"github.com/go-playground/assert/v2"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 )
 
 func TestDecodeTask(t *testing.T) {

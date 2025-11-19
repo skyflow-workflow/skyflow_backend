@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 // HeaderFieldNames ...

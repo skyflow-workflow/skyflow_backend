@@ -3,10 +3,10 @@ package stepfunction
 import (
 	"context"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/decoder"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 )
 
 // StepFunctionDecoder decodes AWS Step Functions JSON definitions

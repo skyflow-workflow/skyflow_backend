@@ -6,9 +6,9 @@ import (
 
 	"github.com/go-playground/assert/v2"
 	"github.com/mmtbak/microlibrary/paging"
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 var DefaultExporterConfig = &config.ExporterConfig{

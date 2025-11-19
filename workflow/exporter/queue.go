@@ -4,7 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/mmtbak/microlibrary/mq"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 var (

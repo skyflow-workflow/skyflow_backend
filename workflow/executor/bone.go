@@ -1,6 +1,6 @@
 package executor
 
-import "github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
+import "github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 
 // Bone is the base struct of ExecutionStep, Bone is used for draw the workflow graph.
 

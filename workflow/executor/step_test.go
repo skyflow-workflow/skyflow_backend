@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 func TestGetBone(t *testing.T) {

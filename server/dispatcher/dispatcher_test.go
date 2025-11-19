@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 )
 
 func TestCreateDispatcherService(t *testing.T) {

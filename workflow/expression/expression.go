@@ -1,7 +1,7 @@
 // package expression show how to evaluate a boolean expression in workflow
 package expression
 
-import "github.com/skyflow-workflow/skyflow_backbend/workflow/expression/stepfunction"
+import "github.com/skyflow-workflow/skyflow_backend/workflow/expression/stepfunction"
 
 // BooleanExpression is a interface for boolean expression evaluator
 type BooleanExpression interface {
