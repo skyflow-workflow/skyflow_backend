@@ -9,14 +9,14 @@ import (
 func TestPassGetResult(t *testing.T) {
 	testcases := []struct {
 		name          string
-		state         *Pass
+		state         *PassState
 		input         any
 		expected      any
 		expectedError error
 	}{
 		{
 			name: "test simple pass",
-			state: &Pass{
+			state: &PassState{
 				BaseState: &BaseState{
 					Name: "test",
 				},
@@ -38,7 +38,7 @@ func TestPassGetResult(t *testing.T) {
 		},
 		{
 			name: "test pass with parameters",
-			state: &Pass{
+			state: &PassState{
 				BaseState: &BaseState{
 					Name: "test",
 				},
@@ -71,4 +71,28 @@ func TestPassGetResult(t *testing.T) {
 			assert.Equal(t, result, tc.expected)
 		})
 	}
+}
+
+func TestPass_GetDefinition(t *testing.T) {
+
+	rawdata := `
+	{
+		"Type": "Pass",
+		"Result": {
+		  "result_key1.$": "$.input_key1",
+		  "result_key2.$": "$.input_key2"
+		},
+		"ResultPath": "$.result",
+		"Next": "NextState"
+	  }
+	`
+	expect := "{\"Type\":\"Pass\",\"OutputPath\":\"$\",\"ResultPath\":\"$.result\",\"MaxExecuteTimes\":1000,\"Next\":\"NextState\",\"Result\":{\"result_key1.$\":\"$.input_key1\",\"result_key2.$\":\"$.input_key2\"}}"
+	state, err := NewPassStateFromString(rawdata)
+	if err != nil {
+		t.Fatal(err)
+	}
+	def, err := state.GetDefinition()
+	assert.Equal(t, err, nil)
+	assert.Equal(t, def, expect)
+
 }

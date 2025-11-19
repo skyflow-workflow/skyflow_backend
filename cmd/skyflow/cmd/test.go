@@ -28,12 +28,12 @@ var testCmd = &cobra.Command{
 }
 
 func CheckConfig() error {
-	if trpc_conf != "" {
-		trpc.ServerConfigPath = trpc_conf // Set the TRPC server configuration path
+	if frame_conf != "" {
+		trpc.ServerConfigPath = frame_conf // Set the TRPC server configuration path
 	}
-	_, err := trpc.LoadConfig(trpc_conf)
+	_, err := trpc.LoadConfig(frame_conf)
 	if err != nil {
-		slog.Error("Error loading TRPC server configuration", "error", err, "configPath", trpc_conf)
+		slog.Error("Error loading TRPC server configuration", "error", err, "configPath", frame_conf)
 		return err
 	}
 	_ = trpc.NewServer()

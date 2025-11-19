@@ -1,7 +1,10 @@
 package executor
 
+//query data for executor
+
 import (
 	"fmt"
+	"log/slog"
 
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -9,12 +12,16 @@ import (
 )
 
 // QueryStepByID
-func (executor *Executor) QueryStepByID(step_id int, fields []string, session rdb.Tx) (*po.Step, error) {
+func (svc *executionService) QueryStepByID(step_id int, fields []string, session rdb.Tx) (*po.Step, error) {
 
 	var dbStep po.Step
 	var err error
+	slog.Debug("QueryStepByID",
+		"step_id", step_id,
+		"fields", fields,
+	)
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {
@@ -28,10 +35,10 @@ func (executor *Executor) QueryStepByID(step_id int, fields []string, session rd
 }
 
 // QueryStepIDByTaskToken 使用tasktoken 查询step id,
-func (executor *Executor) QueryStepIDByTaskToken(tasktoken string, session rdb.Tx) (step_id int, err error) {
+func (svc *executionService) QueryStepIDByTaskToken(tasktoken string, session rdb.Tx) (step_id int, err error) {
 
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	err = tx.Model(new(po.TaskToken)).Where(po.TaskToken{Token: tasktoken, IsDeleted: false}).Select("step_id").Take(&step_id).Error
@@ -46,11 +53,11 @@ func (executor *Executor) QueryStepIDByTaskToken(tasktoken string, session rdb.T
 }
 
 // QueryExecutionByID
-func (executor *Executor) QueryExecutionByID(execution_id int, fields []string, session rdb.Tx) (*po.Execution, error) {
+func (svc *executionService) QueryExecutionByID(execution_id int, fields []string, session rdb.Tx) (*po.Execution, error) {
 	var dbExe po.Execution
 	var err error
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {
@@ -64,11 +71,11 @@ func (executor *Executor) QueryExecutionByID(execution_id int, fields []string, 
 }
 
 // QueryExecutionByUUID
-func (executor *Executor) QueryExecutionByUUID(uuid string, fields []string, session rdb.Tx) (*po.Execution, error) {
+func (svc *executionService) QueryExecutionByUUID(uuid string, fields []string, session rdb.Tx) (*po.Execution, error) {
 	var dbExe po.Execution
 	var err error
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {
@@ -82,12 +89,12 @@ func (executor *Executor) QueryExecutionByUUID(uuid string, fields []string, ses
 }
 
 // QueryStepGroupByStepID
-func (executor *Executor) QueryStepGroupByStepID(step_id int, session rdb.Tx) (*po.StepGroup, error) {
+func (svc *executionService) QueryStepGroupByStepID(step_id int, session rdb.Tx) (*po.StepGroup, error) {
 	var dbStepgroup po.StepGroup
 	var err error
 
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	// stategroup 字段少，不需要判断field
@@ -99,12 +106,12 @@ func (executor *Executor) QueryStepGroupByStepID(step_id int, session rdb.Tx) (*
 }
 
 // QueryStepGroupByStepID
-func (executor *Executor) QueryStepGroupBySubGroupID(execution_id int, subgroup_id int, session rdb.Tx) (*po.StepGroup, error) {
+func (svc *executionService) QueryStepGroupBySubGroupID(execution_id int, subgroup_id int, session rdb.Tx) (*po.StepGroup, error) {
 	var dbStepgroup po.StepGroup
 	var err error
 
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 
@@ -118,11 +125,11 @@ func (executor *Executor) QueryStepGroupBySubGroupID(execution_id int, subgroup_
 	return &dbStepgroup, err
 }
 
-func (executor *Executor) QueryStepUserData(step_id int, fields []string, session rdb.Tx) (*po.UserStepData, error) {
+func (svc *executionService) QueryStepUserData(step_id int, fields []string, session rdb.Tx) (*po.UserStepData, error) {
 	var dbUserData po.UserStepData
 	var err error
 	// 增加控制session
-	tx, maker := executor.MetaDB.NewTxMaker(session)
+	tx, maker := svc.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 	// 判断字段
 	if len(fields) != 0 {

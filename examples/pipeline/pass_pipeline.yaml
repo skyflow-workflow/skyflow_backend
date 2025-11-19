@@ -1,0 +1,70 @@
+Version : v1
+Type: "pipeline"
+
+# stages 所有阶段
+Stages:
+  - Name: 任务准备阶段
+    Comment: "主要完成任务的准备工作,发送信息等"
+    # stage的所有job
+    Jobs:
+      - Name: 任务准备
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: 发送通知消息给任务发起人
+            Comment: "发送通知消息给任务发起人, 提醒"
+            Type: "Pass"
+          - Name: 人工确认审批1
+            Type: Pass
+            Resource: "seed/send_im_message"
+          - Name: 等一会
+            Comment: "等一段时间"
+            Type: "Pass"
+          - Name: 人工确认审批2
+            Type: Pass
+            Resource: "seed/send_im_message"
+
+  - Name: 全量集群发布
+    Jobs:
+      - Name: 集群2的全量发布
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: 修改网关配置
+            Type: Pass
+            Resource: "seed/send_im_message"
+            Parameters:
+              cluster: "$.clusters.cluster2.hostlist"
+
+          - Name: 通知业务观察
+            Type: Pass
+            resource : "activity:seed/send_hook"
+            Parameters:
+              app_id: "$.app.id"
+              cluster_id: "$.clusters.cluster2.id"
+      - Name: 集群3的全量发布
+        Steps:
+          - Name: 修改网关配置
+            Type: Pass
+            resource : "activity:seed/changeweight"
+            Parameters:
+              cluster: "$.clusters.cluster3.hostlist"
+
+          - Name: 通知业务观察
+            Type: Pass
+            resource : "activity:seed/send_hook"
+            Parameters:
+              app_id: "$.app.id"
+              cluster_id: "$.clusters.cluster3.id"
+
+  - Name : 发布结束阶段4
+    Jobs:
+      - Name: "通知业务发布完成"
+        Steps:
+          - Name: "发送通知"
+            Type: "Pass"
+            Resource: "seed/send_im_message"
+            Parameters:
+              receivers : "$.actor"
+              chat_id: "$.chat_id"
+              content: |
+                准备发起seed变更任务,请悉知, {{$.order.url}}
+

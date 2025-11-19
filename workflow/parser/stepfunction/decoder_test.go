@@ -43,7 +43,7 @@ func TestParserStateMachine(t *testing.T) {
 			t.Log("Parsing File:", filepath)
 			filecontent, err := os.ReadFile(filepath)
 			assert.Equal(t, err, nil)
-			decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
+			decoder := NewStepFunctionDecoder(&config.StandardExecutorConfig)
 			_, err = decoder.Decode(string(filecontent))
 			if err != nil {
 				t.Logf("Error parsing file: %s", err)

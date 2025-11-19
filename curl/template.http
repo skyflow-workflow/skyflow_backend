@@ -27,7 +27,7 @@ Content-Type: {{contentType}}
 
 ### ListNamespaces
 POST  {{host}}/api/v1/ListNamespaces
-Accept: application/json
+Content-Type: {{contentType}}
 
 {
     "page_request": {
@@ -62,18 +62,28 @@ Content-Type: application/json
 
 ### ListActivities
 POST  {{host}}/api/v1/ListActivities
-Accept: application/json
+Content-Type: application/json
 
 {
     "namespace": "example-namespace"
 }
 
 
-
-
 ### GetEvents
 POST http://127.0.0.1:8080/api/v1/ListActivities/namespace
-Accept: application/json
+Content-Type: application/json
+
 {
     "namespace": "namespace"
+}
+
+### CreateStateMachine
+POST  {{host}}/api/v1/CreateStateMachine
+Content-Type: {{contentType}}
+
+{
+  "name": "example-state-machine",
+  "description": "This is a state machine to test the functionality",
+  "namespace": "example-namespace",
+  "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
 }

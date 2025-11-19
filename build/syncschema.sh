@@ -1,0 +1,1 @@
+./bin/skyflow syncschema --framework_config=./kratos_config.yaml  --skyflow_config=./skyflow.yaml

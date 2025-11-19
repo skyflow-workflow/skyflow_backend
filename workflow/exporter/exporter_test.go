@@ -6,17 +6,22 @@ import (
 
 	"github.com/go-playground/assert/v2"
 	"github.com/mmtbak/microlibrary/paging"
+	"github.com/skyflow-workflow/skyflow_backbend/config"
 	"github.com/skyflow-workflow/skyflow_backbend/mock"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
+var DefaultExporterConfig = &config.ExporterConfig{
+	CacheSizeMB:    10,
+	CacheTTLSecond: 30 * 60,
+}
+
 func TestSendEvents(t *testing.T) {
 	var err error
 	var myExporter *exporterService
-	client := mock.GetMockDBClient()
-	dbLis := NewDBListener(client)
+	dbClient := mock.GetMockDBClient()
 
-	myExporter, err = NewExporterService(dbLis)
+	myExporter, err = NewExporterService(dbClient, DefaultExporterConfig)
 	assert.Equal(t, err, nil)
 	err = myExporter.SyncSchema()
 	assert.Equal(t, err, nil)
@@ -44,9 +49,8 @@ func TestListExecutionEvents(t *testing.T) {
 	var err error
 	var myExporter *exporterService
 	client := mock.GetMockDBClient()
-	dbLis := NewDBListener(client)
 
-	myExporter, err = NewExporterService(dbLis)
+	myExporter, err = NewExporterService(client, DefaultExporterConfig)
 	assert.Equal(t, err, nil)
 	err = myExporter.SyncSchema()
 	assert.Equal(t, err, nil)
@@ -69,10 +73,9 @@ func TestListExecutionEvents(t *testing.T) {
 func TestListStepEvents(t *testing.T) {
 	var err error
 	var myExporter *exporterService
-	client := mock.GetMockDBClient()
-	dbLis := NewDBListener(client)
+	dbClient := mock.GetMockDBClient()
 
-	myExporter, err = NewExporterService(dbLis)
+	myExporter, err = NewExporterService(dbClient, DefaultExporterConfig)
 	assert.Equal(t, err, nil)
 	err = myExporter.SyncSchema()
 	assert.Equal(t, err, nil)

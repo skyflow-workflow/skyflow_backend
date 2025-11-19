@@ -26,6 +26,66 @@ type BaseState struct {
 	Catch           any    `json:"Catch,omitempty"`
 }
 
+func NewDefautBaseState() *BaseState {
+
+	bs := &BaseState{
+		InputPath:  "",
+		OutputPath: "$",
+		Next:       "",
+		ResultPath: "",
+		Parameters: nil,
+		// default MaxExecuteTimes = 1000 suitable for most cases
+		MaxExecuteTimes: 1000,
+		End:             false,
+	}
+	return bs
+}
+
+// NewBaseStateFromMap NewState from MapData
+func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
+
+	var err error
+	err = ValidateStateFieldOptional(data)
+	if err != nil {
+		return nil, err
+	}
+	bs := NewDefautBaseState()
+	err = InitBaseState(bs, data)
+	if err != nil {
+		return nil, err
+	}
+	err = bs.Init()
+	if err != nil {
+		return nil, err
+	}
+	return bs, err
+}
+
+// NewBaseStateFromString  New State From  String
+func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
+	data, err := StringToMap(definition)
+	if err != nil {
+		return
+	}
+	bs, err = NewBaseStateFromMap(data)
+	return
+}
+
+func InitBaseState(bs *BaseState, data map[string]interface{}) error {
+
+	err := DecodeMapToStruct(data, bs)
+	if err != nil {
+		return err
+	}
+
+	err = myvalidate.Struct(bs)
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
 // GetName ...
 func (s *BaseState) GetName() string {
 	return s.Name
@@ -39,6 +99,17 @@ func (s *BaseState) SetName(name string) {
 // GetType ...
 func (s *BaseState) GetType() string {
 	return s.Type
+}
+
+func (s *BaseState) IsEnd() bool {
+	return s.End
+}
+
+func (s *BaseState) GetNext() []string {
+	if s.Next == "" {
+		return []string{}
+	}
+	return []string{s.Next}
 }
 
 // Validate ...
@@ -160,6 +231,13 @@ func (s *BaseState) GetParametersInput(input any) (any, error) {
 		}
 	}
 	return result, nil
+}
+
+// GetInput Get State Real Input by InputData
+// inpupt , origin input,
+// output state input using inputpath , parameters
+func (s *BaseState) GetInput(input any) (any, error) {
+	return s.GetParametersInput(input)
 }
 
 // GenParameters calculate parameters by input data  and parameters
@@ -338,7 +416,8 @@ func ValidateStateFieldOptional(data map[string]any) error {
 	// check nextend
 	// if nextend is deny , next and end should be nil
 	// if nextend is required , one of next or end is not nil and other is nil
-	if stateRequired.NextEnd == FiledRequiredLevel.Deny {
+	switch stateRequired.NextEnd {
+	case FiledRequiredLevel.Deny:
 		if data[StateFieldNames.Next] != nil {
 			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.Next),
 				StateFieldNames.Next)
@@ -347,7 +426,7 @@ func ValidateStateFieldOptional(data map[string]any) error {
 			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.End),
 				StateFieldNames.End)
 		}
-	} else if stateRequired.NextEnd == FiledRequiredLevel.Required {
+	case FiledRequiredLevel.Required:
 		// one of next or end is not nil and other is nil
 		if data[StateFieldNames.Next] == nil && data[StateFieldNames.End] == nil {
 			return NewFieldPathError(fmt.Errorf("%w: %s or %s", ErrorLackOfRequiredField,

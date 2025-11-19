@@ -2,7 +2,6 @@ package decoder
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
@@ -33,22 +32,6 @@ func NewCommonDecoder() *CommonDecoder {
 // Decode ...
 func (decoder *CommonDecoder) Decode(definition string) (*states.StateMachine, error) {
 	return nil, nil
-}
-
-// JSONUnmarshal unmarshal the json string to the target object
-func (decoder *CommonDecoder) JSONUnmarshal(data string, v any) error {
-	err := myJson.Unmarshal([]byte(data), v)
-	if err != nil {
-		if jsonerr, ok := err.(*json.SyntaxError); ok {
-			newerr := &states.FieldError{
-				RawError: err,
-				Offset:   jsonerr.Offset,
-			}
-			return newerr
-		}
-		return err
-	}
-	return nil
 }
 
 // MapDecode decode the map to the target object

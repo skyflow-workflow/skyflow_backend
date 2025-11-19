@@ -20,11 +20,18 @@ type APIConfig struct {
 }
 
 type DispatcherConfig struct {
-	MaxConcurrency int `yaml:"max_concurrency"`
-	MaxQueueSize   int `yaml:"max_queue_size"`
+	MaxConcurrency int  `yaml:"max_concurrency"`
+	MaxQueueSize   int  `yaml:"max_queue_size"`
+	Debug          bool `yaml:"debug"`
 }
 
 type ExporterConfig struct {
+	// Cache Execution Size
+	CacheSizeMB int `yaml:"cache_size"`
+	// Cache TTL in seconds
+	CacheTTLSecond int `yaml:"cache_ttl_second"`
+	// PoolSize is the size of the worker pool for exporting events.
+	PoolSize int `yaml:"pool_size"`
 	// Listeners is a list of URIs where the exporter will send workflow event data.
 	// supported formats (including formats future will support):
 	// for mysql "mysql://user:password@tcp(host:port)/dbname",

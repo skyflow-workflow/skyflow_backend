@@ -5,7 +5,7 @@ import (
 	"context"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
+	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/pberror"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
@@ -56,7 +56,7 @@ func (svc *templateService) CreateNamespace(ctx context.Context, req vo.CreateNa
 
 	if ns.ID != 0 {
 		// namespace already exists
-		err = pberror.NewPBError(pb.ErrorCode_NameSpaceAlreadyExists, "namespace: "+req.Name+" already exists")
+		err = pberror.NewPBError(pbv1.ErrorCode_NameSpaceAlreadyExists, "namespace: "+req.Name+" already exists")
 		return vo.CreateNamespaceResponse{}, err
 	}
 
@@ -84,7 +84,7 @@ func (svc *templateService) DescribeNamespace(ctx context.Context, name string, 
 	err = tx.Where("name = ?", name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+name+" not found")
+		err = pberror.NewPBError(pbv1.ErrorCode_NameSpaceDoesNotExist, "namespace: "+name+" not found")
 		return ns, err
 	}
 	if err != nil {
@@ -104,7 +104,7 @@ func (svc *templateService) DeleteNamespace(ctx context.Context, req vo.DeleteNa
 	err = tx.Where("name = ?", req.Name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// namespace not found
-		err = pberror.NewPBError(pb.ErrorCode_NameSpaceDoesNotExist, "namespace: "+req.Name+" not found")
+		err = pberror.NewPBError(pbv1.ErrorCode_NameSpaceDoesNotExist, "namespace: "+req.Name+" not found")
 		return err
 	}
 	if err != nil {
@@ -323,7 +323,7 @@ func (svc *templateService) DeleteActivity(ctx context.Context, req vo.DeleteAct
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// activity not found
 		err = pberror.NewPBError(
-			pb.ErrorCode_ActivityDoesNotExist, "activity: "+req.ActivityURI+" not found")
+			pbv1.ErrorCode_ActivityDoesNotExist, "activity: "+req.ActivityURI+" not found")
 		return err
 	}
 	if err != nil {
@@ -346,6 +346,12 @@ func (svc *templateService) CreateStateMachine(ctx context.Context,
 
 	var err error
 	var sm po.StateMachine
+
+	err = parser.ValidateStateMachine(req.Definition)
+	if err != nil {
+		nerr := pberror.NewPBError(pbv1.ErrorCode_StateMachineDeinitionInvalid, err.Error())
+		return vo.CreateStateMachineResponse{}, nerr
+	}
 
 	workflowUri := parser.GenerateStateMachineURI(req.Namespace, req.Name)
 
@@ -500,7 +506,7 @@ func (svc *templateService) UpdateStateMachine(ctx context.Context, req vo.Updat
 	err = tx.Where("uri = ?", req.StateMachineURI).Select("id").First(&sm).Error
 	if rdb.IsErrRecordNotFound(err) {
 		// state machine not found
-		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
+		err = pberror.NewPBError(pbv1.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
 		return err
 	}
 	if err != nil {
@@ -533,7 +539,7 @@ func (svc *templateService) DeleteStateMachine(ctx context.Context, req vo.Delet
 	err = tx.Where("uri = ?", req.StateMachineURI).First(&sm).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
 		// state machine not found
-		err = pberror.NewPBError(pb.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
+		err = pberror.NewPBError(pbv1.ErrorCode_StateMachineDoesNotExist, "state machine: "+req.StateMachineURI+" not found")
 		return err
 	}
 	if err != nil {

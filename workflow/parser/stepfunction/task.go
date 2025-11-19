@@ -23,13 +23,13 @@ var DefaultTaskBody = TaskBody{
 }
 
 // DecodeTaskState ...
-func (decoder *StepfuncionDecoder) DecodeTaskState(ctx context.Context, basestate *states.BaseState, data map[string]any) (
+func (decoder *StepFunctionDecoder) DecodeTaskState(ctx context.Context, basestate *states.BaseState, data map[string]any) (
 	states.State, error) {
 	taskbody, err := decoder.DecodeTaskBody(ctx, data)
 	if err != nil {
 		return nil, err
 	}
-	task := &states.Task{
+	task := &states.TaskState{
 		BaseState: basestate,
 		TaskBody:  taskbody,
 	}
@@ -37,7 +37,7 @@ func (decoder *StepfuncionDecoder) DecodeTaskState(ctx context.Context, basestat
 }
 
 // DecodeTaskBody ...
-func (decoder *StepfuncionDecoder) DecodeTaskBody(ctx context.Context, data map[string]any) (
+func (decoder *StepFunctionDecoder) DecodeTaskBody(ctx context.Context, data map[string]any) (
 	*states.TaskBody, error) {
 	taskbody := states.DefaultTaskBody
 	err := decoder.MapDecode(data, &taskbody)

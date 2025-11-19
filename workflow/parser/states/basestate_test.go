@@ -455,3 +455,133 @@ func TestGetOutput(t *testing.T) {
 		})
 	}
 }
+
+func TestInitBaseState(t *testing.T) {
+	tests := []struct {
+		name       string
+		definition string
+		wantstate  *BaseState
+		want       error
+	}{
+		{
+			name: "normal case 1",
+			definition: `
+			{
+				"Name": "Task1",
+				"Type": "Task",
+				"Comment": "Comment1",
+				"Next": "Task2",
+				"InputPath": "$.input",
+				"OutputPath": "$.output",
+				"ResultPath": "$.result",
+				"Parameters": {
+					"a.$": "$.key1",
+					"b.$": "$.key2"
+				},
+				"TimeoutSeconds": 10,
+				"HeartbeatSeconds": 5,
+				"Retry": [
+					{
+						"ErrorEquals": [ 
+							"States.ALL",
+							"States.Timeout"
+						],
+						"IntervalSeconds": 1,
+						"MaxAttempts": 3,
+						"BackoffRate": 2
+					},
+					{
+						"ErrorEquals": [ 
+							"States.ALL",
+							"States.Timeout"
+						],
+						"IntervalSeconds": 1,
+						"MaxAttempts": 3,
+						"BackoffRate": 2
+					}
+				],
+				"Catch": [
+					{
+						"ErrorEquals": [ 
+							"States.ALL",
+							"States.Timeout"
+						],
+						"Next": "Task3",
+						"ResultPath": "$.result"
+					},
+					{
+						"ErrorEquals": [ 
+							"States.ALL",
+							"States.Timeout"
+						],
+						"Next": "Task3",
+						"ResultPath": "$.result"
+					}
+				]
+			}`,
+			wantstate: &BaseState{
+				Name:       "Task1",
+				Type:       "Task",
+				Comment:    "Comment1",
+				InputPath:  "$.input",
+				OutputPath: "$.output",
+				ResultPath: "$.result",
+				Parameters: map[string]any{
+					"a.$": "$.key1", "b.$": "$.key2",
+				},
+				MaxExecuteTimes: 1000,
+				End:             false,
+				Next:            "Task2",
+				Retry: []map[string]any{
+					{
+						"ErrorEquals":     []any{"States.ALL", "States.Timeout"},
+						"IntervalSeconds": 1,
+						"MaxAttempts":     3,
+						"BackoffRate":     2,
+					},
+					{
+						"ErrorEquals":     []any{"States.ALL", "States.Timeout"},
+						"IntervalSeconds": 1,
+						"MaxAttempts":     3,
+						"BackoffRate":     2,
+					},
+				},
+				Catch: []map[string]any{
+					{
+						"ErrorEquals": []any{"States.ALL", "States.Timeout"},
+						"Next":        "Task3",
+						"ResultPath":  "$.result",
+					},
+					{
+						"ErrorEquals": []any{"States.ALL", "States.Timeout"},
+						"Next":        "Task3",
+						"ResultPath":  "$.result",
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			bs, err := NewBaseStateFromString(test.definition)
+			assert.Equal(t, err, nil)
+			assert.Equal(t, bs.Name, test.wantstate.Name)
+			assert.Equal(t, bs.Type, test.wantstate.Type)
+			assert.Equal(t, bs.Comment, test.wantstate.Comment)
+			assert.Equal(t, bs.InputPath, test.wantstate.InputPath)
+			assert.Equal(t, bs.OutputPath, test.wantstate.OutputPath)
+			assert.Equal(t, bs.ResultPath, test.wantstate.ResultPath)
+			assert.Equal(t, bs.Parameters, test.wantstate.Parameters)
+			assert.Equal(t, bs.MaxExecuteTimes, test.wantstate.MaxExecuteTimes)
+			assert.Equal(t, bs.End, test.wantstate.End)
+			assert.Equal(t, bs.Next, test.wantstate.Next)
+			// assert.Equal(t, bs.Retry, test.wantstate.Retry)
+			// assert.Equal(t, bs.Catch, test.wantstate.Catch)
+		})
+	}
+}
+
+// &{Task1 Task Comment1 $.input $.output $.result map[a.$:$.key1 b.$:$.key2] 1000 false Task2 [map[BackoffRate:2 ErrorEquals:[States.ALL States.Timeout] IntervalSeconds:1 MaxAttempts:3] map[BackoffRate:2 ErrorEquals:[States.ALL States.Timeout] IntervalSeconds:1 MaxAttempts:3]] [map[ErrorEquals:[States.ALL States.Timeout] Next:Task3 ResultPath:$.result] map[ErrorEquals:[States.ALL States.Timeout] Next:Task3 ResultPath:$.result]]} does not equal
+// &{Task1 Task Comment1 $.input $.output $.result map[a.$:$.key1 b.$:$.key2] 1000 false Task2 [{[States.ALL States.Timeout] 1 3 2} {[States.ALL States.Timeout] 1 3 2}] [{[States.ALL States.Timeout] Task3 $.result} {[States.ALL States.Timeout] Task3 $.result}]}

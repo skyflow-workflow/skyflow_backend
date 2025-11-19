@@ -1,3 +1,1 @@
-#!/bin/bash
-
-./bin/skyflow start api -c ./trpc_go.yaml --skyflow_config ./skyflow.yaml
+./bin/skyflow start api dispatcher --framework_config=./kratos_config.yaml  --skyflow_config=./skyflow.yaml

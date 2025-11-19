@@ -10,6 +10,7 @@ package states
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 )
 
 // myValidate self define validator
@@ -243,3 +244,15 @@ var QueryLanguages = struct {
 	JSONPath: "JSONPath",
 	JSONata:  "JSONata",
 }
+
+// StateMachine最大深度,防止流程图过度复杂
+// MaxDepth 最大深度， 默认为3
+var MaxDepth = 3
+
+// StartDepth 最外层的Depth ,默认为1
+var StartDepth = 1
+
+// StartGroupID 最外层的Group ID， 默认为 1
+var StartGroupID = 1
+
+var ParserQuota = config.DefaultQuota

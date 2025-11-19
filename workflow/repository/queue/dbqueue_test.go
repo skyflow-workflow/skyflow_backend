@@ -9,46 +9,47 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
+	"github.com/skyflow-workflow/skyflow_backbend/mock"
 	"github.com/smartystreets/goconvey/convey"
 )
 
-func (dbmq *DBMessageQueue) CleanUnittestData() error {
-	tx := dbmq.dbClient.DB().Begin()
+func (dbMQ *DBMessageQueue) CleanUnittestData() error {
+	tx := dbMQ.dbClient.DB().Begin()
 	tx = tx.Exec("TRUNCATE TABLE message_queues")
 	return tx.Error
 }
 
-func TestDBMQSyncSchema(t *testing.T) {
+func TestDBMessageQueue_SyncSchema(t *testing.T) {
 
 	var err error
-	dbclient := getTestDBClient()
+	dbClient := mock.GetMockDBClient()
 
 	convey.Convey("Test Connect to MySQL DB", t, func() {
 		// DBDelayQueue
-		dbopt := DefaultDBDelayQueueOption
-		dbmq := NewDBMessageQueue(dbclient, dbopt)
+		dbOpt := DefaultDBDelayQueueOption
+		dbMQ := NewDBMessageQueue(dbClient, dbOpt)
 		convey.So(err, convey.ShouldBeNil)
 		convey.Convey("Test SyncSchema", func() {
-			err = dbmq.SyncSchema()
+			err = dbMQ.SyncSchema()
 			convey.So(err, convey.ShouldBeNil)
 
 		})
 	})
 }
 
-func TestDBMQWithForwardQueue(t *testing.T) {
+func TestDBMessageQueue_WithForwardQueue(t *testing.T) {
 	var err error
-	dbclient := getTestDBClient()
-	var dbmq *DBMessageQueue
+	dbClient := mock.GetMockDBClient()
+	var dbMQ *DBMessageQueue
 	// Connect to MySQL DB
 	slog.Info("Test Connect to MySQL DB")
-	dbopt := DefaultDBDelayQueueOption
-	dbmq = NewDBMessageQueue(dbclient, dbopt)
+	dbOpt := DefaultDBDelayQueueOption
+	dbMQ = NewDBMessageQueue(dbClient, dbOpt)
 	slog.Info("Test SyncSchema MySQL DB")
-	err = dbmq.SyncSchema()
+	err = dbMQ.SyncSchema()
 	assert.Equal(t, err, nil)
 	slog.Info("Test Clean Unittest Data")
-	err = dbmq.CleanUnittestData()
+	err = dbMQ.CleanUnittestData()
 	assert.Equal(t, err, nil)
 
 	var messages = []InnerMessageBody{
@@ -61,8 +62,8 @@ func TestDBMQWithForwardQueue(t *testing.T) {
 	}
 
 	forwardQueue := NewSimpleInnerQueue()
-	dbmq.SetForwardQueue(forwardQueue)
-	dbmq.StartPolling()
+	dbMQ.SetForwardQueue(forwardQueue)
+	dbMQ.StartPolling()
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
@@ -87,7 +88,7 @@ func TestDBMQWithForwardQueue(t *testing.T) {
 	}()
 
 	for _, msg := range messages {
-		err = dbmq.SendInnerMessage(msg, nil)
+		err = dbMQ.SendInnerMessage(msg, nil)
 		assert.Equal(t, err, nil)
 		slog.Info("send message", "msg", msg)
 	}
@@ -95,7 +96,7 @@ func TestDBMQWithForwardQueue(t *testing.T) {
 		"all messages sent, send message count: %d", len(messages)),
 	)
 	time.Sleep(2 * time.Second) // wait for messages to be processed
-	err = dbmq.Close()
+	err = dbMQ.Close()
 	assert.Equal(t, err, nil)
 	err = forwardQueue.Close()
 	assert.Equal(t, err, nil)
@@ -104,17 +105,17 @@ func TestDBMQWithForwardQueue(t *testing.T) {
 
 func TestDBMQSendReceiveMessage(t *testing.T) {
 	var err error
-	dbclient := getTestDBClient()
-	var dbmq *DBMessageQueue
+	dbClient := mock.GetMockDBClient()
+	var dbMQ *DBMessageQueue
 	// Connect to MySQL DB
 	slog.Info("Test Connect to MySQL DB")
-	dbopt := DefaultDBDelayQueueOption
-	dbmq = NewDBMessageQueue(dbclient, dbopt)
+	dbOpt := DefaultDBDelayQueueOption
+	dbMQ = NewDBMessageQueue(dbClient, dbOpt)
 	slog.Info("Test SyncSchema MySQL DB")
-	err = dbmq.SyncSchema()
+	err = dbMQ.SyncSchema()
 	assert.Equal(t, err, nil)
 	slog.Info("Test Clean Unittest Data")
-	err = dbmq.CleanUnittestData()
+	err = dbMQ.CleanUnittestData()
 	assert.Equal(t, err, nil)
 
 	var messages = []InnerMessageBody{
@@ -126,14 +127,14 @@ func TestDBMQSendReceiveMessage(t *testing.T) {
 		{2, 5, "Execution", "ExecutionInit", `{"testkey":"testvalue"}`},
 	}
 
-	dbmq.StartPolling()
+	dbMQ.StartPolling()
 
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	// receive data from forward queue
 	go func() {
 		slog.Info("=> Start Receive Inner Message from DB Queue")
-		rcvChan, err := dbmq.ReceiveInnerMessage()
+		rcvChan, err := dbMQ.ReceiveInnerMessage()
 		assert.Equal(t, err, nil)
 		msgCount := 0
 		for {
@@ -151,7 +152,7 @@ func TestDBMQSendReceiveMessage(t *testing.T) {
 	}()
 
 	for _, msg := range messages {
-		err = dbmq.SendInnerMessage(msg, nil)
+		err = dbMQ.SendInnerMessage(msg, nil)
 		assert.Equal(t, err, nil)
 		slog.Info("send message", "msg", msg)
 	}
@@ -159,7 +160,7 @@ func TestDBMQSendReceiveMessage(t *testing.T) {
 		"all messages sent, send message count: %d", len(messages)),
 	)
 	time.Sleep(2 * time.Second) // wait for messages to be processed
-	err = dbmq.Close()
+	err = dbMQ.Close()
 	assert.Equal(t, err, nil)
 	wg.Wait()
 }

@@ -1,0 +1,75 @@
+Version : v1
+Type: "pipeline"
+
+# stages 所有阶段
+Stages:
+  - Name: 任务准备阶段
+    Comment: "主要完成任务的准备工作,发送信息等"
+    ResultPath: "$.stage1result"
+    # stage的所有job
+    Jobs:
+      - Name: 任务准备
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: Add
+            Comment: 两数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            InputPath: "$.add"
+            ResultPath: "$.add.c"
+            Block: true
+            Parameters:
+              x.$ : "$.a"
+              y.$ : "$.b"
+          - Name: Add2
+            Comment: 两数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            Block: true
+            InputPath: "$.add"
+            ResultPath: "$.add.d"
+            Parameters:
+              x.$ : "$.a"
+              y.$ : "$.c"
+            Retry:
+            - Errors:
+                - ErrorA
+                - ErrorB
+              MaxAttempts: 3
+              IntervalSeconds: 2
+
+  - Name: 全量集群发布
+    Jobs:
+      - Name: 集群2的全量发布
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: Pass1
+            Comment: 先不计算
+            Type: Pass
+
+          - Name: MaxCompare
+            Comment: 比较两个数
+            Type: Task
+            Resource: "activity:unittest/max"
+            ResultPath: "$.max.x"
+            Parameters:
+              x.$ : "$.stage1result[0].add.d"
+              y.$ : "$.max.b"
+      - Name: 集群3的全量发布
+        Steps:
+          - Name: 找到大的数
+            Comment: 先比较，再计算
+            Type: Task
+            Resource: "activity:unittest/max"
+            ResultPath: "$.max.max"
+            Parameters:
+              x.$ : "$.add.a"
+              y.$ : "$.add.b"
+          - Name: 生成找到更大的数
+            Comment: 更大的数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            ResultPath: "$.max.max"
+            Parameters:
+              x.$ : "$.max.max"
+              y.$ : "$.max.b"

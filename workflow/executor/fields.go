@@ -5,27 +5,27 @@ package executor
 // ExecutionFields commonly used fields for querying the Execution table.
 var ExecutionFields = struct {
 	// L1  least fields, only need to confirm if Execution exists,
-	// {"id", "uuid", "flow_type", "status", "uri"}
+	// {"id", "uuid", "status", "uri"}
 	L1 []string
 	// L2 basic fields, commonly used simple type fields
-	// {"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header"}
+	// {"id", "uuid", "status", "max_execute_index", "execute_count", "header"}
 	L2 []string
 	// L3 extra fields compared to L2, includes JSON fields like definition/input/output
-	// {"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header",
+	// {"id", "uuid", "status", "max_execute_index", "execute_count", "header",
 	// "definition"}
 	L3 []string
 	// L4 includes definition and input/output related fields for execution phase
-	// {"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header",
+	// {"id", "uuid", "status", "max_execute_index", "execute_count", "header",
 	// "definition", "input", "output", "exception"},
 	L4 []string
 	//L5 查询所有字段
 	L5 []string
 }{
-	L1: []string{"id", "uuid", "flow_type", "status", "uri"},
-	L2: []string{"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header"},
-	L3: []string{"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header",
+	L1: []string{"id", "uuid", "status", "uri"},
+	L2: []string{"id", "uuid", "status", "max_execute_index", "execute_count", "header"},
+	L3: []string{"id", "uuid", "status", "max_execute_index", "execute_count", "header",
 		"definition"},
-	L4: []string{"id", "uuid", "flow_type", "status", "max_execute_index", "execute_count", "header",
+	L4: []string{"id", "uuid", "status", "max_execute_index", "execute_count", "header",
 		"definition", "input", "output", "exception"},
 	L5: []string{},
 }

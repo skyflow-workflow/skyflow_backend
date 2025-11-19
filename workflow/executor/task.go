@@ -20,7 +20,7 @@ import (
 // Task Execution Task State
 type Task struct {
 	*ExecutionStep // 继承 ExecutionStep
-	TaskState      *states.Task
+	TaskState      *states.TaskState
 }
 
 // TaskRunningStatus  Task运营状态
@@ -93,7 +93,7 @@ func NewTaskFromID(id int, executor *Executor) (*Task, error) {
 
 	var err error
 
-	dbStep, err := executor.QueryStepByID(id, []string{}, nil)
+	dbStep, err := executor.ExecutionService.QueryStepByID(id, []string{}, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func NewTaskFromData(dbStep *po.Step, executor *Executor) (*Task, error) {
 	if err != nil {
 		return nil, err
 	}
-	state, ok := baseStep.State.(*states.Task)
+	state, ok := baseStep.State.(*states.TaskState)
 	if !ok {
 		return nil, fmt.Errorf("step state is not Task type")
 	}
@@ -170,7 +170,7 @@ func (t *Task) Run(message queue.InnerMessageBody) error {
 		// 如果是阻塞的， 则不执行
 		slog.Info(fmt.Sprintf("task step '%d' is blocked", dbStep.ID))
 
-		tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+		tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 		defer maker.Close(&err)
 
 		dbStepGroupQueryCond := po.StepGroup{
@@ -197,7 +197,7 @@ func (t *Task) Run(message queue.InnerMessageBody) error {
 
 		// message queue send create message
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.StepGroupBlocked, dbStepGroup.StepID, nil)
-		err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
+		err = t.Executor.SendInnerMessage(message, nil)
 		if err != nil {
 			return err
 		}
@@ -260,7 +260,7 @@ func (t *Task) Run(message queue.InnerMessageBody) error {
 		// 所以 TaskToken 中的UUID 在ActivityTask 中一定是合法的
 
 		// 开始事务
-		tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+		tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 		defer maker.Close(&err)
 
 		updateTask = po.Step{
@@ -460,7 +460,8 @@ func (t *Task) ProcessTaskTimeout(message queue.InnerMessageBody) error {
 		return err
 	}
 
-	dbStep, err = t.Executor.QueryStepByID(message.StepID, append(StepFields.L1, "execute_count"), nil)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(
+		message.StepID, append(StepFields.L1, "execute_count"), nil)
 	if err != nil {
 		return err
 	}
@@ -495,10 +496,11 @@ func (t *Task) ProcessTaskHeartbeatTimeout(message queue.InnerMessageBody) error
 		return err
 	}
 
-	tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 	txf := rdb.ForUpdate(tx)
-	dbStep, err = t.Executor.QueryStepByID(dbStep.ID, append(StepFields.L1, "execute_count", "data"), txf)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(
+		dbStep.ID, append(StepFields.L1, "execute_count", "data"), txf)
 	if err != nil {
 		return err
 	}
@@ -558,7 +560,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		}
 
 		// 开始事务
-		tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+		tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 		defer maker.Close(&err)
 
 		updatetask := po.Step{
@@ -595,7 +597,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		// message queue send create message
 		// send message
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateWakeup, dbStep.ID, mdec)
-		err = t.Executor.InnerQueue.SendInnerMessage(message, &retrytime)
+		err = t.Executor.SendInnerMessage(message, &retrytime)
 
 		if err != nil {
 			return err
@@ -606,7 +608,7 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		// 准备开始下一个节点
 		// 当前节点更新为 Success
 		finishtime := time.Now()
-		tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+		tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 		defer maker.Close(&err)
 
 		updatetask := po.Step{
@@ -638,8 +640,8 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 			GroupID: dbStep.GroupID,
 		}
 		// message queue send create message
-		message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextState, dbStep.ID, fns)
-		err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
+		message := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextStep, dbStep.ID, fns)
+		err = t.Executor.SendInnerMessage(message, nil)
 
 		if err != nil {
 			slog.Error(err.Error())
@@ -667,10 +669,11 @@ func (t *Task) ProcessTaskStateWakeup(message queue.InnerMessageBody) error {
 		}
 	}
 
-	tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
-	dbStep, err = t.Executor.QueryStepByID(message.StepID, []string{"id", "execution_id", "status", "execute_count"}, tx)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(
+		message.StepID, []string{"id", "execution_id", "status", "execute_count"}, tx)
 
 	if err != nil {
 		return err
@@ -696,7 +699,7 @@ func (t *Task) ProcessTaskStateWakeup(message queue.InnerMessageBody) error {
 
 	// message queue send create message
 	newmsg := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, nil)
-	err = t.Executor.InnerQueue.SendInnerMessage(newmsg, nil)
+	err = t.Executor.SendInnerMessage(newmsg, nil)
 	if err != nil {
 		return err
 	}
@@ -751,12 +754,12 @@ func (t *Task) SendTaskFailure(ctx context.Context, errorname string, cause stri
 	}
 	slog.Info(fmt.Sprintf("SendTaskFailure:  Task ID '%d'  error : %s  cause :  %s ", t.Data.ID, errorname, cause))
 
-	tx, maker := t.Executor.MetaDB.NewTxMaker(session)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	// 加锁查看当前step状态
 	txf := rdb.ForUpdate(tx)
-	dbStep, err = t.Executor.QueryStepByID(t.Data.ID, StepFields.L1, txf)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(t.Data.ID, StepFields.L1, txf)
 	if err != nil {
 		return err
 	}
@@ -812,7 +815,7 @@ func (t *Task) SendTaskFailure(ctx context.Context, errorname string, cause stri
 
 	// message queue send create message
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateSend, dbStep.ID, nil)
-	err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
+	err = t.Executor.SendInnerMessage(message, nil)
 	if err != nil {
 		return err
 	}
@@ -827,7 +830,7 @@ func (t *Task) SendTaskFailure(ctx context.Context, errorname string, cause stri
 func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 
 	var err error
-	var dbstep *po.Step
+	var dbStep *po.Step
 	reqinfo := vo.GetRequestInfo(ctx)
 	starttime := time.Now()
 
@@ -851,26 +854,26 @@ func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 		return err
 	}
 	// 开始事务
-	tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
 	// 加锁
 	txf := rdb.ForUpdate(tx)
-	dbstep, err = t.Executor.QueryStepByID(t.Data.ID, StepFields.L1, txf)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(t.Data.ID, StepFields.L1, txf)
 	if err != nil {
 		return err
 	}
 
 	// 状态判断
-	if dbstep.Status != string(StepStatus.Running) {
-		return fmt.Errorf("%w: current step status '%s'", vo.ErrorStepStatus, dbstep.Status)
+	if dbStep.Status != string(StepStatus.Running) {
+		return fmt.Errorf("%w: current step status '%s'", vo.ErrorStepStatus, dbStep.Status)
 	}
 
 	dbTaskToken := po.TaskToken{}
 
 	// 查找token匹配到的StepID
 	err = tx.Where(po.TaskToken{
-		StepID: dbstep.ID,
+		StepID: dbStep.ID,
 	}).Take(&dbTaskToken).Error
 	// 如果查找错误，或者没找到
 	if err != nil {
@@ -884,10 +887,10 @@ func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 		Exception:  tedStr,
 	}
 
-	err = tx.Where(po.Step{ID: dbstep.ID}).Updates(&updatetask).Error
+	err = tx.Where(po.Step{ID: dbStep.ID}).Updates(&updatetask).Error
 
 	if err != nil {
-		slog.Error(fmt.Sprintf("Failed To Update Task, StepID: [ %d ], Error: %s", dbstep.ID, err.Error()))
+		slog.Error(fmt.Sprintf("Failed To Update Task, StepID: [ %d ], Error: %s", dbStep.ID, err.Error()))
 		return err
 	}
 	err = tx.Where(po.TaskToken{ID: dbTaskToken.ID}).Delete(new(po.TaskToken)).Error
@@ -899,9 +902,9 @@ func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 	tx.Commit()
 
 	event := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		ExecutionID: dbStep.ExecutionID,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		StartTime:   starttime,
 		FinishTime:  time.Now(),
 		Data: EventContent_TaskSubmitted{
@@ -911,8 +914,8 @@ func (t *Task) SendTaskSuccess(ctx context.Context, output interface{}) error {
 	t.Executor.SendExecutionEvents(event)
 
 	// message queue send create message
-	message := NewStepMessage(dbstep.ExecutionID, MessageType.TaskStateSend, dbstep.ID, nil)
-	err = t.Executor.InnerQueue.SendInnerMessage(message, nil)
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateSend, dbStep.ID, nil)
+	err = t.Executor.SendInnerMessage(message, nil)
 
 	if err != nil {
 		slog.Error(
@@ -943,10 +946,10 @@ func (t *Task) SendTaskReference(ctx context.Context, title string, url string) 
 	}
 
 	// 开始事务
-	tx, maker := t.Executor.MetaDB.NewTxMaker(nil)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(nil)
 	defer maker.Close(&err)
 
-	dbStep, err = t.Executor.QueryStepByID(step_id, StepFields.L1, tx)
+	dbStep, err = t.Executor.ExecutionService.QueryStepByID(step_id, StepFields.L1, tx)
 	if err != nil {
 		return err
 	}
@@ -996,15 +999,15 @@ func (t *Task) SendTaskHeartbeat(ctx context.Context, message string, session rd
 
 	// Todo : 重置heartbeattimeoutsecond 的时间
 	// 开始事务
-	tx, maker := t.Executor.MetaDB.NewTxMaker(session)
+	tx, maker := t.Executor.ExecutionService.MetaDB.NewTxMaker(session)
 	defer maker.Close(&err)
 
 	txf := rdb.ForUpdate(tx)
-	dbstep, err := t.Executor.QueryStepByID(step_id, append(StepFields.L1, "execute_count", "data"), txf)
+	dbStep, err := t.Executor.ExecutionService.QueryStepByID(step_id, append(StepFields.L1, "execute_count", "data"), txf)
 	if err != nil {
 		return err
 	}
-	innerdata, err := LoadTaskData(dbstep.Data)
+	innerdata, err := LoadTaskData(dbStep.Data)
 	if err != nil {
 		return err
 	}
@@ -1023,7 +1026,7 @@ func (t *Task) SendTaskHeartbeat(ctx context.Context, message string, session rd
 	// 发送超时消息
 	mec := TaskTimeoutMessage{
 		HeartbeatCount: innerdata.HeartbeatCount,
-		ExecuteCount:   dbstep.ExecuteCount,
+		ExecuteCount:   dbStep.ExecuteCount,
 	}
 
 	// 如果设置有有效的心跳时间的话，发送心跳消息,发送新的心跳计数器
@@ -1031,9 +1034,9 @@ func (t *Task) SendTaskHeartbeat(ctx context.Context, message string, session rd
 		// send timing message 发送定时消息,
 		// 发送超时事件， 准备做超时处理。
 		nextTimeoutTime := time.Now().Add(time.Second * time.Duration(innerdata.HeartbeatSeconds))
-		tasktimeoutMsg := NewStepMessage(dbstep.ExecutionID,
-			MessageType.TaskHeartBeatTimeup, dbstep.ID, mec)
-		err = t.Executor.InnerQueue.SendInnerMessage(tasktimeoutMsg, &nextTimeoutTime)
+		tasktimeoutMsg := NewStepMessage(dbStep.ExecutionID,
+			MessageType.TaskHeartBeatTimeup, dbStep.ID, mec)
+		err = t.Executor.SendInnerMessage(tasktimeoutMsg, &nextTimeoutTime)
 		if err != nil {
 			return err
 		}
@@ -1041,9 +1044,9 @@ func (t *Task) SendTaskHeartbeat(ctx context.Context, message string, session rd
 
 	finishtime := time.Now()
 	event := vo.ExecutionEvent{
-		ExecutionID: dbstep.ExecutionID,
-		StepID:      dbstep.ID,
-		StepName:    dbstep.Name,
+		ExecutionID: dbStep.ExecutionID,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
 		Data: EventContent_TaskSendHeartbeat{

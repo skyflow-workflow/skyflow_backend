@@ -12,14 +12,14 @@ func TestRunWait(t *testing.T) {
 
 	var testcases = []struct {
 		name        string
-		wait        *Wait
+		wait        *WaitState
 		input       map[string]any
 		waitTime    time.Time
 		expectError error
 	}{
 		{
 			name: "wait 5 seconds from Seconds",
-			wait: &Wait{
+			wait: &WaitState{
 				BaseState: &BaseState{
 					Type: "Wait",
 					Next: "LookupAddress2",
@@ -34,7 +34,7 @@ func TestRunWait(t *testing.T) {
 		},
 		{
 			name: "wait 5 seconds from SecondsPath",
-			wait: &Wait{
+			wait: &WaitState{
 				BaseState: &BaseState{
 					Type: "Wait",
 					Next: "LookupAddress2",
@@ -53,7 +53,7 @@ func TestRunWait(t *testing.T) {
 		},
 		{
 			name: "wait 5.5 seconds from SecondsPath",
-			wait: &Wait{
+			wait: &WaitState{
 				BaseState: &BaseState{
 					Type: "Wait",
 					Next: "LookupAddress2",
@@ -72,7 +72,7 @@ func TestRunWait(t *testing.T) {
 		},
 		{
 			name: "wait 5 seconds from Timestamp",
-			wait: &Wait{
+			wait: &WaitState{
 				BaseState: &BaseState{
 					Type: "Wait",
 					Next: "LookupAddress2",
@@ -91,7 +91,7 @@ func TestRunWait(t *testing.T) {
 		},
 		{
 			name: "wait 5 seconds from TimestampPath",
-			wait: &Wait{
+			wait: &WaitState{
 				BaseState: &BaseState{
 					Type: "Wait",
 					Next: "LookupAddress2",

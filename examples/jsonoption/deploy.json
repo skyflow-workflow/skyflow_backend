@@ -1,0 +1,33 @@
+
+{
+
+    "Name": "虚拟机发布",
+    "URI": "activity:seed/vm_deploy",
+    "Comment": "虚拟机发布,说明文字。。。。。。",
+    "Parameters":{
+        "group_id":{
+            "Type": "String",
+            "Comment": "资源池ID"
+        },
+        "app_name":{
+            "Type": "String",
+            "Comment": "应用名称",
+            "Default":"echo",
+            "Required":true
+        },
+        "deploy_mode":{
+            "Type": "Radio",
+            "Comment": "发布模式",
+            "Required":true,
+            "Options":[
+                {"value":"1","label":"全量发布"},
+                {"value":"2","label":"灰度发布"}
+            ]
+        },
+        "deploy_args":{
+            "Type": "JSON",
+            "Comment": "资源池ID"
+        }
+    }
+}
+

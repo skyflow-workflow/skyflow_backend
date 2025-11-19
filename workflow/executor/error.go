@@ -40,6 +40,8 @@ var (
 
 	// ErrorInputSizeExceedLimit Input超过限额
 	ErrorInputSizeExceedLimit = fmt.Errorf("input size exceed limit")
+	// ErrorUnrecognizedEventType
+	ErrorUnrecognizedEventType = fmt.Errorf("unrecognized event type")
 )
 
 // StandardErrorNames  name for handling in retry and catch

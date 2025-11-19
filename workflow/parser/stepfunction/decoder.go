@@ -3,31 +3,31 @@ package stepfunction
 import (
 	"context"
 
+	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/decoder"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
 )
 
-// StepfuncionDecoder ...
-type StepfuncionDecoder struct {
+// StepFunctionDecoder decodes AWS Step Functions JSON definitions
+type StepFunctionDecoder struct {
 	*decoder.CommonDecoder
 	config *config.Config
 }
 
-// NewStepfuncionDecoder ...
-func NewStepfuncionDecoder(config *config.Config) *StepfuncionDecoder {
-	return &StepfuncionDecoder{
+// NewStepFunctionDecoder creates a new StepFunctionDecoder instance
+func NewStepFunctionDecoder(config *config.Config) *StepFunctionDecoder {
+	return &StepFunctionDecoder{
 		CommonDecoder: decoder.NewCommonDecoder(),
 		config:        config,
 	}
 }
 
-// Decode ...
-func (decoder *StepfuncionDecoder) Decode(definition string) (*states.StateMachine, error) {
+// Decode decodes a state machine definition from JSON string
+func (decoder *StepFunctionDecoder) Decode(definition string) (*states.StateMachine, error) {
 	// Parse the state machine
 	var err error
-	datamap := make(map[string]any)
-	err = decoder.JSONUnmarshal(definition, &datamap)
+	datamap, err := toolkit.DecodeStringToMap(definition)
 	if err != nil {
 		return nil, err
 	}

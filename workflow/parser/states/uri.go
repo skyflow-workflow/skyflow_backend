@@ -46,12 +46,12 @@ type ResourceURI struct {
 func ParseResource(resource string) (uri *ResourceURI, err error) {
 	fields := strings.SplitN(strings.TrimSpace(resource), ResourceSeparator, 2)
 	if len(fields) < 2 {
-		err = fmt.Errorf("%w:invalid resource", ErrorInvalidFiledContent)
+		err = fmt.Errorf("%w:invalid resource:%s", ErrorInvalidFiledContent, resource)
 		return
 	}
 	restype := fields[0]
 	if _, ok := registedResourceType[restype]; !ok {
-		err = fmt.Errorf("%w:invalid resource type", ErrorInvalidFiledContent)
+		err = fmt.Errorf("%w:invalid resource type:%s", ErrorInvalidFiledContent, resource)
 		return
 	}
 	resuri := &ResourceURI{

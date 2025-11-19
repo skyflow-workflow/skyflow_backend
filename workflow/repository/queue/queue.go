@@ -101,10 +101,10 @@ var MessageQueueErrorCode = struct {
 // MessageClass Message class
 var MessageClass = struct {
 	Execution string
-	State     string
+	Step      string
 	StepGroup string
 }{
 	Execution: "Execution",
-	State:     "State",
+	Step:      "Step",
 	StepGroup: "StepGroup",
 }

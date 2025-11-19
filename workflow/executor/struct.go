@@ -8,11 +8,20 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
 )
 
+// ExceptionData Step异常数据结构
+type ExceptionData struct {
+	Cause      string      `json:"cause"`       // Detail of the failure
+	Error      string      `json:"error"`       // Error Code of the failure
+	ErrorMatch []string    `json:"error_match"` // Error Code match list
+	Output     interface{} `json:"output"`      // Output of state
+	Extra      string      `json:"extra"`       // Extra information about exception
+}
+
 // StartExecutionResponse function StartExecution Return struct
 type StartExecutionResponse struct {
 	Data     *po.Execution
 	Events   []vo.ExecutionEvent
-	Messages []queue.InnerMessage
+	Messages []queue.InnerMessageBody
 }
 
 // StopExecutionResponse function StopExecution Return struct
@@ -25,6 +34,11 @@ type StepWakeupMessage struct {
 	// step execute counter when send message
 	ExecuteCount int    `json:"execute_count"`
 	Token        string `json:"token"`
+}
+
+type StepExecuteMessage struct {
+	// if block step execute
+	Block bool `json:"block"`
 }
 
 // FindNextStep  for find next step
@@ -74,8 +88,8 @@ type ChangeStepStatusRequest struct {
 type InsertStateMachineOption struct {
 	// StartGroupID 可以使用的状态组ID
 	StartGroupID int
-	//StartDeindex 可以使用的开始状态递减索引
-	StartDeindex int
+	//StartDeIndex 可以使用的开始状态递减索引
+	StartDeIndex int
 	// StartDepth 可以使用的开始状态深度
 	StartDepth int
 }
@@ -89,7 +103,7 @@ type InsertStateMachineResponse struct {
 	// 已插入的状态机 最大的 GroupID
 	MaxGroupID int
 	// 已插入的状态机 最小的 Deindex
-	MinDeindex int
+	MinDeIndex int
 }
 
 var DefaultStepExecuteMessage = StepExecuteMessage{

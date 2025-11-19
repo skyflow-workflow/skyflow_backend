@@ -15,7 +15,7 @@ func TestDecodeTask(t *testing.T) {
 	var testcases = []struct {
 		name       string
 		definition string
-		expected   *states.Task
+		expected   *states.TaskState
 		wantError  error
 	}{
 		{
@@ -27,7 +27,7 @@ func TestDecodeTask(t *testing.T) {
 				"Next": ""
 			}
 			`,
-			expected: &states.Task{
+			expected: &states.TaskState{
 				BaseState: &states.BaseState{
 					Type:            "Task",
 					Comment:         "add task",
@@ -60,7 +60,7 @@ func TestDecodeTask(t *testing.T) {
 				"Next": "S2"
 			}
 			`,
-			expected: &states.Task{
+			expected: &states.TaskState{
 				BaseState: &states.BaseState{
 					Type:    "Task",
 					Comment: "",
@@ -86,13 +86,13 @@ func TestDecodeTask(t *testing.T) {
 		},
 	}
 
-	decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
+	decoder := NewStepFunctionDecoder(&config.StandardExecutorConfig)
 	// Add a default state for comparison
 
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
 			var err error
-			state, err := decoder.DecodeStateDefintion(context.Background(), tt.definition)
+			state, err := decoder.DecodeStateDefinition(context.Background(), tt.definition)
 			if err != nil {
 				assert.Equal(t, tt.wantError != nil, true)
 				assert.Equal(t, err.Error(), tt.wantError.Error())

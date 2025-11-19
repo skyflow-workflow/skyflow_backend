@@ -1,0 +1,41 @@
+Version : v1
+Type: "pipeline"
+
+# stages 所有阶段
+Stages:
+  - Name: 任务准备阶段
+    Comment: "主要完成任务的准备工作,发送信息等"
+    ResultPath: "$.stage1result"
+    # stage的所有job
+    Jobs:
+      - Name: 任务准备
+        Comment: "任务准备,发送任务通知"
+        Steps:
+          - Name: Add
+            Comment: 两数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            InputPath: "$.add"
+            ResultPath: "$.add.c"
+            Parameters:
+              x.$ : "$.a"
+              y.$ : "$.b"
+            TimeoutSeconds: 60
+          - Name: Add2
+            Comment: 两数相加
+            Type: "Task"
+            Resource: "activity:unittest/add"
+            InputPath: "$.add"
+            ResultPath: "$.add.d"
+            TimeoutSeconds: 600
+            HeartbeatSeconds: 60
+            Parameters:
+              x.$ : "$.a"
+              y.$ : "$.c"
+            Retry:
+            - Errors:
+                - ErrorA
+                - ErrorB
+              Description: 重试策略1
+              MaxAttempts: 3
+              IntervalSeconds: 2

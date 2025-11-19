@@ -10,23 +10,35 @@ import (
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/stepfunction"
 )
 
-// ParserConfig parser configuration
+// Parser parser configuration for workflow definitions
 type Parser struct {
 	Config              *config.Config
-	stepfunctionDecoder *stepfunction.StepfuncionDecoder
+	stepfunctionDecoder *stepfunction.StepFunctionDecoder
 }
 
-// NewParser ParserConfig parser configuration
+// NewParser creates a new Parser instance with the given configuration
 func NewParser(config *config.Config) *Parser {
 	return &Parser{
 		Config:              config,
-		stepfunctionDecoder: stepfunction.NewStepfuncionDecoder(config),
+		stepfunctionDecoder: stepfunction.NewStepFunctionDecoder(config),
 	}
 }
 
-// ValdateStateMachine ...
-func ValdateStateMachine(definition string) error {
+// ValidateStateMachine validates a state machine definition
+func ValidateStateMachine(definition string) error {
+	if definition == "" {
+		return fmt.Errorf("definition cannot be empty")
+	}
+	
+	if StandardParser == nil {
+		return fmt.Errorf("StandardParser is not initialized")
+	}
+	
 	// Validate the state machine
+	_, err := StandardParser.ParseStateMachine(definition)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -49,18 +61,55 @@ func (parser *Parser) GenerateStateMachineURI(namespace string, stateMachineName
 	return workflow_uri
 }
 func (parser *Parser) ParseState(definition string) (states.State, error) {
+	if definition == "" {
+		return nil, fmt.Errorf("definition cannot be empty")
+	}
+	
 	// Parse the step definition
-	state, err := parser.stepfunctionDecoder.DecodeStateDefintion(context.Background(), definition)
+	state, err := parser.stepfunctionDecoder.DecodeStateDefinition(context.Background(), definition)
 	return state, err
 }
 
+// ParseStateMachine parses a state machine definition using the standard parser
 func ParseStateMachine(definition string) (*states.StateMachine, error) {
+	if definition == "" {
+		return nil, fmt.Errorf("definition cannot be empty")
+	}
+	
+	if StandardParser == nil {
+		return nil, fmt.Errorf("StandardParser is not initialized")
+	}
+	
 	return StandardParser.ParseStateMachine(definition)
 }
 
+// ParseState parses a state definition using the standard parser
+func ParseState(definition string) (states.State, error) {
+	if definition == "" {
+		return nil, fmt.Errorf("definition cannot be empty")
+	}
+	
+	if StandardParser == nil {
+		return nil, fmt.Errorf("StandardParser is not initialized")
+	}
+	
+	return StandardParser.ParseState(definition)
+}
+
+// GenerateActivityURI generates an activity URI using the standard parser
 func GenerateActivityURI(namespace string, activityName string) string {
+	if StandardParser == nil {
+		return ""
+	}
+	
 	return StandardParser.GenerateActivityURI(namespace, activityName)
 }
+
+// GenerateStateMachineURI generates a state machine URI using the standard parser
 func GenerateStateMachineURI(namespace string, stateMachineName string) string {
+	if StandardParser == nil {
+		return ""
+	}
+	
 	return StandardParser.GenerateStateMachineURI(namespace, stateMachineName)
 }

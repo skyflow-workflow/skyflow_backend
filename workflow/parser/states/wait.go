@@ -18,17 +18,82 @@ type WaitBody struct {
 	TimestampPath string `mapstructure:"TimestampPath" validate:"gte=0"`
 }
 
-// Wait ...
-type Wait struct {
-	*BaseState
-	*WaitBody
+// WaitState ...
+type WaitState struct {
+	*BaseState `json:",inline"`
+	*WaitBody  `json:",inline"`
 }
 
-func (w *Wait) GetBaseState() *BaseState {
+// NewWaitStateFromString Create New Wait State
+func NewWaitStateFromString(definition string) (state *WaitState, err error) {
+
+	data, err := StringToMap(definition)
+	if err != nil {
+		return
+	}
+	state, err = NewWaitStateFromMap(data)
+	return
+}
+
+// NewWaitStateFromMap Create New Wait State
+func NewWaitStateFromMap(data map[string]interface{}) (state *WaitState, err error) {
+
+	bs, err := NewBaseStateFromMap(data)
+	if err != nil {
+		return
+	}
+	body, err := NewWaitBodyFromMap(data)
+	if err != nil {
+		return
+	}
+	state = &WaitState{
+		BaseState: bs,
+		WaitBody:  body,
+	}
+	return
+}
+
+func NewWaitBodyFromMap(data map[string]interface{}) (state *WaitBody, err error) {
+	state = &WaitBody{
+		Seconds:       0,
+		Timestamp:     "",
+		SecondsPath:   "",
+		TimestampPath: "",
+	}
+
+	err = DecodeMapToStruct(data, state)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// InitByMap Inititalize Wait Content
+func InitWaitBodyByMap(body *WaitBody, data map[string]interface{}) (err error) {
+
+	// 初始化自身
+	err = DecodeMapToStruct(data, body)
+	if err != nil {
+		return err
+	}
+	err = myValidate.Struct(body)
+	if err != nil {
+		return err
+	}
+
+	err = body.Init()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *WaitState) GetBaseState() *BaseState {
 	return w.BaseState
 }
 
-func (w *Wait) Init() error {
+func (w *WaitBody) Init() error {
 	var err error
 	err = myValidate.Struct(w)
 	if err != nil {
@@ -62,7 +127,7 @@ func (w *Wait) Init() error {
 }
 
 // GetWakeupTime Get Wait State Wake up time
-func (w *Wait) GetWakeupTime(input any) (time.Time, error) {
+func (w *WaitBody) GetWakeupTime(input any) (time.Time, error) {
 
 	var err error
 	now := time.Now()
@@ -132,10 +197,15 @@ func (w *Wait) GetWakeupTime(input any) (time.Time, error) {
 }
 
 // GetNextState Get Next State
-func (w *Wait) GetNextState(input interface{}) (NextState, error) {
+func (w *WaitState) GetNextState(input interface{}) (NextState, error) {
 	ns := NextState{
 		Name:   w.Next,
 		Output: input,
 	}
 	return ns, nil
+}
+
+func (w *WaitState) GetDefinition() (string, error) {
+	data, err := ToString(w)
+	return data, err
 }

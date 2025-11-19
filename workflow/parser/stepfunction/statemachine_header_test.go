@@ -21,10 +21,10 @@ func TestParserStatemachineHeaderFailed(t *testing.T) {
 			defintion: `{"version":false, "type":"stepfunction"}`,
 		},
 	}
-	decoder := NewStepfuncionDecoder(&config.StandardExecutorConfig)
+	decoder := NewStepFunctionDecoder(&config.StandardExecutorConfig)
 	for _, tt := range testcases {
 		t.Run(tt.name, func(t *testing.T) {
-			header, err := decoder.DecodeStateMachineHeaderDefintion(tt.defintion)
+			header, err := decoder.DecodeStateMachineHeaderDefinition(tt.defintion)
 			assert.NotEqual(t, err, nil)
 			if err == nil {
 				t.Log(header)

@@ -16,7 +16,7 @@ func TestCheckConfig(t *testing.T) {
 	wd, err := os.Getwd()
 	assert.Equal(t, err, nil)
 	slog.Info("Current working directory:", "wd", wd)
-	trpc_conf = "./mock/trpc_go.yaml"
+	frame_conf = "./mock/trpc_go.yaml"
 	skyflow_conf = "./mock/skyflow.yaml"
 	err = CheckConfig()
 	assert.Equal(t, err, nil)

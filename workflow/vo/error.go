@@ -31,6 +31,7 @@ var (
 	ErrorParameterInvalid             = fmt.Errorf("parameter is invalid")
 	ErrorParseWorkflow                = fmt.Errorf("parse workflow failed")
 	ErrorUnrecognizedStatemachineType = fmt.Errorf("unrecognized statemachine type")
+	ErrorUnsupportedStateType         = fmt.Errorf("unsupported state type")
 
 	// ErrorOutputSizeLimitExceeded Output超过限额
 	ErrorOutputSizeLimitExceeded = fmt.Errorf("output size limit exceeded")
@@ -47,8 +48,8 @@ var (
 	// ErrorStartExecutionInputSizeLimitExceeded StartExecution输入超过限额, 基于ErrorParameterExceedLimit
 	ErrorStartExecutionInputSizeLimitExceeded = fmt.Errorf("%w: input size limit exceeded", ErrorParameterExceedLimit)
 
-	// ErrorWorkflowSizeLimitExceeded Workflow超过限额, 基于ErrorParameterExceedLimit
-	ErrorWorkflowSizeLimitExceeded = fmt.Errorf("%w:workflow size limit exceeded", ErrorParameterExceedLimit)
+	// ErrorStateMachineSizeLimitExceeded StateMachine超过限额, 基于ErrorParameterExceedLimit
+	ErrorStateMachineSizeLimitExceeded = fmt.Errorf("%w:workflow size limit exceeded", ErrorParameterExceedLimit)
 
 	// ErrorMapBranchNumberLimitExceeded Map分支数超过限额, 基于ErrorParameterExceedLimit
 	ErrorMapBranchNumberLimitExceeded = fmt.Errorf("%w:map branch number limit exceeded", ErrorParameterExceedLimit)
@@ -59,18 +60,22 @@ var (
 	// ErrorExecutionUUIDSizeLimitExceed uuid 超过限额, 基于ErrorParameterExceedLimit
 	ErrorExecutionUUIDSizeLimitExceed = fmt.Errorf("%w:execution uuid size limit exceeded", ErrorParameterExceedLimit)
 
-	// workflow definition
-	// ErrorWorkflowDefinitionInvalid Workflow定义不合法
-	ErrorWorkflowDefinitionInvalid = fmt.Errorf("workflow definition is invalid")
+	// statemachine definition
+	// ErrorStateMachineDefinitionInvalid Workflow定义不合法
+	ErrorStateMachineDefinitionInvalid = fmt.Errorf("workflow definition is invalid")
 	// ErrorMapConncurrencyLimitExceeded Map并发数超过限额, 基于ErrorParameterExceedLimit
-	ErrorMapConncurrencyLimitExceeded = fmt.Errorf("%w:map conncurrency limit exceeded", ErrorWorkflowDefinitionInvalid)
+	ErrorMapConncurrencyLimitExceeded = fmt.Errorf("%w:map conncurrency limit exceeded", ErrorStateMachineDefinitionInvalid)
 
 	// ErrorParallelBranchNumberLimitExceeded 并行分支数超过限额, 基于ErrorParameterExceedLimit
-	ErrorParallelBranchNumberLimitExceeded = fmt.Errorf("%w:parallel branch number limit exceeded", ErrorWorkflowDefinitionInvalid)
+	ErrorParallelBranchNumberLimitExceeded = fmt.Errorf("%w:parallel branch number limit exceeded", ErrorStateMachineDefinitionInvalid)
 
 	// ErrorUnsupportedOperationForExecution 不支持的操作
 	ErrorUnsupportedOperationForExecution = fmt.Errorf("unsupported operation for execution")
 
 	// ErrorAKSKInvalid AKSK 不合法
-	ErrorAKSKInvalid = fmt.Errorf("aksk is invalid")
+	ErrorAKSKInvalid      = fmt.Errorf("aksk is invalid")
+	ErrorParameterMissing = fmt.Errorf("parameter is missing")
+	ErrorParamterTooLong  = fmt.Errorf("parameter is too long")
+	// ErrorNonsupportOperationForStep 不支持的操作
+	ErrorNonsupportOperationForStep = fmt.Errorf("nonsupport operation for step")
 )

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/paging"
-	"github.com/skyflow-workflow/skyflow_backbend/gen/pb"
+	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
 )
 
@@ -19,9 +19,9 @@ func ToTimeString(t time.Time) string {
 	return t.Format(timeformat)
 }
 
-func ToPBExecutionItem(in po.Execution) *pb.ExecutionListItem {
+func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionListItem {
 
-	resp := &pb.ExecutionListItem{
+	resp := &pbv1.ExecutionListItem{
 		ExecutionUuid: in.UUID,
 		Status:        in.Status,
 		Title:         in.Title,
@@ -32,33 +32,40 @@ func ToPBExecutionItem(in po.Execution) *pb.ExecutionListItem {
 		resp.StartTime = in.StartTime.Unix()
 	}
 	if in.FinishTime != nil {
-		resp.FinishTime = in.StartTime.Unix()
+		resp.FinishTime = in.FinishTime.Unix()
 	}
 	return resp
 }
 
-func ToVOPageRequest(req *pb.PageRequest) paging.PageRequest {
+func ToVOPageRequest(req *pbv1.PageRequest) paging.PageRequest {
 
-	var voreq = paging.DefaultPageRequest
+	var voReq = paging.DefaultPageRequest
 	if req != nil {
 		if req.PageSize > 0 {
-			voreq.PageSize = int(req.PageSize)
+			voReq.PageSize = int(req.PageSize)
 		}
 		// 单页不能超过最大值
 		if req.PageSize > int64(MaxPageSize) {
-			voreq.PageNumber = MaxPageSize
+			voReq.PageSize = MaxPageSize
+		}
+		// 验证页码和页大小的合理性
+		if req.PageNumber < 1 {
+			voReq.PageNumber = 1
+		}
+		if req.PageSize < 1 {
+			voReq.PageSize = 10 // 默认页大小
 		}
 		if req.PageNumber > 0 {
-			voreq.PageNumber = int(req.PageNumber)
+			voReq.PageNumber = int(req.PageNumber)
 		}
 	}
 
-	return voreq
+	return voReq
 }
 
-func ToPBPageResponse(req paging.PageResponse) *pb.PageResponse {
+func ToPBPageResponse(req paging.PageResponse) *pbv1.PageResponse {
 
-	var resp = &pb.PageResponse{
+	var resp = &pbv1.PageResponse{
 		PageSize:   int64(req.PageSize),
 		PageNumber: int64(req.PageNumber),
 		Count:      int64(req.Count),
@@ -67,11 +74,11 @@ func ToPBPageResponse(req paging.PageResponse) *pb.PageResponse {
 	return resp
 }
 
-func ToPBExecutionEvent(in po.ExecutionEvent) *pb.ExecutionEventInfo {
+func ToPBExecutionEvent(in po.ExecutionEvent) *pbv1.ExecutionEventInfo {
 
-	resp := &pb.ExecutionEventInfo{
-		StateId:    int64(in.StateID),
-		StateName:  in.StateName,
+	resp := &pbv1.ExecutionEventInfo{
+		StepId:     int64(in.StepID),
+		StepName:   in.StepName,
 		EventType:  in.EventType,
 		CreateTime: in.CreateTime.String(),
 		StartTime:  in.StartTime.String(),
@@ -82,8 +89,8 @@ func ToPBExecutionEvent(in po.ExecutionEvent) *pb.ExecutionEventInfo {
 
 }
 
-func ToPBNamespace(in po.Namespace) *pb.NamespaceListItem {
-	resp := &pb.NamespaceListItem{
+func ToPBNamespace(in po.Namespace) *pbv1.NamespaceListItem {
+	resp := &pbv1.NamespaceListItem{
 		Name:        in.Name,
 		Description: in.Description,
 		CreateTime:  in.CreateTime.Unix(),
@@ -92,8 +99,8 @@ func ToPBNamespace(in po.Namespace) *pb.NamespaceListItem {
 	return resp
 }
 
-func ToPBActivityItem(in po.Activity) *pb.ActivityListItem {
-	resp := &pb.ActivityListItem{
+func ToPBActivityItem(in po.Activity) *pbv1.ActivityListItem {
+	resp := &pbv1.ActivityListItem{
 		Name:        in.Name,
 		Description: in.Description,
 		ActivityUri: in.URI,
@@ -102,8 +109,8 @@ func ToPBActivityItem(in po.Activity) *pb.ActivityListItem {
 	}
 	return resp
 }
-func ToPBStateMachineItem(in po.StateMachine) *pb.StateMachineListItem {
-	resp := &pb.StateMachineListItem{
+func ToPBStateMachineItem(in po.StateMachine) *pbv1.StateMachineListItem {
+	resp := &pbv1.StateMachineListItem{
 		Name:            in.Name,
 		Description:     in.Description,
 		StatemachineUri: in.URI,
@@ -112,8 +119,8 @@ func ToPBStateMachineItem(in po.StateMachine) *pb.StateMachineListItem {
 	}
 	return resp
 }
-func ToPBStateMachine(in *po.StateMachine) *pb.StateMachineInfo {
-	resp := &pb.StateMachineInfo{
+func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineInfo {
+	resp := &pbv1.StateMachineInfo{
 		Name:            in.Name,
 		Description:     in.Description,
 		StatemachineUri: in.URI,
@@ -145,7 +152,11 @@ func ToPBStateMachine(in *po.StateMachine) *pb.StateMachineInfo {
 //
 // fmt.Println(out) // ["1", "2", "3"]
 func DataTransferArray[TI any, TO any](in []TI, f func(TI) TO) []TO {
-	var out = []TO{}
+	if len(in) == 0 {
+		return []TO{}
+	}
+	// 预分配容量避免多次内存重分配
+	out := make([]TO, 0, len(in))
 	for _, d := range in {
 		out = append(out, f(d))
 	}
