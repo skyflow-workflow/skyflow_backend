@@ -22,15 +22,7 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 		var err error
 		// wg -1
 		defer svc.receiverWg.Done()
-		//从 innerqueue 接收消息,发送消息 workerpool，并发处理
-		slog.Info("Dispatcher Message Receiver Start Running.")
 		var message queue.InnerMessage
-		messagechan, err := svc.workflowService.InnerQueue.ReceiveInnerMessage()
-		if err != nil {
-			slog.Error("Acquire Inner Message Channel Failed:",
-				"error", err.Error())
-			return
-		}
 		for {
 			// 如果内存限制器存在，检查内存限制
 			// 如果内存检查不通过，等待1秒
@@ -45,7 +37,7 @@ func (svc *DispatcherService) StartSchedularWorkerManager() {
 			case <-svc.ctx.Done():
 				slog.Error("Schedular Worker Manager Stopped")
 				return
-			case message = <-messagechan:
+			case message = <-svc.msgChan:
 				// wg +1 ,记录当前有运行的消息
 				err = svc.workerPool.Invoke(message)
 				if err != nil {
