@@ -125,7 +125,7 @@ func InitParallelBodyByMap(body *ParallelBody, data map[string]interface{}, dept
 		return err
 	}
 
-	err = myvalidate.Struct(body)
+	err = myValidate.Struct(body)
 	if err != nil {
 		return err
 	}
@@ -137,12 +137,12 @@ func InitParallelBodyByMap(body *ParallelBody, data map[string]interface{}, dept
 	}
 
 	for _, branchdata := range body.Branches {
-		branchsm, err := NewStateMachineBodyFromMap(branchdata, depth+1)
+		branchSm, err := NewStateMachineBodyFromMap(branchdata, depth+1)
 		if err != nil {
 			return err
 		}
 
-		body._Branches = append(body._Branches, branchsm)
+		body._Branches = append(body._Branches, branchSm)
 	}
 
 	return nil

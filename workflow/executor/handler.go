@@ -1667,8 +1667,10 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
  */
 func (svc *executionService) SendTaskSuccess(ctx context.Context, req vo.SendTaskSuccessRequest) error {
 	slog.Info(fmt.Sprintf("SendTaskSuccess token: [ %s ] output length: %d", req.TaskToken, len(req.Output)))
-	var outputs interface{}
-	outputs, err := toolkit.DecodeStringToMap(req.Output)
+	var outputs any
+	var err error
+	// output 可以是任意类型
+	err = toolkit.DecodeString(req.Output, &outputs)
 	if err != nil {
 		return err
 	}

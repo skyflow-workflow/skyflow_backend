@@ -7,8 +7,8 @@ import (
 	"github.com/skyflow-workflow/skyflow_backend/workflow/expression"
 )
 
-// ChoiceFeildNames
-var ChoiceFeildNames = struct {
+// ChoiceFieldNames
+var ChoiceFieldNames = struct {
 	Choices string
 	Default string
 }{
@@ -75,7 +75,7 @@ func NewChoiceBodyFromMap(data map[string]interface{}) (*ChoiceBody, error) {
 
 }
 
-// InitByMap Inititalize ChoiceState Content
+// InitByMap Initialize ChoiceState Content
 func InitChoiceBodyByMap(body *ChoiceBody, data map[string]interface{}) error {
 
 	var err error
@@ -84,7 +84,7 @@ func InitChoiceBodyByMap(body *ChoiceBody, data map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = myvalidate.Struct(body)
+	err = myValidate.Struct(body)
 	if err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func InitChoiceBodyByMap(body *ChoiceBody, data map[string]interface{}) error {
 		return err
 	}
 
-	choicebranchs, ok := data[ChoiceFeildNames.Choices].([]interface{})
+	choicebranchs, ok := data[ChoiceFieldNames.Choices].([]interface{})
 	if !ok {
 		err = fmt.Errorf("choice branch is not array")
 		return err

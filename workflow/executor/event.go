@@ -239,7 +239,7 @@ type EventContent_TaskInitialized struct {
 	Resource         string
 }
 
-// EventContent_TaskSendHeartbeatd   activity scheduled
+// EventContent_TaskSendHeartbeat   activity scheduled
 type EventContent_TaskSendHeartbeat struct {
 	Message     string         `json:"message"`
 	RequestInfo vo.RequestInfo `json:"requestinfo"`
@@ -306,7 +306,13 @@ type EventContent_TaskPush struct {
 }
 
 // EventContent_SucceedStateExited   activity scheduled
-type EventContent_SucceedStateExited struct {
+type EventContent_FailStateExecuted struct {
+	Error string `json:"error"`
+	Cause string `json:"cause"`
+}
+
+// EventContent_SucceedStateExited   activity scheduled
+type EventContent_SucceedStateExecuted struct {
 	Output interface{} `json:"output"`
 }
 

@@ -489,9 +489,9 @@ func (t *Task) ProcessTaskHeartbeatTimeout(message queue.InnerMessageBody) error
 
 	var err error
 
-	var dbStep *po.Step
+	var dbStep *po.Step = t.Data
 	timeoutMsg := TaskTimeoutMessage{}
-	err = json.Unmarshal([]byte(message.Data), &timeoutMsg)
+	err = toolkit.DecodeString(message.Data, &timeoutMsg)
 	if err != nil {
 		return err
 	}
@@ -532,7 +532,7 @@ func (t *Task) ProcessTaskHeartbeatTimeout(message queue.InnerMessageBody) error
 // nolint: funlen
 func (t *Task) ProcessTaskStateSendAfter() error {
 	var err error
-	var dbStep *po.Step
+	var dbStep *po.Step = t.Data
 	starttime := time.Now()
 
 	nextstate, err := t.GetNextState()
@@ -590,13 +590,13 @@ func (t *Task) ProcessTaskStateSendAfter() error {
 		t.Executor.SendExecutionEvents(event1)
 
 		// 发送重试消息，带上了 当前执行次数
-		mdec := StepWakeupMessage{
+		eventMsg := StepWakeupMessage{
 			ExecuteCount: dbStep.ExecuteCount,
 		}
 
 		// message queue send create message
 		// send message
-		message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateWakeup, dbStep.ID, mdec)
+		message := NewStepMessage(dbStep.ExecutionID, MessageType.TaskStateWakeup, dbStep.ID, eventMsg)
 		err = t.Executor.SendInnerMessage(message, &retrytime)
 
 		if err != nil {

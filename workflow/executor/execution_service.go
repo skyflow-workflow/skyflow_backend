@@ -72,6 +72,10 @@ func (svc *executionService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 
 }
 
+func (svc *executionService) GetMetaDB() *rdb.DBClient {
+	return svc.MetaDB
+}
+
 // SendExecutionEvents 发送event
 func (svc *executionService) SendExecutionEvents(events ...vo.ExecutionEvent) {
 	svc.Exporter.SendExecutionEvents(events)

@@ -1,7 +1,6 @@
 package executor
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
@@ -29,14 +28,14 @@ func NewWaitFromID(id int, executor *Executor) (*Wait, error) {
 
 	var err error
 
-	var dbstep = &po.Step{}
+	var dbStep = &po.Step{}
 
-	dbstep, err = executor.ExecutionService.QueryStepByID(id, []string{}, nil)
+	dbStep, err = executor.ExecutionService.QueryStepByID(id, []string{}, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	state, err := NewWaitFromData(dbstep, executor)
+	state, err := NewWaitFromData(dbStep, executor)
 
 	return state, err
 }
@@ -50,7 +49,7 @@ func NewWaitFromData(dbStep *po.Step, executor *Executor) (*Wait, error) {
 	}
 	state, ok := baseStep.State.(*states.WaitState)
 	if !ok {
-		return nil, fmt.Errorf("step state is not 'Wat' type")
+		return nil, fmt.Errorf("step state is not 'Wait' type")
 	}
 	waitState := &Wait{
 		ExecutionStep: baseStep,
@@ -86,7 +85,7 @@ func (w *Wait) ProcessEvent(message queue.InnerMessageBody) error {
 	case MessageType.WaitStateWakeup:
 		err = w.WaitStateWakeup(message)
 	default:
-		log.Errorf("igore message: ", message)
+		log.Errorf("ignore message: ", message)
 	}
 	return err
 }
@@ -116,7 +115,7 @@ func (w *Wait) GetNextState() (NextStep, error) {
 func (w *Wait) Run(_ queue.InnerMessageBody) error {
 	var err error
 
-	dbstate := w.Data
+	dbStep := w.Data
 
 	starttime := time.Now()
 
@@ -144,7 +143,7 @@ func (w *Wait) Run(_ queue.InnerMessageBody) error {
 	updatestep = po.Step{
 		Status: string(StepStatus.Running),
 	}
-	err = tx.Where(po.Step{ID: dbstate.ID}).Updates(&updatestep).Error
+	err = tx.Where(po.Step{ID: dbStep.ID}).Updates(&updatestep).Error
 	if err != nil {
 		log.Error(err.Error())
 		return err
@@ -153,24 +152,24 @@ func (w *Wait) Run(_ queue.InnerMessageBody) error {
 
 	finishtime := time.Now()
 	event := vo.ExecutionEvent{
-		ExecutionID: dbstate.ExecutionID,
+		ExecutionID: dbStep.ExecutionID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
-		StepID:      dbstate.ID,
-		StepName:    dbstate.Name,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		Data: EventContent_WaitStateExecuted{
-			ExecuteCount: dbstate.ExecuteCount,
+			ExecuteCount: dbStep.ExecuteCount,
 			WakeupTime:   wakeupTime,
 		},
 	}
 	w.ExecutionService.SendExecutionEvents(event)
 
 	swm := StepWakeupMessage{
-		ExecuteCount: dbstate.ExecuteCount,
+		ExecuteCount: dbStep.ExecuteCount,
 	}
 	// message queue send create message
 
-	message := NewStepMessage(dbstate.ExecutionID, MessageType.WaitStateWakeup, dbstate.ID, swm)
+	message := NewStepMessage(dbStep.ExecutionID, MessageType.WaitStateWakeup, dbStep.ID, swm)
 	err = w.ExecutionService.SendInnerMessage(message, &wakeupTime)
 	if err != nil {
 		return err
@@ -183,19 +182,19 @@ func (w *Wait) WaitStateWakeup(message queue.InnerMessageBody) error {
 
 	var err error
 
-	var dbstate = w.Data
-	// var dbexecution *db.Execution
+	var dbStep = w.Data
+	// var dbExecution *db.Execution
 
 	/*
 		当前wait节点当前不是Running ,说明状态被强行终止了。
 		忽略这次计时器事件
 	*/
-	if dbstate.Status != string(StepStatus.Running) {
+	if dbStep.Status != string(StepStatus.Running) {
 		return nil
 	}
 
-	mdec := StepWakeupMessage{}
-	err = json.Unmarshal([]byte(message.Data), &mdec)
+	eventMsg := StepWakeupMessage{}
+	err = toolkit.DecodeString(message.Data, &eventMsg)
 	if err != nil {
 		return err
 	}
@@ -204,7 +203,7 @@ func (w *Wait) WaitStateWakeup(message queue.InnerMessageBody) error {
 		说明当前当前状态已经被强制重试过。
 		直接忽略历史计时器
 	*/
-	if mdec.ExecuteCount != dbstate.ExecuteCount {
+	if eventMsg.ExecuteCount != dbStep.ExecuteCount {
 		return nil
 	}
 
@@ -219,7 +218,7 @@ func (w *Wait) WaitStateWakeup(message queue.InnerMessageBody) error {
 func (w *Wait) Finish() error {
 	var err error
 
-	var dbstate = w.Data
+	var dbStep = w.Data
 
 	var starttime = time.Now()
 	sns, err := w.GetNextState()
@@ -241,7 +240,7 @@ func (w *Wait) Finish() error {
 		Output:     outputstr,
 	}
 
-	err = tx.Where(po.Step{ID: dbstate.ID}).Updates(&updatestate).Error
+	err = tx.Where(po.Step{ID: dbStep.ID}).Updates(&updatestate).Error
 	if err != nil {
 		return err
 	}
@@ -249,19 +248,19 @@ func (w *Wait) Finish() error {
 
 	finishtime := time.Now()
 	event1 := vo.ExecutionEvent{
-		ExecutionID: dbstate.ExecutionID,
+		ExecutionID: dbStep.ExecutionID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
-		StepID:      dbstate.ID,
-		StepName:    dbstate.Name,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		Data:        EventContent_WaitStateWakeup{},
 	}
 	event2 := vo.ExecutionEvent{
-		ExecutionID: dbstate.ExecutionID,
+		ExecutionID: dbStep.ExecutionID,
 		StartTime:   starttime,
 		FinishTime:  finishtime,
-		StepID:      dbstate.ID,
-		StepName:    dbstate.Name,
+		StepID:      dbStep.ID,
+		StepName:    dbStep.Name,
 		Data: EventContent_StateExited{
 			Output: outputstr,
 		},
@@ -274,7 +273,7 @@ func (w *Wait) Finish() error {
 	}
 
 	// message queue send create message
-	newmessage := NewStepMessage(dbstate.ExecutionID, MessageType.FindNextStep, dbstate.ID, fns)
+	newmessage := NewStepMessage(dbStep.ExecutionID, MessageType.FindNextStep, dbStep.ID, fns)
 	err = w.ExecutionService.SendInnerMessage(newmessage, nil)
 	if err != nil {
 		return err

@@ -38,14 +38,14 @@ func NewStepFromData(dbStep *po.Step, executor *Executor) (Step, error) {
 	// 	step, err = NewParallelFromState(dbStep, node.(*grammar.ParallelState), svc)
 	// case grammar.StateType.StateGroup:
 	// 	step, err = NewStepGroupFromState(dbStep, node.(*grammar.StateGroup), svc)
-	// case grammar.StateType.Suspend:
-	// 	step, err = NewSuspendFromState(dbStep, node.(*grammar.SuspendState), svc)
+	case states.StateTypes.Suspend:
+		step, err = NewSuspendFromData(dbStep, executor)
 	case states.StateTypes.Wait:
 		step, err = NewWaitFromData(dbStep, executor)
-	// case grammer.StateType.Fail:
-	// 	state, err = NewFailFromData(dbstep)
-	// case grammer.StateType.Succeed:
-	// 	state, err = NewSucceedFromData(dbstep)
+	case states.StateTypes.Fail:
+		step, err = NewFailFromData(dbStep, executor)
+	case states.StateTypes.Succeed:
+		step, err = NewSucceedFromData(dbStep, executor)
 	default:
 		err = fmt.Errorf("step id: %d  name: %s type: %s  not supported",
 			dbStep.ID, dbStep.Name, dbStep.Type)

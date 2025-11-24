@@ -77,7 +77,7 @@ func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]any) (err 
 		return
 	}
 
-	err = myvalidate.Struct(smb)
+	err = myValidate.Struct(smb)
 	if err != nil {
 		return
 	}

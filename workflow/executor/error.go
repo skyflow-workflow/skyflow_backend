@@ -15,8 +15,8 @@ import (
 var (
 	// ErrorCreateExecutionUUIDFailed ...
 	ErrorCreateExecutionUUIDFailed = fmt.Errorf("create execution new uuid  failed")
-	// ErrorUnrecognizeEvent ...
-	ErrorUnrecognizeEvent = fmt.Errorf("event type  unrecognize")
+	// ErrorUnrecognizedEvent ...
+	ErrorUnrecognizedEvent = fmt.Errorf("event type  unrecognized")
 
 	// ErrorStepNotFound  常用错误类型 之一， step
 	ErrorStepNotFound = fmt.Errorf("step not found ")
@@ -42,6 +42,8 @@ var (
 	ErrorInputSizeExceedLimit = fmt.Errorf("input size exceed limit")
 	// ErrorUnrecognizedEventType
 	ErrorUnrecognizedEventType = fmt.Errorf("unrecognized event type")
+	// ErrorStepTypeIsNotMatch
+	ErrorStepTypeIsNotMatch = fmt.Errorf("step type is not match")
 )
 
 // StandardErrorNames  name for handling in retry and catch

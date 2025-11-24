@@ -9,12 +9,8 @@ package states
 */
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
 )
-
-// myValidate self define validator
-var myValidate = validator.New()
 
 // doc: https://states-language.net/spec.html#state-type-table-jsonpath
 // 						Pass		Task		Choice		Wait		Succeed		Fail		Parallel    Map
@@ -223,13 +219,13 @@ var StateMachineType = "statemachine"
 
 // IsExecutableStateType 是否是可执行的步骤类型
 func IsExecutableStateType(stype string) bool {
-	sttype := StateType(stype)
-	isExecuteable := sttype == StateTypes.Task ||
-		sttype == StateTypes.Wait ||
-		sttype == StateTypes.Succeed ||
-		sttype == StateTypes.Fail ||
-		sttype == StateTypes.Suspend ||
-		sttype == StateTypes.Choice
+	stType := StateType(stype)
+	isExecuteable := stType == StateTypes.Task ||
+		stType == StateTypes.Wait ||
+		stType == StateTypes.Succeed ||
+		stType == StateTypes.Fail ||
+		stType == StateTypes.Suspend ||
+		stType == StateTypes.Choice
 	return isExecuteable
 }
 
