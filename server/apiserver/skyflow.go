@@ -60,12 +60,29 @@ func (s *SkyflowServiceHandler) SendTaskFailure(ctx context.Context, req *pbv1.S
 
 // SendTaskHeartbeat implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) SendTaskHeartbeat(ctx context.Context, req *pbv1.SendTaskHeartbeatRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.SendTaskHeartbeatRequest{
+		TaskToken: req.TaskToken,
+		Message:   req.Message,
+	}
+	err := s.wfSvc.ExecutionService.SendTaskHeartbeat(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // SendTaskReference implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) SendTaskReference(ctx context.Context, req *pbv1.SendTaskReferenceRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.SendTaskReferenceRequest{
+		TaskToken: req.TaskToken,
+		Title:     req.Title,
+		URL:       req.Url,
+	}
+	err := s.wfSvc.ExecutionService.SendTaskReference(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // SendTaskSuccess implements v1.SkyflowV1ServiceServer.
@@ -153,7 +170,24 @@ func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pb
 
 // ListExecutions implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.ListExecutionsRequest) (*pbv1.ListExecutionsResponse, error) {
-	panic("unimplemented")
+	voReq := vo.ListExecutionsRequest{
+		PageRequest:    ToVOPageRequest(req.PageRequest),
+		Title:          req.Title,
+		Status:         req.Status,
+		WorkflowURI:    req.StatemachineUri,
+		ExecutionUUIDs: req.ExecutionUuids,
+	}
+	voResp, err := s.wfSvc.ExecutionService.ListExecutions(voReq)
+	if err != nil {
+		return nil, err
+	}
+
+	respData := DataTransferArray(voResp.Executions, ToPBExecutionItem)
+	return &pbv1.ListExecutionsResponse{
+
+		Executions:   respData,
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
+	}, nil
 }
 
 // ListStepEvents implements pbv1.SkyflowV1ServiceService.

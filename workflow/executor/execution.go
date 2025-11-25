@@ -63,26 +63,6 @@ func NewExecutionFromData(data *po.Execution, svc ExecutionService) (exe *Execut
 		States:           map[string]Step{},
 		ExecutionService: svc,
 	}
-
-	// delay init
-	// var header = grammer.StateMachineHeader{}
-	// if data.Header != "" {
-	// 	err = json.Unmarshal([]byte(data.Header), &header)
-	// 	if err != nil {
-	// 		return
-	// 	}
-
-	// } else {
-	// 	var sm *grammer.StateMachine
-	// 	var wf flow.WorkFlow
-	// 	wf, err = parser.ParseWorkflow(data.FlowDefinition)
-	// 	if err != nil {
-	// 		return
-	// 	}
-	// 	sm = wf.GetNode()
-	// 	header = sm.StateMachineHeader
-	// }
-	// exe.StateMachineHeader = &header
 	return
 }
 
@@ -232,19 +212,19 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		dp := &dbSteps[di]
 		// 存成map
 		dbStepMap[dp.Name] = dp
-		var groupid int
+		var groupId int
 		newstate, err := NewStepFromData(dp, e.ExecutionService.StandardExecutor)
 		if err != nil {
 			return bone, err
 		}
 		// 如果GroupBoneMap 中新的GroupID 不存在， 则创建该GroupID的map， 存入该GroupID 子流程下所有的节点。
 		newbone := newstate.GetBone()
-		groupid = dp.GroupID
-		GroupBone, ok := GroupBoneMap[groupid]
+		groupId = dp.GroupID
+		GroupBone, ok := GroupBoneMap[groupId]
 		if !ok {
-			newssb := map[string]StepBone{}
-			newssb[dp.Name] = newbone
-			GroupBoneMap[groupid] = newssb
+			newSsb := map[string]StepBone{}
+			newSsb[dp.Name] = newbone
+			GroupBoneMap[groupId] = newSsb
 		} else {
 			GroupBone[dp.Name] = newbone
 		}
@@ -256,19 +236,19 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 	}
 
 	// 处理StepGroup, 把StepGroup 按照step_id 分成不同的分组,  方便计算出一个State下有多少个子流程
-	// sgmap  StepGroup 按照start_id 进行分组
-	var sgmap = map[int][]*po.StepGroup{}
+	// sgMap  StepGroup 按照start_id 进行分组
+	var sgMap = map[int][]*po.StepGroup{}
 	var step_id int
 	for index := range dbStepGroups {
 		step_id = dbStepGroups[index].StepID
-		if sgg, ok := sgmap[step_id]; ok {
-			sgmap[step_id] = append(sgg, &(dbStepGroups[index]))
+		if sgg, ok := sgMap[step_id]; ok {
+			sgMap[step_id] = append(sgg, &(dbStepGroups[index]))
 		} else {
-			sgmap[step_id] = []*po.StepGroup{&(dbStepGroups[index])}
+			sgMap[step_id] = []*po.StepGroup{&(dbStepGroups[index])}
 		}
 	}
 	// 排序， 每个 子流程内的多个group 按照index 进行排序
-	for _, arraygroup := range sgmap {
+	for _, arraygroup := range sgMap {
 		sort.SliceStable(arraygroup, func(i, j int) bool { return arraygroup[i].GroupIndex < arraygroup[j].GroupIndex })
 	}
 	// 处理连接器节点，把 GroupBoneMap 中的不同层级的节点连起来。
@@ -278,7 +258,7 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		// parallel state process
 		sb := GroupBoneMap[lc.GroupID][lc.Name]
 		sb.Branches = []StepBone{}
-		sg, ok := sgmap[lc.ID]
+		sg, ok := sgMap[lc.ID]
 		if !ok {
 			// 当前还没有节点数据， 说明还没有执行到这里，Map类型生成虚拟节点
 			// statemachinebone
@@ -295,18 +275,18 @@ func (e *Execution) GetBone() (ExecutionBone, error) {
 		}
 
 		for _, subgroup := range sg {
-			subgroupid := subgroup.SubGroupID
+			subgroupId := subgroup.SubGroupID
 			startatnode, ok := dbStepMap[subgroup.StartAt]
 			if !ok {
 				return bone, fmt.Errorf("state data error: startat state not found ")
 			}
-			newseb := StepBone{
+			newSeb := StepBone{
 				StateMachineBone: &StateMachineBone{
 					StartAt: startatnode.Name,
-					States:  GroupBoneMap[subgroupid],
+					States:  GroupBoneMap[subgroupId],
 				},
 			}
-			sb.Branches = append(sb.Branches, newseb)
+			sb.Branches = append(sb.Branches, newSeb)
 		}
 
 		GroupBoneMap[lc.GroupID][lc.Name] = sb
@@ -533,10 +513,10 @@ func (e *Execution) InsertStateMachine(smb *states.StateMachineBody, opt InsertS
 		if err != nil {
 			return
 		}
-		newsg := g.StepGroup
-		newsg.MasterStepID = masterstep.ID
+		newSg := g.StepGroup
+		newSg.MasterStepID = masterstep.ID
 		//
-		err = tx.Create(&newsg).Error
+		err = tx.Create(&newSg).Error
 		if err != nil {
 			return
 		}
@@ -698,7 +678,7 @@ func (e *Execution) ChangeExecutionStatus(status _ExecutionStatusType, session r
 	return err
 }
 
-// ProcessSucceed  处理 Execution Successs
+// ProcessSucceed  处理 Execution Success
 func (e *Execution) ProcessSucceed(output string) error {
 
 	var err error

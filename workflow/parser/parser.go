@@ -1,4 +1,4 @@
-// Description: This package contains the parser service and configuration for the workflow parser.
+// Description: This package contains the parser service and configuration for the state machine parser.
 package parser
 
 import (
@@ -8,6 +8,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/stepfunction"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 // Parser parser configuration for workflow definitions
@@ -44,6 +45,12 @@ func ValidateStateMachine(definition string) error {
 
 // ParseStateMachine ...
 func (parser *Parser) ParseStateMachine(definition string) (*states.StateMachine, error) {
+	if definition == "" {
+		return nil, fmt.Errorf("%w: definition cannot be empty", vo.ErrorStateMachineDefinitionInvalid)
+	}
+	if len(definition) > parser.Config.Quota.MaxStateMachineSize {
+		return nil, fmt.Errorf("%w: definition size is too large", vo.ErrorStateMachineDefinitionInvalid)
+	}
 	sm, err := parser.stepfunctionDecoder.Decode(definition)
 	if err != nil {
 		return nil, err
@@ -56,9 +63,9 @@ func (parser *Parser) GenerateActivityURI(namespace string, activityName string)
 	return activity_uri
 }
 func (parser *Parser) GenerateStateMachineURI(namespace string, stateMachineName string) string {
-	// Generate the workflow URI
-	workflow_uri := fmt.Sprintf("%s:%s/%s", "statemachine", namespace, stateMachineName)
-	return workflow_uri
+	// Generate the statemachine URI
+	statemachine_uri := fmt.Sprintf("%s:%s/%s", "statemachine", namespace, stateMachineName)
+	return statemachine_uri
 }
 func (parser *Parser) ParseState(definition string) (states.State, error) {
 	if definition == "" {
