@@ -12,11 +12,13 @@ import (
 )
 
 // Parser parser configuration for workflow definitions
+// Parser parser configuration for workflow definitions
 type Parser struct {
 	Config              *config.Config
 	stepfunctionDecoder *stepfunction.StepFunctionDecoder
 }
 
+// NewParser creates a new Parser instance with the given configuration
 // NewParser creates a new Parser instance with the given configuration
 func NewParser(config *config.Config) *Parser {
 	return &Parser{
@@ -71,12 +73,12 @@ func (parser *Parser) ParseState(definition string) (states.State, error) {
 	if definition == "" {
 		return nil, fmt.Errorf("definition cannot be empty")
 	}
-
 	// Parse the step definition
 	state, err := parser.stepfunctionDecoder.DecodeStateDefinition(context.Background(), definition)
 	return state, err
 }
 
+// ParseStateMachine parses a state machine definition using the standard parser
 // ParseStateMachine parses a state machine definition using the standard parser
 func ParseStateMachine(definition string) (*states.StateMachine, error) {
 	if definition == "" {
@@ -108,15 +110,15 @@ func GenerateActivityURI(namespace string, activityName string) string {
 	if StandardParser == nil {
 		return ""
 	}
-
 	return StandardParser.GenerateActivityURI(namespace, activityName)
 }
+
+// GenerateStateMachineURI generates a state machine URI using the standard parser
 
 // GenerateStateMachineURI generates a state machine URI using the standard parser
 func GenerateStateMachineURI(namespace string, stateMachineName string) string {
 	if StandardParser == nil {
 		return ""
 	}
-
 	return StandardParser.GenerateStateMachineURI(namespace, stateMachineName)
 }

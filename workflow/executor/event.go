@@ -239,7 +239,7 @@ type EventContent_TaskInitialized struct {
 	Resource         string
 }
 
-// EventContent_TaskSendHeartbeat   activity scheduled
+// EventContent_TaskSendHeartbeatd   activity scheduled
 type EventContent_TaskSendHeartbeat struct {
 	Message     string         `json:"message"`
 	RequestInfo vo.RequestInfo `json:"requestinfo"`
