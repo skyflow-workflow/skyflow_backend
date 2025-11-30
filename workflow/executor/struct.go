@@ -2,10 +2,10 @@ package executor
 
 // struct.go defines the structures used in the workflow executor package.
 import (
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 // ExceptionData Step异常数据结构

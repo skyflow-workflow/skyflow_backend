@@ -3,8 +3,8 @@ package trpc
 import (
 	"log/slog"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/trpclog"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/trpclog"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/server"
 )

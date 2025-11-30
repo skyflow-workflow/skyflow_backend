@@ -1,8 +1,8 @@
 package executor
 
 import (
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 )
 
 // message.go defines message struct processed in workflow processing

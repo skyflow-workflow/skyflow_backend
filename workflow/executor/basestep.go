@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"trpc.group/trpc-go/tnet/log"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 // ExecutionStep execution step
@@ -178,7 +178,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 
 	maxindex = dbExecution.MaxExecuteIndex
 	// maxindex 代表当前最大的执行Index。
-	// 如果当前是未执行节点，  则dbstep.ExecuteIndex = maxindex +1; maxindex = dbstep.ExecuteIndex
+	// 如果当前是未执行节点，  则dbStep.ExecuteIndex = maxindex +1; maxindex = dbstep.ExecuteIndex
 	// 如果当前是已经执行的节点，则 都保持不变 。
 	if step.Executor.Config.Option.EnableExecuteIndex {
 
@@ -230,10 +230,10 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 	// 那么更新Execution的max_execute_index 值 ,不然就放弃，保持 0
 	// 如果当前的index > maxindex , 更新maxindex
 	if maxindex < executionindex {
-		updateexe := po.Execution{
+		updateExecution := po.Execution{
 			MaxExecuteIndex: executionindex,
 		}
-		err = tx.Where(po.Execution{ID: dbStep.ExecutionID}).Updates(&updateexe).Error
+		err = tx.Where(po.Execution{ID: dbStep.ExecutionID}).Updates(&updateExecution).Error
 		if err != nil {
 			return err
 		}

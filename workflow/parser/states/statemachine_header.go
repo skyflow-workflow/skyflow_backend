@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 // HeaderFieldNames ...
@@ -54,7 +54,7 @@ type StateMachineTimeout struct {
 	AbortTimeout time.Duration
 }
 
-func NewDefautStateMachineHeader() StateMachineHeader {
+func NewDefaultStateMachineHeader() StateMachineHeader {
 	return StateMachineHeader{
 		Version:             "1.0",
 		Type:                StateMachineType,
@@ -68,7 +68,7 @@ func NewDefautStateMachineHeader() StateMachineHeader {
 // NewStateMachineHeaderFromMap NewStateMachineHeaderFromMap
 func NewStateMachineHeaderFromMap(data map[string]interface{}) (*StateMachineHeader, error) {
 	var err error
-	header := NewDefautStateMachineHeader()
+	header := NewDefaultStateMachineHeader()
 	headerptr := &header
 	err = InitStateMachineHeaderByMap(headerptr, data)
 	if err != nil {
@@ -97,7 +97,7 @@ func InitStateMachineHeaderByMap(header *StateMachineHeader, data map[string]int
 // Init ...
 func (header *StateMachineHeader) Init() error {
 	var err error
-	err = myvalidate.Struct(header)
+	err = myValidate.Struct(header)
 	if err != nil {
 		return err
 	}

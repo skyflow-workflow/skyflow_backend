@@ -1,6 +1,6 @@
 package states
 
-import "github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
+import "github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 
 // PassBody ...
 type PassBody struct {
@@ -55,7 +55,7 @@ func NewPassBodyFromMap(data map[string]interface{}) (*PassBody, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = myvalidate.Struct(body)
+	err = myValidate.Struct(body)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func NewPassBodyFromMap(data map[string]interface{}) (*PassBody, error) {
 	return body, nil
 }
 
-// InitPassBodyByMap Inititalize PassBody Content
+// InitPassBodyByMap Initialize PassBody Content
 func InitPassBodyByMap(body *PassBody, data map[string]interface{}) error {
 	return nil
 }

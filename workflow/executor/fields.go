@@ -103,6 +103,9 @@ var ExecutionFieldNames = struct {
 	Output          string
 	Exception       string
 	URI             string
+	StartTime       string
+	FinishTime      string
+	GmtCreated      string
 }{
 	ID:              "id",
 	UUID:            "uuid",
@@ -116,4 +119,7 @@ var ExecutionFieldNames = struct {
 	Output:          "output",
 	Exception:       "exception",
 	URI:             "uri",
+	StartTime:       "start_time",
+	FinishTime:      "finish_time",
+	GmtCreated:      "gmt_created",
 }

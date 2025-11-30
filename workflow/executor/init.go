@@ -2,7 +2,7 @@ package executor
 
 import (
 	"github.com/go-playground/validator/v10"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/config"
 )
 
 // init validator

@@ -13,12 +13,12 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/toolkit"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"gorm.io/gorm"
 )
 
@@ -1667,8 +1667,10 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
  */
 func (svc *executionService) SendTaskSuccess(ctx context.Context, req vo.SendTaskSuccessRequest) error {
 	slog.Info(fmt.Sprintf("SendTaskSuccess token: [ %s ] output length: %d", req.TaskToken, len(req.Output)))
-	var outputs interface{}
-	outputs, err := toolkit.DecodeStringToMap(req.Output)
+	var outputs any
+	var err error
+	// output 可以是任意类型
+	err = toolkit.DecodeString(req.Output, &outputs)
 	if err != nil {
 		return err
 	}

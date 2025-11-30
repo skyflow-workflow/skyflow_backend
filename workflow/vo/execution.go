@@ -2,7 +2,7 @@ package vo
 
 import (
 	"github.com/mmtbak/microlibrary/paging"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 // StartExecutionRequest Start Execution Request

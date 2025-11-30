@@ -10,9 +10,10 @@ import (
 	"github.com/goodaye/wire"
 	"github.com/mmtbak/microlibrary/limiter"
 	"github.com/panjf2000/ants/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/executor"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/executor"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 )
 
 // DispatcherService  message dispatcher
@@ -33,6 +34,8 @@ type DispatcherService struct {
 	EventCounter uint64
 	// 内存限制器
 	memlimiter *limiter.MemoryLimiter
+	// msgchan 消息通道
+	msgChan <-chan queue.InnerMessage
 }
 
 // Option dispatcher option
@@ -91,6 +94,16 @@ func (svc *DispatcherService) Start() error {
 		svc.memlimiter.Start()
 	}
 
+	//从 innerqueue 接收消息,发送消息 workerpool，并发处理
+	slog.Info("Dispatcher Message Receiver Start Running.")
+
+	messagechan, err := svc.workflowService.InnerQueue.ReceiveInnerMessage()
+	if err != nil {
+		slog.Error("Acquire Inner Message Channel Failed:",
+			"error", err.Error())
+		return err
+	}
+	svc.msgChan = messagechan
 	svc.StartSchedularWorkerManager()
 
 	slog.Info("start run dispatcher success")

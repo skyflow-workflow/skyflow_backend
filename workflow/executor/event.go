@@ -10,7 +10,7 @@ package executor
 import (
 	"time"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 // ExecutionEvent event结构
@@ -306,7 +306,13 @@ type EventContent_TaskPush struct {
 }
 
 // EventContent_SucceedStateExited   activity scheduled
-type EventContent_SucceedStateExited struct {
+type EventContent_FailStateExecuted struct {
+	Error string `json:"error"`
+	Cause string `json:"cause"`
+}
+
+// EventContent_SucceedStateExited   activity scheduled
+type EventContent_SucceedStateExecuted struct {
 	Output interface{} `json:"output"`
 }
 

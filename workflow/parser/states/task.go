@@ -124,7 +124,7 @@ func NewTaskBodyFromMap(data map[string]interface{}) (*TaskBody, error) {
 	return &taskbody, nil
 }
 
-// InitByMap Inititalize TaskState Content
+// InitByMap Initialize TaskState Content
 func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 
 	// 数据初始化
@@ -134,7 +134,7 @@ func InitTaskBodyByMap(body *TaskBody, data map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = myvalidate.Struct(body)
+	err = myValidate.Struct(body)
 	if err != nil {
 		return err
 	}

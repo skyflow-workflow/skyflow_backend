@@ -1,7 +1,7 @@
 package apiserver
 
 import (
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 )
 
 // APIServer is the API server.

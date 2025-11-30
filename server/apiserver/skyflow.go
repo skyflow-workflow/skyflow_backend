@@ -3,10 +3,11 @@ package apiserver
 import (
 	"context"
 	"errors"
+	"log/slog"
 
-	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -21,6 +22,100 @@ func NewSkyflowServiceHandler(wfSvc workflow.WorkflowService) *SkyflowServiceHan
 	return &SkyflowServiceHandler{
 		wfSvc: wfSvc,
 	}
+}
+
+// RedoStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) RedoStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// ResumeSuspendingStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) ResumeSuspendingStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// RetryFailedStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) RetryFailedStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// SendStepFailed implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SendStepFailed(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// SendTaskFailure implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SendTaskFailure(ctx context.Context, req *pbv1.SendTaskFailureRequest) (*emptypb.Empty, error) {
+	voReq := vo.SendTaskFailureRequest{
+		TaskToken: req.TaskToken,
+		Error:     req.Error,
+		Cause:     req.Cause,
+	}
+	err := s.wfSvc.ExecutionService.SendTaskFailure(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// SendTaskHeartbeat implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SendTaskHeartbeat(ctx context.Context, req *pbv1.SendTaskHeartbeatRequest) (*emptypb.Empty, error) {
+	voReq := vo.SendTaskHeartbeatRequest{
+		TaskToken: req.TaskToken,
+		Message:   req.Message,
+	}
+	err := s.wfSvc.ExecutionService.SendTaskHeartbeat(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// SendTaskReference implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SendTaskReference(ctx context.Context, req *pbv1.SendTaskReferenceRequest) (*emptypb.Empty, error) {
+	voReq := vo.SendTaskReferenceRequest{
+		TaskToken: req.TaskToken,
+		Title:     req.Title,
+		URL:       req.Url,
+	}
+	err := s.wfSvc.ExecutionService.SendTaskReference(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// SendTaskSuccess implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SendTaskSuccess(ctx context.Context, req *pbv1.SendTaskSuccessRequest) (*emptypb.Empty, error) {
+	voReq := vo.SendTaskSuccessRequest{
+		TaskToken: req.TaskToken,
+		Output:    req.Output,
+	}
+
+	// Log
+	slog.InfoContext(ctx, "Call Method SendTaskSuccess",
+		slog.String("TaskToken", voReq.TaskToken),
+	)
+	err := s.wfSvc.ExecutionService.SendTaskSuccess(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// SkipBlockedTask implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SkipBlockedTask(ctx context.Context, req *pbv1.SkipBlockedTaskRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// SkipFailedStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SkipFailedStep(ctx context.Context, req *pbv1.SkipFailedStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// UnblockTask implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) UnblockTask(ctx context.Context, req *pbv1.UnblockTaskRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
 }
 
 // ValidateStateMachineDefinition implements pbv1.SkyflowV1ServiceService.
@@ -75,7 +170,24 @@ func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pb
 
 // ListExecutions implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.ListExecutionsRequest) (*pbv1.ListExecutionsResponse, error) {
-	panic("unimplemented")
+	voReq := vo.ListExecutionsRequest{
+		PageRequest:    ToVOPageRequest(req.PageRequest),
+		Title:          req.Title,
+		Status:         req.Status,
+		WorkflowURI:    req.StatemachineUri,
+		ExecutionUUIDs: req.ExecutionUuids,
+	}
+	voResp, err := s.wfSvc.ExecutionService.ListExecutions(voReq)
+	if err != nil {
+		return nil, err
+	}
+
+	respData := DataTransferArray(voResp.Executions, ToPBExecutionItem)
+	return &pbv1.ListExecutionsResponse{
+
+		Executions:   respData,
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
+	}, nil
 }
 
 // ListStepEvents implements pbv1.SkyflowV1ServiceService.

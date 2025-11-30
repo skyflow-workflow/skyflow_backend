@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 // BaseState is a struct that defines the base state of a state machine, with default values
@@ -26,7 +26,7 @@ type BaseState struct {
 	Catch           any    `json:"Catch,omitempty"`
 }
 
-func NewDefautBaseState() *BaseState {
+func NewDefaultBaseState() *BaseState {
 
 	bs := &BaseState{
 		InputPath:  "",
@@ -49,7 +49,7 @@ func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
 	if err != nil {
 		return nil, err
 	}
-	bs := NewDefautBaseState()
+	bs := NewDefaultBaseState()
 	err = InitBaseState(bs, data)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func InitBaseState(bs *BaseState, data map[string]interface{}) error {
 		return err
 	}
 
-	err = myvalidate.Struct(bs)
+	err = myValidate.Struct(bs)
 	if err != nil {
 		return err
 	}
@@ -234,7 +234,7 @@ func (s *BaseState) GetParametersInput(input any) (any, error) {
 }
 
 // GetInput Get State Real Input by InputData
-// inpupt , origin input,
+// input , origin input,
 // output state input using inputpath , parameters
 func (s *BaseState) GetInput(input any) (any, error) {
 	return s.GetParametersInput(input)
@@ -351,11 +351,11 @@ func ValidateStateFieldOptional(data map[string]any) error {
 		return NewFieldPathError(ErrorInvalidData)
 	}
 	// validate field "Type"
-	stype, ok := data[StateFieldNames.Type]
+	sType, ok := data[StateFieldNames.Type]
 	if !ok {
 		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.Type))
 	}
-	statetype, ok := stype.(string)
+	statetype, ok := sType.(string)
 	if !ok {
 		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorInvalidData, StateFieldNames.Type))
 	}
@@ -443,4 +443,9 @@ func ValidateStateFieldOptional(data map[string]any) error {
 	}
 
 	return nil
+}
+
+func (bs *BaseState) GetDefinition() (string, error) {
+	data, err := ToString(bs)
+	return data, err
 }

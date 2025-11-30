@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/dolthub/go-mysql-server/server"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
 )
 
 var (

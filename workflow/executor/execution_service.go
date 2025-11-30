@@ -7,14 +7,14 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/cachemap"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/cache"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/domain"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/exporter"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/lock"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/cachemap"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/cache"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/domain"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/exporter"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/lock"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 )
 
 type ExecutionService = *executionService
@@ -70,6 +70,10 @@ func (svc *executionService) SyncSchema(ctx context.Context, tx rdb.Tx) error {
 	}
 	return nil
 
+}
+
+func (svc *executionService) GetMetaDB() *rdb.DBClient {
+	return svc.MetaDB
 }
 
 // SendExecutionEvents 发送event
@@ -134,7 +138,7 @@ func (svc *executionService) NewTaskFromToken(token string, session rdb.Tx) (*Ta
 	var tasktoken = po.TaskToken{
 		Token: token,
 	}
-	var dbstep = &po.Step{}
+	var dbStep = &po.Step{}
 
 	// 增加控制session
 	tx, maker := svc.MetaDB.NewTxMaker(session)
@@ -148,12 +152,12 @@ func (svc *executionService) NewTaskFromToken(token string, session rdb.Tx) (*Ta
 		return nil, err
 	}
 
-	dbstep, err = svc.QueryStepByID(tasktoken.StepID, []string{}, tx)
+	dbStep, err = svc.QueryStepByID(tasktoken.StepID, []string{}, tx)
 	if err != nil {
 		return nil, err
 	}
 
-	state, err := NewTaskFromData(dbstep, svc.StandardExecutor)
+	state, err := NewTaskFromData(dbStep, svc.StandardExecutor)
 	if err != nil {
 		return nil, err
 	}
@@ -173,26 +177,19 @@ func (svc *executionService) SendEventsMessages(events []vo.ExecutionEvent, msgs
 	return nil
 }
 
-// func (svc *executionService) NewParallelFromID(step_id int, session rdb.Tx) (*Parallel, error) {
-
-// 	step, err := NewParallelFromID(step_id, svc, session)
-// 	return step, err
-
-// }
-
 // JudgeExecutionRunningStatus 判断Execution是否是可执行的状态
 func (svc *executionService) JudgeExecutionRunningStatus(execution_id int) error {
 
 	var err error
-	dbexecution, err := svc.QueryExecutionByID(execution_id, ExecutionFields.L1, nil)
+	dbExecution, err := svc.QueryExecutionByID(execution_id, ExecutionFields.L1, nil)
 	if err != nil {
 		return err
 	}
 
 	// 如果 消息类型是正常消息， 而 Execution状态不在 [ created  running ] , 忽略消息。 不能接收Failed/Abort/Success 等其他状态的消息
 	if !slices.Contains([]string{string(ExecutionStatus.Running)},
-		dbexecution.Status) {
-		return fmt.Errorf("%w: current status '%s'", vo.ErrorExecutionStatus, dbexecution.Status)
+		dbExecution.Status) {
+		return fmt.Errorf("%w: current status '%s'", vo.ErrorExecutionStatus, dbExecution.Status)
 	}
 	return nil
 }

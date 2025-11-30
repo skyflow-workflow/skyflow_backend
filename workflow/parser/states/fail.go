@@ -66,13 +66,13 @@ func NewFailBodyFromMap(data map[string]interface{}) (*FailBody, error) {
 	return failbody, nil
 }
 
-// InitByMap Inititalize Fail Content
+// InitByMap Initialize Fail Content
 func InitFailBodyByMap(body *FailBody, data map[string]interface{}) error {
 	err := DecodeMapToStruct(data, body)
 	if err != nil {
 		return err
 	}
-	err = myvalidate.Struct(body)
+	err = myValidate.Struct(body)
 	if err != nil {
 		return err
 	}

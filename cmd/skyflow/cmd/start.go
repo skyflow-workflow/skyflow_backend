@@ -6,10 +6,10 @@ import (
 	"sync"
 
 	"github.com/goodaye/wire"
-	"github.com/skyflow-workflow/skyflow_backbend/cmd/skyflow/kratos"
-	"github.com/skyflow-workflow/skyflow_backbend/config"
-	"github.com/skyflow-workflow/skyflow_backbend/server/dispatcher"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow"
+	"github.com/skyflow-workflow/skyflow_backend/cmd/skyflow/kratos"
+	"github.com/skyflow-workflow/skyflow_backend/config"
+	"github.com/skyflow-workflow/skyflow_backend/server/dispatcher"
+	"github.com/skyflow-workflow/skyflow_backend/workflow"
 	"github.com/spf13/cobra"
 )
 

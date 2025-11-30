@@ -9,7 +9,8 @@ import (
 
 var myJson jsoniter.API
 
-var myvalidate = validator.New()
+// myValidate self define validator
+var myValidate = validator.New()
 
 func init() {
 	myJson = jsoniter.Config{

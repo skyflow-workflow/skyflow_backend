@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
 type DBLockService struct {

@@ -24,6 +24,10 @@ func Decode(data []byte, v any) error {
 	return myJson.Unmarshal(data, v)
 }
 
+func DecodeString(data string, v any) error {
+	return myJson.UnmarshalFromString(data, v)
+}
+
 // EncodeToString encode data to json serialized string
 func EncodeToString(v any) (string, error) {
 

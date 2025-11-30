@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/repository/queue"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 )
 
 func TestRunChoice(t *testing.T) {

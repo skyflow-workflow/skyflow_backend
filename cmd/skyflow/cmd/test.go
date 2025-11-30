@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/skyflow-workflow/skyflow_backbend/config"
+	"github.com/skyflow-workflow/skyflow_backend/config"
 	"github.com/spf13/cobra"
 	"trpc.group/trpc-go/trpc-go"
 	tconfig "trpc.group/trpc-go/trpc-go/config"

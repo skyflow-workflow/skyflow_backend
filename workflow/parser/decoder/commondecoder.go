@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/mitchellh/mapstructure"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/parser/states"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
 
 	jsoniter "github.com/json-iterator/go"
 )

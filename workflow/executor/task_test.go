@@ -3,7 +3,7 @@ package executor
 import (
 	"testing"
 
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 
 	"gopkg.in/go-playground/assert.v1"
 )

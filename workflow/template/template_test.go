@@ -9,9 +9,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mmtbak/microlibrary/paging"
 	"github.com/mmtbak/microlibrary/rdb"
-	"github.com/skyflow-workflow/skyflow_backbend/mock"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/vo"
+	"github.com/skyflow-workflow/skyflow_backend/mock"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"gopkg.in/go-playground/assert.v1"
 	"gorm.io/gorm/schema"
 )

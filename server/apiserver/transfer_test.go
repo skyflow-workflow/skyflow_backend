@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/paging"
-	pbv1 "github.com/skyflow-workflow/skyflow_backbend/api/v1"
-	"github.com/skyflow-workflow/skyflow_backbend/workflow/po"
+	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -17,9 +17,9 @@ type InnerQueueGroup struct {
 func NewInnerQueueGroup(masterqueue InnerMessageQueue, delayqueue InnerMessageQueue) (*InnerQueueGroup, error) {
 
 	if delayqueue != nil {
-		if dbqueue, ok := delayqueue.(*DBMessageQueue); ok {
-			dbqueue.SetForwardQueue(masterqueue)
-			dbqueue.StartPolling()
+		if dbQueue, ok := delayqueue.(*DBMessageQueue); ok {
+			dbQueue.SetForwardQueue(masterqueue)
+			dbQueue.StartPolling()
 		}
 	}
 
@@ -45,8 +45,8 @@ func (q *InnerQueueGroup) SendInnerMessage(msg InnerMessageBody, sendTime *time.
 // ReceiveInnerMessage  receive innermessage from group queue
 func (q *InnerQueueGroup) ReceiveInnerMessage() (<-chan InnerMessage, error) {
 	var err error
-	nchan, err := q._NormalQueue.ReceiveInnerMessage()
-	return nchan, err
+	nChan, err := q._NormalQueue.ReceiveInnerMessage()
+	return nChan, err
 }
 
 // CleanExecution 清理一个execution的 message

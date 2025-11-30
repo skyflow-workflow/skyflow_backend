@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/mitchellh/mapstructure"
-	"github.com/skyflow-workflow/skyflow_backbend/pkg/jsonpath"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/jsonpath"
 )
 
 // myValidate self define validator

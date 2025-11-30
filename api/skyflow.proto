@@ -852,9 +852,9 @@ message ParseStateMachineRequest{
 
 // ParseStateMachineResponse 解析一个状态机返回结构
 message ParseStateMachineResponse{
-    // statemachine bone 
+    // statemachine bone
     string bone =1 ;
-    // 
+    //
 
 }
 
