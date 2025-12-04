@@ -8,8 +8,7 @@ require (
 	github.com/google/gnostic v0.7.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20251111163417-95abcf5c77ba
 	google.golang.org/grpc v1.77.0
-	google.golang.org/protobuf v1.36.10
-)
+	google.golang.org/protobuf v1.36.1
 
 require (
 	github.com/go-kratos/aegis v0.2.0 // indirect

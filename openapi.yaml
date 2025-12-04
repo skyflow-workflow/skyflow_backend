@@ -1,0 +1,1794 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /api/v1/CreateActivity:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateActivity 创建一个活动
+            operationId: SkyflowV1Service_CreateActivity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateActivityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateActivityResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/CreateNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateNamespace 创建一个命名空间
+            operationId: SkyflowV1Service_CreateNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateNamespaceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/CreateOrUpdateActivity:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateOrUpdateActivity 创建/更新一个活动
+            operationId: SkyflowV1Service_CreateOrUpdateActivity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateActivityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateActivityResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/CreateOrUpdateNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateOrUpdateNamespace 创建/更新一个命名空间
+            operationId: SkyflowV1Service_CreateOrUpdateNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateNamespaceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/CreateOrUpdateStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateOrUpdateStateMachine 创建/更新一个状态机
+            operationId: SkyflowV1Service_CreateOrUpdateStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/CreateStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: CreateStateMachine 创建一个状态机
+            operationId: SkyflowV1Service_CreateStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DeleteActivity:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: DeleteActivity 删除一个活动
+            operationId: SkyflowV1Service_DeleteActivity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeleteActivityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteActivityResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DeleteNamespace:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: |-
+                DeleteNamespace 删除一个命名空间
+                 注意: 只有当命名空间下没有任何活动和状态机时，才能删除命名空间
+            operationId: SkyflowV1Service_DeleteNamespace
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeleteNamespaceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DeleteStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: DeleteStateMachine 删除一个状态机
+            operationId: SkyflowV1Service_DeleteStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DeleteStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DescribeActivity:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: DescribeActivity 获得一个活动的描述
+            operationId: SkyflowV1Service_DescribeActivity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeActivityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DescribeActivityResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DescribeExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: DescribeExecution 获得一个执行的描述
+            operationId: SkyflowV1Service_DescribeExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DescribeExecutionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DescribeExecutionBone:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: |-
+                DescribeExecutionBone 获得一个执行的执行的Bone信息
+                 Bone信息用于前段展示执行的流程图
+            operationId: SkyflowV1Service_DescribeExecutionBone
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeExecutionBoneRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DescribeExecutionBoneResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DescribeStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: DescribeStateMachine 获得一个状态机的描述
+            operationId: SkyflowV1Service_DescribeStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DescribeStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/DescribeStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            operationId: SkyflowV1Service_DescribeStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DescribeStepResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/GetActivityTask:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: GetActivityTask 获得一个需要执行的task
+            operationId: SkyflowV1Service_GetActivityTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetActivityTaskRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetActivityTaskResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/HTTP:
+        post:
+            tags:
+                - CommonService
+                - 通用服务
+            description: HTTPReturn  HTTP API接口返回值格式
+            operationId: CommonService_HTTP
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/HTTPResponseMessage'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListActivities:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ListActivities 获得活动列表
+            operationId: SkyflowV1Service_ListActivities
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListActivitiesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListActivitiesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListExecutionEvents:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: ListExecutionEvents 获得一个执行的Event列表
+            operationId: SkyflowV1Service_ListExecutionEvents
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListExecutionEventsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListExecutionEventsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListExecutions:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: ListExecutions 获得execution列表
+            operationId: SkyflowV1Service_ListExecutions
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListExecutionsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListExecutionsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListNamespaces:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ListNamespaces 获得命名空间列表
+            operationId: SkyflowV1Service_ListNamespaces
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListNamespacesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListNamespacesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListStateMachines:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ListStateMachines 获得状态机列表
+            operationId: SkyflowV1Service_ListStateMachines
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListStateMachinesRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListStateMachinesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ListStepEvents:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: ListStepEvents 获得一个执行的StepEvent列表
+            operationId: SkyflowV1Service_ListStepEvents
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ListStepEventsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListExecutionEventsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/Paging:
+        post:
+            tags:
+                - CommonService
+                - 通用服务
+            description: Paging 分页格式
+            operationId: CommonService_Paging
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PageRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ParseStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: |-
+                ParseStateMachine 解析一个状态机模板，返回解析后的定义和类型
+                 验证definition的合法性
+            operationId: SkyflowV1Service_ParseStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ParseStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ParseStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/Ping:
+        post:
+            tags:
+                - CommonService
+                - 通用服务
+            description: Ping ping service
+            operationId: CommonService_Ping
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/RedoStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: |-
+                RedoStep 强制重做一个步骤
+                 不判断步骤状态，直接重做
+            operationId: SkyflowV1Service_RedoStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ResumeSuspendingStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: |-
+                ResumeSuspendingStep 继续一个处于暂停状态的步骤，
+                 需要 Step Type:Suspend, Status: Suspending
+            operationId: SkyflowV1Service_ResumeSuspendingStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendStepFailed:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendStepFailed 强制Running步骤失败
+            operationId: SkyflowV1Service_SendStepFailed
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendStepRetry:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: RetryFailedStep 重试失败的步骤
+            operationId: SkyflowV1Service_RetryFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DescribeStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendTaskFailure:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskFailure 发送task执行失败
+            operationId: SkyflowV1Service_SendTaskFailure
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SendTaskFailureRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendTaskHeartbeat:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskHeartbeat 发送task 执行心跳
+            operationId: SkyflowV1Service_SendTaskHeartbeat
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SendTaskHeartbeatRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendTaskReference:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskReference 发送task执行关联信息
+            operationId: SkyflowV1Service_SendTaskReference
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SendTaskReferenceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SendTaskSuccess:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SendTaskSuccess 发送task执行成功
+            operationId: SkyflowV1Service_SendTaskSuccess
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SendTaskSuccessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SkipBlockedTask:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SkipBlockedTask 跳过阻塞任务
+            operationId: SkyflowV1Service_SkipBlockedTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SkipBlockedTaskRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/SkipFailedStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: SkipFailedStep 跳过失败的步骤
+            operationId: SkyflowV1Service_SkipFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SkipFailedStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/StartExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: |-
+                任务管理
+                 StartExecution 创建一个执行任务
+            operationId: SkyflowV1Service_StartExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StartExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StartExecutionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/StopExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: StopExecution 终止一个执行
+            operationId: SkyflowV1Service_StopExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StopExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/UnblockTask:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务操作
+            description: UnblockTask 解锁阻塞任务
+            operationId: SkyflowV1Service_UnblockTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UnblockTaskRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/UpdateStateMachine:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: UpdateStateMachine 更新一个状态机
+            operationId: SkyflowV1Service_UpdateStateMachine
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateStateMachineRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateStateMachineResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/ValidateStateMachineDefinition:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 模板管理
+            description: ValidateStateMachineDefinition 验证状态机定义的合法性
+            operationId: SkyflowV1Service_ValidateStateMachineDefinition
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ValidateStateMachineDefinitionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ValidateStateMachineDefinitionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        ActivityListItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 活动名字
+                description:
+                    type: string
+                    description: description 活动描述
+                activityUri:
+                    type: string
+                    description: activity_uri 活动uri
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: ActivityListItem ...
+        CreateActivityRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name activity name
+                description:
+                    type: string
+                    description: description activity description
+                namespace:
+                    type: string
+                    description: namespace activity namespace
+                parameters:
+                    type: string
+                    description: parameters activity parameters
+            description: CreateActivityRequest 创建一个活动请求结构
+        CreateActivityResponse:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: activity uri
+                createTime:
+                    type: string
+                    description: create_time create time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: CreateActivityResponse 创建一个活动返回结构
+        CreateNamespaceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+                description:
+                    type: string
+                    description: description 命名空间描述
+            description: CreateNamespaceRequest 创建一个命名空间
+        CreateNamespaceResponse:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name namespace name
+                description:
+                    type: string
+                    description: description 命名空间描述
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time  update time timestample
+            description: CreateNamespaceResponse 创建一个命名空间返回结构
+        CreateStateMachineRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                description:
+                    type: string
+                namespace:
+                    type: string
+                definition:
+                    type: string
+            description: CreateStateMachineRequest 创建一个状态机请求结构
+        CreateStateMachineResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/StateMachineInfo'
+            description: CreateStateMachineResponse 创建一个状态机返回结构
+        DeleteActivityRequest:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: activity uri
+        DeleteActivityResponse:
+            type: object
+            properties: {}
+            description: 删除活动请求返回， 占位符
+        DeleteNamespaceRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+            description: DeleteNamespaceRequest 删除一个命名空间
+        DeleteStateMachineRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+            description: DeleteStateMachineRequest 删除一个状态机请求结构
+        DeleteStateMachineResponse:
+            type: object
+            properties: {}
+            description: DeleteStateMachineResponse 删除一个状态机返回结构
+        DescribeActivityRequest:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: activity uri
+            description: DescribeActivityRequest 获得活动详情
+        DescribeActivityResponse:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name activity name
+                description:
+                    type: string
+                    description: description activity description
+                activityUri:
+                    type: string
+                    description: activity_uri activity uri
+                createTime:
+                    type: string
+                    description: create_time create time timestample
+                updateTime:
+                    type: string
+                    description: update_time  update time timestample
+            description: DescribeActivityResponse 获得活动列表请求返回
+        DescribeExecutionBoneRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid 必选
+            description: 获得一个执行的执行的Bone请求结构
+        DescribeExecutionBoneResponse:
+            type: object
+            properties:
+                bone:
+                    type: string
+                    description: bone execution bone
+            description: 获得一个执行的描述d的返回结构
+        DescribeExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid 必选
+            description: 获得一个执行的描述请求结构
+        DescribeExecutionResponse:
+            type: object
+            properties: {}
+            description: 获得一个执行的描述的返回结构
+        DescribeStateMachineRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+            description: DescribeActivityRequest 获得状态机详情返回结构
+        DescribeStateMachineResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/StateMachineInfo'
+            description: DescribeStateMachineResponse 获得活动列表请求返回结构
+        DescribeStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: DescribeStepRequest 获得一个Step的信息请求结构
+        DescribeStepResponse:
+            type: object
+            properties:
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/StepInfo'
+                    description: 返回的Step 状态信息
+                executionUuid:
+                    type: string
+                    description: execution uuid
+            description: DescribeStepResponse 获得一个Step的信息返回结构
+        ExecutionEventInfo:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: step id
+                stepName:
+                    type: string
+                eventType:
+                    type: string
+                data:
+                    type: string
+                createTime:
+                    type: string
+                startTime:
+                    type: string
+                finishTime:
+                    type: string
+            description: ExecutionEventInfo 执行事件
+        ExecutionListItem:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution_uuid
+                status:
+                    type: string
+                    description: status execution status
+                title:
+                    type: string
+                    description: title execution title
+                definition:
+                    type: string
+                createTime:
+                    type: string
+                    description: create_time timestample
+                startTime:
+                    type: string
+                    description: start_time timestample
+                finishTime:
+                    type: string
+                    description: finish_time timestample
+            description: ExecutionListItem execution info in ListExecutionsResponse
+        GetActivityTaskRequest:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: task uri
+                timeoutSeconds:
+                    type: integer
+                    description: timeout_seconds
+                    format: int32
+            description: GetActivityTaskRequest 通过URI查询是否有一个需要执行的task
+        GetActivityTaskResponse:
+            type: object
+            properties:
+                activityUri:
+                    type: string
+                    description: task_uri
+                taskToken:
+                    type: string
+                    description: task_token
+                input:
+                    type: string
+                    description: task 的输入，需要worker自己解码
+                timeoutSecond:
+                    type: string
+                    description: |-
+                        Deprecated: 该字段已经废弃，使用timeout_seconds
+                         task 的超时时间，单位(s), 0表示不超时
+                heartbeatTimeoutSecond:
+                    type: string
+                    description: |-
+                        Deprecated: 该字段已经废弃，使用heartbeat_seconds
+                         task 心跳超时时间，单位(s), 0 表示不超时
+                timeoutSeconds:
+                    type: string
+                    description: task 的超时时间，单位(s), 0表示不超时
+                heartbeatSeconds:
+                    type: string
+                    description: task 心跳超时时间，单位(s), 0 表示不超时
+                extraInfo:
+                    allOf:
+                        - $ref: '#/components/schemas/GetActivityTaskResponse_ExtraInfo'
+                    description: task 的额外信息
+            description: GetActivityTaskResponse 返回查询到的结构
+        GetActivityTaskResponse_ExtraInfo:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                executionUuid:
+                    type: string
+                    description: execution uuid
+            description: ExtraInfo 附加信息
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        HTTPResponseMessage:
+            type: object
+            properties:
+                retcode:
+                    type: integer
+                    description: 返回码，0为正常，非0为异常
+                    format: int32
+                message:
+                    type: string
+                    description: 异常信息说明
+            description: HTTPResponseMessage HTTP API接口返回值格式
+        ListActivitiesRequest:
+            type: object
+            properties:
+                namespace:
+                    type: string
+                    description: namespace 活动命名空间
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListActivitiesRequest 获得活动列表请求结构
+        ListActivitiesResponse:
+            type: object
+            properties:
+                activities:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ActivityListItem'
+                    description: 查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/PageResponse'
+                    description: 分页信息
+            description: ListActivitiesResponse 获得活动列表请求返回
+        ListExecutionEventsRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                pageRequest:
+                    $ref: '#/components/schemas/PageRequest'
+            description: ListExecutionEventsRequest  获得一个执行的Event列表请求结构
+        ListExecutionEventsResponse:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ExecutionEventInfo'
+                    description: 返回Event列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/PageResponse'
+                    description: 分页信息
+            description: ListExecutionEventsResponse 获得一个执行的Event列表返回值
+        ListExecutionsRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+                    description: 流程名字, 按照名字查询， 可选
+                executionUuids:
+                    type: array
+                    items:
+                        type: string
+                    description: uuid 列表，指定的uuid列表查询， 可选, 最大100个
+                status:
+                    type: string
+                    description: 状态，按照状态查询， 可选
+                title:
+                    type: string
+                    description: title按照title 关键字查询，可选。title like "%${title}%"
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListExecutionsRequest 获得execution列表请求结构
+        ListExecutionsResponse:
+            type: object
+            properties:
+                executions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ExecutionListItem'
+                    description: 查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/PageResponse'
+                    description: 分页信息
+            description: ListExecutionsResponse 获得execution列表返回值
+        ListNamespacesRequest:
+            type: object
+            properties:
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListNamespacesRequest 获得命名空间列表
+        ListNamespacesResponse:
+            type: object
+            properties:
+                namespaces:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NamespaceListItem'
+                    description: data  查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/PageResponse'
+                    description: 分页信息
+            description: ListNamespacesResponse 获得命名空间列表返回
+        ListStateMachinesRequest:
+            type: object
+            properties:
+                namespace:
+                    type: string
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/PageRequest'
+                    description: 分页请求，默认 每分页大小 = 50条
+            description: ListStateMachinesRequest 获得状态机列表请求结构
+        ListStateMachinesResponse:
+            type: object
+            properties:
+                statemachines:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StateMachineListItem'
+                    description: 查询到的执行列表
+                pageResponse:
+                    allOf:
+                        - $ref: '#/components/schemas/PageResponse'
+                    description: 分页信息
+            description: ListStateMachinesResponse 获得状态机列表请求返回
+        ListStepEventsRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                pageRequest:
+                    allOf:
+                        - $ref: '#/components/schemas/PageRequest'
+                    description: 分页信息
+            description: ListStepEventsRequest 获得一个Step的执行事件列表请求机构
+        NamespaceListItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 命名空间名字
+                description:
+                    type: string
+                    description: description 命名空间描述
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: NamespaceInfo 命名空间信息
+        PageRequest:
+            type: object
+            properties:
+                pageSize:
+                    type: string
+                    description: 请求分页大小
+                pageNumber:
+                    type: string
+                    description: 请求页号
+                orderBy:
+                    type: string
+                    description: 请求排序字段
+            description: 分页请求结构
+        PageResponse:
+            type: object
+            properties:
+                count:
+                    type: string
+                    description: 总数量
+                pageSize:
+                    type: string
+                    description: 请求分页大小
+                pageNumber:
+                    type: string
+                    description: 请求页号
+                pageCount:
+                    type: string
+                    description: 总页数
+            description: 分页返回结构
+        ParseStateMachineRequest:
+            type: object
+            properties:
+                definition:
+                    type: string
+                    description: statemachine definition
+            description: ParseStateMachineRequest 解析一个状态机请求结构`
+        ParseStateMachineResponse:
+            type: object
+            properties:
+                bone:
+                    type: string
+                    description: statemachine bone
+            description: ParseStateMachineResponse 解析一个状态机返回结构
+        PingResponse:
+            type: object
+            properties:
+                retcode:
+                    type: integer
+                    description: 返回码，0为正常，非0为异常
+                    format: int32
+                message:
+                    type: string
+                    description: 异常信息说明
+            description: PingResponse ping返回
+        SendTaskFailureRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                error:
+                    type: string
+                    description: error 错误类型，用来匹配异常
+                cause:
+                    type: string
+                    description: cause， error的文本描述
+            description: SendTaskFailureRequest 发送task 失败
+        SendTaskHeartbeatRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                message:
+                    type: string
+                    description: task 可以附带的message
+            description: SendTaskHeartbeatRequest 发送task 心跳
+        SendTaskReferenceRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                title:
+                    type: string
+                    description: task 关联的链接描述
+                url:
+                    type: string
+                    description: task关联的链接url
+        SendTaskSuccessRequest:
+            type: object
+            properties:
+                taskToken:
+                    type: string
+                    description: task token
+                output:
+                    type: string
+                    description: output task 执行的output， json 类型
+            description: SendTaskSuccessRequest 发送task 成功
+        SkipBlockedTaskRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: SkipBlockedTaskRequest 跳过阻塞任务请求
+        SkipFailedStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                nextState:
+                    type: string
+                    description: 下一个步骤名
+                output:
+                    type: string
+                    description: output 当天步骤的输出
+            description: SkipFailedStepRequest 跳过失败的步骤
+        StartExecutionRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+                    description: 状态机模板URI，可选，statemachine_uri 与definition 必须指定一个
+                definition:
+                    type: string
+                    description: 流程模板定义，JSON/YAML格式的流程模板定义，可选
+                title:
+                    type: string
+                    description: 状态机执行的标题，可为空
+                input:
+                    type: string
+                    description: 状态机执行的输入，json格式的输入 ，可选，默认是空 '{}'
+                executionName:
+                    type: string
+                    description: 状态机执行的任务ID， 全局不可重复 uuid， 可选，不指定自动生成uuid
+            description: |-
+                创建一个执行的请求体
+                 参数约束：
+                 statemachine_uri 是指注册到 skyflowflow的 模板引用路径，
+                 definition是自定义的StateMachine定义,json/yaml格式
+                 statemachine_uri与definition 二选一。
+                 execution_name：用户自定义的执行唯一名称，可选， 如果指定，自动生成一个新的uuid .
+        StartExecutionResponse:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: 返回的执行的唯一ID
+                createTime:
+                    type: string
+                    description: 执行创建的时间
+            description: 创建一个执行的请求返回结构
+        StateMachineInfo:
+            type: object
+            properties:
+                name:
+                    type: string
+                description:
+                    type: string
+                statemachineUri:
+                    type: string
+                definition:
+                    type: string
+                type:
+                    type: string
+                    description: 'type : standard / express'
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+            description: StateMachineInfo 状态机信息
+        StateMachineListItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: name 状态机名字
+                description:
+                    type: string
+                    description: description 状态机描述
+                statemachineUri:
+                    type: string
+                    description: statemachine_uri 状态机uri
+                createTime:
+                    type: string
+                    description: create_time timestample
+                updateTime:
+                    type: string
+                    description: update_time timestample
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        StepInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: string
+                definition:
+                    type: string
+                input:
+                    type: string
+                output:
+                    type: string
+                createTime:
+                    type: string
+                startTime:
+                    type: string
+                finishTime:
+                    type: string
+            description: StepInfo 一个Step的状态描述
+        StopExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid， 必选
+                error:
+                    type: string
+                    description: Error 错误类型，用来匹配异常, 必选
+                cause:
+                    type: string
+                    description: cause， error的文本描述， 可选
+            description: 终止一个执行
+        UnblockTaskRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: UnblockTaskRequest 解除任务阻塞请求
+        UpdateStateMachineRequest:
+            type: object
+            properties:
+                statemachineUri:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                definition:
+                    type: string
+            description: UpdateStateMachineRequest 更新一个状态机请求结构
+        UpdateStateMachineResponse:
+            type: object
+            properties: {}
+            description: UpdateStateMachineResponse 更新一个状态机返回结构
+        ValidateStateMachineDefinitionDiagnostic:
+            type: object
+            properties:
+                code:
+                    type: string
+                message:
+                    type: string
+                severity:
+                    type: string
+                location:
+                    type: string
+            description: ValidateStateMachineDefinitionDiagnostic 验证状态机定义返回的错误信息
+        ValidateStateMachineDefinitionRequest:
+            type: object
+            properties:
+                definition:
+                    type: string
+                    description: statemachine definition
+                maxResults:
+                    type: integer
+                    format: int32
+                severity:
+                    type: string
+                type:
+                    type: string
+            description: ValidateStateMachineDefinitionRequest 验证状态机定义请求结构
+        ValidateStateMachineDefinitionResponse:
+            type: object
+            properties:
+                diagnostics:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ValidateStateMachineDefinitionDiagnostic'
+                    description: 是否合法
+                result:
+                    type: string
+                truncated:
+                    type: string
+            description: ValidateStateMachineDefinitionResponse 验证状态机定义返回结构
+tags:
+    - name: CommonService
+      description: CommonService 通用服务
+    - name: SkyflowV1Service
+      description: SkyflowV1Service workflow Service
