@@ -68,7 +68,7 @@ func CustomErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
 		Data:         nil,
 		ReturnCode:   int(-1),
 	}
-	var pberr *pberror.PBError
+	var pbErr *pberror.PBError
 	var kerr *errors.Error
 	var ok bool
 	var statusCode int
@@ -83,13 +83,13 @@ func CustomErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
 		resp.ErrorMessage = err.Error()
 		goto WRITE_MESSAGE
 	}
-	pberr, ok = pberror.IsPBError(err)
+	pbErr, ok = pberror.IsPBError(err)
 	if ok {
 		// 业务错误
-		slog.Error("pberr error", "error", kerr)
-		resp.ErrorCode = pberr.Code.String()
-		resp.ErrorMessage = pberr.Message
-		resp.ReturnCode = int(pberr.Code)
+		slog.Error("pb err error", "error", pbErr)
+		resp.ErrorCode = pbErr.Code.String()
+		resp.ErrorMessage = pbErr.Message
+		resp.ReturnCode = int(pbErr.Code)
 		w.WriteHeader(http.StatusOK)
 		goto WRITE_MESSAGE
 	}
