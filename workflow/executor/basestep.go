@@ -151,7 +151,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 		}
 	} else {
 		// 减少一次额外的查询
-		dbExecution, err = step.ExecutionService.QueryExecutionByID(dbStep.ExecutionID, []string{"id", "max_execute_index"}, tx)
+		dbExecution, err = step.ExecutionService.QueryExecutionByID(step.Data.ExecutionID, []string{"id", "max_execute_index"}, tx)
 		if err != nil {
 			return err
 		}
