@@ -24,6 +24,11 @@ func NewPBError(code pbv1.ErrorCode, message string) *PBError {
 	return pbErr
 }
 
+func (err *PBError) WithMesage(message string) *PBError {
+	err.Message = message
+	return err
+}
+
 func NewFromError(code pbv1.ErrorCode, err error) *PBError {
 	pbErr := &PBError{
 		Code:     code,

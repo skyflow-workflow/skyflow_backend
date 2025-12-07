@@ -30,7 +30,7 @@ var (
 	ErrorNotAllStepGroupFinish = fmt.Errorf("not all step group succeed")
 	// activity not found error
 	// ErrorActivityTaskNotFound = fmt.Errorf("ActivityTaskNotFound")
-	ErrorActivityTaskNotFound = pberror.NewPBError(pbv1.ErrorCode_ActivityTaskNotFound, "ActivityTaskNotFound")
+	ErrorActivityTaskNotFound = pberror.NewPBError(pbv1.ErrorCode_ActivityTaskNotFound, "")
 	//unsupported operation for step
 	ErrorUnsupportedOperationForStep = fmt.Errorf("unsupported operation for step")
 

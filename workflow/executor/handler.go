@@ -13,11 +13,9 @@ import (
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
-	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
 	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/parser"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/states"
-	"github.com/skyflow-workflow/skyflow_backend/workflow/pberror"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
@@ -1573,8 +1571,8 @@ func (svc *executionService) GetActivityTask(ctx context.Context, req vo.GetActi
 	// 超过查找次数没找到
 	if !found {
 		tx.Commit()
-		rawerr := fmt.Errorf("%w : %s", vo.ErrorActivityTaskNotFound, req.ActivityURI)
-		err = pberror.NewFromError(pbv1.ErrorCode_ActivityTaskNotFound, rawerr)
+		msg := fmt.Sprintf("activity task not found: %s", req.ActivityURI)
+		err = vo.ErrorActivityTaskNotFound.WithMesage(msg)
 		return
 	}
 	err = json.Unmarshal([]byte(dbActivityTask.Data), &atData)
