@@ -361,3 +361,29 @@ func TestRunChoice(t *testing.T) {
 
 	}
 }
+
+func TestChoice_NumericLessThanEquals(t *testing.T) {
+
+	definition := `{
+		"Name": "ChoiceSub",
+        "Type": "Choice",
+        "Choices": [
+                {
+                    "Variable": "$.z",
+                    "NumericLessThanEquals": 100,
+                    "Next": "S3"
+                }
+            ],
+            "Default": "S2"
+	}`
+
+	input := map[string]any{
+		"z": 110,
+	}
+	state, err := NewChoiceStateFromString(definition)
+	assert.Equal(t, err == nil, true)
+
+	next, err := state.GetNextState(input)
+	assert.Equal(t, err == nil, true)
+	assert.Equal(t, next.Name, "S2")
+}

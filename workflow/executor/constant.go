@@ -392,7 +392,7 @@ var TimeSeriesNodeType = struct {
 
 // StateEventStatusCheckMap  事件的前置状态检查字典
 // 不同的事件对状态有要求，通过检查状态， 确认消息是否可消费
-var StateEventEventCheckStatus = map[string][]string{
+var StateEventCheckStatus = map[string][]string{
 	//normal message
 	MessageType.StateNewTurn:        {string(StepStatus.WaitInit)},
 	MessageType.FindNextStep:        {string(StepStatus.Skip), string(StepStatus.Success)},

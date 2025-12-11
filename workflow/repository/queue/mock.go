@@ -10,12 +10,16 @@ import (
 // MockInnerQueue mock innerqueue
 type MockInnerQueue struct{}
 
+func NewMockInnerQueue() *MockInnerQueue {
+	return &MockInnerQueue{}
+}
+
 func (mock MockInnerQueue) GetName() string {
 	return "mockqueue"
 }
 
 // SendInnerMessage SendInnerMessage
-func (mock MockInnerQueue) SendInnerMessage(msg InnerMessage, sendtime *time.Time) error {
+func (mock MockInnerQueue) SendInnerMessage(msg InnerMessageBody, sendtime *time.Time) error {
 
 	if sendtime == nil {
 		sendtime = &time.Time{}
@@ -31,7 +35,7 @@ func (mock MockInnerQueue) SendInnerMessage(msg InnerMessage, sendtime *time.Tim
 }
 
 // ReceiveInnerMessage ReceiveInnerMessage
-func (mock MockInnerQueue) ReceiveInnerMessage() (<-chan InnerMessageBody, error) {
+func (mock MockInnerQueue) ReceiveInnerMessage() (<-chan InnerMessage, error) {
 	return nil, nil
 }
 
@@ -47,5 +51,33 @@ func (mock MockInnerQueue) CleanExecutionMessage(int) error {
 }
 
 func (mock MockInnerQueue) SyncSchema() error {
+	return nil
+}
+
+type MockMessage struct {
+	id   string
+	body InnerMessageBody
+}
+
+func NewMockMessage(id string, body InnerMessageBody) MockMessage {
+	return MockMessage{
+		id:   id,
+		body: body,
+	}
+}
+
+func (mock MockMessage) ID() string {
+	return mock.id
+}
+
+func (mock MockMessage) Body() InnerMessageBody {
+	return mock.body
+}
+
+func (mock MockMessage) Ack() error {
+	return nil
+}
+
+func (mock MockMessage) Nack() error {
 	return nil
 }
