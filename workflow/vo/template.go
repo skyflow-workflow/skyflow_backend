@@ -111,8 +111,8 @@ type DeleteStateMachineRequest struct {
 
 // DescribeStepResponse ...
 type DescribeStepResponse struct {
-	ExecutionUUID string
-	Step          po.Step
+	Execution *po.Execution
+	Step      *po.Step
 }
 
 type UpdateStateMachineRequest struct {

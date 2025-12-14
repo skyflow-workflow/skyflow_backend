@@ -890,8 +890,8 @@ components:
         skyflow.CreateStateMachineResponse:
             type: object
             properties:
-                data:
-                    $ref: '#/components/schemas/skyflow.StateMachineInfo'
+                statemachine:
+                    $ref: '#/components/schemas/skyflow.StateMachineListItem'
             description: CreateStateMachineResponse 创建一个状态机返回结构
         skyflow.DeleteActivityRequest:
             type: object
@@ -899,6 +899,7 @@ components:
                 activityUri:
                     type: string
                     description: activity uri
+            description: DeleteActivityRequest 删除活动请求结构
         skyflow.DeleteActivityResponse:
             type: object
             properties: {}
@@ -969,7 +970,9 @@ components:
             description: 获得一个执行的描述请求结构
         skyflow.DescribeExecutionResponse:
             type: object
-            properties: {}
+            properties:
+                execution:
+                    $ref: '#/components/schemas/skyflow.ExecutionItem'
             description: 获得一个执行的描述的返回结构
         skyflow.DescribeStateMachineRequest:
             type: object
@@ -980,8 +983,8 @@ components:
         skyflow.DescribeStateMachineResponse:
             type: object
             properties:
-                data:
-                    $ref: '#/components/schemas/skyflow.StateMachineInfo'
+                statemachine:
+                    $ref: '#/components/schemas/skyflow.StateMachineListItem'
             description: DescribeStateMachineResponse 获得活动列表请求返回结构
         skyflow.DescribeStepRequest:
             type: object
@@ -993,17 +996,19 @@ components:
         skyflow.DescribeStepResponse:
             type: object
             properties:
-                data:
+                step:
                     allOf:
-                        - $ref: '#/components/schemas/skyflow.StepInfo'
+                        - $ref: '#/components/schemas/skyflow.StepItem'
                     description: 返回的Step 状态信息
                 executionUuid:
                     type: string
                     description: execution uuid
             description: DescribeStepResponse 获得一个Step的信息返回结构
-        skyflow.ExecutionEventInfo:
+        skyflow.ExecutionEventItem:
             type: object
             properties:
+                executionUuid:
+                    type: string
                 stepId:
                     type: string
                     description: step id
@@ -1015,12 +1020,15 @@ components:
                     type: string
                 createTime:
                     type: string
+                    description: create_time timestamp
                 startTime:
                     type: string
+                    description: start_time timestamp
                 finishTime:
                     type: string
-            description: ExecutionEventInfo 执行事件
-        skyflow.ExecutionListItem:
+                    description: finish_time timestamp
+            description: ExecutionEventListItem 执行事件
+        skyflow.ExecutionItem:
             type: object
             properties:
                 executionUuid:
@@ -1034,15 +1042,27 @@ components:
                     description: title execution title
                 definition:
                     type: string
+                input:
+                    type: string
+                output:
+                    type: string
+                statemachineUri:
+                    type: string
+                data:
+                    type: string
+                namespace:
+                    type: string
+                executeCount:
+                    type: string
                 createTime:
                     type: string
-                    description: create_time timestample
+                    description: create_time timestamp
                 startTime:
                     type: string
-                    description: start_time timestample
+                    description: start_time timestamp
                 finishTime:
                     type: string
-                    description: finish_time timestample
+                    description: finish_time timestamp
             description: ExecutionListItem execution info in ListExecutionsResponse
         skyflow.GetActivityTaskRequest:
             type: object
@@ -1067,16 +1087,6 @@ components:
                 input:
                     type: string
                     description: task 的输入，需要worker自己解码
-                timeoutSecond:
-                    type: string
-                    description: |-
-                        Deprecated: 该字段已经废弃，使用timeout_seconds
-                         task 的超时时间，单位(s), 0表示不超时
-                heartbeatTimeoutSecond:
-                    type: string
-                    description: |-
-                        Deprecated: 该字段已经废弃，使用heartbeat_seconds
-                         task 心跳超时时间，单位(s), 0 表示不超时
                 timeoutSeconds:
                     type: string
                     description: task 的超时时间，单位(s), 0表示不超时
@@ -1144,10 +1154,10 @@ components:
         skyflow.ListExecutionEventsResponse:
             type: object
             properties:
-                data:
+                events:
                     type: array
                     items:
-                        $ref: '#/components/schemas/skyflow.ExecutionEventInfo'
+                        $ref: '#/components/schemas/skyflow.ExecutionEventItem'
                     description: 返回Event列表
                 pageResponse:
                     allOf:
@@ -1182,7 +1192,7 @@ components:
                 executions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/skyflow.ExecutionListItem'
+                        $ref: '#/components/schemas/skyflow.ExecutionItem'
                     description: 查询到的执行列表
                 pageResponse:
                     allOf:
@@ -1414,27 +1424,6 @@ components:
                     type: string
                     description: 执行创建的时间
             description: 创建一个执行的请求返回结构
-        skyflow.StateMachineInfo:
-            type: object
-            properties:
-                name:
-                    type: string
-                description:
-                    type: string
-                statemachineUri:
-                    type: string
-                definition:
-                    type: string
-                type:
-                    type: string
-                    description: 'type : standard / express'
-                createTime:
-                    type: string
-                    description: create_time timestample
-                updateTime:
-                    type: string
-                    description: update_time timestample
-            description: StateMachineInfo 状态机信息
         skyflow.StateMachineListItem:
             type: object
             properties:
@@ -1447,18 +1436,25 @@ components:
                 statemachineUri:
                     type: string
                     description: statemachine_uri 状态机uri
+                definition:
+                    type: string
+                    description: definition 状态机定义
                 createTime:
                     type: string
                     description: create_time timestample
                 updateTime:
                     type: string
                     description: update_time timestample
-        skyflow.StepInfo:
+        skyflow.StepItem:
             type: object
             properties:
                 id:
                     type: string
                 status:
+                    type: string
+                name:
+                    type: string
+                type:
                     type: string
                 definition:
                     type: string
@@ -1466,13 +1462,18 @@ components:
                     type: string
                 output:
                     type: string
+                data:
+                    type: string
                 createTime:
                     type: string
+                    description: create_time timestamp
                 startTime:
                     type: string
+                    description: start_time timestamp
                 finishTime:
                     type: string
-            description: StepInfo 一个Step的状态描述
+                    description: finish_time timestamp
+            description: StepItem 一个Step的状态描述
         skyflow.StopExecutionRequest:
             type: object
             properties:

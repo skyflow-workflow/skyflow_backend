@@ -2712,11 +2712,11 @@ func (m *CreateStateMachineResponse) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetStatemachine()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, CreateStateMachineResponseValidationError{
-					field:  "Data",
+					field:  "Statemachine",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -2724,16 +2724,16 @@ func (m *CreateStateMachineResponse) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, CreateStateMachineResponseValidationError{
-					field:  "Data",
+					field:  "Statemachine",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetStatemachine()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return CreateStateMachineResponseValidationError{
-				field:  "Data",
+				field:  "Statemachine",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -2957,11 +2957,11 @@ func (m *DescribeStateMachineResponse) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetStatemachine()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, DescribeStateMachineResponseValidationError{
-					field:  "Data",
+					field:  "Statemachine",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -2969,16 +2969,16 @@ func (m *DescribeStateMachineResponse) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, DescribeStateMachineResponseValidationError{
-					field:  "Data",
+					field:  "Statemachine",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetStatemachine()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return DescribeStateMachineResponseValidationError{
-				field:  "Data",
+				field:  "Statemachine",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -3864,6 +3864,8 @@ func (m *StateMachineListItem) validate(all bool) error {
 
 	// no validation rules for StatemachineUri
 
+	// no validation rules for Definition
+
 	// no validation rules for CreateTime
 
 	// no validation rules for UpdateTime
@@ -3948,22 +3950,22 @@ var _ interface {
 	ErrorName() string
 } = StateMachineListItemValidationError{}
 
-// Validate checks the field values on ExecutionListItem with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ExecutionListItem) Validate() error {
+// Validate checks the field values on ExecutionItem with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ExecutionItem) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ExecutionListItem with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ExecutionListItemMultiError, or nil if none found.
-func (m *ExecutionListItem) ValidateAll() error {
+// ValidateAll checks the field values on ExecutionItem with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ExecutionItemMultiError, or
+// nil if none found.
+func (m *ExecutionItem) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ExecutionListItem) validate(all bool) error {
+func (m *ExecutionItem) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -3978,6 +3980,18 @@ func (m *ExecutionListItem) validate(all bool) error {
 
 	// no validation rules for Definition
 
+	// no validation rules for Input
+
+	// no validation rules for Output
+
+	// no validation rules for StatemachineUri
+
+	// no validation rules for Data
+
+	// no validation rules for Namespace
+
+	// no validation rules for ExecuteCount
+
 	// no validation rules for CreateTime
 
 	// no validation rules for StartTime
@@ -3985,19 +3999,19 @@ func (m *ExecutionListItem) validate(all bool) error {
 	// no validation rules for FinishTime
 
 	if len(errors) > 0 {
-		return ExecutionListItemMultiError(errors)
+		return ExecutionItemMultiError(errors)
 	}
 
 	return nil
 }
 
-// ExecutionListItemMultiError is an error wrapping multiple validation errors
-// returned by ExecutionListItem.ValidateAll() if the designated constraints
+// ExecutionItemMultiError is an error wrapping multiple validation errors
+// returned by ExecutionItem.ValidateAll() if the designated constraints
 // aren't met.
-type ExecutionListItemMultiError []error
+type ExecutionItemMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ExecutionListItemMultiError) Error() string {
+func (m ExecutionItemMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -4006,11 +4020,11 @@ func (m ExecutionListItemMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ExecutionListItemMultiError) AllErrors() []error { return m }
+func (m ExecutionItemMultiError) AllErrors() []error { return m }
 
-// ExecutionListItemValidationError is the validation error returned by
-// ExecutionListItem.Validate if the designated constraints aren't met.
-type ExecutionListItemValidationError struct {
+// ExecutionItemValidationError is the validation error returned by
+// ExecutionItem.Validate if the designated constraints aren't met.
+type ExecutionItemValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -4018,24 +4032,22 @@ type ExecutionListItemValidationError struct {
 }
 
 // Field function returns field value.
-func (e ExecutionListItemValidationError) Field() string { return e.field }
+func (e ExecutionItemValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ExecutionListItemValidationError) Reason() string { return e.reason }
+func (e ExecutionItemValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ExecutionListItemValidationError) Cause() error { return e.cause }
+func (e ExecutionItemValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ExecutionListItemValidationError) Key() bool { return e.key }
+func (e ExecutionItemValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ExecutionListItemValidationError) ErrorName() string {
-	return "ExecutionListItemValidationError"
-}
+func (e ExecutionItemValidationError) ErrorName() string { return "ExecutionItemValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ExecutionListItemValidationError) Error() string {
+func (e ExecutionItemValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -4047,14 +4059,14 @@ func (e ExecutionListItemValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sExecutionListItem.%s: %s%s",
+		"invalid %sExecutionItem.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ExecutionListItemValidationError{}
+var _ error = ExecutionItemValidationError{}
 
 var _ interface {
 	Field() string
@@ -4062,24 +4074,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ExecutionListItemValidationError{}
+} = ExecutionItemValidationError{}
 
-// Validate checks the field values on StepInfo with the rules defined in the
+// Validate checks the field values on StepItem with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *StepInfo) Validate() error {
+func (m *StepItem) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on StepInfo with the rules defined in
+// ValidateAll checks the field values on StepItem with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in StepInfoMultiError, or nil
+// result is a list of violation errors wrapped in StepItemMultiError, or nil
 // if none found.
-func (m *StepInfo) ValidateAll() error {
+func (m *StepItem) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *StepInfo) validate(all bool) error {
+func (m *StepItem) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -4090,11 +4102,17 @@ func (m *StepInfo) validate(all bool) error {
 
 	// no validation rules for Status
 
+	// no validation rules for Name
+
+	// no validation rules for Type
+
 	// no validation rules for Definition
 
 	// no validation rules for Input
 
 	// no validation rules for Output
+
+	// no validation rules for Data
 
 	// no validation rules for CreateTime
 
@@ -4103,18 +4121,18 @@ func (m *StepInfo) validate(all bool) error {
 	// no validation rules for FinishTime
 
 	if len(errors) > 0 {
-		return StepInfoMultiError(errors)
+		return StepItemMultiError(errors)
 	}
 
 	return nil
 }
 
-// StepInfoMultiError is an error wrapping multiple validation errors returned
-// by StepInfo.ValidateAll() if the designated constraints aren't met.
-type StepInfoMultiError []error
+// StepItemMultiError is an error wrapping multiple validation errors returned
+// by StepItem.ValidateAll() if the designated constraints aren't met.
+type StepItemMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m StepInfoMultiError) Error() string {
+func (m StepItemMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -4123,11 +4141,11 @@ func (m StepInfoMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m StepInfoMultiError) AllErrors() []error { return m }
+func (m StepItemMultiError) AllErrors() []error { return m }
 
-// StepInfoValidationError is the validation error returned by
-// StepInfo.Validate if the designated constraints aren't met.
-type StepInfoValidationError struct {
+// StepItemValidationError is the validation error returned by
+// StepItem.Validate if the designated constraints aren't met.
+type StepItemValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -4135,22 +4153,22 @@ type StepInfoValidationError struct {
 }
 
 // Field function returns field value.
-func (e StepInfoValidationError) Field() string { return e.field }
+func (e StepItemValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e StepInfoValidationError) Reason() string { return e.reason }
+func (e StepItemValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e StepInfoValidationError) Cause() error { return e.cause }
+func (e StepItemValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e StepInfoValidationError) Key() bool { return e.key }
+func (e StepItemValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e StepInfoValidationError) ErrorName() string { return "StepInfoValidationError" }
+func (e StepItemValidationError) ErrorName() string { return "StepItemValidationError" }
 
 // Error satisfies the builtin error interface
-func (e StepInfoValidationError) Error() string {
+func (e StepItemValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -4162,14 +4180,14 @@ func (e StepInfoValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sStepInfo.%s: %s%s",
+		"invalid %sStepItem.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = StepInfoValidationError{}
+var _ error = StepItemValidationError{}
 
 var _ interface {
 	Field() string
@@ -4177,29 +4195,31 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = StepInfoValidationError{}
+} = StepItemValidationError{}
 
-// Validate checks the field values on ExecutionEventInfo with the rules
+// Validate checks the field values on ExecutionEventItem with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ExecutionEventInfo) Validate() error {
+func (m *ExecutionEventItem) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ExecutionEventInfo with the rules
+// ValidateAll checks the field values on ExecutionEventItem with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ExecutionEventInfoMultiError, or nil if none found.
-func (m *ExecutionEventInfo) ValidateAll() error {
+// ExecutionEventItemMultiError, or nil if none found.
+func (m *ExecutionEventItem) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ExecutionEventInfo) validate(all bool) error {
+func (m *ExecutionEventItem) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
+
+	// no validation rules for ExecutionUuid
 
 	// no validation rules for StepId
 
@@ -4216,19 +4236,19 @@ func (m *ExecutionEventInfo) validate(all bool) error {
 	// no validation rules for FinishTime
 
 	if len(errors) > 0 {
-		return ExecutionEventInfoMultiError(errors)
+		return ExecutionEventItemMultiError(errors)
 	}
 
 	return nil
 }
 
-// ExecutionEventInfoMultiError is an error wrapping multiple validation errors
-// returned by ExecutionEventInfo.ValidateAll() if the designated constraints
+// ExecutionEventItemMultiError is an error wrapping multiple validation errors
+// returned by ExecutionEventItem.ValidateAll() if the designated constraints
 // aren't met.
-type ExecutionEventInfoMultiError []error
+type ExecutionEventItemMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ExecutionEventInfoMultiError) Error() string {
+func (m ExecutionEventItemMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -4237,11 +4257,11 @@ func (m ExecutionEventInfoMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ExecutionEventInfoMultiError) AllErrors() []error { return m }
+func (m ExecutionEventItemMultiError) AllErrors() []error { return m }
 
-// ExecutionEventInfoValidationError is the validation error returned by
-// ExecutionEventInfo.Validate if the designated constraints aren't met.
-type ExecutionEventInfoValidationError struct {
+// ExecutionEventItemValidationError is the validation error returned by
+// ExecutionEventItem.Validate if the designated constraints aren't met.
+type ExecutionEventItemValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -4249,24 +4269,24 @@ type ExecutionEventInfoValidationError struct {
 }
 
 // Field function returns field value.
-func (e ExecutionEventInfoValidationError) Field() string { return e.field }
+func (e ExecutionEventItemValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ExecutionEventInfoValidationError) Reason() string { return e.reason }
+func (e ExecutionEventItemValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ExecutionEventInfoValidationError) Cause() error { return e.cause }
+func (e ExecutionEventItemValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ExecutionEventInfoValidationError) Key() bool { return e.key }
+func (e ExecutionEventItemValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ExecutionEventInfoValidationError) ErrorName() string {
-	return "ExecutionEventInfoValidationError"
+func (e ExecutionEventItemValidationError) ErrorName() string {
+	return "ExecutionEventItemValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ExecutionEventInfoValidationError) Error() string {
+func (e ExecutionEventItemValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -4278,14 +4298,14 @@ func (e ExecutionEventInfoValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sExecutionEventInfo.%s: %s%s",
+		"invalid %sExecutionEventItem.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ExecutionEventInfoValidationError{}
+var _ error = ExecutionEventItemValidationError{}
 
 var _ interface {
 	Field() string
@@ -4293,230 +4313,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ExecutionEventInfoValidationError{}
-
-// Validate checks the field values on ActivityInfo with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *ActivityInfo) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ActivityInfo with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in ActivityInfoMultiError, or
-// nil if none found.
-func (m *ActivityInfo) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ActivityInfo) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Description
-
-	// no validation rules for ActivityUri
-
-	// no validation rules for CreateTime
-
-	// no validation rules for UpdateTime
-
-	if len(errors) > 0 {
-		return ActivityInfoMultiError(errors)
-	}
-
-	return nil
-}
-
-// ActivityInfoMultiError is an error wrapping multiple validation errors
-// returned by ActivityInfo.ValidateAll() if the designated constraints aren't met.
-type ActivityInfoMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ActivityInfoMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ActivityInfoMultiError) AllErrors() []error { return m }
-
-// ActivityInfoValidationError is the validation error returned by
-// ActivityInfo.Validate if the designated constraints aren't met.
-type ActivityInfoValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ActivityInfoValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ActivityInfoValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ActivityInfoValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ActivityInfoValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ActivityInfoValidationError) ErrorName() string { return "ActivityInfoValidationError" }
-
-// Error satisfies the builtin error interface
-func (e ActivityInfoValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sActivityInfo.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ActivityInfoValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ActivityInfoValidationError{}
-
-// Validate checks the field values on StateMachineInfo with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *StateMachineInfo) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on StateMachineInfo with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// StateMachineInfoMultiError, or nil if none found.
-func (m *StateMachineInfo) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *StateMachineInfo) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Description
-
-	// no validation rules for StatemachineUri
-
-	// no validation rules for Definition
-
-	// no validation rules for Type
-
-	// no validation rules for CreateTime
-
-	// no validation rules for UpdateTime
-
-	if len(errors) > 0 {
-		return StateMachineInfoMultiError(errors)
-	}
-
-	return nil
-}
-
-// StateMachineInfoMultiError is an error wrapping multiple validation errors
-// returned by StateMachineInfo.ValidateAll() if the designated constraints
-// aren't met.
-type StateMachineInfoMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m StateMachineInfoMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m StateMachineInfoMultiError) AllErrors() []error { return m }
-
-// StateMachineInfoValidationError is the validation error returned by
-// StateMachineInfo.Validate if the designated constraints aren't met.
-type StateMachineInfoValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e StateMachineInfoValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e StateMachineInfoValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e StateMachineInfoValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e StateMachineInfoValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e StateMachineInfoValidationError) ErrorName() string { return "StateMachineInfoValidationError" }
-
-// Error satisfies the builtin error interface
-func (e StateMachineInfoValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sStateMachineInfo.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = StateMachineInfoValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = StateMachineInfoValidationError{}
+} = ExecutionEventItemValidationError{}
 
 // Validate checks the field values on ParseStateMachineRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -5477,6 +5274,35 @@ func (m *DescribeExecutionResponse) validate(all bool) error {
 
 	var errors []error
 
+	if all {
+		switch v := interface{}(m.GetExecution()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DescribeExecutionResponseValidationError{
+					field:  "Execution",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DescribeExecutionResponseValidationError{
+					field:  "Execution",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetExecution()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DescribeExecutionResponseValidationError{
+				field:  "Execution",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return DescribeExecutionResponseMultiError(errors)
 	}
@@ -6406,7 +6232,7 @@ func (m *ListExecutionEventsResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetData() {
+	for idx, item := range m.GetEvents() {
 		_, _ = idx, item
 
 		if all {
@@ -6414,7 +6240,7 @@ func (m *ListExecutionEventsResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListExecutionEventsResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Events[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -6422,7 +6248,7 @@ func (m *ListExecutionEventsResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListExecutionEventsResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
+						field:  fmt.Sprintf("Events[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -6431,7 +6257,7 @@ func (m *ListExecutionEventsResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListExecutionEventsResponseValidationError{
-					field:  fmt.Sprintf("Data[%v]", idx),
+					field:  fmt.Sprintf("Events[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -6686,11 +6512,11 @@ func (m *DescribeStepResponse) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetStep()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, DescribeStepResponseValidationError{
-					field:  "Data",
+					field:  "Step",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -6698,16 +6524,16 @@ func (m *DescribeStepResponse) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, DescribeStepResponseValidationError{
-					field:  "Data",
+					field:  "Step",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetStep()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return DescribeStepResponseValidationError{
-				field:  "Data",
+				field:  "Step",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -7089,10 +6915,6 @@ func (m *GetActivityTaskResponse) validate(all bool) error {
 	// no validation rules for TaskToken
 
 	// no validation rules for Input
-
-	// no validation rules for TimeoutSecond
-
-	// no validation rules for HeartbeatTimeoutSecond
 
 	// no validation rules for TimeoutSeconds
 

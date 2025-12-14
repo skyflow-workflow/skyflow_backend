@@ -156,7 +156,7 @@ func (svc *workflowService) StopExecution(ctx context.Context, req vo.StopExecut
 }
 
 // DescribeExecution 获得一个执行的描述
-func (svc *workflowService) DescribeExecution(req vo.DescribeExecutionRequest) (dbExe *po.Execution, err error) {
+func (svc *workflowService) DescribeExecution(ctx context.Context, req vo.DescribeExecutionRequest) (dbExe *po.Execution, err error) {
 
 	dbExe, err = svc.ExecutionService.QueryExecutionByUUID(req.ExecutionUUID, executor.ExecutionFields.L5, nil)
 	if err != nil {
@@ -176,14 +176,14 @@ func (svc *workflowService) DescribeExecutionBone(ctx context.Context, req vo.De
 }
 
 // DescribeExecution 获得一个执行的描述
-func (svc *workflowService) ListExecutions(req vo.ListExecutionsRequest) (vo.ListExecutionsResponse, error) {
+func (svc *workflowService) ListExecutions(ctx context.Context, req vo.ListExecutionsRequest) (vo.ListExecutionsResponse, error) {
 
 	resp, err := svc.ExecutionService.ListExecutions(req)
 	return resp, err
 }
 
 // DescribeStep 获得一个执行的描述
-func (svc *workflowService) DescribeStep(req vo.DescribeStepRequest) (resp vo.DescribeStepResponse, err error) {
+func (svc *workflowService) DescribeStep(ctx context.Context, req vo.DescribeStepRequest) (resp vo.DescribeStepResponse, err error) {
 
 	var dbStep *po.Step
 	var dbExe *po.Execution
@@ -196,8 +196,8 @@ func (svc *workflowService) DescribeStep(req vo.DescribeStepRequest) (resp vo.De
 		return
 	}
 	resp = vo.DescribeStepResponse{
-		Step:          *dbStep,
-		ExecutionUUID: dbExe.UUID,
+		Step:      dbStep,
+		Execution: dbExe,
 	}
 
 	return resp, nil
@@ -273,7 +273,7 @@ func (svc *workflowService) ResumeSuspendingStep(req vo.DescribeStepRequest) err
 	return err
 }
 
-func (svc *workflowService) ListExecutionEvents(req vo.ListExecutionEventsRequest) (vo.ListExecutionEventsResponse, error) {
+func (svc *workflowService) ListExecutionEvents(ctx context.Context, req vo.ListExecutionEventsRequest) (vo.ListExecutionEventsResponse, error) {
 
 	dbExe, err := svc.ExecutionService.QueryExecutionByUUID(req.ExecutionUUID, executor.ExecutionFields.L1, nil)
 	if err != nil {
@@ -284,13 +284,13 @@ func (svc *workflowService) ListExecutionEvents(req vo.ListExecutionEventsReques
 	return resp, err
 }
 
-func (svc *workflowService) ListStepEvents(req vo.ListStepEventsRequest) (vo.ListExecutionEventsResponse, error) {
+func (svc *workflowService) ListStepEvents(ctx context.Context, req vo.ListStepEventsRequest) (vo.ListExecutionEventsResponse, error) {
 
 	resp, err := svc.ExporterService.ListStepEvents(req)
 	return resp, err
 }
 
-func (svc *workflowService) SendStepRetry(req vo.DescribeStepRequest) error {
+func (svc *workflowService) SendStepRetry(ctx context.Context, req vo.DescribeStepRequest) error {
 
 	err := svc.ExecutionService.SendStepRetry(int(req.StepID))
 

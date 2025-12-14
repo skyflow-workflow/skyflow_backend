@@ -19,20 +19,23 @@ func ToTimeString(t time.Time) string {
 	return t.Format(timeformat)
 }
 
-func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionListItem {
+func ToTimeUnix(t *time.Time) int64 {
+	if t == nil {
+		return 0
+	}
+	return t.Unix()
+}
 
-	resp := &pbv1.ExecutionListItem{
+func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionItem {
+
+	resp := &pbv1.ExecutionItem{
 		ExecutionUuid: in.UUID,
 		Status:        in.Status,
 		Title:         in.Title,
 		Definition:    in.Definition,
 		CreateTime:    in.CreateTime.Unix(),
-	}
-	if in.StartTime != nil {
-		resp.StartTime = in.StartTime.Unix()
-	}
-	if in.FinishTime != nil {
-		resp.FinishTime = in.FinishTime.Unix()
+		StartTime:     ToTimeUnix(in.StartTime),
+		FinishTime:    ToTimeUnix(in.FinishTime),
 	}
 	return resp
 }
@@ -74,15 +77,15 @@ func ToPBPageResponse(req paging.PageResponse) *pbv1.PageResponse {
 	return resp
 }
 
-func ToPBExecutionEvent(in po.ExecutionEvent) *pbv1.ExecutionEventInfo {
+func ToPBExecutionEvent(in po.ExecutionEvent) *pbv1.ExecutionEventItem {
 
-	resp := &pbv1.ExecutionEventInfo{
+	resp := &pbv1.ExecutionEventItem{
 		StepId:     int64(in.StepID),
 		StepName:   in.StepName,
 		EventType:  in.EventType,
-		CreateTime: in.CreateTime.String(),
-		StartTime:  in.StartTime.String(),
-		FinishTime: ToTimeString(in.FinishTime),
+		CreateTime: in.CreateTime.Unix(),
+		StartTime:  in.StartTime.Unix(),
+		FinishTime: in.FinishTime.Unix(),
 		Data:       in.Data,
 	}
 	return resp
@@ -119,14 +122,33 @@ func ToPBStateMachineItem(in po.StateMachine) *pbv1.StateMachineListItem {
 	}
 	return resp
 }
-func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineInfo {
-	resp := &pbv1.StateMachineInfo{
+func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineListItem {
+	resp := &pbv1.StateMachineListItem{
 		Name:            in.Name,
 		Description:     in.Description,
 		StatemachineUri: in.URI,
+		Definition:      in.Definition,
 		CreateTime:      in.CreateTime.Unix(),
 		UpdateTime:      in.UpdateTime.Unix(),
-		Definition:      in.Definition,
+	}
+	return resp
+}
+
+// ToPBStep 将po.Step转换为protobuf格式的StepItem
+// 转换包括ID、名称、类型、状态、定义、输入输出数据和时间戳等字段
+func ToPBStep(in po.Step) *pbv1.StepItem {
+	resp := &pbv1.StepItem{
+		Id:         int64(in.ID),
+		Name:       in.Name,
+		Type:       in.Type,
+		Status:     in.Status,
+		Definition: in.Definition,
+		Input:      in.Input,
+		Output:     in.Output,
+		Data:       in.Data,
+		CreateTime: in.CreateTime.Unix(),
+		StartTime:  ToTimeUnix(in.StartTime),
+		FinishTime: ToTimeUnix(in.FinishTime),
 	}
 	return resp
 }

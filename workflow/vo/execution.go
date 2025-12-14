@@ -151,7 +151,7 @@ type ListExecutionEventsRequest struct {
 
 // ListStepEventsRequest ...
 type ListStepEventsRequest struct {
-	StepID      int
+	StepID      int64
 	PageRequest paging.PageRequest
 }
 

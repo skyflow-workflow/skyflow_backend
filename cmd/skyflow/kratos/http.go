@@ -78,8 +78,8 @@ func CustomErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
 		slog.Error("unknown error", "error", err)
 		// 未知错误
 		w.WriteHeader(http.StatusInternalServerError)
-		resp.ErrorCode = pbv1.ErrorCode_UnknownError.String()
-		resp.ReturnCode = int(pbv1.ErrorCode_UnknownError)
+		resp.ErrorCode = pbv1.ErrorCode_UNKNOWN_ERROR.String()
+		resp.ReturnCode = int(pbv1.ErrorCode_UNKNOWN_ERROR)
 		resp.ErrorMessage = err.Error()
 		goto WRITE_MESSAGE
 	}

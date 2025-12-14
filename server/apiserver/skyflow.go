@@ -119,13 +119,24 @@ func (s *SkyflowServiceHandler) UnblockTask(ctx context.Context, req *pbv1.Unblo
 }
 
 // ValidateStateMachineDefinition implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ValidateStateMachineDefinition(ctx context.Context, req *pbv1.ValidateStateMachineDefinitionRequest) (*pbv1.ValidateStateMachineDefinitionResponse, error) {
+func (s *SkyflowServiceHandler) ValidateStateMachineDefinition(ctx context.Context, req *pbv1.ValidateStateMachineDefinitionRequest,
+) (*pbv1.ValidateStateMachineDefinitionResponse, error) {
 	panic("unimplemented")
 }
 
 // DescribeExecution implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pbv1.DescribeExecutionRequest) (*pbv1.DescribeExecutionResponse, error) {
-	panic("unimplemented")
+	voReq := vo.DescribeExecutionRequest{
+		ExecutionUUID: req.ExecutionUuid,
+	}
+	voResp, err := s.wfSvc.DescribeExecution(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pbv1.DescribeExecutionResponse{
+		Execution: ToPBExecutionItem(*voResp),
+	}
+	return resp, nil
 }
 
 // DescribeExecutionBone implements pbv1.SkyflowV1ServiceService.
@@ -135,8 +146,19 @@ func (s *SkyflowServiceHandler) DescribeExecutionBone(ctx context.Context, req *
 
 // DescribeStep implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*pbv1.DescribeStepResponse, error) {
+	voReq := vo.DescribeStepRequest{
+		StepID: req.StepId,
+	}
+	voResp, err := s.wfSvc.DescribeStep(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
 
-	panic("unimplemented")
+	resp := &pbv1.DescribeStepResponse{
+		Step:          ToPBStep(*voResp.Step),
+		ExecutionUuid: voResp.Execution.UUID,
+	}
+	return resp, nil
 }
 
 // GetActivityTask implements pbv1.SkyflowV1ServiceService.
@@ -165,7 +187,19 @@ func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pbv1.G
 
 // ListExecutionEvents implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pbv1.ListExecutionEventsRequest) (*pbv1.ListExecutionEventsResponse, error) {
-	panic("unimplemented")
+	voReq := vo.ListExecutionEventsRequest{
+		PageRequest:   ToVOPageRequest(req.PageRequest),
+		ExecutionUUID: req.ExecutionUuid,
+	}
+	voResp, err := s.wfSvc.ListExecutionEvents(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	respData := DataTransferArray(voResp.Events, ToPBExecutionEvent)
+	return &pbv1.ListExecutionEventsResponse{
+		Events:       respData,
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
+	}, nil
 }
 
 // ListExecutions implements pbv1.SkyflowV1ServiceService.
@@ -192,7 +226,19 @@ func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.Li
 
 // ListStepEvents implements pbv1.SkyflowV1ServiceService.
 func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pbv1.ListStepEventsRequest) (*pbv1.ListExecutionEventsResponse, error) {
-	panic("unimplemented")
+	voReq := vo.ListStepEventsRequest{
+		StepID:      req.StepId,
+		PageRequest: ToVOPageRequest(req.PageRequest),
+	}
+	voResp, err := s.wfSvc.ListStepEvents(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	respData := DataTransferArray(voResp.Events, ToPBExecutionEvent)
+	return &pbv1.ListExecutionEventsResponse{
+		Events:       respData,
+		PageResponse: ToPBPageResponse(voResp.PageResponse),
+	}, nil
 }
 
 // ParseStateMachine implements pbv1.SkyflowV1ServiceService.
@@ -269,7 +315,7 @@ func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, 
 		return nil, err
 	}
 	resp := &pbv1.CreateStateMachineResponse{
-		Data: ToPBStateMachine(&voResp.Data),
+		Statemachine: ToPBStateMachine(&voResp.Data),
 	}
 	return resp, nil
 }
@@ -287,7 +333,7 @@ func (s *SkyflowServiceHandler) CreateStateMachine(ctx context.Context, req *pbv
 		return nil, err
 	}
 	resp := &pbv1.CreateStateMachineResponse{
-		Data: ToPBStateMachine(&voResp.Data),
+		Statemachine: ToPBStateMachine(&voResp.Data),
 	}
 	return resp, nil
 }
@@ -328,7 +374,7 @@ func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *p
 		return nil, err
 	}
 	return &pbv1.DescribeStateMachineResponse{
-		Data: ToPBStateMachine(&voResp),
+		Statemachine: ToPBStateMachine(&voResp),
 	}, nil
 }
 

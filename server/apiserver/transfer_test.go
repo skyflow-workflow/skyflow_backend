@@ -25,7 +25,7 @@ func TestToPBExecutionItem(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    po.Execution
-		expected *pbv1.ExecutionListItem
+		expected *pbv1.ExecutionItem
 	}{
 		{
 			name: "WithStartAndFinishTime",
@@ -38,7 +38,7 @@ func TestToPBExecutionItem(t *testing.T) {
 				StartTime:  &startTime,
 				FinishTime: &finishTime,
 			},
-			expected: &pbv1.ExecutionListItem{
+			expected: &pbv1.ExecutionItem{
 				ExecutionUuid: "test-uuid",
 				Status:        "running",
 				Title:         "test-title",
@@ -57,7 +57,7 @@ func TestToPBExecutionItem(t *testing.T) {
 				Definition: "test-definition",
 				CreateTime: createTime,
 			},
-			expected: &pbv1.ExecutionListItem{
+			expected: &pbv1.ExecutionItem{
 				ExecutionUuid: "test-uuid",
 				Status:        "completed",
 				Title:         "test-title",
