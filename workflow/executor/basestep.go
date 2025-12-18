@@ -121,7 +121,7 @@ func (step *ExecutionStep) Init(msg queue.InnerMessageBody) error {
 	var dbExecution *po.Execution
 
 	var stateExeMsg = StepExecuteMessage{
-		Block: false,
+		UnBlockTask: false,
 	}
 	// 兼容历史消息
 	if msg.Data != "" {

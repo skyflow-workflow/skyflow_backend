@@ -383,7 +383,7 @@ func (e *Execution) ProcessInit() error {
 	// 发送消息
 	// 处理下一个节点
 	msg := StepExecuteMessage{
-		Block: false,
+		UnBlockTask: false,
 	}
 	message := NewStepMessage(dbExe.ID, MessageType.StateNewTurn, inSmResp.StartStepID, msg)
 	err = e.ExecutionService.InnerQueue.SendInnerMessage(message, nil)

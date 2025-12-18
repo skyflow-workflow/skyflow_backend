@@ -1329,7 +1329,7 @@ func (svc *executionService) SendStepRetry(step_id int) error {
 	svc.SendExecutionEvents(event)
 
 	msg := StepExecuteMessage{
-		Block: true,
+		UnBlockTask: true,
 	}
 	//  写入message queue ,发送手动处理消息
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateNewTurn, dbStep.ID, msg)
@@ -1857,7 +1857,7 @@ func (svc *executionService) RetryExecution(execution_id int) error {
 		events = append(events, event)
 
 		msg := StepExecuteMessage{
-			Block: true,
+			UnBlockTask: true,
 		}
 
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.StateNewTurn, dbStep.ID, msg)
@@ -2110,7 +2110,7 @@ func (svc *executionService) UnblockTask(ctx context.Context, req vo.UnblockTask
 	tx.Commit()
 
 	msgdata := StepExecuteMessage{
-		Block: true,
+		UnBlockTask: true,
 	}
 	msg := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, msgdata)
 	err = svc.SendInnerMessage(msg, nil)
@@ -2238,7 +2238,7 @@ func (svc *executionService) UnblockExecution(ctx context.Context, execution_id 
 		events = append(events, event)
 
 		msg := StepExecuteMessage{
-			Block: true,
+			UnBlockTask: true,
 		}
 
 		message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, msg)

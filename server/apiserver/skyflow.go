@@ -44,6 +44,29 @@ func (s *SkyflowServiceHandler) SendStepFailed(ctx context.Context, req *pbv1.De
 	panic("unimplemented")
 }
 
+// SkipBlockedTask implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SkipBlockedTask(ctx context.Context, req *pbv1.SkipBlockedTaskRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// SkipFailedStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) SkipFailedStep(ctx context.Context, req *pbv1.SkipFailedStepRequest) (*emptypb.Empty, error) {
+	panic("unimplemented")
+}
+
+// UnblockTask implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) UnblockTask(ctx context.Context, req *pbv1.UnblockTaskRequest) (*emptypb.Empty, error) {
+
+	voReq := vo.UnblockTaskRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.ExecutionService.UnblockTask(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
 // SendTaskFailure implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) SendTaskFailure(ctx context.Context, req *pbv1.SendTaskFailureRequest) (*emptypb.Empty, error) {
 	voReq := vo.SendTaskFailureRequest{
@@ -101,21 +124,6 @@ func (s *SkyflowServiceHandler) SendTaskSuccess(ctx context.Context, req *pbv1.S
 		return nil, err
 	}
 	return &emptypb.Empty{}, nil
-}
-
-// SkipBlockedTask implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) SkipBlockedTask(ctx context.Context, req *pbv1.SkipBlockedTaskRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
-}
-
-// SkipFailedStep implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) SkipFailedStep(ctx context.Context, req *pbv1.SkipFailedStepRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
-}
-
-// UnblockTask implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) UnblockTask(ctx context.Context, req *pbv1.UnblockTaskRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
 }
 
 // ValidateStateMachineDefinition implements pbv1.SkyflowV1ServiceService.
