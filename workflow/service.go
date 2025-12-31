@@ -168,6 +168,12 @@ func (svc *workflowService) DescribeExecution(ctx context.Context, req vo.Descri
 // DescribeExecutionBone 获得一个执行的框架的描述
 func (svc *workflowService) DescribeExecutionBone(ctx context.Context, req vo.DescribeExecutionBoneRequest) (resp vo.DescribeExecutionBoneResponse, err error) {
 
+	dbExe, err := svc.ExecutionService.QueryExecutionByUUID(req.ExecutionUUID, executor.ExecutionFields.L1, nil)
+	if err != nil {
+		return
+	}
+	req.ExecutionID = dbExe.ID
+
 	resp, err = svc.ExecutionService.DescribeExecutionBone(ctx, req)
 	if err != nil {
 		return
@@ -203,7 +209,7 @@ func (svc *workflowService) DescribeStep(ctx context.Context, req vo.DescribeSte
 	return resp, nil
 }
 
-func (svc *workflowService) ParseWorkflow(req vo.ParseFlowRequest) (*states.StateMachine, error) {
+func (svc *workflowService) ParseStateMachine(ctx context.Context, req vo.ParseStateMachineRequest) (*states.StateMachine, error) {
 	// Request Limit Check
 	smObj, err := svc.standardExecutor.Parser.ParseStateMachine(req.StateMachineDefinition)
 	if err != nil {
@@ -245,31 +251,33 @@ func (svc *workflowService) SendTaskHeartbeat(ctx context.Context, req vo.SendTa
 	err := svc.ExecutionService.SendTaskHeartbeat(ctx, req)
 	return err
 }
-func (svc *workflowService) SendStepSkip(ctx context.Context, req vo.SendStepSkipRequest) error {
-	err := svc.ExecutionService.SendStepSkip(ctx, req)
-	return err
-}
-func (svc *workflowService) RedoStep(ctx context.Context, req vo.DescribeStepRequest) error {
-	err := svc.ExecutionService.RedoStep(int(req.StepID))
+
+func (svc *workflowService) SkipFailedStep(ctx context.Context, req vo.SkipFailedStepRequest) error {
+	err := svc.ExecutionService.SkipFailedStep(ctx, req)
 	return err
 }
 
-func (svc *workflowService) ResumeExecution(req vo.DescribeExecutionRequest) error {
+func (svc *workflowService) RedoStep(ctx context.Context, req vo.RedoStepRequest) error {
+	err := svc.ExecutionService.RedoStep(ctx, req)
+	return err
+}
+
+func (svc *workflowService) ResumeExecution(ctx context.Context, req vo.ResumeExecutionRequest) error {
 
 	dbExe, err := svc.ExecutionService.QueryExecutionByUUID(req.ExecutionUUID, executor.ExecutionFields.L1, nil)
 	if err != nil {
 		return err
 	}
-
-	err = svc.ExecutionService.ResumeExecution(dbExe.ID)
+	req.ExecutionID = dbExe.ID
+	err = svc.ExecutionService.ResumeExecution(ctx, req)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (svc *workflowService) ResumeSuspendingStep(req vo.DescribeStepRequest) error {
-	err := svc.ExecutionService.ResumeSuspendingStep(int(req.StepID))
+func (svc *workflowService) ResumeSuspendingStep(ctx context.Context, req vo.ResumeSuspendingStepRequest) error {
+	err := svc.ExecutionService.ResumeSuspendingStep(ctx, req)
 	return err
 }
 
@@ -284,33 +292,35 @@ func (svc *workflowService) ListExecutionEvents(ctx context.Context, req vo.List
 	return resp, err
 }
 
+// ListStepEvents 列出步骤事件
 func (svc *workflowService) ListStepEvents(ctx context.Context, req vo.ListStepEventsRequest) (vo.ListExecutionEventsResponse, error) {
 
 	resp, err := svc.ExporterService.ListStepEvents(req)
 	return resp, err
 }
 
-func (svc *workflowService) SendStepRetry(ctx context.Context, req vo.DescribeStepRequest) error {
+// RetryFailedStep 重试失败的步骤
+func (svc *workflowService) RetryFailedStep(ctx context.Context, req vo.RetryFailedStepRequest) error {
 
-	err := svc.ExecutionService.SendStepRetry(int(req.StepID))
-
-	return err
-}
-
-func (svc *workflowService) SendStepFailed(ctx context.Context, req vo.DescribeStepRequest) error {
-
-	err := svc.ExecutionService.SendStepFailed(int(req.StepID))
+	err := svc.ExecutionService.RetryFailedStep(ctx, req)
 
 	return err
 }
 
-func (svc *workflowService) RetryExecution(ctx context.Context, req vo.DescribeExecutionRequest) error {
+func (svc *workflowService) SendStepFailed(ctx context.Context, req vo.SendStepFailedRequest) error {
+
+	err := svc.ExecutionService.SendStepFailed(ctx, req)
+	return err
+}
+
+func (svc *workflowService) RetryExecution(ctx context.Context, req vo.RetryExecutionRequest) error {
 
 	dbExe, err := svc.ExecutionService.QueryExecutionByUUID(req.ExecutionUUID, executor.ExecutionFields.L1, nil)
 	if err != nil {
 		return err
 	}
-	err = svc.ExecutionService.RetryExecution(dbExe.ID)
+	req.ExecutionID = dbExe.ID
+	err = svc.ExecutionService.RetryExecution(ctx, req)
 	return err
 }
 

@@ -271,7 +271,8 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务管理
+                - 步骤管理
+            description: DescribeStep 获得一个执行的Step的描述
             operationId: SkyflowV1Service_DescribeStep
             requestBody:
                 content:
@@ -428,7 +429,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务管理
+                - 步骤管理
             description: ListStepEvents 获得一个执行的StepEvent列表
             operationId: SkyflowV1Service_ListStepEvents
             requestBody:
@@ -508,7 +509,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: |-
                 RedoStep 强制重做一个步骤
                  不判断步骤状态，直接重做
@@ -517,7 +518,24 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.RedoStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/ResumeExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: ResumeExecution 恢复一个执行
+            operationId: SkyflowV1Service_ResumeExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.ResumeExecutionRequest'
                 required: true
             responses:
                 "200":
@@ -527,16 +545,50 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: |-
                 ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-                 需要 Step Type:Suspend, Status: Suspending
+                 需要 Status: Suspending
             operationId: SkyflowV1Service_ResumeSuspendingStep
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.ResumeSuspendingStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/RetryExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: RetryExecution 重试一个执行
+            operationId: SkyflowV1Service_RetryExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.RetryExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/RetryFailedStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 步骤管理
+            description: RetryFailedStep 重试失败的步骤
+            operationId: SkyflowV1Service_RetryFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.RetryFailedStepRequest'
                 required: true
             responses:
                 "200":
@@ -546,31 +598,14 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendStepFailed 强制Running步骤失败
             operationId: SkyflowV1Service_SendStepFailed
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-    /api/v1/SendStepRetry:
-        post:
-            tags:
-                - SkyflowV1Service
-                - 任务操作
-            description: RetryFailedStep 重试失败的步骤
-            operationId: SkyflowV1Service_RetryFailedStep
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.SendStepFailedRequest'
                 required: true
             responses:
                 "200":
@@ -580,7 +615,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskFailure 发送task执行失败
             operationId: SkyflowV1Service_SendTaskFailure
             requestBody:
@@ -597,7 +632,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskHeartbeat 发送task 执行心跳
             operationId: SkyflowV1Service_SendTaskHeartbeat
             requestBody:
@@ -614,7 +649,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskReference 发送task执行关联信息
             operationId: SkyflowV1Service_SendTaskReference
             requestBody:
@@ -631,7 +666,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskSuccess 发送task执行成功
             operationId: SkyflowV1Service_SendTaskSuccess
             requestBody:
@@ -648,7 +683,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SkipBlockedTask 跳过阻塞任务
             operationId: SkyflowV1Service_SkipBlockedTask
             requestBody:
@@ -665,7 +700,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SkipFailedStep 跳过失败的步骤
             operationId: SkyflowV1Service_SkipFailedStep
             requestBody:
@@ -683,9 +718,7 @@ paths:
             tags:
                 - SkyflowV1Service
                 - 任务管理
-            description: |-
-                任务管理
-                 StartExecution 创建一个执行任务
+            description: StartExecution 创建一个执行任务
             operationId: SkyflowV1Service_StartExecution
             requestBody:
                 content:
@@ -721,7 +754,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: UnblockTask 解锁阻塞任务
             operationId: SkyflowV1Service_UnblockTask
             requestBody:
@@ -1324,6 +1357,59 @@ components:
                     type: string
                     description: 异常信息说明
             description: PingResponse ping返回
+        skyflow.RedoStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: RedoStepRequest 重做步骤请求
+        skyflow.ResumeExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid， 必选
+                cause:
+                    type: string
+                    description: cause， error的文本描述， 可选
+            description: 恢复一个执行任务
+        skyflow.ResumeSuspendingStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: ResumeSuspendingStepRequest 恢复挂起的步骤
+        skyflow.RetryExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid， 必选
+                cause:
+                    type: string
+                    description: cause， error的文本描述， 可选
+            description: 重试一个执行任务
+        skyflow.RetryFailedStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: RetryFailedStepRequest 重试失败的步骤请求
+        skyflow.SendStepFailedRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                error:
+                    type: string
+                    description: error 错误类型，用来匹配异常
+                cause:
+                    type: string
+                    description: cause， error的文本描述
         skyflow.SendTaskFailureRequest:
             type: object
             properties:
@@ -1486,7 +1572,7 @@ components:
                 cause:
                     type: string
                     description: cause， error的文本描述， 可选
-            description: 终止一个执行
+            description: 终止一个执行任务
         skyflow.UnblockTaskRequest:
             type: object
             properties:

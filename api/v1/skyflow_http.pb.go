@@ -188,7 +188,9 @@ const OperationSkyflowV1ServiceListStateMachines = "/skyflow.SkyflowV1Service/Li
 const OperationSkyflowV1ServiceListStepEvents = "/skyflow.SkyflowV1Service/ListStepEvents"
 const OperationSkyflowV1ServiceParseStateMachine = "/skyflow.SkyflowV1Service/ParseStateMachine"
 const OperationSkyflowV1ServiceRedoStep = "/skyflow.SkyflowV1Service/RedoStep"
+const OperationSkyflowV1ServiceResumeExecution = "/skyflow.SkyflowV1Service/ResumeExecution"
 const OperationSkyflowV1ServiceResumeSuspendingStep = "/skyflow.SkyflowV1Service/ResumeSuspendingStep"
+const OperationSkyflowV1ServiceRetryExecution = "/skyflow.SkyflowV1Service/RetryExecution"
 const OperationSkyflowV1ServiceRetryFailedStep = "/skyflow.SkyflowV1Service/RetryFailedStep"
 const OperationSkyflowV1ServiceSendStepFailed = "/skyflow.SkyflowV1Service/SendStepFailed"
 const OperationSkyflowV1ServiceSendTaskFailure = "/skyflow.SkyflowV1Service/SendTaskFailure"
@@ -232,6 +234,7 @@ type SkyflowV1ServiceHTTPServer interface {
 	DescribeExecutionBone(context.Context, *DescribeExecutionBoneRequest) (*DescribeExecutionBoneResponse, error)
 	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(context.Context, *DescribeStateMachineRequest) (*DescribeStateMachineResponse, error)
+	// DescribeStep DescribeStep 获得一个执行的Step的描述
 	DescribeStep(context.Context, *DescribeStepRequest) (*DescribeStepResponse, error)
 	// GetActivityTask GetActivityTask 获得一个需要执行的task
 	GetActivityTask(context.Context, *GetActivityTaskRequest) (*GetActivityTaskResponse, error)
@@ -252,14 +255,18 @@ type SkyflowV1ServiceHTTPServer interface {
 	ParseStateMachine(context.Context, *ParseStateMachineRequest) (*ParseStateMachineResponse, error)
 	// RedoStep RedoStep 强制重做一个步骤
 	// 不判断步骤状态，直接重做
-	RedoStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	RedoStep(context.Context, *RedoStepRequest) (*emptypb.Empty, error)
+	// ResumeExecution ResumeExecution 恢复一个执行
+	ResumeExecution(context.Context, *ResumeExecutionRequest) (*emptypb.Empty, error)
 	// ResumeSuspendingStep ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-	// 需要 Step Type:Suspend, Status: Suspending
-	ResumeSuspendingStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	// 需要 Status: Suspending
+	ResumeSuspendingStep(context.Context, *ResumeSuspendingStepRequest) (*emptypb.Empty, error)
+	// RetryExecution RetryExecution 重试一个执行
+	RetryExecution(context.Context, *RetryExecutionRequest) (*emptypb.Empty, error)
 	// RetryFailedStep RetryFailedStep 重试失败的步骤
-	RetryFailedStep(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	RetryFailedStep(context.Context, *RetryFailedStepRequest) (*emptypb.Empty, error)
 	// SendStepFailed SendStepFailed 强制Running步骤失败
-	SendStepFailed(context.Context, *DescribeStepRequest) (*emptypb.Empty, error)
+	SendStepFailed(context.Context, *SendStepFailedRequest) (*emptypb.Empty, error)
 	// SendTaskFailure SendTaskFailure 发送task执行失败
 	SendTaskFailure(context.Context, *SendTaskFailureRequest) (*emptypb.Empty, error)
 	// SendTaskHeartbeat SendTaskHeartbeat 发送task 执行心跳
@@ -272,8 +279,7 @@ type SkyflowV1ServiceHTTPServer interface {
 	SkipBlockedTask(context.Context, *SkipBlockedTaskRequest) (*emptypb.Empty, error)
 	// SkipFailedStep SkipFailedStep 跳过失败的步骤
 	SkipFailedStep(context.Context, *SkipFailedStepRequest) (*emptypb.Empty, error)
-	// StartExecution 任务管理
-	// StartExecution 创建一个执行任务
+	// StartExecution StartExecution 创建一个执行任务
 	StartExecution(context.Context, *StartExecutionRequest) (*StartExecutionResponse, error)
 	// StopExecution StopExecution 终止一个执行
 	StopExecution(context.Context, *StopExecutionRequest) (*emptypb.Empty, error)
@@ -308,6 +314,8 @@ func RegisterSkyflowV1ServiceHTTPServer(s *http.Server, srv SkyflowV1ServiceHTTP
 	r.POST("/api/v1/DescribeExecution", _SkyflowV1Service_DescribeExecution0_HTTP_Handler(srv))
 	r.POST("/api/v1/DescribeExecutionBone", _SkyflowV1Service_DescribeExecutionBone0_HTTP_Handler(srv))
 	r.POST("/api/v1/StopExecution", _SkyflowV1Service_StopExecution0_HTTP_Handler(srv))
+	r.POST("/api/v1/RetryExecution", _SkyflowV1Service_RetryExecution0_HTTP_Handler(srv))
+	r.POST("/api/v1/ResumeExecution", _SkyflowV1Service_ResumeExecution0_HTTP_Handler(srv))
 	r.POST("/api/v1/ListExecutions", _SkyflowV1Service_ListExecutions0_HTTP_Handler(srv))
 	r.POST("/api/v1/ListExecutionEvents", _SkyflowV1Service_ListExecutionEvents0_HTTP_Handler(srv))
 	r.POST("/api/v1/DescribeStep", _SkyflowV1Service_DescribeStep0_HTTP_Handler(srv))
@@ -320,7 +328,7 @@ func RegisterSkyflowV1ServiceHTTPServer(s *http.Server, srv SkyflowV1ServiceHTTP
 	r.POST("/api/v1/SkipFailedStep", _SkyflowV1Service_SkipFailedStep0_HTTP_Handler(srv))
 	r.POST("/api/v1/UnblockTask", _SkyflowV1Service_UnblockTask0_HTTP_Handler(srv))
 	r.POST("/api/v1/SkipBlockedTask", _SkyflowV1Service_SkipBlockedTask0_HTTP_Handler(srv))
-	r.POST("/api/v1/SendStepRetry", _SkyflowV1Service_RetryFailedStep0_HTTP_Handler(srv))
+	r.POST("/api/v1/RetryFailedStep", _SkyflowV1Service_RetryFailedStep0_HTTP_Handler(srv))
 	r.POST("/api/v1/SendStepFailed", _SkyflowV1Service_SendStepFailed0_HTTP_Handler(srv))
 	r.POST("/api/v1/RedoStep", _SkyflowV1Service_RedoStep0_HTTP_Handler(srv))
 	r.POST("/api/v1/ResumeSuspendingStep", _SkyflowV1Service_ResumeSuspendingStep0_HTTP_Handler(srv))
@@ -788,6 +796,50 @@ func _SkyflowV1Service_StopExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServe
 	}
 }
 
+func _SkyflowV1Service_RetryExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RetryExecutionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceRetryExecution)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RetryExecution(ctx, req.(*RetryExecutionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SkyflowV1Service_ResumeExecution0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResumeExecutionRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSkyflowV1ServiceResumeExecution)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ResumeExecution(ctx, req.(*ResumeExecutionRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _SkyflowV1Service_ListExecutions0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListExecutionsRequest
@@ -1054,7 +1106,7 @@ func _SkyflowV1Service_SkipBlockedTask0_HTTP_Handler(srv SkyflowV1ServiceHTTPSer
 
 func _SkyflowV1Service_RetryFailedStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DescribeStepRequest
+		var in RetryFailedStepRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -1063,7 +1115,7 @@ func _SkyflowV1Service_RetryFailedStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPSer
 		}
 		http.SetOperation(ctx, OperationSkyflowV1ServiceRetryFailedStep)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.RetryFailedStep(ctx, req.(*DescribeStepRequest))
+			return srv.RetryFailedStep(ctx, req.(*RetryFailedStepRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1076,7 +1128,7 @@ func _SkyflowV1Service_RetryFailedStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPSer
 
 func _SkyflowV1Service_SendStepFailed0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DescribeStepRequest
+		var in SendStepFailedRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -1085,7 +1137,7 @@ func _SkyflowV1Service_SendStepFailed0_HTTP_Handler(srv SkyflowV1ServiceHTTPServ
 		}
 		http.SetOperation(ctx, OperationSkyflowV1ServiceSendStepFailed)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.SendStepFailed(ctx, req.(*DescribeStepRequest))
+			return srv.SendStepFailed(ctx, req.(*SendStepFailedRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1098,7 +1150,7 @@ func _SkyflowV1Service_SendStepFailed0_HTTP_Handler(srv SkyflowV1ServiceHTTPServ
 
 func _SkyflowV1Service_RedoStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DescribeStepRequest
+		var in RedoStepRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -1107,7 +1159,7 @@ func _SkyflowV1Service_RedoStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) fu
 		}
 		http.SetOperation(ctx, OperationSkyflowV1ServiceRedoStep)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.RedoStep(ctx, req.(*DescribeStepRequest))
+			return srv.RedoStep(ctx, req.(*RedoStepRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1120,7 +1172,7 @@ func _SkyflowV1Service_RedoStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) fu
 
 func _SkyflowV1Service_ResumeSuspendingStep0_HTTP_Handler(srv SkyflowV1ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DescribeStepRequest
+		var in ResumeSuspendingStepRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -1129,7 +1181,7 @@ func _SkyflowV1Service_ResumeSuspendingStep0_HTTP_Handler(srv SkyflowV1ServiceHT
 		}
 		http.SetOperation(ctx, OperationSkyflowV1ServiceResumeSuspendingStep)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ResumeSuspendingStep(ctx, req.(*DescribeStepRequest))
+			return srv.ResumeSuspendingStep(ctx, req.(*ResumeSuspendingStepRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -1169,6 +1221,7 @@ type SkyflowV1ServiceHTTPClient interface {
 	DescribeExecutionBone(ctx context.Context, req *DescribeExecutionBoneRequest, opts ...http.CallOption) (rsp *DescribeExecutionBoneResponse, err error)
 	// DescribeStateMachine DescribeStateMachine 获得一个状态机的描述
 	DescribeStateMachine(ctx context.Context, req *DescribeStateMachineRequest, opts ...http.CallOption) (rsp *DescribeStateMachineResponse, err error)
+	// DescribeStep DescribeStep 获得一个执行的Step的描述
 	DescribeStep(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *DescribeStepResponse, err error)
 	// GetActivityTask GetActivityTask 获得一个需要执行的task
 	GetActivityTask(ctx context.Context, req *GetActivityTaskRequest, opts ...http.CallOption) (rsp *GetActivityTaskResponse, err error)
@@ -1189,14 +1242,18 @@ type SkyflowV1ServiceHTTPClient interface {
 	ParseStateMachine(ctx context.Context, req *ParseStateMachineRequest, opts ...http.CallOption) (rsp *ParseStateMachineResponse, err error)
 	// RedoStep RedoStep 强制重做一个步骤
 	// 不判断步骤状态，直接重做
-	RedoStep(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	RedoStep(ctx context.Context, req *RedoStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// ResumeExecution ResumeExecution 恢复一个执行
+	ResumeExecution(ctx context.Context, req *ResumeExecutionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// ResumeSuspendingStep ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-	// 需要 Step Type:Suspend, Status: Suspending
-	ResumeSuspendingStep(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// 需要 Status: Suspending
+	ResumeSuspendingStep(ctx context.Context, req *ResumeSuspendingStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// RetryExecution RetryExecution 重试一个执行
+	RetryExecution(ctx context.Context, req *RetryExecutionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// RetryFailedStep RetryFailedStep 重试失败的步骤
-	RetryFailedStep(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	RetryFailedStep(ctx context.Context, req *RetryFailedStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// SendStepFailed SendStepFailed 强制Running步骤失败
-	SendStepFailed(ctx context.Context, req *DescribeStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	SendStepFailed(ctx context.Context, req *SendStepFailedRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// SendTaskFailure SendTaskFailure 发送task执行失败
 	SendTaskFailure(ctx context.Context, req *SendTaskFailureRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// SendTaskHeartbeat SendTaskHeartbeat 发送task 执行心跳
@@ -1209,8 +1266,7 @@ type SkyflowV1ServiceHTTPClient interface {
 	SkipBlockedTask(ctx context.Context, req *SkipBlockedTaskRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// SkipFailedStep SkipFailedStep 跳过失败的步骤
 	SkipFailedStep(ctx context.Context, req *SkipFailedStepRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	// StartExecution 任务管理
-	// StartExecution 创建一个执行任务
+	// StartExecution StartExecution 创建一个执行任务
 	StartExecution(ctx context.Context, req *StartExecutionRequest, opts ...http.CallOption) (rsp *StartExecutionResponse, err error)
 	// StopExecution StopExecution 终止一个执行
 	StopExecution(ctx context.Context, req *StopExecutionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -1414,6 +1470,7 @@ func (c *SkyflowV1ServiceHTTPClientImpl) DescribeStateMachine(ctx context.Contex
 	return &out, nil
 }
 
+// DescribeStep DescribeStep 获得一个执行的Step的描述
 func (c *SkyflowV1ServiceHTTPClientImpl) DescribeStep(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*DescribeStepResponse, error) {
 	var out DescribeStepResponse
 	pattern := "/api/v1/DescribeStep"
@@ -1542,7 +1599,7 @@ func (c *SkyflowV1ServiceHTTPClientImpl) ParseStateMachine(ctx context.Context, 
 
 // RedoStep RedoStep 强制重做一个步骤
 // 不判断步骤状态，直接重做
-func (c *SkyflowV1ServiceHTTPClientImpl) RedoStep(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *SkyflowV1ServiceHTTPClientImpl) RedoStep(ctx context.Context, in *RedoStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/api/v1/RedoStep"
 	path := binding.EncodeURL(pattern, in, false)
@@ -1555,9 +1612,23 @@ func (c *SkyflowV1ServiceHTTPClientImpl) RedoStep(ctx context.Context, in *Descr
 	return &out, nil
 }
 
+// ResumeExecution ResumeExecution 恢复一个执行
+func (c *SkyflowV1ServiceHTTPClientImpl) ResumeExecution(ctx context.Context, in *ResumeExecutionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/ResumeExecution"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceResumeExecution))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 // ResumeSuspendingStep ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-// 需要 Step Type:Suspend, Status: Suspending
-func (c *SkyflowV1ServiceHTTPClientImpl) ResumeSuspendingStep(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+// 需要 Status: Suspending
+func (c *SkyflowV1ServiceHTTPClientImpl) ResumeSuspendingStep(ctx context.Context, in *ResumeSuspendingStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/api/v1/ResumeSuspendingStep"
 	path := binding.EncodeURL(pattern, in, false)
@@ -1570,10 +1641,24 @@ func (c *SkyflowV1ServiceHTTPClientImpl) ResumeSuspendingStep(ctx context.Contex
 	return &out, nil
 }
 
-// RetryFailedStep RetryFailedStep 重试失败的步骤
-func (c *SkyflowV1ServiceHTTPClientImpl) RetryFailedStep(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+// RetryExecution RetryExecution 重试一个执行
+func (c *SkyflowV1ServiceHTTPClientImpl) RetryExecution(ctx context.Context, in *RetryExecutionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/api/v1/SendStepRetry"
+	pattern := "/api/v1/RetryExecution"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationSkyflowV1ServiceRetryExecution))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// RetryFailedStep RetryFailedStep 重试失败的步骤
+func (c *SkyflowV1ServiceHTTPClientImpl) RetryFailedStep(ctx context.Context, in *RetryFailedStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/RetryFailedStep"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationSkyflowV1ServiceRetryFailedStep))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -1585,7 +1670,7 @@ func (c *SkyflowV1ServiceHTTPClientImpl) RetryFailedStep(ctx context.Context, in
 }
 
 // SendStepFailed SendStepFailed 强制Running步骤失败
-func (c *SkyflowV1ServiceHTTPClientImpl) SendStepFailed(ctx context.Context, in *DescribeStepRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *SkyflowV1ServiceHTTPClientImpl) SendStepFailed(ctx context.Context, in *SendStepFailedRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/api/v1/SendStepFailed"
 	path := binding.EncodeURL(pattern, in, false)
@@ -1682,8 +1767,7 @@ func (c *SkyflowV1ServiceHTTPClientImpl) SkipFailedStep(ctx context.Context, in 
 	return &out, nil
 }
 
-// StartExecution 任务管理
-// StartExecution 创建一个执行任务
+// StartExecution StartExecution 创建一个执行任务
 func (c *SkyflowV1ServiceHTTPClientImpl) StartExecution(ctx context.Context, in *StartExecutionRequest, opts ...http.CallOption) (*StartExecutionResponse, error) {
 	var out StartExecutionResponse
 	pattern := "/api/v1/StartExecution"

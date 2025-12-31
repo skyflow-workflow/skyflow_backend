@@ -6,6 +6,7 @@ import (
 	"log/slog"
 
 	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backend/workflow"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -24,24 +25,73 @@ func NewSkyflowServiceHandler(wfSvc workflow.WorkflowService) *SkyflowServiceHan
 	}
 }
 
-// RedoStep implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) RedoStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
+// ResumeExecution implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) ResumeExecution(ctx context.Context, req *pbv1.ResumeExecutionRequest) (*emptypb.Empty, error) {
 	panic("unimplemented")
+}
+
+// RetryExecution implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) RetryExecution(ctx context.Context, req *pbv1.RetryExecutionRequest) (*emptypb.Empty, error) {
+	voReq := vo.RetryExecutionRequest{
+		ExecutionUUID: req.ExecutionUuid,
+	}
+	err := s.wfSvc.RetryExecution(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+
+}
+
+// RedoStep implements v1.SkyflowV1ServiceServer.
+func (s *SkyflowServiceHandler) RedoStep(ctx context.Context, req *pbv1.RedoStepRequest) (*emptypb.Empty, error) {
+	voReq := vo.RedoStepRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.RedoStep(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // ResumeSuspendingStep implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) ResumeSuspendingStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+func (s *SkyflowServiceHandler) ResumeSuspendingStep(ctx context.Context, req *pbv1.ResumeSuspendingStepRequest) (*emptypb.Empty, error) {
+	voReq := vo.ResumeSuspendingStepRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.ResumeSuspendingStep(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // RetryFailedStep implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) RetryFailedStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+func (s *SkyflowServiceHandler) RetryFailedStep(ctx context.Context, req *pbv1.RetryFailedStepRequest) (*emptypb.Empty, error) {
+
+	voReq := vo.RetryFailedStepRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.RetryFailedStep(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // SendStepFailed implements v1.SkyflowV1ServiceServer.
-func (s *SkyflowServiceHandler) SendStepFailed(ctx context.Context, req *pbv1.DescribeStepRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+func (s *SkyflowServiceHandler) SendStepFailed(ctx context.Context, req *pbv1.SendStepFailedRequest) (*emptypb.Empty, error) {
+	voReq := vo.SendStepFailedRequest{
+		StepID: int(req.StepId),
+		Error:  req.Error,
+		Cause:  req.Cause,
+	}
+	err := s.wfSvc.SendStepFailed(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // SkipBlockedTask implements v1.SkyflowV1ServiceServer.
@@ -51,7 +101,14 @@ func (s *SkyflowServiceHandler) SkipBlockedTask(ctx context.Context, req *pbv1.S
 
 // SkipFailedStep implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) SkipFailedStep(ctx context.Context, req *pbv1.SkipFailedStepRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+	voReq := vo.SkipFailedStepRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.SkipFailedStep(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // UnblockTask implements v1.SkyflowV1ServiceServer.
@@ -127,13 +184,15 @@ func (s *SkyflowServiceHandler) SendTaskSuccess(ctx context.Context, req *pbv1.S
 }
 
 // ValidateStateMachineDefinition implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ValidateStateMachineDefinition(ctx context.Context, req *pbv1.ValidateStateMachineDefinitionRequest,
-) (*pbv1.ValidateStateMachineDefinitionResponse, error) {
-	panic("unimplemented")
+func (s *SkyflowServiceHandler) ValidateStateMachineDefinition(ctx context.Context,
+	req *pbv1.ValidateStateMachineDefinitionRequest) (*pbv1.ValidateStateMachineDefinitionResponse, error) {
+	slog.Error("not implemented yet", "method", "ValidateStateMachineDefinition")
+	return nil, errors.New("not implemented yet")
 }
 
 // DescribeExecution implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pbv1.DescribeExecutionRequest) (*pbv1.DescribeExecutionResponse, error) {
+func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pbv1.DescribeExecutionRequest,
+) (*pbv1.DescribeExecutionResponse, error) {
 	voReq := vo.DescribeExecutionRequest{
 		ExecutionUUID: req.ExecutionUuid,
 	}
@@ -148,12 +207,29 @@ func (s *SkyflowServiceHandler) DescribeExecution(ctx context.Context, req *pbv1
 }
 
 // DescribeExecutionBone implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DescribeExecutionBone(ctx context.Context, req *pbv1.DescribeExecutionBoneRequest) (*pbv1.DescribeExecutionBoneResponse, error) {
-	panic("unimplemented")
+func (s *SkyflowServiceHandler) DescribeExecutionBone(ctx context.Context, req *pbv1.DescribeExecutionBoneRequest) (
+	*pbv1.DescribeExecutionBoneResponse, error) {
+	voReq := vo.DescribeExecutionBoneRequest{
+		ExecutionUUID: req.ExecutionUuid,
+	}
+	voResp, err := s.wfSvc.DescribeExecutionBone(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+
+	boneStr, err := toolkit.ToString(voResp.Bone)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pbv1.DescribeExecutionBoneResponse{
+		Bone: boneStr,
+	}
+	return resp, nil
 }
 
 // DescribeStep implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pbv1.DescribeStepRequest) (*pbv1.DescribeStepResponse, error) {
+func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pbv1.DescribeStepRequest) (
+	*pbv1.DescribeStepResponse, error) {
 	voReq := vo.DescribeStepRequest{
 		StepID: req.StepId,
 	}
@@ -170,7 +246,8 @@ func (s *SkyflowServiceHandler) DescribeStep(ctx context.Context, req *pbv1.Desc
 }
 
 // GetActivityTask implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pbv1.GetActivityTaskRequest) (*pbv1.GetActivityTaskResponse, error) {
+func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pbv1.GetActivityTaskRequest) (
+	*pbv1.GetActivityTaskResponse, error) {
 
 	if req.ActivityUri == "" {
 		return nil, errors.New("activity uri is required")
@@ -194,7 +271,8 @@ func (s *SkyflowServiceHandler) GetActivityTask(ctx context.Context, req *pbv1.G
 }
 
 // ListExecutionEvents implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pbv1.ListExecutionEventsRequest) (*pbv1.ListExecutionEventsResponse, error) {
+func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pbv1.ListExecutionEventsRequest) (
+	*pbv1.ListExecutionEventsResponse, error) {
 	voReq := vo.ListExecutionEventsRequest{
 		PageRequest:   ToVOPageRequest(req.PageRequest),
 		ExecutionUUID: req.ExecutionUuid,
@@ -211,7 +289,8 @@ func (s *SkyflowServiceHandler) ListExecutionEvents(ctx context.Context, req *pb
 }
 
 // ListExecutions implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.ListExecutionsRequest) (*pbv1.ListExecutionsResponse, error) {
+func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.ListExecutionsRequest) (
+	*pbv1.ListExecutionsResponse, error) {
 	voReq := vo.ListExecutionsRequest{
 		PageRequest:    ToVOPageRequest(req.PageRequest),
 		Title:          req.Title,
@@ -233,7 +312,8 @@ func (s *SkyflowServiceHandler) ListExecutions(ctx context.Context, req *pbv1.Li
 }
 
 // ListStepEvents implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pbv1.ListStepEventsRequest) (*pbv1.ListExecutionEventsResponse, error) {
+func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pbv1.ListStepEventsRequest) (
+	*pbv1.ListExecutionEventsResponse, error) {
 	voReq := vo.ListStepEventsRequest{
 		StepID:      req.StepId,
 		PageRequest: ToVOPageRequest(req.PageRequest),
@@ -250,19 +330,37 @@ func (s *SkyflowServiceHandler) ListStepEvents(ctx context.Context, req *pbv1.Li
 }
 
 // ParseStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pbv1.ParseStateMachineRequest) (*pbv1.ParseStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) ParseStateMachine(ctx context.Context, req *pbv1.ParseStateMachineRequest) (
+	*pbv1.ParseStateMachineResponse, error) {
 
-	panic("unimplemented")
+	voReq := vo.ParseStateMachineRequest{
+		StateMachineDefinition: req.Definition,
+	}
+	voResp, err := s.wfSvc.ParseStateMachine(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	bone := voResp.GetBone()
+
+	boneStr, err := toolkit.ToString(bone)
+	if err != nil {
+		return nil, err
+	}
+	resp := &pbv1.ParseStateMachineResponse{
+		Bone: boneStr,
+	}
+	return resp, nil
 }
 
 // StartExecution implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.StartExecutionRequest) (*pbv1.StartExecutionResponse, error) {
+func (s *SkyflowServiceHandler) StartExecution(ctx context.Context, req *pbv1.StartExecutionRequest) (
+	*pbv1.StartExecutionResponse, error) {
 	// 输入验证
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
 	if req.StatemachineUri == "" && req.Definition == "" {
-		return nil, errors.New("state machine definition is required")
+		return nil, errors.New("statemachine definition is required")
 	}
 	if req.Input == "" {
 		req.Input = "{}"
@@ -299,7 +397,8 @@ func (s *SkyflowServiceHandler) StopExecution(ctx context.Context, req *pbv1.Sto
 }
 
 // DeleteNamespace implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pbv1.DeleteNamespaceRequest) (*emptypb.Empty, error) {
+func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pbv1.DeleteNamespaceRequest) (
+	*emptypb.Empty, error) {
 	voReq := vo.DeleteNamespaceRequest{
 		Name: req.Name,
 	}
@@ -311,7 +410,8 @@ func (s *SkyflowServiceHandler) DeleteNamespace(ctx context.Context, req *pbv1.D
 }
 
 // CreateOrUpdateStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, req *pbv1.CreateStateMachineRequest) (*pbv1.CreateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, req *pbv1.CreateStateMachineRequest) (
+	*pbv1.CreateStateMachineResponse, error) {
 	voReq := vo.CreateStateMachineRequest{
 		Name:        req.Name,
 		Description: req.Description,
@@ -329,7 +429,8 @@ func (s *SkyflowServiceHandler) CreateOrUpdateStateMachine(ctx context.Context, 
 }
 
 // CreateStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) CreateStateMachine(ctx context.Context, req *pbv1.CreateStateMachineRequest) (*pbv1.CreateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) CreateStateMachine(ctx context.Context, req *pbv1.CreateStateMachineRequest) (
+	*pbv1.CreateStateMachineResponse, error) {
 	voReq := vo.CreateStateMachineRequest{
 		Name:        req.Name,
 		Description: req.Description,
@@ -360,7 +461,8 @@ func (s *SkyflowServiceHandler) DeleteActivity(ctx context.Context, req *pbv1.De
 }
 
 // DeleteStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DeleteStateMachine(ctx context.Context, req *pbv1.DeleteStateMachineRequest) (*pbv1.DeleteStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) DeleteStateMachine(ctx context.Context, req *pbv1.DeleteStateMachineRequest) (
+	*pbv1.DeleteStateMachineResponse, error) {
 	voReq := vo.DeleteStateMachineRequest{
 		StateMachineURI: req.StatemachineUri,
 	}
@@ -373,7 +475,8 @@ func (s *SkyflowServiceHandler) DeleteStateMachine(ctx context.Context, req *pbv
 }
 
 // DescribeStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *pbv1.DescribeStateMachineRequest) (*pbv1.DescribeStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *pbv1.DescribeStateMachineRequest) (
+	*pbv1.DescribeStateMachineResponse, error) {
 	voReq := vo.DescribeStateMachineRequest{
 		StateMachineURI: req.StatemachineUri,
 	}
@@ -387,7 +490,8 @@ func (s *SkyflowServiceHandler) DescribeStateMachine(ctx context.Context, req *p
 }
 
 // ListStateMachines implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) ListStateMachines(ctx context.Context, req *pbv1.ListStateMachinesRequest) (*pbv1.ListStateMachinesResponse, error) {
+func (s *SkyflowServiceHandler) ListStateMachines(ctx context.Context, req *pbv1.ListStateMachinesRequest) (
+	*pbv1.ListStateMachinesResponse, error) {
 
 	voReq := vo.ListStateMachinesRequest{
 		Namespace:   req.Namespace,
@@ -405,7 +509,8 @@ func (s *SkyflowServiceHandler) ListStateMachines(ctx context.Context, req *pbv1
 }
 
 // UpdateStateMachine implements pbv1.SkyflowV1ServiceService.
-func (s *SkyflowServiceHandler) UpdateStateMachine(ctx context.Context, req *pbv1.UpdateStateMachineRequest) (*pbv1.UpdateStateMachineResponse, error) {
+func (s *SkyflowServiceHandler) UpdateStateMachine(ctx context.Context, req *pbv1.UpdateStateMachineRequest) (
+	*pbv1.UpdateStateMachineResponse, error) {
 	voReq := vo.UpdateStateMachineRequest{
 		StateMachineURI: req.StatemachineUri,
 		Name:            req.Name,
@@ -421,7 +526,8 @@ func (s *SkyflowServiceHandler) UpdateStateMachine(ctx context.Context, req *pbv
 }
 
 // CreateOrUpdateActivity implements pbv1.SkyflowServiceService.
-func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req *pbv1.CreateActivityRequest) (*pbv1.CreateActivityResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req *pbv1.CreateActivityRequest) (
+	*pbv1.CreateActivityResponse, error) {
 	voReq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
 		Description:  req.Description,
@@ -440,7 +546,8 @@ func (s *SkyflowServiceHandler) CreateOrUpdateActivity(ctx context.Context, req 
 }
 
 // CreateOrUpdateNamespace implements pbv1.SkyflowServiceService.
-func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req *pbv1.CreateNamespaceRequest) (*pbv1.CreateNamespaceResponse, error) {
+func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req *pbv1.CreateNamespaceRequest) (
+	*pbv1.CreateNamespaceResponse, error) {
 	voReq := vo.CreateNamespaceRequest{
 		Name:        req.Name,
 		Description: req.Description,
@@ -459,7 +566,8 @@ func (s *SkyflowServiceHandler) CreateOrUpdateNamespace(ctx context.Context, req
 }
 
 // CreateActivity implements pbv1.SkyflowService.
-func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pbv1.CreateActivityRequest) (*pbv1.CreateActivityResponse, error) {
+func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pbv1.CreateActivityRequest) (
+	*pbv1.CreateActivityResponse, error) {
 	voReq := vo.CreateActivityRequest{
 		ActivityName: req.Name,
 		Description:  req.Description,
@@ -478,7 +586,8 @@ func (s *SkyflowServiceHandler) CreateActivity(ctx context.Context, req *pbv1.Cr
 }
 
 // CreateNamespace implements pbv1.SkyflowService.
-func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pbv1.CreateNamespaceRequest) (*pbv1.CreateNamespaceResponse, error) {
+func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pbv1.CreateNamespaceRequest) (
+	*pbv1.CreateNamespaceResponse, error) {
 
 	voReq := vo.CreateNamespaceRequest{
 		Name:        req.Name,
@@ -498,7 +607,8 @@ func (s *SkyflowServiceHandler) CreateNamespace(ctx context.Context, req *pbv1.C
 }
 
 // DescribeActivity implements pbv1.SkyflowService.
-func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pbv1.DescribeActivityRequest) (*pbv1.DescribeActivityResponse, error) {
+func (s *SkyflowServiceHandler) DescribeActivity(ctx context.Context, req *pbv1.DescribeActivityRequest) (
+	*pbv1.DescribeActivityResponse, error) {
 	voResp, err := s.wfSvc.TemplateService.DescribeActivity(ctx, req.ActivityUri, nil)
 	if err != nil {
 		return nil, err

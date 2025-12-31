@@ -234,6 +234,7 @@ func TestParseStateMachineBone(t *testing.T) {
 			}
 			`,
 			bone: StateMachineBone{
+				Version: "1.0",
 				StartAt: "P1",
 				States: map[string]StateBone{
 					"P1": {
@@ -306,6 +307,7 @@ func TestParseStateMachineBone(t *testing.T) {
 				}
 			  }`,
 			bone: StateMachineBone{
+				Version: "1.0",
 				StartAt: "FirstState",
 				States: map[string]StateBone{
 					"FirstState": {

@@ -3023,7 +3023,7 @@ func (x *DescribeExecutionBoneResponse) GetBone() string {
 	return ""
 }
 
-// 终止一个执行
+// 终止一个执行任务
 type StopExecutionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// execution uuid， 必选
@@ -3087,6 +3087,116 @@ func (x *StopExecutionRequest) GetCause() string {
 	return ""
 }
 
+// 重试一个执行任务
+type RetryExecutionRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// execution uuid， 必选
+	ExecutionUuid string `protobuf:"bytes,1,opt,name=execution_uuid,json=executionUuid,proto3" json:"execution_uuid,omitempty"`
+	// cause， error的文本描述， 可选
+	Cause         string `protobuf:"bytes,2,opt,name=cause,proto3" json:"cause,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RetryExecutionRequest) Reset() {
+	*x = RetryExecutionRequest{}
+	mi := &file_skyflow_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RetryExecutionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RetryExecutionRequest) ProtoMessage() {}
+
+func (x *RetryExecutionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RetryExecutionRequest.ProtoReflect.Descriptor instead.
+func (*RetryExecutionRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *RetryExecutionRequest) GetExecutionUuid() string {
+	if x != nil {
+		return x.ExecutionUuid
+	}
+	return ""
+}
+
+func (x *RetryExecutionRequest) GetCause() string {
+	if x != nil {
+		return x.Cause
+	}
+	return ""
+}
+
+// 恢复一个执行任务
+type ResumeExecutionRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// execution uuid， 必选
+	ExecutionUuid string `protobuf:"bytes,1,opt,name=execution_uuid,json=executionUuid,proto3" json:"execution_uuid,omitempty"`
+	// cause， error的文本描述， 可选
+	Cause         string `protobuf:"bytes,2,opt,name=cause,proto3" json:"cause,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResumeExecutionRequest) Reset() {
+	*x = ResumeExecutionRequest{}
+	mi := &file_skyflow_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResumeExecutionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResumeExecutionRequest) ProtoMessage() {}
+
+func (x *ResumeExecutionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResumeExecutionRequest.ProtoReflect.Descriptor instead.
+func (*ResumeExecutionRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *ResumeExecutionRequest) GetExecutionUuid() string {
+	if x != nil {
+		return x.ExecutionUuid
+	}
+	return ""
+}
+
+func (x *ResumeExecutionRequest) GetCause() string {
+	if x != nil {
+		return x.Cause
+	}
+	return ""
+}
+
 // ListExecutionsRequest 获得execution列表请求结构
 type ListExecutionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -3106,7 +3216,7 @@ type ListExecutionsRequest struct {
 
 func (x *ListExecutionsRequest) Reset() {
 	*x = ListExecutionsRequest{}
-	mi := &file_skyflow_proto_msgTypes[47]
+	mi := &file_skyflow_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3118,7 +3228,7 @@ func (x *ListExecutionsRequest) String() string {
 func (*ListExecutionsRequest) ProtoMessage() {}
 
 func (x *ListExecutionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[47]
+	mi := &file_skyflow_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3131,7 +3241,7 @@ func (x *ListExecutionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionsRequest.ProtoReflect.Descriptor instead.
 func (*ListExecutionsRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{47}
+	return file_skyflow_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ListExecutionsRequest) GetStatemachineUri() string {
@@ -3182,7 +3292,7 @@ type ListExecutionsResponse struct {
 
 func (x *ListExecutionsResponse) Reset() {
 	*x = ListExecutionsResponse{}
-	mi := &file_skyflow_proto_msgTypes[48]
+	mi := &file_skyflow_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3194,7 +3304,7 @@ func (x *ListExecutionsResponse) String() string {
 func (*ListExecutionsResponse) ProtoMessage() {}
 
 func (x *ListExecutionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[48]
+	mi := &file_skyflow_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3207,7 +3317,7 @@ func (x *ListExecutionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionsResponse.ProtoReflect.Descriptor instead.
 func (*ListExecutionsResponse) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{48}
+	return file_skyflow_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *ListExecutionsResponse) GetExecutions() []*ExecutionItem {
@@ -3235,7 +3345,7 @@ type ListExecutionEventsRequest struct {
 
 func (x *ListExecutionEventsRequest) Reset() {
 	*x = ListExecutionEventsRequest{}
-	mi := &file_skyflow_proto_msgTypes[49]
+	mi := &file_skyflow_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3247,7 +3357,7 @@ func (x *ListExecutionEventsRequest) String() string {
 func (*ListExecutionEventsRequest) ProtoMessage() {}
 
 func (x *ListExecutionEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[49]
+	mi := &file_skyflow_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3260,7 +3370,7 @@ func (x *ListExecutionEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionEventsRequest.ProtoReflect.Descriptor instead.
 func (*ListExecutionEventsRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{49}
+	return file_skyflow_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *ListExecutionEventsRequest) GetExecutionUuid() string {
@@ -3290,7 +3400,7 @@ type ListExecutionEventsResponse struct {
 
 func (x *ListExecutionEventsResponse) Reset() {
 	*x = ListExecutionEventsResponse{}
-	mi := &file_skyflow_proto_msgTypes[50]
+	mi := &file_skyflow_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3302,7 +3412,7 @@ func (x *ListExecutionEventsResponse) String() string {
 func (*ListExecutionEventsResponse) ProtoMessage() {}
 
 func (x *ListExecutionEventsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[50]
+	mi := &file_skyflow_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3315,7 +3425,7 @@ func (x *ListExecutionEventsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListExecutionEventsResponse.ProtoReflect.Descriptor instead.
 func (*ListExecutionEventsResponse) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{50}
+	return file_skyflow_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *ListExecutionEventsResponse) GetEvents() []*ExecutionEventItem {
@@ -3343,7 +3453,7 @@ type DescribeStepRequest struct {
 
 func (x *DescribeStepRequest) Reset() {
 	*x = DescribeStepRequest{}
-	mi := &file_skyflow_proto_msgTypes[51]
+	mi := &file_skyflow_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3355,7 +3465,7 @@ func (x *DescribeStepRequest) String() string {
 func (*DescribeStepRequest) ProtoMessage() {}
 
 func (x *DescribeStepRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[51]
+	mi := &file_skyflow_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3368,7 +3478,7 @@ func (x *DescribeStepRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStepRequest.ProtoReflect.Descriptor instead.
 func (*DescribeStepRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{51}
+	return file_skyflow_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *DescribeStepRequest) GetStepId() int64 {
@@ -3391,7 +3501,7 @@ type DescribeStepResponse struct {
 
 func (x *DescribeStepResponse) Reset() {
 	*x = DescribeStepResponse{}
-	mi := &file_skyflow_proto_msgTypes[52]
+	mi := &file_skyflow_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3403,7 +3513,7 @@ func (x *DescribeStepResponse) String() string {
 func (*DescribeStepResponse) ProtoMessage() {}
 
 func (x *DescribeStepResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[52]
+	mi := &file_skyflow_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3416,7 +3526,7 @@ func (x *DescribeStepResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DescribeStepResponse.ProtoReflect.Descriptor instead.
 func (*DescribeStepResponse) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{52}
+	return file_skyflow_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *DescribeStepResponse) GetStep() *StepItem {
@@ -3446,7 +3556,7 @@ type ListStepEventsRequest struct {
 
 func (x *ListStepEventsRequest) Reset() {
 	*x = ListStepEventsRequest{}
-	mi := &file_skyflow_proto_msgTypes[53]
+	mi := &file_skyflow_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3458,7 +3568,7 @@ func (x *ListStepEventsRequest) String() string {
 func (*ListStepEventsRequest) ProtoMessage() {}
 
 func (x *ListStepEventsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[53]
+	mi := &file_skyflow_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3471,7 +3581,7 @@ func (x *ListStepEventsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListStepEventsRequest.ProtoReflect.Descriptor instead.
 func (*ListStepEventsRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{53}
+	return file_skyflow_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *ListStepEventsRequest) GetStepId() int64 {
@@ -3501,7 +3611,7 @@ type GetActivityTaskRequest struct {
 
 func (x *GetActivityTaskRequest) Reset() {
 	*x = GetActivityTaskRequest{}
-	mi := &file_skyflow_proto_msgTypes[54]
+	mi := &file_skyflow_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3513,7 +3623,7 @@ func (x *GetActivityTaskRequest) String() string {
 func (*GetActivityTaskRequest) ProtoMessage() {}
 
 func (x *GetActivityTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[54]
+	mi := &file_skyflow_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3526,7 +3636,7 @@ func (x *GetActivityTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetActivityTaskRequest.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{54}
+	return file_skyflow_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *GetActivityTaskRequest) GetActivityUri() string {
@@ -3564,7 +3674,7 @@ type GetActivityTaskResponse struct {
 
 func (x *GetActivityTaskResponse) Reset() {
 	*x = GetActivityTaskResponse{}
-	mi := &file_skyflow_proto_msgTypes[55]
+	mi := &file_skyflow_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3576,7 +3686,7 @@ func (x *GetActivityTaskResponse) String() string {
 func (*GetActivityTaskResponse) ProtoMessage() {}
 
 func (x *GetActivityTaskResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[55]
+	mi := &file_skyflow_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3589,7 +3699,7 @@ func (x *GetActivityTaskResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetActivityTaskResponse.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskResponse) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{55}
+	return file_skyflow_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *GetActivityTaskResponse) GetActivityUri() string {
@@ -3647,7 +3757,7 @@ type SendTaskSuccessRequest struct {
 
 func (x *SendTaskSuccessRequest) Reset() {
 	*x = SendTaskSuccessRequest{}
-	mi := &file_skyflow_proto_msgTypes[56]
+	mi := &file_skyflow_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3659,7 +3769,7 @@ func (x *SendTaskSuccessRequest) String() string {
 func (*SendTaskSuccessRequest) ProtoMessage() {}
 
 func (x *SendTaskSuccessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[56]
+	mi := &file_skyflow_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3672,7 +3782,7 @@ func (x *SendTaskSuccessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskSuccessRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskSuccessRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{56}
+	return file_skyflow_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *SendTaskSuccessRequest) GetTaskToken() string {
@@ -3704,7 +3814,7 @@ type SendTaskFailureRequest struct {
 
 func (x *SendTaskFailureRequest) Reset() {
 	*x = SendTaskFailureRequest{}
-	mi := &file_skyflow_proto_msgTypes[57]
+	mi := &file_skyflow_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3716,7 +3826,7 @@ func (x *SendTaskFailureRequest) String() string {
 func (*SendTaskFailureRequest) ProtoMessage() {}
 
 func (x *SendTaskFailureRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[57]
+	mi := &file_skyflow_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3729,7 +3839,7 @@ func (x *SendTaskFailureRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskFailureRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskFailureRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{57}
+	return file_skyflow_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *SendTaskFailureRequest) GetTaskToken() string {
@@ -3766,7 +3876,7 @@ type SendTaskHeartbeatRequest struct {
 
 func (x *SendTaskHeartbeatRequest) Reset() {
 	*x = SendTaskHeartbeatRequest{}
-	mi := &file_skyflow_proto_msgTypes[58]
+	mi := &file_skyflow_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3778,7 +3888,7 @@ func (x *SendTaskHeartbeatRequest) String() string {
 func (*SendTaskHeartbeatRequest) ProtoMessage() {}
 
 func (x *SendTaskHeartbeatRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[58]
+	mi := &file_skyflow_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3791,7 +3901,7 @@ func (x *SendTaskHeartbeatRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskHeartbeatRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskHeartbeatRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{58}
+	return file_skyflow_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *SendTaskHeartbeatRequest) GetTaskToken() string {
@@ -3822,7 +3932,7 @@ type SendTaskReferenceRequest struct {
 
 func (x *SendTaskReferenceRequest) Reset() {
 	*x = SendTaskReferenceRequest{}
-	mi := &file_skyflow_proto_msgTypes[59]
+	mi := &file_skyflow_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3834,7 +3944,7 @@ func (x *SendTaskReferenceRequest) String() string {
 func (*SendTaskReferenceRequest) ProtoMessage() {}
 
 func (x *SendTaskReferenceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[59]
+	mi := &file_skyflow_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3847,7 +3957,7 @@ func (x *SendTaskReferenceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendTaskReferenceRequest.ProtoReflect.Descriptor instead.
 func (*SendTaskReferenceRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{59}
+	return file_skyflow_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *SendTaskReferenceRequest) GetTaskToken() string {
@@ -3871,32 +3981,33 @@ func (x *SendTaskReferenceRequest) GetUrl() string {
 	return ""
 }
 
-// StoreTaskDataRequest 存储task 临时数据
-type StoreTaskDataRequest struct {
+type SendStepFailedRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// task token
-	TaskToken string `protobuf:"bytes,1,opt,name=task_token,json=taskToken,proto3" json:"task_token,omitempty"`
-	// task 临时数据
-	Data          string `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	// Step id
+	StepId int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	// error 错误类型，用来匹配异常
+	Error string `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	// cause， error的文本描述
+	Cause         string `protobuf:"bytes,3,opt,name=cause,proto3" json:"cause,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StoreTaskDataRequest) Reset() {
-	*x = StoreTaskDataRequest{}
-	mi := &file_skyflow_proto_msgTypes[60]
+func (x *SendStepFailedRequest) Reset() {
+	*x = SendStepFailedRequest{}
+	mi := &file_skyflow_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StoreTaskDataRequest) String() string {
+func (x *SendStepFailedRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StoreTaskDataRequest) ProtoMessage() {}
+func (*SendStepFailedRequest) ProtoMessage() {}
 
-func (x *StoreTaskDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[60]
+func (x *SendStepFailedRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3907,95 +4018,56 @@ func (x *StoreTaskDataRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StoreTaskDataRequest.ProtoReflect.Descriptor instead.
-func (*StoreTaskDataRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{60}
+// Deprecated: Use SendStepFailedRequest.ProtoReflect.Descriptor instead.
+func (*SendStepFailedRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{62}
 }
 
-func (x *StoreTaskDataRequest) GetTaskToken() string {
-	if x != nil {
-		return x.TaskToken
-	}
-	return ""
-}
-
-func (x *StoreTaskDataRequest) GetData() string {
-	if x != nil {
-		return x.Data
-	}
-	return ""
-}
-
-// LoadTaskDataRequest 获得task 临时数据
-type LoadTaskDataRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// State id
-	StepId        int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LoadTaskDataRequest) Reset() {
-	*x = LoadTaskDataRequest{}
-	mi := &file_skyflow_proto_msgTypes[61]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LoadTaskDataRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LoadTaskDataRequest) ProtoMessage() {}
-
-func (x *LoadTaskDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[61]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LoadTaskDataRequest.ProtoReflect.Descriptor instead.
-func (*LoadTaskDataRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{61}
-}
-
-func (x *LoadTaskDataRequest) GetStepId() int64 {
+func (x *SendStepFailedRequest) GetStepId() int64 {
 	if x != nil {
 		return x.StepId
 	}
 	return 0
 }
 
-// LoadTaskDataResponse 获得task 临时数据
-type LoadTaskDataResponse struct {
+func (x *SendStepFailedRequest) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *SendStepFailedRequest) GetCause() string {
+	if x != nil {
+		return x.Cause
+	}
+	return ""
+}
+
+// ResumeSuspendingStepRequest 恢复挂起的步骤
+type ResumeSuspendingStepRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// task 临时数据
-	Data          string `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+	// Step id
+	StepId        int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *LoadTaskDataResponse) Reset() {
-	*x = LoadTaskDataResponse{}
-	mi := &file_skyflow_proto_msgTypes[62]
+func (x *ResumeSuspendingStepRequest) Reset() {
+	*x = ResumeSuspendingStepRequest{}
+	mi := &file_skyflow_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LoadTaskDataResponse) String() string {
+func (x *ResumeSuspendingStepRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoadTaskDataResponse) ProtoMessage() {}
+func (*ResumeSuspendingStepRequest) ProtoMessage() {}
 
-func (x *LoadTaskDataResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[62]
+func (x *ResumeSuspendingStepRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4006,16 +4078,16 @@ func (x *LoadTaskDataResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoadTaskDataResponse.ProtoReflect.Descriptor instead.
-func (*LoadTaskDataResponse) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{62}
+// Deprecated: Use ResumeSuspendingStepRequest.ProtoReflect.Descriptor instead.
+func (*ResumeSuspendingStepRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{63}
 }
 
-func (x *LoadTaskDataResponse) GetData() string {
+func (x *ResumeSuspendingStepRequest) GetStepId() int64 {
 	if x != nil {
-		return x.Data
+		return x.StepId
 	}
-	return ""
+	return 0
 }
 
 // SkipFailedStepRequest 跳过失败的步骤
@@ -4033,7 +4105,7 @@ type SkipFailedStepRequest struct {
 
 func (x *SkipFailedStepRequest) Reset() {
 	*x = SkipFailedStepRequest{}
-	mi := &file_skyflow_proto_msgTypes[63]
+	mi := &file_skyflow_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4045,7 +4117,7 @@ func (x *SkipFailedStepRequest) String() string {
 func (*SkipFailedStepRequest) ProtoMessage() {}
 
 func (x *SkipFailedStepRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[63]
+	mi := &file_skyflow_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4058,7 +4130,7 @@ func (x *SkipFailedStepRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkipFailedStepRequest.ProtoReflect.Descriptor instead.
 func (*SkipFailedStepRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{63}
+	return file_skyflow_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *SkipFailedStepRequest) GetStepId() int64 {
@@ -4093,7 +4165,7 @@ type UnblockTaskRequest struct {
 
 func (x *UnblockTaskRequest) Reset() {
 	*x = UnblockTaskRequest{}
-	mi := &file_skyflow_proto_msgTypes[64]
+	mi := &file_skyflow_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4105,7 +4177,7 @@ func (x *UnblockTaskRequest) String() string {
 func (*UnblockTaskRequest) ProtoMessage() {}
 
 func (x *UnblockTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[64]
+	mi := &file_skyflow_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4118,7 +4190,7 @@ func (x *UnblockTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UnblockTaskRequest.ProtoReflect.Descriptor instead.
 func (*UnblockTaskRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{64}
+	return file_skyflow_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *UnblockTaskRequest) GetStepId() int64 {
@@ -4139,7 +4211,7 @@ type SkipBlockedTaskRequest struct {
 
 func (x *SkipBlockedTaskRequest) Reset() {
 	*x = SkipBlockedTaskRequest{}
-	mi := &file_skyflow_proto_msgTypes[65]
+	mi := &file_skyflow_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4151,7 +4223,7 @@ func (x *SkipBlockedTaskRequest) String() string {
 func (*SkipBlockedTaskRequest) ProtoMessage() {}
 
 func (x *SkipBlockedTaskRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[65]
+	mi := &file_skyflow_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4164,10 +4236,102 @@ func (x *SkipBlockedTaskRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkipBlockedTaskRequest.ProtoReflect.Descriptor instead.
 func (*SkipBlockedTaskRequest) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{65}
+	return file_skyflow_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *SkipBlockedTaskRequest) GetStepId() int64 {
+	if x != nil {
+		return x.StepId
+	}
+	return 0
+}
+
+// RedoStepRequest 重做步骤请求
+type RedoStepRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Step id
+	StepId        int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RedoStepRequest) Reset() {
+	*x = RedoStepRequest{}
+	mi := &file_skyflow_proto_msgTypes[67]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RedoStepRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RedoStepRequest) ProtoMessage() {}
+
+func (x *RedoStepRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[67]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RedoStepRequest.ProtoReflect.Descriptor instead.
+func (*RedoStepRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{67}
+}
+
+func (x *RedoStepRequest) GetStepId() int64 {
+	if x != nil {
+		return x.StepId
+	}
+	return 0
+}
+
+// RetryFailedStepRequest 重试失败的步骤请求
+type RetryFailedStepRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Step id
+	StepId        int64 `protobuf:"varint,1,opt,name=step_id,json=stepId,proto3" json:"step_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RetryFailedStepRequest) Reset() {
+	*x = RetryFailedStepRequest{}
+	mi := &file_skyflow_proto_msgTypes[68]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RetryFailedStepRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RetryFailedStepRequest) ProtoMessage() {}
+
+func (x *RetryFailedStepRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_skyflow_proto_msgTypes[68]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RetryFailedStepRequest.ProtoReflect.Descriptor instead.
+func (*RetryFailedStepRequest) Descriptor() ([]byte, []int) {
+	return file_skyflow_proto_rawDescGZIP(), []int{68}
+}
+
+func (x *RetryFailedStepRequest) GetStepId() int64 {
 	if x != nil {
 		return x.StepId
 	}
@@ -4187,7 +4351,7 @@ type GetActivityTaskResponse_ExtraInfo struct {
 
 func (x *GetActivityTaskResponse_ExtraInfo) Reset() {
 	*x = GetActivityTaskResponse_ExtraInfo{}
-	mi := &file_skyflow_proto_msgTypes[66]
+	mi := &file_skyflow_proto_msgTypes[69]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4199,7 +4363,7 @@ func (x *GetActivityTaskResponse_ExtraInfo) String() string {
 func (*GetActivityTaskResponse_ExtraInfo) ProtoMessage() {}
 
 func (x *GetActivityTaskResponse_ExtraInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_skyflow_proto_msgTypes[66]
+	mi := &file_skyflow_proto_msgTypes[69]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4212,7 +4376,7 @@ func (x *GetActivityTaskResponse_ExtraInfo) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use GetActivityTaskResponse_ExtraInfo.ProtoReflect.Descriptor instead.
 func (*GetActivityTaskResponse_ExtraInfo) Descriptor() ([]byte, []int) {
-	return file_skyflow_proto_rawDescGZIP(), []int{55, 0}
+	return file_skyflow_proto_rawDescGZIP(), []int{57, 0}
 }
 
 func (x *GetActivityTaskResponse_ExtraInfo) GetStepId() int64 {
@@ -4483,6 +4647,16 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x05error\x18\x02 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x01(\xc8\x01R\x05error\x12 \n" +
 	"\x05cause\x18\x03 \x01(\tB\n" +
+	"\xfaB\ar\x05 \x00(\xe8\aR\x05cause\"k\n" +
+	"\x15RetryExecutionRequest\x120\n" +
+	"\x0eexecution_uuid\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \n" +
+	"(dR\rexecutionUuid\x12 \n" +
+	"\x05cause\x18\x02 \x01(\tB\n" +
+	"\xfaB\ar\x05 \x00(\xe8\aR\x05cause\"l\n" +
+	"\x16ResumeExecutionRequest\x120\n" +
+	"\x0eexecution_uuid\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \n" +
+	"(dR\rexecutionUuid\x12 \n" +
+	"\x05cause\x18\x02 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x00(\xe8\aR\x05cause\"\xf6\x01\n" +
 	"\x15ListExecutionsRequest\x125\n" +
 	"\x10statemachine_uri\x18\x01 \x01(\tB\n" +
@@ -4557,16 +4731,15 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x05title\x18\x02 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x01(\xc8\x01R\x05title\x12\x1c\n" +
 	"\x03url\x18\x03 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x01(\xe8\aR\x03url\"]\n" +
-	"\x14StoreTaskDataRequest\x12(\n" +
-	"\n" +
-	"task_token\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \n" +
-	"(dR\ttaskToken\x12\x1b\n" +
-	"\x04data\x18\x02 \x01(\tB\a\xfaB\x04r\x02 \x01R\x04data\"7\n" +
-	"\x13LoadTaskDataRequest\x12 \n" +
-	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\"3\n" +
-	"\x14LoadTaskDataResponse\x12\x1b\n" +
-	"\x04data\x18\x01 \x01(\tB\a\xfaB\x04r\x02 \x01R\x04data\"p\n" +
+	"\xfaB\ar\x05 \x01(\xe8\aR\x03url\"}\n" +
+	"\x15SendStepFailedRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\x12 \n" +
+	"\x05error\x18\x02 \x01(\tB\n" +
+	"\xfaB\ar\x05 \x01(\xc8\x01R\x05error\x12 \n" +
+	"\x05cause\x18\x03 \x01(\tB\n" +
+	"\xfaB\ar\x05 \x00(\xe8\aR\x05cause\"?\n" +
+	"\x1bResumeSuspendingStepRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\"p\n" +
 	"\x15SkipFailedStepRequest\x12 \n" +
 	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\x12\x1d\n" +
 	"\n" +
@@ -4575,6 +4748,10 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x12UnblockTaskRequest\x12 \n" +
 	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\":\n" +
 	"\x16SkipBlockedTaskRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\"3\n" +
+	"\x0fRedoStepRequest\x12 \n" +
+	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId\":\n" +
+	"\x16RetryFailedStepRequest\x12 \n" +
 	"\astep_id\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06stepId*\xa2\x06\n" +
 	"\tErrorCode\x12\x06\n" +
 	"\x02OK\x10\x00\x12\x12\n" +
@@ -4611,7 +4788,7 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x04HTTP\x12\x16.google.protobuf.Empty\x1a\x1c.skyflow.HTTPResponseMessage\"(\xbaG\x0e\n" +
 	"\f通用服务\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/HTTP\x12_\n" +
 	"\x04Ping\x12\x16.google.protobuf.Empty\x1a\x15.skyflow.PingResponse\"(\xbaG\x0e\n" +
-	"\f通用服务\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/Ping2\xf1(\n" +
+	"\f通用服务\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/Ping2\xfb*\n" +
 	"\x10SkyflowV1Service\x12\x89\x01\n" +
 	"\x0fCreateNamespace\x12\x1f.skyflow.CreateNamespaceRequest\x1a .skyflow.CreateNamespaceResponse\"3\xbaG\x0e\n" +
 	"\f模板管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/CreateNamespace\x12\x99\x01\n" +
@@ -4654,39 +4831,43 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x15DescribeExecutionBone\x12%.skyflow.DescribeExecutionBoneRequest\x1a&.skyflow.DescribeExecutionBoneResponse\"9\xbaG\x0e\n" +
 	"\f任务管理\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/api/v1/DescribeExecutionBone\x12y\n" +
 	"\rStopExecution\x12\x1d.skyflow.StopExecutionRequest\x1a\x16.google.protobuf.Empty\"1\xbaG\x0e\n" +
-	"\f任务管理\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/StopExecution\x12\x85\x01\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/StopExecution\x12|\n" +
+	"\x0eRetryExecution\x12\x1e.skyflow.RetryExecutionRequest\x1a\x16.google.protobuf.Empty\"2\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/RetryExecution\x12\x7f\n" +
+	"\x0fResumeExecution\x12\x1f.skyflow.ResumeExecutionRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
+	"\f任务管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/ResumeExecution\x12\x85\x01\n" +
 	"\x0eListExecutions\x12\x1e.skyflow.ListExecutionsRequest\x1a\x1f.skyflow.ListExecutionsResponse\"2\xbaG\x0e\n" +
 	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListExecutions\x12\x99\x01\n" +
 	"\x13ListExecutionEvents\x12#.skyflow.ListExecutionEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"7\xbaG\x0e\n" +
 	"\f任务管理\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/ListExecutionEvents\x12}\n" +
 	"\fDescribeStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x1d.skyflow.DescribeStepResponse\"0\xbaG\x0e\n" +
-	"\f任务管理\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/DescribeStep\x12\x8a\x01\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/DescribeStep\x12\x8a\x01\n" +
 	"\x0eListStepEvents\x12\x1e.skyflow.ListStepEventsRequest\x1a$.skyflow.ListExecutionEventsResponse\"2\xbaG\x0e\n" +
-	"\f任务管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListStepEvents\x12\x89\x01\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/ListStepEvents\x12\x89\x01\n" +
 	"\x0fGetActivityTask\x12\x1f.skyflow.GetActivityTaskRequest\x1a .skyflow.GetActivityTaskResponse\"3\xbaG\x0e\n" +
 	"\f任务操作\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/GetActivityTask\x12\x7f\n" +
 	"\x0fSendTaskSuccess\x12\x1f.skyflow.SendTaskSuccessRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SendTaskSuccess\x12\x7f\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SendTaskSuccess\x12\x7f\n" +
 	"\x0fSendTaskFailure\x12\x1f.skyflow.SendTaskFailureRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SendTaskFailure\x12\x85\x01\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SendTaskFailure\x12\x85\x01\n" +
 	"\x11SendTaskHeartbeat\x12!.skyflow.SendTaskHeartbeatRequest\x1a\x16.google.protobuf.Empty\"5\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/SendTaskHeartbeat\x12\x85\x01\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/SendTaskHeartbeat\x12\x85\x01\n" +
 	"\x11SendTaskReference\x12!.skyflow.SendTaskReferenceRequest\x1a\x16.google.protobuf.Empty\"5\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/SendTaskReference\x12|\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/api/v1/SendTaskReference\x12|\n" +
 	"\x0eSkipFailedStep\x12\x1e.skyflow.SkipFailedStepRequest\x1a\x16.google.protobuf.Empty\"2\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/SkipFailedStep\x12s\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/SkipFailedStep\x12s\n" +
 	"\vUnblockTask\x12\x1b.skyflow.UnblockTaskRequest\x1a\x16.google.protobuf.Empty\"/\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/UnblockTask\x12\x7f\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/UnblockTask\x12\x7f\n" +
 	"\x0fSkipBlockedTask\x12\x1f.skyflow.SkipBlockedTaskRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SkipBlockedTask\x12z\n" +
-	"\x0fRetryFailedStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x16.google.protobuf.Empty\"1\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/SendStepRetry\x12z\n" +
-	"\x0eSendStepFailed\x12\x1c.skyflow.DescribeStepRequest\x1a\x16.google.protobuf.Empty\"2\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/SendStepFailed\x12n\n" +
-	"\bRedoStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x16.google.protobuf.Empty\",\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/v1/RedoStep\x12\x86\x01\n" +
-	"\x14ResumeSuspendingStep\x12\x1c.skyflow.DescribeStepRequest\x1a\x16.google.protobuf.Empty\"8\xbaG\x0e\n" +
-	"\f任务操作\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/ResumeSuspendingStepB/Z-github.com/skyflow/skyflow_backbend/api/v1;v1b\x06proto3"
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/SkipBlockedTask\x12\x7f\n" +
+	"\x0fRetryFailedStep\x12\x1f.skyflow.RetryFailedStepRequest\x1a\x16.google.protobuf.Empty\"3\xbaG\x0e\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/api/v1/RetryFailedStep\x12|\n" +
+	"\x0eSendStepFailed\x12\x1e.skyflow.SendStepFailedRequest\x1a\x16.google.protobuf.Empty\"2\xbaG\x0e\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/api/v1/SendStepFailed\x12j\n" +
+	"\bRedoStep\x12\x18.skyflow.RedoStepRequest\x1a\x16.google.protobuf.Empty\",\xbaG\x0e\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/api/v1/RedoStep\x12\x8e\x01\n" +
+	"\x14ResumeSuspendingStep\x12$.skyflow.ResumeSuspendingStepRequest\x1a\x16.google.protobuf.Empty\"8\xbaG\x0e\n" +
+	"\f步骤管理\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/api/v1/ResumeSuspendingStepB/Z-github.com/skyflow/skyflow_backbend/api/v1;v1b\x06proto3"
 
 var (
 	file_skyflow_proto_rawDescOnce sync.Once
@@ -4701,7 +4882,7 @@ func file_skyflow_proto_rawDescGZIP() []byte {
 }
 
 var file_skyflow_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_skyflow_proto_msgTypes = make([]protoimpl.MessageInfo, 67)
+var file_skyflow_proto_msgTypes = make([]protoimpl.MessageInfo, 70)
 var file_skyflow_proto_goTypes = []any{
 	(ErrorCode)(0),                                   // 0: skyflow.ErrorCode
 	(*PageRequest)(nil),                              // 1: skyflow.PageRequest
@@ -4751,27 +4932,30 @@ var file_skyflow_proto_goTypes = []any{
 	(*DescribeExecutionBoneRequest)(nil),             // 45: skyflow.DescribeExecutionBoneRequest
 	(*DescribeExecutionBoneResponse)(nil),            // 46: skyflow.DescribeExecutionBoneResponse
 	(*StopExecutionRequest)(nil),                     // 47: skyflow.StopExecutionRequest
-	(*ListExecutionsRequest)(nil),                    // 48: skyflow.ListExecutionsRequest
-	(*ListExecutionsResponse)(nil),                   // 49: skyflow.ListExecutionsResponse
-	(*ListExecutionEventsRequest)(nil),               // 50: skyflow.ListExecutionEventsRequest
-	(*ListExecutionEventsResponse)(nil),              // 51: skyflow.ListExecutionEventsResponse
-	(*DescribeStepRequest)(nil),                      // 52: skyflow.DescribeStepRequest
-	(*DescribeStepResponse)(nil),                     // 53: skyflow.DescribeStepResponse
-	(*ListStepEventsRequest)(nil),                    // 54: skyflow.ListStepEventsRequest
-	(*GetActivityTaskRequest)(nil),                   // 55: skyflow.GetActivityTaskRequest
-	(*GetActivityTaskResponse)(nil),                  // 56: skyflow.GetActivityTaskResponse
-	(*SendTaskSuccessRequest)(nil),                   // 57: skyflow.SendTaskSuccessRequest
-	(*SendTaskFailureRequest)(nil),                   // 58: skyflow.SendTaskFailureRequest
-	(*SendTaskHeartbeatRequest)(nil),                 // 59: skyflow.SendTaskHeartbeatRequest
-	(*SendTaskReferenceRequest)(nil),                 // 60: skyflow.SendTaskReferenceRequest
-	(*StoreTaskDataRequest)(nil),                     // 61: skyflow.StoreTaskDataRequest
-	(*LoadTaskDataRequest)(nil),                      // 62: skyflow.LoadTaskDataRequest
-	(*LoadTaskDataResponse)(nil),                     // 63: skyflow.LoadTaskDataResponse
-	(*SkipFailedStepRequest)(nil),                    // 64: skyflow.SkipFailedStepRequest
-	(*UnblockTaskRequest)(nil),                       // 65: skyflow.UnblockTaskRequest
-	(*SkipBlockedTaskRequest)(nil),                   // 66: skyflow.SkipBlockedTaskRequest
-	(*GetActivityTaskResponse_ExtraInfo)(nil),        // 67: skyflow.GetActivityTaskResponse.ExtraInfo
-	(*emptypb.Empty)(nil),                            // 68: google.protobuf.Empty
+	(*RetryExecutionRequest)(nil),                    // 48: skyflow.RetryExecutionRequest
+	(*ResumeExecutionRequest)(nil),                   // 49: skyflow.ResumeExecutionRequest
+	(*ListExecutionsRequest)(nil),                    // 50: skyflow.ListExecutionsRequest
+	(*ListExecutionsResponse)(nil),                   // 51: skyflow.ListExecutionsResponse
+	(*ListExecutionEventsRequest)(nil),               // 52: skyflow.ListExecutionEventsRequest
+	(*ListExecutionEventsResponse)(nil),              // 53: skyflow.ListExecutionEventsResponse
+	(*DescribeStepRequest)(nil),                      // 54: skyflow.DescribeStepRequest
+	(*DescribeStepResponse)(nil),                     // 55: skyflow.DescribeStepResponse
+	(*ListStepEventsRequest)(nil),                    // 56: skyflow.ListStepEventsRequest
+	(*GetActivityTaskRequest)(nil),                   // 57: skyflow.GetActivityTaskRequest
+	(*GetActivityTaskResponse)(nil),                  // 58: skyflow.GetActivityTaskResponse
+	(*SendTaskSuccessRequest)(nil),                   // 59: skyflow.SendTaskSuccessRequest
+	(*SendTaskFailureRequest)(nil),                   // 60: skyflow.SendTaskFailureRequest
+	(*SendTaskHeartbeatRequest)(nil),                 // 61: skyflow.SendTaskHeartbeatRequest
+	(*SendTaskReferenceRequest)(nil),                 // 62: skyflow.SendTaskReferenceRequest
+	(*SendStepFailedRequest)(nil),                    // 63: skyflow.SendStepFailedRequest
+	(*ResumeSuspendingStepRequest)(nil),              // 64: skyflow.ResumeSuspendingStepRequest
+	(*SkipFailedStepRequest)(nil),                    // 65: skyflow.SkipFailedStepRequest
+	(*UnblockTaskRequest)(nil),                       // 66: skyflow.UnblockTaskRequest
+	(*SkipBlockedTaskRequest)(nil),                   // 67: skyflow.SkipBlockedTaskRequest
+	(*RedoStepRequest)(nil),                          // 68: skyflow.RedoStepRequest
+	(*RetryFailedStepRequest)(nil),                   // 69: skyflow.RetryFailedStepRequest
+	(*GetActivityTaskResponse_ExtraInfo)(nil),        // 70: skyflow.GetActivityTaskResponse.ExtraInfo
+	(*emptypb.Empty)(nil),                            // 71: google.protobuf.Empty
 }
 var file_skyflow_proto_depIdxs = []int32{
 	1,  // 0: skyflow.ListNamespacesRequest.page_request:type_name -> skyflow.PageRequest
@@ -4795,10 +4979,10 @@ var file_skyflow_proto_depIdxs = []int32{
 	2,  // 18: skyflow.ListExecutionEventsResponse.page_response:type_name -> skyflow.PageResponse
 	34, // 19: skyflow.DescribeStepResponse.step:type_name -> skyflow.StepItem
 	1,  // 20: skyflow.ListStepEventsRequest.page_request:type_name -> skyflow.PageRequest
-	67, // 21: skyflow.GetActivityTaskResponse.extra_info:type_name -> skyflow.GetActivityTaskResponse.ExtraInfo
+	70, // 21: skyflow.GetActivityTaskResponse.extra_info:type_name -> skyflow.GetActivityTaskResponse.ExtraInfo
 	1,  // 22: skyflow.CommonService.Paging:input_type -> skyflow.PageRequest
-	68, // 23: skyflow.CommonService.HTTP:input_type -> google.protobuf.Empty
-	68, // 24: skyflow.CommonService.Ping:input_type -> google.protobuf.Empty
+	71, // 23: skyflow.CommonService.HTTP:input_type -> google.protobuf.Empty
+	71, // 24: skyflow.CommonService.Ping:input_type -> google.protobuf.Empty
 	6,  // 25: skyflow.SkyflowV1Service.CreateNamespace:input_type -> skyflow.CreateNamespaceRequest
 	6,  // 26: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:input_type -> skyflow.CreateNamespaceRequest
 	8,  // 27: skyflow.SkyflowV1Service.ListNamespaces:input_type -> skyflow.ListNamespacesRequest
@@ -4820,64 +5004,68 @@ var file_skyflow_proto_depIdxs = []int32{
 	43, // 43: skyflow.SkyflowV1Service.DescribeExecution:input_type -> skyflow.DescribeExecutionRequest
 	45, // 44: skyflow.SkyflowV1Service.DescribeExecutionBone:input_type -> skyflow.DescribeExecutionBoneRequest
 	47, // 45: skyflow.SkyflowV1Service.StopExecution:input_type -> skyflow.StopExecutionRequest
-	48, // 46: skyflow.SkyflowV1Service.ListExecutions:input_type -> skyflow.ListExecutionsRequest
-	50, // 47: skyflow.SkyflowV1Service.ListExecutionEvents:input_type -> skyflow.ListExecutionEventsRequest
-	52, // 48: skyflow.SkyflowV1Service.DescribeStep:input_type -> skyflow.DescribeStepRequest
-	54, // 49: skyflow.SkyflowV1Service.ListStepEvents:input_type -> skyflow.ListStepEventsRequest
-	55, // 50: skyflow.SkyflowV1Service.GetActivityTask:input_type -> skyflow.GetActivityTaskRequest
-	57, // 51: skyflow.SkyflowV1Service.SendTaskSuccess:input_type -> skyflow.SendTaskSuccessRequest
-	58, // 52: skyflow.SkyflowV1Service.SendTaskFailure:input_type -> skyflow.SendTaskFailureRequest
-	59, // 53: skyflow.SkyflowV1Service.SendTaskHeartbeat:input_type -> skyflow.SendTaskHeartbeatRequest
-	60, // 54: skyflow.SkyflowV1Service.SendTaskReference:input_type -> skyflow.SendTaskReferenceRequest
-	64, // 55: skyflow.SkyflowV1Service.SkipFailedStep:input_type -> skyflow.SkipFailedStepRequest
-	65, // 56: skyflow.SkyflowV1Service.UnblockTask:input_type -> skyflow.UnblockTaskRequest
-	66, // 57: skyflow.SkyflowV1Service.SkipBlockedTask:input_type -> skyflow.SkipBlockedTaskRequest
-	52, // 58: skyflow.SkyflowV1Service.RetryFailedStep:input_type -> skyflow.DescribeStepRequest
-	52, // 59: skyflow.SkyflowV1Service.SendStepFailed:input_type -> skyflow.DescribeStepRequest
-	52, // 60: skyflow.SkyflowV1Service.RedoStep:input_type -> skyflow.DescribeStepRequest
-	52, // 61: skyflow.SkyflowV1Service.ResumeSuspendingStep:input_type -> skyflow.DescribeStepRequest
-	2,  // 62: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
-	4,  // 63: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
-	3,  // 64: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
-	7,  // 65: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	7,  // 66: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
-	9,  // 67: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
-	68, // 68: skyflow.SkyflowV1Service.DeleteNamespace:output_type -> google.protobuf.Empty
-	14, // 69: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
-	14, // 70: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
-	21, // 71: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
-	16, // 72: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
-	18, // 73: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
-	23, // 74: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	23, // 75: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
-	27, // 76: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
-	31, // 77: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
-	25, // 78: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
-	29, // 79: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
-	37, // 80: skyflow.SkyflowV1Service.ParseStateMachine:output_type -> skyflow.ParseStateMachineResponse
-	39, // 81: skyflow.SkyflowV1Service.ValidateStateMachineDefinition:output_type -> skyflow.ValidateStateMachineDefinitionResponse
-	42, // 82: skyflow.SkyflowV1Service.StartExecution:output_type -> skyflow.StartExecutionResponse
-	44, // 83: skyflow.SkyflowV1Service.DescribeExecution:output_type -> skyflow.DescribeExecutionResponse
-	46, // 84: skyflow.SkyflowV1Service.DescribeExecutionBone:output_type -> skyflow.DescribeExecutionBoneResponse
-	68, // 85: skyflow.SkyflowV1Service.StopExecution:output_type -> google.protobuf.Empty
-	49, // 86: skyflow.SkyflowV1Service.ListExecutions:output_type -> skyflow.ListExecutionsResponse
-	51, // 87: skyflow.SkyflowV1Service.ListExecutionEvents:output_type -> skyflow.ListExecutionEventsResponse
-	53, // 88: skyflow.SkyflowV1Service.DescribeStep:output_type -> skyflow.DescribeStepResponse
-	51, // 89: skyflow.SkyflowV1Service.ListStepEvents:output_type -> skyflow.ListExecutionEventsResponse
-	56, // 90: skyflow.SkyflowV1Service.GetActivityTask:output_type -> skyflow.GetActivityTaskResponse
-	68, // 91: skyflow.SkyflowV1Service.SendTaskSuccess:output_type -> google.protobuf.Empty
-	68, // 92: skyflow.SkyflowV1Service.SendTaskFailure:output_type -> google.protobuf.Empty
-	68, // 93: skyflow.SkyflowV1Service.SendTaskHeartbeat:output_type -> google.protobuf.Empty
-	68, // 94: skyflow.SkyflowV1Service.SendTaskReference:output_type -> google.protobuf.Empty
-	68, // 95: skyflow.SkyflowV1Service.SkipFailedStep:output_type -> google.protobuf.Empty
-	68, // 96: skyflow.SkyflowV1Service.UnblockTask:output_type -> google.protobuf.Empty
-	68, // 97: skyflow.SkyflowV1Service.SkipBlockedTask:output_type -> google.protobuf.Empty
-	68, // 98: skyflow.SkyflowV1Service.RetryFailedStep:output_type -> google.protobuf.Empty
-	68, // 99: skyflow.SkyflowV1Service.SendStepFailed:output_type -> google.protobuf.Empty
-	68, // 100: skyflow.SkyflowV1Service.RedoStep:output_type -> google.protobuf.Empty
-	68, // 101: skyflow.SkyflowV1Service.ResumeSuspendingStep:output_type -> google.protobuf.Empty
-	62, // [62:102] is the sub-list for method output_type
-	22, // [22:62] is the sub-list for method input_type
+	48, // 46: skyflow.SkyflowV1Service.RetryExecution:input_type -> skyflow.RetryExecutionRequest
+	49, // 47: skyflow.SkyflowV1Service.ResumeExecution:input_type -> skyflow.ResumeExecutionRequest
+	50, // 48: skyflow.SkyflowV1Service.ListExecutions:input_type -> skyflow.ListExecutionsRequest
+	52, // 49: skyflow.SkyflowV1Service.ListExecutionEvents:input_type -> skyflow.ListExecutionEventsRequest
+	54, // 50: skyflow.SkyflowV1Service.DescribeStep:input_type -> skyflow.DescribeStepRequest
+	56, // 51: skyflow.SkyflowV1Service.ListStepEvents:input_type -> skyflow.ListStepEventsRequest
+	57, // 52: skyflow.SkyflowV1Service.GetActivityTask:input_type -> skyflow.GetActivityTaskRequest
+	59, // 53: skyflow.SkyflowV1Service.SendTaskSuccess:input_type -> skyflow.SendTaskSuccessRequest
+	60, // 54: skyflow.SkyflowV1Service.SendTaskFailure:input_type -> skyflow.SendTaskFailureRequest
+	61, // 55: skyflow.SkyflowV1Service.SendTaskHeartbeat:input_type -> skyflow.SendTaskHeartbeatRequest
+	62, // 56: skyflow.SkyflowV1Service.SendTaskReference:input_type -> skyflow.SendTaskReferenceRequest
+	65, // 57: skyflow.SkyflowV1Service.SkipFailedStep:input_type -> skyflow.SkipFailedStepRequest
+	66, // 58: skyflow.SkyflowV1Service.UnblockTask:input_type -> skyflow.UnblockTaskRequest
+	67, // 59: skyflow.SkyflowV1Service.SkipBlockedTask:input_type -> skyflow.SkipBlockedTaskRequest
+	69, // 60: skyflow.SkyflowV1Service.RetryFailedStep:input_type -> skyflow.RetryFailedStepRequest
+	63, // 61: skyflow.SkyflowV1Service.SendStepFailed:input_type -> skyflow.SendStepFailedRequest
+	68, // 62: skyflow.SkyflowV1Service.RedoStep:input_type -> skyflow.RedoStepRequest
+	64, // 63: skyflow.SkyflowV1Service.ResumeSuspendingStep:input_type -> skyflow.ResumeSuspendingStepRequest
+	2,  // 64: skyflow.CommonService.Paging:output_type -> skyflow.PageResponse
+	4,  // 65: skyflow.CommonService.HTTP:output_type -> skyflow.HTTPResponseMessage
+	3,  // 66: skyflow.CommonService.Ping:output_type -> skyflow.PingResponse
+	7,  // 67: skyflow.SkyflowV1Service.CreateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	7,  // 68: skyflow.SkyflowV1Service.CreateOrUpdateNamespace:output_type -> skyflow.CreateNamespaceResponse
+	9,  // 69: skyflow.SkyflowV1Service.ListNamespaces:output_type -> skyflow.ListNamespacesResponse
+	71, // 70: skyflow.SkyflowV1Service.DeleteNamespace:output_type -> google.protobuf.Empty
+	14, // 71: skyflow.SkyflowV1Service.CreateActivity:output_type -> skyflow.CreateActivityResponse
+	14, // 72: skyflow.SkyflowV1Service.CreateOrUpdateActivity:output_type -> skyflow.CreateActivityResponse
+	21, // 73: skyflow.SkyflowV1Service.ListActivities:output_type -> skyflow.ListActivitiesResponse
+	16, // 74: skyflow.SkyflowV1Service.DescribeActivity:output_type -> skyflow.DescribeActivityResponse
+	18, // 75: skyflow.SkyflowV1Service.DeleteActivity:output_type -> skyflow.DeleteActivityResponse
+	23, // 76: skyflow.SkyflowV1Service.CreateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	23, // 77: skyflow.SkyflowV1Service.CreateOrUpdateStateMachine:output_type -> skyflow.CreateStateMachineResponse
+	27, // 78: skyflow.SkyflowV1Service.DeleteStateMachine:output_type -> skyflow.DeleteStateMachineResponse
+	31, // 79: skyflow.SkyflowV1Service.ListStateMachines:output_type -> skyflow.ListStateMachinesResponse
+	25, // 80: skyflow.SkyflowV1Service.DescribeStateMachine:output_type -> skyflow.DescribeStateMachineResponse
+	29, // 81: skyflow.SkyflowV1Service.UpdateStateMachine:output_type -> skyflow.UpdateStateMachineResponse
+	37, // 82: skyflow.SkyflowV1Service.ParseStateMachine:output_type -> skyflow.ParseStateMachineResponse
+	39, // 83: skyflow.SkyflowV1Service.ValidateStateMachineDefinition:output_type -> skyflow.ValidateStateMachineDefinitionResponse
+	42, // 84: skyflow.SkyflowV1Service.StartExecution:output_type -> skyflow.StartExecutionResponse
+	44, // 85: skyflow.SkyflowV1Service.DescribeExecution:output_type -> skyflow.DescribeExecutionResponse
+	46, // 86: skyflow.SkyflowV1Service.DescribeExecutionBone:output_type -> skyflow.DescribeExecutionBoneResponse
+	71, // 87: skyflow.SkyflowV1Service.StopExecution:output_type -> google.protobuf.Empty
+	71, // 88: skyflow.SkyflowV1Service.RetryExecution:output_type -> google.protobuf.Empty
+	71, // 89: skyflow.SkyflowV1Service.ResumeExecution:output_type -> google.protobuf.Empty
+	51, // 90: skyflow.SkyflowV1Service.ListExecutions:output_type -> skyflow.ListExecutionsResponse
+	53, // 91: skyflow.SkyflowV1Service.ListExecutionEvents:output_type -> skyflow.ListExecutionEventsResponse
+	55, // 92: skyflow.SkyflowV1Service.DescribeStep:output_type -> skyflow.DescribeStepResponse
+	53, // 93: skyflow.SkyflowV1Service.ListStepEvents:output_type -> skyflow.ListExecutionEventsResponse
+	58, // 94: skyflow.SkyflowV1Service.GetActivityTask:output_type -> skyflow.GetActivityTaskResponse
+	71, // 95: skyflow.SkyflowV1Service.SendTaskSuccess:output_type -> google.protobuf.Empty
+	71, // 96: skyflow.SkyflowV1Service.SendTaskFailure:output_type -> google.protobuf.Empty
+	71, // 97: skyflow.SkyflowV1Service.SendTaskHeartbeat:output_type -> google.protobuf.Empty
+	71, // 98: skyflow.SkyflowV1Service.SendTaskReference:output_type -> google.protobuf.Empty
+	71, // 99: skyflow.SkyflowV1Service.SkipFailedStep:output_type -> google.protobuf.Empty
+	71, // 100: skyflow.SkyflowV1Service.UnblockTask:output_type -> google.protobuf.Empty
+	71, // 101: skyflow.SkyflowV1Service.SkipBlockedTask:output_type -> google.protobuf.Empty
+	71, // 102: skyflow.SkyflowV1Service.RetryFailedStep:output_type -> google.protobuf.Empty
+	71, // 103: skyflow.SkyflowV1Service.SendStepFailed:output_type -> google.protobuf.Empty
+	71, // 104: skyflow.SkyflowV1Service.RedoStep:output_type -> google.protobuf.Empty
+	71, // 105: skyflow.SkyflowV1Service.ResumeSuspendingStep:output_type -> google.protobuf.Empty
+	64, // [64:106] is the sub-list for method output_type
+	22, // [22:64] is the sub-list for method input_type
 	22, // [22:22] is the sub-list for extension type_name
 	22, // [22:22] is the sub-list for extension extendee
 	0,  // [0:22] is the sub-list for field type_name
@@ -4894,7 +5082,7 @@ func file_skyflow_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_skyflow_proto_rawDesc), len(file_skyflow_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   67,
+			NumMessages:   70,
 			NumExtensions: 0,
 			NumServices:   2,
 		},

@@ -5,8 +5,8 @@ import (
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
-// ParseFlowRequest request
-type ParseFlowRequest struct {
+// ParseStateMachineRequest request
+type ParseStateMachineRequest struct {
 	StateMachineDefinition string
 }
 

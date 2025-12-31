@@ -61,6 +61,7 @@ func ParserStateMachine(definition string) error {
 // GetBone  GetBone
 func (sm StateMachine) GetBone() StateMachineBone {
 	bone := sm.StateMachineBody.GetBone()
+	bone.Version = sm.StateMachineHeader.Version
 	return bone
 }
 

@@ -41,3 +41,11 @@ Content-Type: {{contentType}}
   "task_token": "",
   "output": ""
 }
+
+### DescribeExecutionBone
+POST {{host}}/api/v1/DescribeExecutionBone
+Content-Type: {{contentType}}
+
+{
+  "execution_uuid": "980ea130-df8e-40ff-8eb0-f3e25ccfa9d9"
+}

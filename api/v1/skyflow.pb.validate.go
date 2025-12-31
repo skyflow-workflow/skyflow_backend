@@ -5737,6 +5737,254 @@ var _ interface {
 	ErrorName() string
 } = StopExecutionRequestValidationError{}
 
+// Validate checks the field values on RetryExecutionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RetryExecutionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RetryExecutionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RetryExecutionRequestMultiError, or nil if none found.
+func (m *RetryExecutionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RetryExecutionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := len(m.GetExecutionUuid()); l < 10 || l > 100 {
+		err := RetryExecutionRequestValidationError{
+			field:  "ExecutionUuid",
+			reason: "value length must be between 10 and 100 bytes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := len(m.GetCause()); l < 0 || l > 1000 {
+		err := RetryExecutionRequestValidationError{
+			field:  "Cause",
+			reason: "value length must be between 0 and 1000 bytes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RetryExecutionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RetryExecutionRequestMultiError is an error wrapping multiple validation
+// errors returned by RetryExecutionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type RetryExecutionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RetryExecutionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RetryExecutionRequestMultiError) AllErrors() []error { return m }
+
+// RetryExecutionRequestValidationError is the validation error returned by
+// RetryExecutionRequest.Validate if the designated constraints aren't met.
+type RetryExecutionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RetryExecutionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RetryExecutionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RetryExecutionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RetryExecutionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RetryExecutionRequestValidationError) ErrorName() string {
+	return "RetryExecutionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RetryExecutionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRetryExecutionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RetryExecutionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RetryExecutionRequestValidationError{}
+
+// Validate checks the field values on ResumeExecutionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ResumeExecutionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ResumeExecutionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ResumeExecutionRequestMultiError, or nil if none found.
+func (m *ResumeExecutionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ResumeExecutionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := len(m.GetExecutionUuid()); l < 10 || l > 100 {
+		err := ResumeExecutionRequestValidationError{
+			field:  "ExecutionUuid",
+			reason: "value length must be between 10 and 100 bytes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := len(m.GetCause()); l < 0 || l > 1000 {
+		err := ResumeExecutionRequestValidationError{
+			field:  "Cause",
+			reason: "value length must be between 0 and 1000 bytes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ResumeExecutionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ResumeExecutionRequestMultiError is an error wrapping multiple validation
+// errors returned by ResumeExecutionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ResumeExecutionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ResumeExecutionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ResumeExecutionRequestMultiError) AllErrors() []error { return m }
+
+// ResumeExecutionRequestValidationError is the validation error returned by
+// ResumeExecutionRequest.Validate if the designated constraints aren't met.
+type ResumeExecutionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ResumeExecutionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ResumeExecutionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ResumeExecutionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ResumeExecutionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ResumeExecutionRequestValidationError) ErrorName() string {
+	return "ResumeExecutionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ResumeExecutionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sResumeExecutionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ResumeExecutionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ResumeExecutionRequestValidationError{}
+
 // Validate checks the field values on ListExecutionsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -7538,32 +7786,32 @@ var _ interface {
 	ErrorName() string
 } = SendTaskReferenceRequestValidationError{}
 
-// Validate checks the field values on StoreTaskDataRequest with the rules
+// Validate checks the field values on SendStepFailedRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *StoreTaskDataRequest) Validate() error {
+func (m *SendStepFailedRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on StoreTaskDataRequest with the rules
+// ValidateAll checks the field values on SendStepFailedRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// StoreTaskDataRequestMultiError, or nil if none found.
-func (m *StoreTaskDataRequest) ValidateAll() error {
+// SendStepFailedRequestMultiError, or nil if none found.
+func (m *SendStepFailedRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *StoreTaskDataRequest) validate(all bool) error {
+func (m *SendStepFailedRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if l := len(m.GetTaskToken()); l < 10 || l > 100 {
-		err := StoreTaskDataRequestValidationError{
-			field:  "TaskToken",
-			reason: "value length must be between 10 and 100 bytes, inclusive",
+	if m.GetStepId() <= 0 {
+		err := SendStepFailedRequestValidationError{
+			field:  "StepId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
@@ -7571,10 +7819,21 @@ func (m *StoreTaskDataRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if len(m.GetData()) < 1 {
-		err := StoreTaskDataRequestValidationError{
-			field:  "Data",
-			reason: "value length must be at least 1 bytes",
+	if l := len(m.GetError()); l < 1 || l > 200 {
+		err := SendStepFailedRequestValidationError{
+			field:  "Error",
+			reason: "value length must be between 1 and 200 bytes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := len(m.GetCause()); l < 0 || l > 1000 {
+		err := SendStepFailedRequestValidationError{
+			field:  "Cause",
+			reason: "value length must be between 0 and 1000 bytes, inclusive",
 		}
 		if !all {
 			return err
@@ -7583,19 +7842,19 @@ func (m *StoreTaskDataRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return StoreTaskDataRequestMultiError(errors)
+		return SendStepFailedRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// StoreTaskDataRequestMultiError is an error wrapping multiple validation
-// errors returned by StoreTaskDataRequest.ValidateAll() if the designated
+// SendStepFailedRequestMultiError is an error wrapping multiple validation
+// errors returned by SendStepFailedRequest.ValidateAll() if the designated
 // constraints aren't met.
-type StoreTaskDataRequestMultiError []error
+type SendStepFailedRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m StoreTaskDataRequestMultiError) Error() string {
+func (m SendStepFailedRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -7604,11 +7863,11 @@ func (m StoreTaskDataRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m StoreTaskDataRequestMultiError) AllErrors() []error { return m }
+func (m SendStepFailedRequestMultiError) AllErrors() []error { return m }
 
-// StoreTaskDataRequestValidationError is the validation error returned by
-// StoreTaskDataRequest.Validate if the designated constraints aren't met.
-type StoreTaskDataRequestValidationError struct {
+// SendStepFailedRequestValidationError is the validation error returned by
+// SendStepFailedRequest.Validate if the designated constraints aren't met.
+type SendStepFailedRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -7616,24 +7875,24 @@ type StoreTaskDataRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e StoreTaskDataRequestValidationError) Field() string { return e.field }
+func (e SendStepFailedRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e StoreTaskDataRequestValidationError) Reason() string { return e.reason }
+func (e SendStepFailedRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e StoreTaskDataRequestValidationError) Cause() error { return e.cause }
+func (e SendStepFailedRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e StoreTaskDataRequestValidationError) Key() bool { return e.key }
+func (e SendStepFailedRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e StoreTaskDataRequestValidationError) ErrorName() string {
-	return "StoreTaskDataRequestValidationError"
+func (e SendStepFailedRequestValidationError) ErrorName() string {
+	return "SendStepFailedRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e StoreTaskDataRequestValidationError) Error() string {
+func (e SendStepFailedRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -7645,14 +7904,14 @@ func (e StoreTaskDataRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sStoreTaskDataRequest.%s: %s%s",
+		"invalid %sSendStepFailedRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = StoreTaskDataRequestValidationError{}
+var _ error = SendStepFailedRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -7660,24 +7919,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = StoreTaskDataRequestValidationError{}
+} = SendStepFailedRequestValidationError{}
 
-// Validate checks the field values on LoadTaskDataRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ResumeSuspendingStepRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *LoadTaskDataRequest) Validate() error {
+func (m *ResumeSuspendingStepRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on LoadTaskDataRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ResumeSuspendingStepRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// LoadTaskDataRequestMultiError, or nil if none found.
-func (m *LoadTaskDataRequest) ValidateAll() error {
+// ResumeSuspendingStepRequestMultiError, or nil if none found.
+func (m *ResumeSuspendingStepRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *LoadTaskDataRequest) validate(all bool) error {
+func (m *ResumeSuspendingStepRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -7685,7 +7944,7 @@ func (m *LoadTaskDataRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetStepId() <= 0 {
-		err := LoadTaskDataRequestValidationError{
+		err := ResumeSuspendingStepRequestValidationError{
 			field:  "StepId",
 			reason: "value must be greater than 0",
 		}
@@ -7696,19 +7955,19 @@ func (m *LoadTaskDataRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return LoadTaskDataRequestMultiError(errors)
+		return ResumeSuspendingStepRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// LoadTaskDataRequestMultiError is an error wrapping multiple validation
-// errors returned by LoadTaskDataRequest.ValidateAll() if the designated
-// constraints aren't met.
-type LoadTaskDataRequestMultiError []error
+// ResumeSuspendingStepRequestMultiError is an error wrapping multiple
+// validation errors returned by ResumeSuspendingStepRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ResumeSuspendingStepRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m LoadTaskDataRequestMultiError) Error() string {
+func (m ResumeSuspendingStepRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -7717,11 +7976,12 @@ func (m LoadTaskDataRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m LoadTaskDataRequestMultiError) AllErrors() []error { return m }
+func (m ResumeSuspendingStepRequestMultiError) AllErrors() []error { return m }
 
-// LoadTaskDataRequestValidationError is the validation error returned by
-// LoadTaskDataRequest.Validate if the designated constraints aren't met.
-type LoadTaskDataRequestValidationError struct {
+// ResumeSuspendingStepRequestValidationError is the validation error returned
+// by ResumeSuspendingStepRequest.Validate if the designated constraints
+// aren't met.
+type ResumeSuspendingStepRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -7729,24 +7989,24 @@ type LoadTaskDataRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e LoadTaskDataRequestValidationError) Field() string { return e.field }
+func (e ResumeSuspendingStepRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e LoadTaskDataRequestValidationError) Reason() string { return e.reason }
+func (e ResumeSuspendingStepRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e LoadTaskDataRequestValidationError) Cause() error { return e.cause }
+func (e ResumeSuspendingStepRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e LoadTaskDataRequestValidationError) Key() bool { return e.key }
+func (e ResumeSuspendingStepRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e LoadTaskDataRequestValidationError) ErrorName() string {
-	return "LoadTaskDataRequestValidationError"
+func (e ResumeSuspendingStepRequestValidationError) ErrorName() string {
+	return "ResumeSuspendingStepRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e LoadTaskDataRequestValidationError) Error() string {
+func (e ResumeSuspendingStepRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -7758,14 +8018,14 @@ func (e LoadTaskDataRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sLoadTaskDataRequest.%s: %s%s",
+		"invalid %sResumeSuspendingStepRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = LoadTaskDataRequestValidationError{}
+var _ error = ResumeSuspendingStepRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -7773,120 +8033,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = LoadTaskDataRequestValidationError{}
-
-// Validate checks the field values on LoadTaskDataResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *LoadTaskDataResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoadTaskDataResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// LoadTaskDataResponseMultiError, or nil if none found.
-func (m *LoadTaskDataResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoadTaskDataResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if len(m.GetData()) < 1 {
-		err := LoadTaskDataResponseValidationError{
-			field:  "Data",
-			reason: "value length must be at least 1 bytes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return LoadTaskDataResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoadTaskDataResponseMultiError is an error wrapping multiple validation
-// errors returned by LoadTaskDataResponse.ValidateAll() if the designated
-// constraints aren't met.
-type LoadTaskDataResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoadTaskDataResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoadTaskDataResponseMultiError) AllErrors() []error { return m }
-
-// LoadTaskDataResponseValidationError is the validation error returned by
-// LoadTaskDataResponse.Validate if the designated constraints aren't met.
-type LoadTaskDataResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoadTaskDataResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoadTaskDataResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoadTaskDataResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoadTaskDataResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoadTaskDataResponseValidationError) ErrorName() string {
-	return "LoadTaskDataResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e LoadTaskDataResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoadTaskDataResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoadTaskDataResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoadTaskDataResponseValidationError{}
+} = ResumeSuspendingStepRequestValidationError{}
 
 // Validate checks the field values on SkipFailedStepRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -8230,6 +8377,230 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SkipBlockedTaskRequestValidationError{}
+
+// Validate checks the field values on RedoStepRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RedoStepRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RedoStepRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RedoStepRequestMultiError, or nil if none found.
+func (m *RedoStepRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RedoStepRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetStepId() <= 0 {
+		err := RedoStepRequestValidationError{
+			field:  "StepId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RedoStepRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RedoStepRequestMultiError is an error wrapping multiple validation errors
+// returned by RedoStepRequest.ValidateAll() if the designated constraints
+// aren't met.
+type RedoStepRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RedoStepRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RedoStepRequestMultiError) AllErrors() []error { return m }
+
+// RedoStepRequestValidationError is the validation error returned by
+// RedoStepRequest.Validate if the designated constraints aren't met.
+type RedoStepRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RedoStepRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RedoStepRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RedoStepRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RedoStepRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RedoStepRequestValidationError) ErrorName() string { return "RedoStepRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RedoStepRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRedoStepRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RedoStepRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RedoStepRequestValidationError{}
+
+// Validate checks the field values on RetryFailedStepRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RetryFailedStepRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RetryFailedStepRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RetryFailedStepRequestMultiError, or nil if none found.
+func (m *RetryFailedStepRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RetryFailedStepRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetStepId() <= 0 {
+		err := RetryFailedStepRequestValidationError{
+			field:  "StepId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RetryFailedStepRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RetryFailedStepRequestMultiError is an error wrapping multiple validation
+// errors returned by RetryFailedStepRequest.ValidateAll() if the designated
+// constraints aren't met.
+type RetryFailedStepRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RetryFailedStepRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RetryFailedStepRequestMultiError) AllErrors() []error { return m }
+
+// RetryFailedStepRequestValidationError is the validation error returned by
+// RetryFailedStepRequest.Validate if the designated constraints aren't met.
+type RetryFailedStepRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RetryFailedStepRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RetryFailedStepRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RetryFailedStepRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RetryFailedStepRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RetryFailedStepRequestValidationError) ErrorName() string {
+	return "RetryFailedStepRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RetryFailedStepRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRetryFailedStepRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RetryFailedStepRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RetryFailedStepRequestValidationError{}
 
 // Validate checks the field values on GetActivityTaskResponse_ExtraInfo with
 // the rules defined in the proto definition for this message. If any rules

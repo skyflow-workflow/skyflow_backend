@@ -79,13 +79,13 @@ stages:
 }
 func TestStartExecutionPipeline(t *testing.T) {
 
-	var piplepath = "../../examples/pipeline/jobmap_pipeline.yaml"
+	var pipelinePath = "../../examples/pipeline/jobmap_pipeline.yaml"
 	var input = `{"x":1, "y":2}`
 
 	// var piplepath = "../../examples/pipeline/task_pipeline.yaml"
 	// var input = `{"x":1, "y":2}`
 
-	content, err := os.ReadFile(piplepath)
+	content, err := os.ReadFile(pipelinePath)
 	if err != nil {
 		log.Println(err)
 		return
@@ -113,12 +113,12 @@ func TestSendTaskSkip(t *testing.T) {
 	fmt.Println(task)
 
 	ctx := context.Background()
-	req := vo.SendStepSkipRequest{
+	req := vo.SkipFailedStepRequest{
 		StepID:       step_id,
 		NextStepName: "MHello",
 		Output:       `{"xyz":"xx"}`,
 	}
-	err = myExecutionService.SendStepSkip(ctx, req)
+	err = myExecutionService.SkipFailedStep(ctx, req)
 	fmt.Println(err)
 	assert.Equal(t, err, nil)
 
@@ -185,8 +185,10 @@ func TestChangeStepGroupStatus(t *testing.T) {
 }
 func TestResumeStep(t *testing.T) {
 
-	step_id := 303
-	err := myExecutionService.ResumeSuspendingStep(step_id)
+	req := vo.ResumeSuspendingStepRequest{
+		StepID: 303,
+	}
+	err := myExecutionService.ResumeSuspendingStep(context.Background(), req)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -195,20 +197,31 @@ func TestResumeStep(t *testing.T) {
 }
 
 func TestResumeExecution(t *testing.T) {
+	// 注意：此测试需要数据库中存在 exeId=16 的记录
+	// 在实际项目中，应先创建一个执行，再恢复它
+	exeId := 16
 
-	exeid := 16
-	err := myExecutionService.ResumeExecution(exeid)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	req := vo.ResumeExecutionRequest{
+		ExecutionID: exeId,
 	}
+
+	err := myExecutionService.ResumeExecution(context.Background(), req)
+	if err != nil {
+		t.Fatalf("ResumeExecution failed for exeId %d: %v", exeId, err)
+	}
+
+	// TODO: 验证执行状态已正确恢复
+	// 需要添加查询执行状态的逻辑并断言
+	t.Logf("Successfully resumed execution with ID: %d", exeId)
 
 }
 
 func TestSendStepRetry(t *testing.T) {
 
 	var step_id = 749
-	err := myExecutionService.SendStepRetry(step_id)
+	err := myExecutionService.RetryFailedStep(context.Background(), vo.RetryFailedStepRequest{
+		StepID: step_id,
+	})
 	if err != nil {
 		fmt.Println(err.Error())
 		return

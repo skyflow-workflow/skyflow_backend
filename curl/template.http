@@ -87,3 +87,14 @@ Content-Type: {{contentType}}
   "namespace": "example-namespace",
   "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
 }
+
+
+### ParseStateMachine
+POST  {{host}}/api/v1/ParseStateMachine
+Content-Type: {{contentType}}
+
+{
+  "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
+}
+
+

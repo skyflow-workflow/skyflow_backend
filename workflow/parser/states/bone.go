@@ -21,6 +21,7 @@ type StateBone struct {
 
 // StateMachineBone  StateMachineBone
 type StateMachineBone struct {
+	Version string               `json:"Version"`
 	StartAt string               `json:"StartAt"`
 	States  map[string]StateBone `json:"States"`
 }
