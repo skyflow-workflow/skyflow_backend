@@ -1989,7 +1989,7 @@ func (svc *executionService) LoadTaskData(ctx context.Context, step_id int) (dat
 	return taskdata.TaskData, nil
 }
 
-// SkipBlokcedTask 跳过阻塞的任务
+// SkipBlockedTask 跳过阻塞的任务
 func (svc *executionService) SkipBlockedTask(ctx context.Context, req vo.SkipBlockedTaskRequest) error {
 
 	var err error

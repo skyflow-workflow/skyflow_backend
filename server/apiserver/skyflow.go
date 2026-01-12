@@ -27,7 +27,16 @@ func NewSkyflowServiceHandler(wfSvc workflow.WorkflowService) *SkyflowServiceHan
 
 // ResumeExecution implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) ResumeExecution(ctx context.Context, req *pbv1.ResumeExecutionRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+
+	voReq := vo.ResumeExecutionRequest{
+		ExecutionUUID: req.ExecutionUuid,
+		Cause:         req.Cause,
+	}
+	err := s.wfSvc.ResumeExecution(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // RetryExecution implements v1.SkyflowV1ServiceServer.
@@ -96,7 +105,15 @@ func (s *SkyflowServiceHandler) SendStepFailed(ctx context.Context, req *pbv1.Se
 
 // SkipBlockedTask implements v1.SkyflowV1ServiceServer.
 func (s *SkyflowServiceHandler) SkipBlockedTask(ctx context.Context, req *pbv1.SkipBlockedTaskRequest) (*emptypb.Empty, error) {
-	panic("unimplemented")
+
+	voReq := vo.SkipBlockedTaskRequest{
+		StepID: int(req.StepId),
+	}
+	err := s.wfSvc.ExecutionService.SkipBlockedTask(ctx, voReq)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // SkipFailedStep implements v1.SkyflowV1ServiceServer.
