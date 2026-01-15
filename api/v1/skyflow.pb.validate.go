@@ -486,6 +486,10 @@ func (m *NamespaceListItem) validate(all bool) error {
 
 	// no validation rules for UpdateTime
 
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
 	if len(errors) > 0 {
 		return NamespaceListItemMultiError(errors)
 	}
@@ -719,6 +723,10 @@ func (m *CreateNamespaceResponse) validate(all bool) error {
 	// no validation rules for CreateTime
 
 	// no validation rules for UpdateTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
 
 	if len(errors) > 0 {
 		return CreateNamespaceResponseMultiError(errors)
@@ -1239,6 +1247,10 @@ func (m *DescribeNamespaceResponse) validate(all bool) error {
 
 	// no validation rules for UpdateTime
 
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
 	if len(errors) > 0 {
 		return DescribeNamespaceResponseMultiError(errors)
 	}
@@ -1606,6 +1618,10 @@ func (m *CreateActivityResponse) validate(all bool) error {
 
 	// no validation rules for UpdateTime
 
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
 	if len(errors) > 0 {
 		return CreateActivityResponseMultiError(errors)
 	}
@@ -1830,6 +1846,10 @@ func (m *DescribeActivityResponse) validate(all bool) error {
 	// no validation rules for CreateTime
 
 	// no validation rules for UpdateTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
 
 	if len(errors) > 0 {
 		return DescribeActivityResponseMultiError(errors)
@@ -2299,6 +2319,10 @@ func (m *ActivityListItem) validate(all bool) error {
 	// no validation rules for CreateTime
 
 	// no validation rules for UpdateTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
 
 	if len(errors) > 0 {
 		return ActivityListItemMultiError(errors)
@@ -3870,6 +3894,10 @@ func (m *StateMachineListItem) validate(all bool) error {
 
 	// no validation rules for UpdateTime
 
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
 	if len(errors) > 0 {
 		return StateMachineListItemMultiError(errors)
 	}
@@ -3994,9 +4022,19 @@ func (m *ExecutionItem) validate(all bool) error {
 
 	// no validation rules for CreateTime
 
+	// no validation rules for UpdateTime
+
 	// no validation rules for StartTime
 
 	// no validation rules for FinishTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
+	// no validation rules for StartTimeStr
+
+	// no validation rules for FinishTimeStr
 
 	if len(errors) > 0 {
 		return ExecutionItemMultiError(errors)
@@ -4116,9 +4154,19 @@ func (m *StepItem) validate(all bool) error {
 
 	// no validation rules for CreateTime
 
+	// no validation rules for UpdateTime
+
 	// no validation rules for StartTime
 
 	// no validation rules for FinishTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for UpdateTimeStr
+
+	// no validation rules for StartTimeStr
+
+	// no validation rules for FinishTimeStr
 
 	if len(errors) > 0 {
 		return StepItemMultiError(errors)
@@ -4234,6 +4282,12 @@ func (m *ExecutionEventItem) validate(all bool) error {
 	// no validation rules for StartTime
 
 	// no validation rules for FinishTime
+
+	// no validation rules for CreateTimeStr
+
+	// no validation rules for StartTimeStr
+
+	// no validation rules for FinishTimeStr
 
 	if len(errors) > 0 {
 		return ExecutionEventItemMultiError(errors)
@@ -5058,6 +5112,8 @@ func (m *StartExecutionResponse) validate(all bool) error {
 	// no validation rules for ExecutionUuid
 
 	// no validation rules for CreateTime
+
+	// no validation rules for CreateTimeStr
 
 	if len(errors) > 0 {
 		return StartExecutionResponseMultiError(errors)

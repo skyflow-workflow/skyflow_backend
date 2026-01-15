@@ -105,7 +105,8 @@ var ExecutionFieldNames = struct {
 	URI             string
 	StartTime       string
 	FinishTime      string
-	GmtCreated      string
+	CreateTime      string
+	UpdateTime      string
 }{
 	ID:              "id",
 	UUID:            "uuid",
@@ -121,5 +122,6 @@ var ExecutionFieldNames = struct {
 	URI:             "uri",
 	StartTime:       "start_time",
 	FinishTime:      "finish_time",
-	GmtCreated:      "gmt_created",
+	CreateTime:      "create_time",
+	UpdateTime:      "update_time",
 }

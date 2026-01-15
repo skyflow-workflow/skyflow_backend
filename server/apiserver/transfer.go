@@ -15,7 +15,10 @@ const (
 	MaxPageSize = 2000
 )
 
-func ToTimeString(t time.Time) string {
+func ToTimeString(t *time.Time) string {
+	if t == nil {
+		return ""
+	}
 	return t.Format(timeformat)
 }
 
@@ -34,8 +37,13 @@ func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionItem {
 		Title:         in.Title,
 		Definition:    in.Definition,
 		CreateTime:    in.CreateTime.Unix(),
+		UpdateTime:    in.UpdateTime.Unix(),
 		StartTime:     ToTimeUnix(in.StartTime),
 		FinishTime:    ToTimeUnix(in.FinishTime),
+		CreateTimeStr: ToTimeString(&in.CreateTime),
+		UpdateTimeStr: ToTimeString(&in.UpdateTime),
+		StartTimeStr:  ToTimeString(in.StartTime),
+		FinishTimeStr: ToTimeString(in.FinishTime),
 	}
 	return resp
 }
@@ -80,13 +88,16 @@ func ToPBPageResponse(req paging.PageResponse) *pbv1.PageResponse {
 func ToPBExecutionEvent(in po.ExecutionEvent) *pbv1.ExecutionEventItem {
 
 	resp := &pbv1.ExecutionEventItem{
-		StepId:     int64(in.StepID),
-		StepName:   in.StepName,
-		EventType:  in.EventType,
-		CreateTime: in.CreateTime.Unix(),
-		StartTime:  in.StartTime.Unix(),
-		FinishTime: in.FinishTime.Unix(),
-		Data:       in.Data,
+		StepId:        int64(in.StepID),
+		StepName:      in.StepName,
+		EventType:     in.EventType,
+		Data:          in.Data,
+		CreateTime:    in.CreateTime.Unix(),
+		StartTime:     in.StartTime.Unix(),
+		FinishTime:    in.FinishTime.Unix(),
+		CreateTimeStr: ToTimeString(&in.CreateTime),
+		StartTimeStr:  ToTimeString(&in.StartTime),
+		FinishTimeStr: ToTimeString(&in.FinishTime),
 	}
 	return resp
 
@@ -94,21 +105,25 @@ func ToPBExecutionEvent(in po.ExecutionEvent) *pbv1.ExecutionEventItem {
 
 func ToPBNamespace(in po.Namespace) *pbv1.NamespaceListItem {
 	resp := &pbv1.NamespaceListItem{
-		Name:        in.Name,
-		Description: in.Description,
-		CreateTime:  in.CreateTime.Unix(),
-		UpdateTime:  in.UpdateTime.Unix(),
+		Name:          in.Name,
+		Description:   in.Description,
+		CreateTime:    in.CreateTime.Unix(),
+		UpdateTime:    in.UpdateTime.Unix(),
+		CreateTimeStr: ToTimeString(&in.CreateTime),
+		UpdateTimeStr: ToTimeString(&in.UpdateTime),
 	}
 	return resp
 }
 
 func ToPBActivityItem(in po.Activity) *pbv1.ActivityListItem {
 	resp := &pbv1.ActivityListItem{
-		Name:        in.Name,
-		Description: in.Description,
-		ActivityUri: in.URI,
-		CreateTime:  in.CreateTime.Unix(),
-		UpdateTime:  in.UpdateTime.Unix(),
+		Name:          in.Name,
+		Description:   in.Description,
+		ActivityUri:   in.URI,
+		CreateTime:    in.CreateTime.Unix(),
+		UpdateTime:    in.UpdateTime.Unix(),
+		CreateTimeStr: ToTimeString(&in.CreateTime),
+		UpdateTimeStr: ToTimeString(&in.UpdateTime),
 	}
 	return resp
 }
@@ -119,6 +134,8 @@ func ToPBStateMachineItem(in po.StateMachine) *pbv1.StateMachineListItem {
 		StatemachineUri: in.URI,
 		CreateTime:      in.CreateTime.Unix(),
 		UpdateTime:      in.UpdateTime.Unix(),
+		CreateTimeStr:   ToTimeString(&in.CreateTime),
+		UpdateTimeStr:   ToTimeString(&in.UpdateTime),
 	}
 	return resp
 }
@@ -130,6 +147,8 @@ func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineListItem {
 		Definition:      in.Definition,
 		CreateTime:      in.CreateTime.Unix(),
 		UpdateTime:      in.UpdateTime.Unix(),
+		CreateTimeStr:   ToTimeString(&in.CreateTime),
+		UpdateTimeStr:   ToTimeString(&in.UpdateTime),
 	}
 	return resp
 }
@@ -138,17 +157,22 @@ func ToPBStateMachine(in *po.StateMachine) *pbv1.StateMachineListItem {
 // 转换包括ID、名称、类型、状态、定义、输入输出数据和时间戳等字段
 func ToPBStep(in po.Step) *pbv1.StepItem {
 	resp := &pbv1.StepItem{
-		Id:         int64(in.ID),
-		Name:       in.Name,
-		Type:       in.Type,
-		Status:     in.Status,
-		Definition: in.Definition,
-		Input:      in.Input,
-		Output:     in.Output,
-		Data:       in.Data,
-		CreateTime: in.CreateTime.Unix(),
-		StartTime:  ToTimeUnix(in.StartTime),
-		FinishTime: ToTimeUnix(in.FinishTime),
+		Id:            int64(in.ID),
+		Name:          in.Name,
+		Type:          in.Type,
+		Status:        in.Status,
+		Definition:    in.Definition,
+		Input:         in.Input,
+		Output:        in.Output,
+		Data:          in.Data,
+		CreateTime:    in.CreateTime.Unix(),
+		UpdateTime:    in.UpdateTime.Unix(),
+		StartTime:     ToTimeUnix(in.StartTime),
+		FinishTime:    ToTimeUnix(in.FinishTime),
+		CreateTimeStr: ToTimeString(&in.CreateTime),
+		UpdateTimeStr: ToTimeString(&in.UpdateTime),
+		StartTimeStr:  ToTimeString(in.StartTime),
+		FinishTimeStr: ToTimeString(in.FinishTime),
 	}
 	return resp
 }

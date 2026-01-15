@@ -589,6 +589,10 @@ message NamespaceListItem {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // CreateNamespaceRequest 创建一个命名空间
@@ -609,6 +613,10 @@ message CreateNamespaceResponse {
     int64 create_time = 11;
     // update_time  update time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ListNamespacesRequest 获得命名空间列表
@@ -642,6 +650,10 @@ message DescribeNamespaceResponse {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 
@@ -673,6 +685,10 @@ message CreateActivityResponse {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // DescribeActivityRequest 获得活动详情
@@ -693,6 +709,10 @@ message DescribeActivityResponse {
     int64 create_time = 11;
     // update_time  update time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // DeleteActivityRequest 删除活动请求结构
@@ -725,6 +745,10 @@ message ActivityListItem {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ListActivitiesResponse 获得活动列表请求返回
@@ -807,6 +831,10 @@ message StateMachineListItem {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ExecutionListItem execution info in ListExecutionsResponse
@@ -826,10 +854,20 @@ message ExecutionItem {
     string execute_count = 10;
     // create_time timestamp
     int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
     // start_time timestamp
-    int64 start_time = 12;
+    int64 start_time = 13;
     // finish_time timestamp
-    int64 finish_time = 13;
+    int64 finish_time = 14;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 15;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 16;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 17;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 18;
 }
 // StepItem 一个Step的状态描述
 message StepItem {
@@ -843,10 +881,20 @@ message StepItem {
     string data = 8;
     // create_time timestamp
     int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
     // start_time timestamp
-    int64 start_time = 12;
+    int64 start_time = 13;
     // finish_time timestamp
-    int64 finish_time = 13;
+    int64 finish_time = 14;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 15;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 16;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 17;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 18;
 }
 
 // ExecutionEventListItem 执行事件
@@ -863,6 +911,13 @@ message ExecutionEventItem {
     int64 start_time = 12;
     // finish_time timestamp
     int64 finish_time = 13;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 14;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 15;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 16;
+    
 }
 
 
@@ -930,7 +985,8 @@ message StartExecutionResponse {
     string execution_uuid = 1;
     // 执行创建的时间
     string create_time = 2;
-
+    // 执行创建的时间字符串 RFC3339
+    string create_time_str = 3;
 }
 
 // 获得一个执行的描述请求结构
@@ -1096,7 +1152,7 @@ message SendTaskHeartbeatRequest {
     // task token
     string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
     // task 可以附带的message
-    string message = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
+    string message = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
 }
 
 //

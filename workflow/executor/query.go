@@ -178,7 +178,13 @@ func (svc *executionService) ListExecutions(req vo.ListExecutionsRequest) (vo.Li
 		return resp, err
 	}
 	// 查询数据
-	fields := append(ExecutionFields.L2, ExecutionFieldNames.GmtCreated, ExecutionFieldNames.StartTime, ExecutionFieldNames.FinishTime)
+	fields := append(
+		ExecutionFields.L2,
+		ExecutionFieldNames.CreateTime,
+		ExecutionFieldNames.StartTime,
+		ExecutionFieldNames.FinishTime,
+		ExecutionFieldNames.UpdateTime,
+	)
 	err = tx.Limit(limit).Offset(offset).Select(fields).Order("id DESC").Find(&dbExecutions).Error
 	if err != nil {
 		return resp, err

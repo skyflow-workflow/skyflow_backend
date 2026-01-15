@@ -13,7 +13,7 @@ import (
 func TestToTimeString(t *testing.T) {
 	now := time.Now()
 	expected := now.Format(timeformat)
-	result := ToTimeString(now)
+	result := ToTimeString(&now)
 	assert.Equal(t, expected, result)
 }
 

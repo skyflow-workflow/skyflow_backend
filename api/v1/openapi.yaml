@@ -852,6 +852,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: ActivityListItem ...
         skyflow.CreateActivityRequest:
             type: object
@@ -881,6 +887,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: CreateActivityResponse 创建一个活动返回结构
         skyflow.CreateNamespaceRequest:
             type: object
@@ -907,6 +919,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time  update time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: CreateNamespaceResponse 创建一个命名空间返回结构
         skyflow.CreateStateMachineRequest:
             type: object
@@ -979,6 +997,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time  update time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: DescribeActivityResponse 获得活动列表请求返回
         skyflow.DescribeExecutionBoneRequest:
             type: object
@@ -1060,6 +1084,15 @@ components:
                 finishTime:
                     type: string
                     description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
             description: ExecutionEventListItem 执行事件
         skyflow.ExecutionItem:
             type: object
@@ -1090,12 +1123,27 @@ components:
                 createTime:
                     type: string
                     description: create_time timestamp
+                updateTime:
+                    type: string
+                    description: update_time timestample
                 startTime:
                     type: string
                     description: start_time timestamp
                 finishTime:
                     type: string
                     description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
             description: ExecutionListItem execution info in ListExecutionsResponse
         skyflow.GetActivityTaskRequest:
             type: object
@@ -1302,6 +1350,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: NamespaceInfo 命名空间信息
         skyflow.PageRequest:
             type: object
@@ -1509,6 +1563,9 @@ components:
                 createTime:
                     type: string
                     description: 执行创建的时间
+                createTimeStr:
+                    type: string
+                    description: 执行创建的时间字符串 RFC3339
             description: 创建一个执行的请求返回结构
         skyflow.StateMachineListItem:
             type: object
@@ -1531,6 +1588,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
         skyflow.StepItem:
             type: object
             properties:
@@ -1553,12 +1616,27 @@ components:
                 createTime:
                     type: string
                     description: create_time timestamp
+                updateTime:
+                    type: string
+                    description: update_time timestample
                 startTime:
                     type: string
                     description: start_time timestamp
                 finishTime:
                     type: string
                     description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
             description: StepItem 一个Step的状态描述
         skyflow.StopExecutionRequest:
             type: object

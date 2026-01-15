@@ -437,7 +437,11 @@ type NamespaceListItem struct {
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -498,6 +502,20 @@ func (x *NamespaceListItem) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *NamespaceListItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *NamespaceListItem) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // CreateNamespaceRequest 创建一个命名空间
@@ -565,7 +583,11 @@ type CreateNamespaceResponse struct {
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time  update time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -626,6 +648,20 @@ func (x *CreateNamespaceResponse) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *CreateNamespaceResponse) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *CreateNamespaceResponse) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // ListNamespacesRequest 获得命名空间列表
@@ -785,7 +821,11 @@ type DescribeNamespaceResponse struct {
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -846,6 +886,20 @@ func (x *DescribeNamespaceResponse) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *DescribeNamespaceResponse) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *DescribeNamespaceResponse) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // DeleteNamespaceRequest 删除一个命名空间
@@ -975,7 +1029,11 @@ type CreateActivityResponse struct {
 	// create_time create time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1029,6 +1087,20 @@ func (x *CreateActivityResponse) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *CreateActivityResponse) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *CreateActivityResponse) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // DescribeActivityRequest 获得活动详情
@@ -1089,7 +1161,11 @@ type DescribeActivityResponse struct {
 	// create_time create time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time  update time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1157,6 +1233,20 @@ func (x *DescribeActivityResponse) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *DescribeActivityResponse) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *DescribeActivityResponse) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // DeleteActivityRequest 删除活动请求结构
@@ -1309,7 +1399,11 @@ type ActivityListItem struct {
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1377,6 +1471,20 @@ func (x *ActivityListItem) GetUpdateTime() int64 {
 		return x.UpdateTime
 	}
 	return 0
+}
+
+func (x *ActivityListItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *ActivityListItem) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
 }
 
 // ListActivitiesResponse 获得活动列表请求返回
@@ -1948,7 +2056,11 @@ type StateMachineListItem struct {
 	// create_time timestample
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
-	UpdateTime    int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,13,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,14,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2025,6 +2137,20 @@ func (x *StateMachineListItem) GetUpdateTime() int64 {
 	return 0
 }
 
+func (x *StateMachineListItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *StateMachineListItem) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
+}
+
 // ExecutionListItem execution info in ListExecutionsResponse
 type ExecutionItem struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2043,10 +2169,20 @@ type ExecutionItem struct {
 	ExecuteCount    string `protobuf:"bytes,10,opt,name=execute_count,json=executeCount,proto3" json:"execute_count,omitempty"`
 	// create_time timestamp
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	// update_time timestample
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	// start_time timestamp
-	StartTime int64 `protobuf:"varint,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	StartTime int64 `protobuf:"varint,13,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	// finish_time timestamp
-	FinishTime    int64 `protobuf:"varint,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	FinishTime int64 `protobuf:"varint,14,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,15,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,16,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
+	// start_time_str 开始时间字符串 RFC3339
+	StartTimeStr string `protobuf:"bytes,17,opt,name=start_time_str,json=startTimeStr,proto3" json:"start_time_str,omitempty"`
+	// finish_time_str 结束时间字符串 RFC3339
+	FinishTimeStr string `protobuf:"bytes,18,opt,name=finish_time_str,json=finishTimeStr,proto3" json:"finish_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2158,6 +2294,13 @@ func (x *ExecutionItem) GetCreateTime() int64 {
 	return 0
 }
 
+func (x *ExecutionItem) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
 func (x *ExecutionItem) GetStartTime() int64 {
 	if x != nil {
 		return x.StartTime
@@ -2170,6 +2313,34 @@ func (x *ExecutionItem) GetFinishTime() int64 {
 		return x.FinishTime
 	}
 	return 0
+}
+
+func (x *ExecutionItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *ExecutionItem) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
+}
+
+func (x *ExecutionItem) GetStartTimeStr() string {
+	if x != nil {
+		return x.StartTimeStr
+	}
+	return ""
+}
+
+func (x *ExecutionItem) GetFinishTimeStr() string {
+	if x != nil {
+		return x.FinishTimeStr
+	}
+	return ""
 }
 
 // StepItem 一个Step的状态描述
@@ -2185,10 +2356,20 @@ type StepItem struct {
 	Data       string                 `protobuf:"bytes,8,opt,name=data,proto3" json:"data,omitempty"`
 	// create_time timestamp
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	// update_time timestample
+	UpdateTime int64 `protobuf:"varint,12,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
 	// start_time timestamp
-	StartTime int64 `protobuf:"varint,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	StartTime int64 `protobuf:"varint,13,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	// finish_time timestamp
-	FinishTime    int64 `protobuf:"varint,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	FinishTime int64 `protobuf:"varint,14,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,15,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// update_time_str 更新时间字符串 RFC3339
+	UpdateTimeStr string `protobuf:"bytes,16,opt,name=update_time_str,json=updateTimeStr,proto3" json:"update_time_str,omitempty"`
+	// start_time_str 开始时间字符串 RFC3339
+	StartTimeStr string `protobuf:"bytes,17,opt,name=start_time_str,json=startTimeStr,proto3" json:"start_time_str,omitempty"`
+	// finish_time_str 结束时间字符串 RFC3339
+	FinishTimeStr string `protobuf:"bytes,18,opt,name=finish_time_str,json=finishTimeStr,proto3" json:"finish_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2286,6 +2467,13 @@ func (x *StepItem) GetCreateTime() int64 {
 	return 0
 }
 
+func (x *StepItem) GetUpdateTime() int64 {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return 0
+}
+
 func (x *StepItem) GetStartTime() int64 {
 	if x != nil {
 		return x.StartTime
@@ -2298,6 +2486,34 @@ func (x *StepItem) GetFinishTime() int64 {
 		return x.FinishTime
 	}
 	return 0
+}
+
+func (x *StepItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *StepItem) GetUpdateTimeStr() string {
+	if x != nil {
+		return x.UpdateTimeStr
+	}
+	return ""
+}
+
+func (x *StepItem) GetStartTimeStr() string {
+	if x != nil {
+		return x.StartTimeStr
+	}
+	return ""
+}
+
+func (x *StepItem) GetFinishTimeStr() string {
+	if x != nil {
+		return x.FinishTimeStr
+	}
+	return ""
 }
 
 // ExecutionEventListItem 执行事件
@@ -2314,7 +2530,13 @@ type ExecutionEventItem struct {
 	// start_time timestamp
 	StartTime int64 `protobuf:"varint,12,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	// finish_time timestamp
-	FinishTime    int64 `protobuf:"varint,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	FinishTime int64 `protobuf:"varint,13,opt,name=finish_time,json=finishTime,proto3" json:"finish_time,omitempty"`
+	// create_time_str 创建时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,14,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
+	// start_time_str 开始时间字符串 RFC3339
+	StartTimeStr string `protobuf:"bytes,15,opt,name=start_time_str,json=startTimeStr,proto3" json:"start_time_str,omitempty"`
+	// finish_time_str 结束时间字符串 RFC3339
+	FinishTimeStr string `protobuf:"bytes,16,opt,name=finish_time_str,json=finishTimeStr,proto3" json:"finish_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2403,6 +2625,27 @@ func (x *ExecutionEventItem) GetFinishTime() int64 {
 		return x.FinishTime
 	}
 	return 0
+}
+
+func (x *ExecutionEventItem) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
+	}
+	return ""
+}
+
+func (x *ExecutionEventItem) GetStartTimeStr() string {
+	if x != nil {
+		return x.StartTimeStr
+	}
+	return ""
+}
+
+func (x *ExecutionEventItem) GetFinishTimeStr() string {
+	if x != nil {
+		return x.FinishTimeStr
+	}
+	return ""
 }
 
 // ParseStateMachineRequest 解析一个状态机请求结构`
@@ -2791,7 +3034,9 @@ type StartExecutionResponse struct {
 	// 返回的执行的唯一ID
 	ExecutionUuid string `protobuf:"bytes,1,opt,name=execution_uuid,json=executionUuid,proto3" json:"execution_uuid,omitempty"`
 	// 执行创建的时间
-	CreateTime    string `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	CreateTime string `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	// 执行创建的时间字符串 RFC3339
+	CreateTimeStr string `protobuf:"bytes,3,opt,name=create_time_str,json=createTimeStr,proto3" json:"create_time_str,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2836,6 +3081,13 @@ func (x *StartExecutionResponse) GetExecutionUuid() string {
 func (x *StartExecutionResponse) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
+	}
+	return ""
+}
+
+func (x *StartExecutionResponse) GetCreateTimeStr() string {
+	if x != nil {
+		return x.CreateTimeStr
 	}
 	return ""
 }
@@ -3869,7 +4121,7 @@ type SendTaskHeartbeatRequest struct {
 	// task token
 	TaskToken string `protobuf:"bytes,1,opt,name=task_token,json=taskToken,proto3" json:"task_token,omitempty"`
 	// task 可以附带的message
-	Message       string `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	Message       string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4415,25 +4667,29 @@ const file_skyflow_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"I\n" +
 	"\x13HTTPResponseMessage\x12\x18\n" +
 	"\aretcode\x18\x01 \x01(\x05R\aretcode\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\x8b\x01\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xdb\x01\n" +
 	"\x11NamespaceListItem\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"e\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"e\n" +
 	"\x16CreateNamespaceRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\x12,\n" +
 	"\vdescription\x18\x02 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x00(\xe8\aR\vdescription\"\x91\x01\n" +
+	"\xfaB\ar\x05 \x00(\xe8\aR\vdescription\"\xe1\x01\n" +
 	"\x17CreateNamespaceResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"P\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"P\n" +
 	"\x15ListNamespacesRequest\x127\n" +
 	"\fpage_request\x18\x01 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"\x90\x01\n" +
 	"\x16ListNamespacesResponse\x12:\n" +
@@ -4442,14 +4698,16 @@ const file_skyflow_proto_rawDesc = "" +
 	"namespaces\x12:\n" +
 	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"9\n" +
 	"\x18DescribeNamespaceRequest\x12\x1d\n" +
-	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\"\x93\x01\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\"\xe3\x01\n" +
 	"\x19DescribeNamespaceResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"7\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"7\n" +
 	"\x16DeleteNamespaceRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\"\xb9\x01\n" +
 	"\x15CreateActivityRequest\x12\x1d\n" +
@@ -4460,16 +4718,18 @@ const file_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"parameters\x18\x04 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x00(\xe8\aR\n" +
-	"parameters\"}\n" +
+	"parameters\"\xcd\x01\n" +
 	"\x16CreateActivityResponse\x12!\n" +
 	"\factivity_uri\x18\x01 \x01(\tR\vactivityUri\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"H\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"H\n" +
 	"\x17DescribeActivityRequest\x12-\n" +
 	"\factivity_uri\x18\x01 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x01(\xc8\x01R\vactivityUri\"\xb5\x01\n" +
+	"\xfaB\ar\x05 \x01(\xc8\x01R\vactivityUri\"\x85\x02\n" +
 	"\x18DescribeActivityResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12!\n" +
@@ -4477,14 +4737,16 @@ const file_skyflow_proto_rawDesc = "" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"F\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"F\n" +
 	"\x15DeleteActivityRequest\x12-\n" +
 	"\factivity_uri\x18\x01 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x01(\xc8\x01R\vactivityUri\"\x18\n" +
 	"\x16DeleteActivityResponse\"y\n" +
 	"\x15ListActivitiesRequest\x12'\n" +
 	"\tnamespace\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\tnamespace\x127\n" +
-	"\fpage_request\x18\x02 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"\xad\x01\n" +
+	"\fpage_request\x18\x02 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"\xfd\x01\n" +
 	"\x10ActivityListItem\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12!\n" +
@@ -4492,7 +4754,9 @@ const file_skyflow_proto_rawDesc = "" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"\x8f\x01\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"\x8f\x01\n" +
 	"\x16ListActivitiesResponse\x129\n" +
 	"\n" +
 	"activities\x18\x01 \x03(\v2\x19.skyflow.ActivityListItemR\n" +
@@ -4532,7 +4796,7 @@ const file_skyflow_proto_rawDesc = "" +
 	"\fpage_request\x18\x02 \x01(\v2\x14.skyflow.PageRequestR\vpageRequest\"\x9c\x01\n" +
 	"\x19ListStateMachinesResponse\x12C\n" +
 	"\rstatemachines\x18\x01 \x03(\v2\x1d.skyflow.StateMachineListItemR\rstatemachines\x12:\n" +
-	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"\xd9\x01\n" +
+	"\rpage_response\x18\x02 \x01(\v2\x15.skyflow.PageResponseR\fpageResponse\"\xa9\x02\n" +
 	"\x14StateMachineListItem\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12)\n" +
@@ -4543,7 +4807,9 @@ const file_skyflow_proto_rawDesc = "" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
-	"updateTime\"\x95\x03\n" +
+	"updateTime\x12&\n" +
+	"\x0fcreate_time_str\x18\r \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x0e \x01(\tR\rupdateTimeStr\"\xd4\x04\n" +
 	"\rExecutionItem\x12%\n" +
 	"\x0eexecution_uuid\x18\x01 \x01(\tR\rexecutionUuid\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x14\n" +
@@ -4559,11 +4825,17 @@ const file_skyflow_proto_rawDesc = "" +
 	"\rexecute_count\x18\n" +
 	" \x01(\tR\fexecuteCount\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
-	"createTime\x12\x1d\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\f \x01(\x03R\n" +
+	"updateTime\x12\x1d\n" +
 	"\n" +
-	"start_time\x18\f \x01(\x03R\tstartTime\x12\x1f\n" +
-	"\vfinish_time\x18\r \x01(\x03R\n" +
-	"finishTime\"\x9d\x02\n" +
+	"start_time\x18\r \x01(\x03R\tstartTime\x12\x1f\n" +
+	"\vfinish_time\x18\x0e \x01(\x03R\n" +
+	"finishTime\x12&\n" +
+	"\x0fcreate_time_str\x18\x0f \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x10 \x01(\tR\rupdateTimeStr\x12$\n" +
+	"\x0estart_time_str\x18\x11 \x01(\tR\fstartTimeStr\x12&\n" +
+	"\x0ffinish_time_str\x18\x12 \x01(\tR\rfinishTimeStr\"\xdc\x03\n" +
 	"\bStepItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x12\n" +
@@ -4576,11 +4848,17 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x06output\x18\a \x01(\tR\x06output\x12\x12\n" +
 	"\x04data\x18\b \x01(\tR\x04data\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
-	"createTime\x12\x1d\n" +
+	"createTime\x12\x1f\n" +
+	"\vupdate_time\x18\f \x01(\x03R\n" +
+	"updateTime\x12\x1d\n" +
 	"\n" +
-	"start_time\x18\f \x01(\x03R\tstartTime\x12\x1f\n" +
-	"\vfinish_time\x18\r \x01(\x03R\n" +
-	"finishTime\"\x85\x02\n" +
+	"start_time\x18\r \x01(\x03R\tstartTime\x12\x1f\n" +
+	"\vfinish_time\x18\x0e \x01(\x03R\n" +
+	"finishTime\x12&\n" +
+	"\x0fcreate_time_str\x18\x0f \x01(\tR\rcreateTimeStr\x12&\n" +
+	"\x0fupdate_time_str\x18\x10 \x01(\tR\rupdateTimeStr\x12$\n" +
+	"\x0estart_time_str\x18\x11 \x01(\tR\fstartTimeStr\x12&\n" +
+	"\x0ffinish_time_str\x18\x12 \x01(\tR\rfinishTimeStr\"\xfb\x02\n" +
 	"\x12ExecutionEventItem\x12%\n" +
 	"\x0eexecution_uuid\x18\x01 \x01(\tR\rexecutionUuid\x12\x17\n" +
 	"\astep_id\x18\x02 \x01(\x03R\x06stepId\x12\x1b\n" +
@@ -4593,7 +4871,10 @@ const file_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"start_time\x18\f \x01(\x03R\tstartTime\x12\x1f\n" +
 	"\vfinish_time\x18\r \x01(\x03R\n" +
-	"finishTime\":\n" +
+	"finishTime\x12&\n" +
+	"\x0fcreate_time_str\x18\x0e \x01(\tR\rcreateTimeStr\x12$\n" +
+	"\x0estart_time_str\x18\x0f \x01(\tR\fstartTimeStr\x12&\n" +
+	"\x0ffinish_time_str\x18\x10 \x01(\tR\rfinishTimeStr\":\n" +
 	"\x18ParseStateMachineRequest\x12\x1e\n" +
 	"\n" +
 	"definition\x18\x01 \x01(\tR\n" +
@@ -4626,11 +4907,12 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x05title\x18\x03 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x00(\xc8\x01R\x05title\x12\x14\n" +
 	"\x05input\x18\x04 \x01(\tR\x05input\x120\n" +
-	"\x0eexecution_name\x18\x05 \x01(\tB\t\xfaB\x06r\x04 \x00(dR\rexecutionName\"`\n" +
+	"\x0eexecution_name\x18\x05 \x01(\tB\t\xfaB\x06r\x04 \x00(dR\rexecutionName\"\x88\x01\n" +
 	"\x16StartExecutionResponse\x12%\n" +
 	"\x0eexecution_uuid\x18\x01 \x01(\tR\rexecutionUuid\x12\x1f\n" +
 	"\vcreate_time\x18\x02 \x01(\tR\n" +
-	"createTime\"L\n" +
+	"createTime\x12&\n" +
+	"\x0fcreate_time_str\x18\x03 \x01(\tR\rcreateTimeStr\"L\n" +
 	"\x18DescribeExecutionRequest\x120\n" +
 	"\x0eexecution_uuid\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \n" +
 	"(dR\rexecutionUuid\"Q\n" +
@@ -4722,7 +5004,7 @@ const file_skyflow_proto_rawDesc = "" +
 	"\n" +
 	"task_token\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \n" +
 	"(dR\ttaskToken\x12$\n" +
-	"\amessage\x18\x03 \x01(\tB\n" +
+	"\amessage\x18\x02 \x01(\tB\n" +
 	"\xfaB\ar\x05 \x01(\xe8\aR\amessage\"\x84\x01\n" +
 	"\x18SendTaskReferenceRequest\x12(\n" +
 	"\n" +
