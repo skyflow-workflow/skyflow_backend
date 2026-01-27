@@ -94,6 +94,7 @@ var ExecutionFieldNames = struct {
 	ID              string
 	UUID            string
 	FlowType        string
+	Title           string
 	Status          string
 	MaxExecuteIndex string
 	ExecuteCount    string
@@ -111,6 +112,7 @@ var ExecutionFieldNames = struct {
 	ID:              "id",
 	UUID:            "uuid",
 	FlowType:        "flow_type",
+	Title:           "title",
 	Status:          "status",
 	MaxExecuteIndex: "max_execute_index",
 	ExecuteCount:    "execute_count",

@@ -32,18 +32,23 @@ func ToTimeUnix(t *time.Time) int64 {
 func ToPBExecutionItem(in po.Execution) *pbv1.ExecutionItem {
 
 	resp := &pbv1.ExecutionItem{
-		ExecutionUuid: in.UUID,
-		Status:        in.Status,
-		Title:         in.Title,
-		Definition:    in.Definition,
-		CreateTime:    in.CreateTime.Unix(),
-		UpdateTime:    in.UpdateTime.Unix(),
-		StartTime:     ToTimeUnix(in.StartTime),
-		FinishTime:    ToTimeUnix(in.FinishTime),
-		CreateTimeStr: ToTimeString(&in.CreateTime),
-		UpdateTimeStr: ToTimeString(&in.UpdateTime),
-		StartTimeStr:  ToTimeString(in.StartTime),
-		FinishTimeStr: ToTimeString(in.FinishTime),
+		ExecutionUuid:   in.UUID,
+		Status:          in.Status,
+		Title:           in.Title,
+		Definition:      in.Definition,
+		Input:           in.Input,
+		Output:          in.Output,
+		Data:            in.Data,
+		StatemachineUri: in.URI,
+		ExecuteCount:    int32(in.ExecuteCount),
+		CreateTime:      in.CreateTime.Unix(),
+		UpdateTime:      in.UpdateTime.Unix(),
+		StartTime:       ToTimeUnix(in.StartTime),
+		FinishTime:      ToTimeUnix(in.FinishTime),
+		CreateTimeStr:   ToTimeString(&in.CreateTime),
+		UpdateTimeStr:   ToTimeString(&in.UpdateTime),
+		StartTimeStr:    ToTimeString(in.StartTime),
+		FinishTimeStr:   ToTimeString(in.FinishTime),
 	}
 	return resp
 }

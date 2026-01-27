@@ -1119,7 +1119,9 @@ components:
                 namespace:
                     type: string
                 executeCount:
-                    type: string
+                    type: integer
+                    description: 执行step次数
+                    format: int32
                 createTime:
                     type: string
                     description: create_time timestamp

@@ -180,6 +180,7 @@ func (svc *executionService) ListExecutions(req vo.ListExecutionsRequest) (vo.Li
 	// 查询数据
 	fields := append(
 		ExecutionFields.L2,
+		ExecutionFieldNames.Title,
 		ExecutionFieldNames.CreateTime,
 		ExecutionFieldNames.StartTime,
 		ExecutionFieldNames.FinishTime,

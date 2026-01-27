@@ -14,6 +14,14 @@ Content-Type: {{contentType}}
 }
 
 
+### DescribeExecution
+POST  {{host}}/api/v1/DescribeExecution
+Content-Type: {{contentType}}
+
+{
+  "execution_uuid": "18d1b2cf-4013-4866-baae-9822e026fc3d"
+}
+
 ### StopExecution
 POST  {{host}}/api/v1/StopExecution
 Content-Type: {{contentType}}

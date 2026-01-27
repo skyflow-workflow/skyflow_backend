@@ -851,7 +851,8 @@ message ExecutionItem {
     string statemachine_uri = 7;
     string data =8;
     string namespace = 9;
-    string execute_count = 10;
+    // 执行step次数
+    int32 execute_count = 10;
     // create_time timestamp
     int64 create_time = 11;
     // update_time timestample
