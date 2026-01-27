@@ -29,3 +29,6 @@ skyflow.yaml
 trpc_go.yaml
 kratos.yaml
 target
+
+*ark.sh
+*rsync.sh

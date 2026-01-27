@@ -1,1 +1,1 @@
-rsync -av --exclude="cmd" --exclude=".git" --exclude=".DS_Store" --exclude="go.mod"  . ../skyflow_backend/
+rsync -av --exclude="cmd" --exclude=".git" --exclude=".DS_Store" --exclude="go.mod"  . ../github/skyflow_backend/

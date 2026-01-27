@@ -2166,7 +2166,8 @@ type ExecutionItem struct {
 	StatemachineUri string `protobuf:"bytes,7,opt,name=statemachine_uri,json=statemachineUri,proto3" json:"statemachine_uri,omitempty"`
 	Data            string `protobuf:"bytes,8,opt,name=data,proto3" json:"data,omitempty"`
 	Namespace       string `protobuf:"bytes,9,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	ExecuteCount    string `protobuf:"bytes,10,opt,name=execute_count,json=executeCount,proto3" json:"execute_count,omitempty"`
+	// 执行step次数
+	ExecuteCount int32 `protobuf:"varint,10,opt,name=execute_count,json=executeCount,proto3" json:"execute_count,omitempty"`
 	// create_time timestamp
 	CreateTime int64 `protobuf:"varint,11,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	// update_time timestample
@@ -2280,11 +2281,11 @@ func (x *ExecutionItem) GetNamespace() string {
 	return ""
 }
 
-func (x *ExecutionItem) GetExecuteCount() string {
+func (x *ExecutionItem) GetExecuteCount() int32 {
 	if x != nil {
 		return x.ExecuteCount
 	}
-	return ""
+	return 0
 }
 
 func (x *ExecutionItem) GetCreateTime() int64 {
@@ -4823,7 +4824,7 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x04data\x18\b \x01(\tR\x04data\x12\x1c\n" +
 	"\tnamespace\x18\t \x01(\tR\tnamespace\x12#\n" +
 	"\rexecute_count\x18\n" +
-	" \x01(\tR\fexecuteCount\x12\x1f\n" +
+	" \x01(\x05R\fexecuteCount\x12\x1f\n" +
 	"\vcreate_time\x18\v \x01(\x03R\n" +
 	"createTime\x12\x1f\n" +
 	"\vupdate_time\x18\f \x01(\x03R\n" +
