@@ -32,7 +32,7 @@ init:
 api:
 	protoc --proto_path=./api \
 	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative,omitempty=false:./api/v1 \
+ 	       --go_out=paths=source_relative:./api/v1 \
  	       --go-http_out=paths=source_relative,omitempty=false:./api/v1 \
  	       --go-grpc_out=paths=source_relative:./api/v1 \
  	       --validate_out=lang=go,paths=source_relative:./api/v1 \
