@@ -29,8 +29,9 @@ type ChoiceBody struct {
 
 // ChoiceState ...
 type ChoiceState struct {
-	*BaseState  `json:",inline"`
-	*ChoiceBody `json:",inline"`
+	*BaseState
+	*ChoiceBody
+	_RawData map[string]any
 }
 
 // NewChoiceStateFromString NewChoiceStateFromString
@@ -60,6 +61,7 @@ func NewChoiceStateFromMap(data map[string]interface{}) (state *ChoiceState, err
 	state = &ChoiceState{
 		BaseState:  bs,
 		ChoiceBody: choicebody,
+		_RawData:   data,
 	}
 	return
 }
@@ -178,6 +180,6 @@ func (choice *ChoiceState) IsEnd() bool {
 }
 
 func (choice *ChoiceState) GetDefinition() (string, error) {
-	data, err := ToString(choice)
+	data, err := ToString(choice._RawData)
 	return data, err
 }

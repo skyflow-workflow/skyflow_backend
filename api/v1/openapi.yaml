@@ -271,7 +271,8 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务管理
+                - 步骤管理
+            description: DescribeStep 获得一个执行的Step的描述
             operationId: SkyflowV1Service_DescribeStep
             requestBody:
                 content:
@@ -428,7 +429,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务管理
+                - 步骤管理
             description: ListStepEvents 获得一个执行的StepEvent列表
             operationId: SkyflowV1Service_ListStepEvents
             requestBody:
@@ -508,7 +509,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: |-
                 RedoStep 强制重做一个步骤
                  不判断步骤状态，直接重做
@@ -517,7 +518,24 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.RedoStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/ResumeExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: ResumeExecution 恢复一个执行
+            operationId: SkyflowV1Service_ResumeExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.ResumeExecutionRequest'
                 required: true
             responses:
                 "200":
@@ -527,16 +545,50 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: |-
                 ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-                 需要 Step Type:Suspend, Status: Suspending
+                 需要 Status: Suspending
             operationId: SkyflowV1Service_ResumeSuspendingStep
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.ResumeSuspendingStepRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/RetryExecution:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 任务管理
+            description: RetryExecution 重试一个执行
+            operationId: SkyflowV1Service_RetryExecution
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.RetryExecutionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+    /api/v1/RetryFailedStep:
+        post:
+            tags:
+                - SkyflowV1Service
+                - 步骤管理
+            description: RetryFailedStep 重试失败的步骤
+            operationId: SkyflowV1Service_RetryFailedStep
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/skyflow.RetryFailedStepRequest'
                 required: true
             responses:
                 "200":
@@ -546,31 +598,14 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendStepFailed 强制Running步骤失败
             operationId: SkyflowV1Service_SendStepFailed
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-    /api/v1/SendStepRetry:
-        post:
-            tags:
-                - SkyflowV1Service
-                - 任务操作
-            description: RetryFailedStep 重试失败的步骤
-            operationId: SkyflowV1Service_RetryFailedStep
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/skyflow.DescribeStepRequest'
+                            $ref: '#/components/schemas/skyflow.SendStepFailedRequest'
                 required: true
             responses:
                 "200":
@@ -580,7 +615,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskFailure 发送task执行失败
             operationId: SkyflowV1Service_SendTaskFailure
             requestBody:
@@ -597,7 +632,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskHeartbeat 发送task 执行心跳
             operationId: SkyflowV1Service_SendTaskHeartbeat
             requestBody:
@@ -614,7 +649,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskReference 发送task执行关联信息
             operationId: SkyflowV1Service_SendTaskReference
             requestBody:
@@ -631,7 +666,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SendTaskSuccess 发送task执行成功
             operationId: SkyflowV1Service_SendTaskSuccess
             requestBody:
@@ -648,7 +683,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SkipBlockedTask 跳过阻塞任务
             operationId: SkyflowV1Service_SkipBlockedTask
             requestBody:
@@ -665,7 +700,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: SkipFailedStep 跳过失败的步骤
             operationId: SkyflowV1Service_SkipFailedStep
             requestBody:
@@ -683,9 +718,7 @@ paths:
             tags:
                 - SkyflowV1Service
                 - 任务管理
-            description: |-
-                任务管理
-                 StartExecution 创建一个执行任务
+            description: StartExecution 创建一个执行任务
             operationId: SkyflowV1Service_StartExecution
             requestBody:
                 content:
@@ -721,7 +754,7 @@ paths:
         post:
             tags:
                 - SkyflowV1Service
-                - 任务操作
+                - 步骤管理
             description: UnblockTask 解锁阻塞任务
             operationId: SkyflowV1Service_UnblockTask
             requestBody:
@@ -819,6 +852,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: ActivityListItem ...
         skyflow.CreateActivityRequest:
             type: object
@@ -848,6 +887,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: CreateActivityResponse 创建一个活动返回结构
         skyflow.CreateNamespaceRequest:
             type: object
@@ -874,6 +919,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time  update time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: CreateNamespaceResponse 创建一个命名空间返回结构
         skyflow.CreateStateMachineRequest:
             type: object
@@ -890,8 +941,8 @@ components:
         skyflow.CreateStateMachineResponse:
             type: object
             properties:
-                data:
-                    $ref: '#/components/schemas/skyflow.StateMachineInfo'
+                statemachine:
+                    $ref: '#/components/schemas/skyflow.StateMachineListItem'
             description: CreateStateMachineResponse 创建一个状态机返回结构
         skyflow.DeleteActivityRequest:
             type: object
@@ -899,6 +950,7 @@ components:
                 activityUri:
                     type: string
                     description: activity uri
+            description: DeleteActivityRequest 删除活动请求结构
         skyflow.DeleteActivityResponse:
             type: object
             properties: {}
@@ -945,6 +997,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time  update time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: DescribeActivityResponse 获得活动列表请求返回
         skyflow.DescribeExecutionBoneRequest:
             type: object
@@ -969,7 +1027,9 @@ components:
             description: 获得一个执行的描述请求结构
         skyflow.DescribeExecutionResponse:
             type: object
-            properties: {}
+            properties:
+                execution:
+                    $ref: '#/components/schemas/skyflow.ExecutionItem'
             description: 获得一个执行的描述的返回结构
         skyflow.DescribeStateMachineRequest:
             type: object
@@ -980,8 +1040,8 @@ components:
         skyflow.DescribeStateMachineResponse:
             type: object
             properties:
-                data:
-                    $ref: '#/components/schemas/skyflow.StateMachineInfo'
+                statemachine:
+                    $ref: '#/components/schemas/skyflow.StateMachineListItem'
             description: DescribeStateMachineResponse 获得活动列表请求返回结构
         skyflow.DescribeStepRequest:
             type: object
@@ -993,17 +1053,19 @@ components:
         skyflow.DescribeStepResponse:
             type: object
             properties:
-                data:
+                step:
                     allOf:
-                        - $ref: '#/components/schemas/skyflow.StepInfo'
+                        - $ref: '#/components/schemas/skyflow.StepItem'
                     description: 返回的Step 状态信息
                 executionUuid:
                     type: string
                     description: execution uuid
             description: DescribeStepResponse 获得一个Step的信息返回结构
-        skyflow.ExecutionEventInfo:
+        skyflow.ExecutionEventItem:
             type: object
             properties:
+                executionUuid:
+                    type: string
                 stepId:
                     type: string
                     description: step id
@@ -1015,12 +1077,24 @@ components:
                     type: string
                 createTime:
                     type: string
+                    description: create_time timestamp
                 startTime:
                     type: string
+                    description: start_time timestamp
                 finishTime:
                     type: string
-            description: ExecutionEventInfo 执行事件
-        skyflow.ExecutionListItem:
+                    description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
+            description: ExecutionEventListItem 执行事件
+        skyflow.ExecutionItem:
             type: object
             properties:
                 executionUuid:
@@ -1034,15 +1108,42 @@ components:
                     description: title execution title
                 definition:
                     type: string
+                input:
+                    type: string
+                output:
+                    type: string
+                statemachineUri:
+                    type: string
+                data:
+                    type: string
+                namespace:
+                    type: string
+                executeCount:
+                    type: string
                 createTime:
                     type: string
-                    description: create_time timestample
+                    description: create_time timestamp
+                updateTime:
+                    type: string
+                    description: update_time timestample
                 startTime:
                     type: string
-                    description: start_time timestample
+                    description: start_time timestamp
                 finishTime:
                     type: string
-                    description: finish_time timestample
+                    description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
             description: ExecutionListItem execution info in ListExecutionsResponse
         skyflow.GetActivityTaskRequest:
             type: object
@@ -1067,16 +1168,6 @@ components:
                 input:
                     type: string
                     description: task 的输入，需要worker自己解码
-                timeoutSecond:
-                    type: string
-                    description: |-
-                        Deprecated: 该字段已经废弃，使用timeout_seconds
-                         task 的超时时间，单位(s), 0表示不超时
-                heartbeatTimeoutSecond:
-                    type: string
-                    description: |-
-                        Deprecated: 该字段已经废弃，使用heartbeat_seconds
-                         task 心跳超时时间，单位(s), 0 表示不超时
                 timeoutSeconds:
                     type: string
                     description: task 的超时时间，单位(s), 0表示不超时
@@ -1144,10 +1235,10 @@ components:
         skyflow.ListExecutionEventsResponse:
             type: object
             properties:
-                data:
+                events:
                     type: array
                     items:
-                        $ref: '#/components/schemas/skyflow.ExecutionEventInfo'
+                        $ref: '#/components/schemas/skyflow.ExecutionEventItem'
                     description: 返回Event列表
                 pageResponse:
                     allOf:
@@ -1182,7 +1273,7 @@ components:
                 executions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/skyflow.ExecutionListItem'
+                        $ref: '#/components/schemas/skyflow.ExecutionItem'
                     description: 查询到的执行列表
                 pageResponse:
                     allOf:
@@ -1259,6 +1350,12 @@ components:
                 updateTime:
                     type: string
                     description: update_time timestample
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
             description: NamespaceInfo 命名空间信息
         skyflow.PageRequest:
             type: object
@@ -1314,6 +1411,59 @@ components:
                     type: string
                     description: 异常信息说明
             description: PingResponse ping返回
+        skyflow.RedoStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: RedoStepRequest 重做步骤请求
+        skyflow.ResumeExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid， 必选
+                cause:
+                    type: string
+                    description: cause， error的文本描述， 可选
+            description: 恢复一个执行任务
+        skyflow.ResumeSuspendingStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: ResumeSuspendingStepRequest 恢复挂起的步骤
+        skyflow.RetryExecutionRequest:
+            type: object
+            properties:
+                executionUuid:
+                    type: string
+                    description: execution uuid， 必选
+                cause:
+                    type: string
+                    description: cause， error的文本描述， 可选
+            description: 重试一个执行任务
+        skyflow.RetryFailedStepRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+            description: RetryFailedStepRequest 重试失败的步骤请求
+        skyflow.SendStepFailedRequest:
+            type: object
+            properties:
+                stepId:
+                    type: string
+                    description: Step id
+                error:
+                    type: string
+                    description: error 错误类型，用来匹配异常
+                cause:
+                    type: string
+                    description: cause， error的文本描述
         skyflow.SendTaskFailureRequest:
             type: object
             properties:
@@ -1413,28 +1563,10 @@ components:
                 createTime:
                     type: string
                     description: 执行创建的时间
+                createTimeStr:
+                    type: string
+                    description: 执行创建的时间字符串 RFC3339
             description: 创建一个执行的请求返回结构
-        skyflow.StateMachineInfo:
-            type: object
-            properties:
-                name:
-                    type: string
-                description:
-                    type: string
-                statemachineUri:
-                    type: string
-                definition:
-                    type: string
-                type:
-                    type: string
-                    description: 'type : standard / express'
-                createTime:
-                    type: string
-                    description: create_time timestample
-                updateTime:
-                    type: string
-                    description: update_time timestample
-            description: StateMachineInfo 状态机信息
         skyflow.StateMachineListItem:
             type: object
             properties:
@@ -1447,18 +1579,31 @@ components:
                 statemachineUri:
                     type: string
                     description: statemachine_uri 状态机uri
+                definition:
+                    type: string
+                    description: definition 状态机定义
                 createTime:
                     type: string
                     description: create_time timestample
                 updateTime:
                     type: string
                     description: update_time timestample
-        skyflow.StepInfo:
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
+        skyflow.StepItem:
             type: object
             properties:
                 id:
                     type: string
                 status:
+                    type: string
+                name:
+                    type: string
+                type:
                     type: string
                 definition:
                     type: string
@@ -1466,13 +1611,33 @@ components:
                     type: string
                 output:
                     type: string
+                data:
+                    type: string
                 createTime:
                     type: string
+                    description: create_time timestamp
+                updateTime:
+                    type: string
+                    description: update_time timestample
                 startTime:
                     type: string
+                    description: start_time timestamp
                 finishTime:
                     type: string
-            description: StepInfo 一个Step的状态描述
+                    description: finish_time timestamp
+                createTimeStr:
+                    type: string
+                    description: create_time_str 创建时间字符串 RFC3339
+                updateTimeStr:
+                    type: string
+                    description: update_time_str 更新时间字符串 RFC3339
+                startTimeStr:
+                    type: string
+                    description: start_time_str 开始时间字符串 RFC3339
+                finishTimeStr:
+                    type: string
+                    description: finish_time_str 结束时间字符串 RFC3339
+            description: StepItem 一个Step的状态描述
         skyflow.StopExecutionRequest:
             type: object
             properties:
@@ -1485,7 +1650,7 @@ components:
                 cause:
                     type: string
                     description: cause， error的文本描述， 可选
-            description: 终止一个执行
+            description: 终止一个执行任务
         skyflow.UnblockTaskRequest:
             type: object
             properties:

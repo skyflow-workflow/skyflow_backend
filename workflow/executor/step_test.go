@@ -42,8 +42,8 @@ func TestGetBone(t *testing.T) {
 					StepID: 1,
 					Index:  0,
 				},
-				StateMachineBone: nil,
-				Branches:         nil,
+				ExecutionBone: nil,
+				Branches:      nil,
 			},
 		},
 	}

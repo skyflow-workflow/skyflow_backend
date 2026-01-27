@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 	"slices"
-	"sort"
 	"time"
 
 	"github.com/mmtbak/microlibrary/rdb"
@@ -174,130 +173,36 @@ func (e *Execution) GetInput() (interface{}, error) {
 
 // GetBone 获得execution bone
 // NOCC:golint/fnsize("设计如此")
-func (e *Execution) GetBone() (ExecutionBone, error) {
+func (e *Execution) GetBone() (*ExecutionBone, error) {
 
-	var bone ExecutionBone
 	var err error
 	var dbSteps []po.Step
 	var dbStepGroups []po.StepGroup
-	//
-	var dbStepMap = map[string]*po.Step{}
 
 	// 查询数据
 	tx := e.ExecutionService.MetaDB.DB()
 	err = tx.Where(po.Step{ExecutionID: e.Data.ID}).Find(&dbSteps).Error
 	if err != nil {
-		return bone, err
+		return nil, err
 	}
 
 	err = tx.Where(po.StepGroup{ExecutionID: e.Data.ID}).Find(&dbStepGroups).Error
 	if err != nil {
-		return bone, err
+		return nil, err
 	}
 
-	// levelconnector  是子流程连接的节点，主要是Parallel/Map 节点
-	var levelconnector = []*po.Step{}
-	// 构建bone
-	StartGroupID := states.StartGroupID
-	// GroupBoneMap  group 组内的bone map，
-	// 两层map结构， 第一层是 group_id， 第二层是statename ,都可以从DB钟获得
-	// 通过初始化， GroupBoneMap 按照分层存储所有的节点的Bone。 节点都是 StateBone 类型
-	var GroupBoneMap = map[int]map[string]StepBone{
-		// StartGroupID: map[string]StateBone{},
+	// 构建 ExecutionBone
+	req := BuildExecutionBoneRequest{
+		Steps:      &dbSteps,
+		StepGroups: &dbStepGroups,
 	}
-	// StateBoneMap  按照step_id 生成的 Map
-	var StateMap = map[int]Step{}
-
-	for di := range dbSteps {
-		dp := &dbSteps[di]
-		// 存成map
-		dbStepMap[dp.Name] = dp
-		var groupId int
-		newstate, err := NewStepFromData(dp, e.ExecutionService.StandardExecutor)
-		if err != nil {
-			return bone, err
-		}
-		// 如果GroupBoneMap 中新的GroupID 不存在， 则创建该GroupID的map， 存入该GroupID 子流程下所有的节点。
-		newbone := newstate.GetBone()
-		groupId = dp.GroupID
-		GroupBone, ok := GroupBoneMap[groupId]
-		if !ok {
-			newSsb := map[string]StepBone{}
-			newSsb[dp.Name] = newbone
-			GroupBoneMap[groupId] = newSsb
-		} else {
-			GroupBone[dp.Name] = newbone
-		}
-		StateMap[dp.ID] = newstate
-		// 如果是parallel 或者map 节点， 记录下来
-		if dp.Type == string(states.StateTypes.Map) || dp.Type == string(states.StateTypes.Parallel) {
-			levelconnector = append(levelconnector, dp)
-		}
+	executionBone, err := BuildExecutionBone(req, e.ExecutionService.StandardExecutor)
+	if err != nil {
+		return nil, err
 	}
-
-	// 处理StepGroup, 把StepGroup 按照step_id 分成不同的分组,  方便计算出一个State下有多少个子流程
-	// sgMap  StepGroup 按照start_id 进行分组
-	var sgMap = map[int][]*po.StepGroup{}
-	var step_id int
-	for index := range dbStepGroups {
-		step_id = dbStepGroups[index].StepID
-		if sgg, ok := sgMap[step_id]; ok {
-			sgMap[step_id] = append(sgg, &(dbStepGroups[index]))
-		} else {
-			sgMap[step_id] = []*po.StepGroup{&(dbStepGroups[index])}
-		}
-	}
-	// 排序， 每个 子流程内的多个group 按照index 进行排序
-	for _, arraygroup := range sgMap {
-		sort.SliceStable(arraygroup, func(i, j int) bool { return arraygroup[i].GroupIndex < arraygroup[j].GroupIndex })
-	}
-	// 处理连接器节点，把 GroupBoneMap 中的不同层级的节点连起来。
-	for _, lc := range levelconnector {
-
-		// 处理Parallel/Map 类型的连接器
-		// parallel state process
-		sb := GroupBoneMap[lc.GroupID][lc.Name]
-		sb.Branches = []StepBone{}
-		sg, ok := sgMap[lc.ID]
-		if !ok {
-			// 当前还没有节点数据， 说明还没有执行到这里，Map类型生成虚拟节点
-			// statemachinebone
-			// TODO， 这里需要重新设计。， 对于Map类型的LevelConnecter识别。
-			// vstate := StateMap[lc.ID]
-			// // 判断是Map 类型
-			// if vstate.GetBone().Type == grammer.StateType.Map {
-			// 	subsm := vstate.(*Map).State.GetIterator().GetBone()
-			// 	vbone := TransformVritualBone(subsm)
-			// 	sb.SubGroup = append(sb.SubGroup, vbone)
-			// 	GroupBoneMap[lc.GroupID][lc.Name] = sb
-			// }
-			continue
-		}
-
-		for _, subgroup := range sg {
-			subgroupId := subgroup.SubGroupID
-			startatnode, ok := dbStepMap[subgroup.StartAt]
-			if !ok {
-				return bone, fmt.Errorf("state data error: startat state not found ")
-			}
-			newSeb := StepBone{
-				StateMachineBone: &StateMachineBone{
-					StartAt: startatnode.Name,
-					States:  GroupBoneMap[subgroupId],
-				},
-			}
-			sb.Branches = append(sb.Branches, newSeb)
-		}
-
-		GroupBoneMap[lc.GroupID][lc.Name] = sb
-		continue
-
-	}
-	toplevelStateBone := ExecutionBone{
-		StartAt: e.StateMachine.StartAt,
-		States:  GroupBoneMap[StartGroupID],
-	}
-	return toplevelStateBone, nil
+	slog.Info("GetBone completed successfully", "bone", executionBone)
+	executionBone.StartAt = e.StateMachine.StartAt
+	return executionBone, nil
 }
 
 // ProcessInit  初始化execution
@@ -383,7 +288,7 @@ func (e *Execution) ProcessInit() error {
 	// 发送消息
 	// 处理下一个节点
 	msg := StepExecuteMessage{
-		Block: false,
+		UnBlockTask: false,
 	}
 	message := NewStepMessage(dbExe.ID, MessageType.StateNewTurn, inSmResp.StartStepID, msg)
 	err = e.ExecutionService.InnerQueue.SendInnerMessage(message, nil)

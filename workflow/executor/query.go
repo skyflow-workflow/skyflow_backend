@@ -67,7 +67,7 @@ func (svc *executionService) QueryExecutionByID(execution_id int, fields []strin
 	}
 	err = tx.Take(&dbExe, execution_id).Error
 	if rdb.IsErrRecordNotFound(err) {
-		return nil, fmt.Errorf("%w: execution uuid %d", vo.ErrorExecutionNotFound, execution_id)
+		return nil, fmt.Errorf("%w: execution id %d", vo.ErrorExecutionNotFound, execution_id)
 	}
 	return &dbExe, err
 }
@@ -178,7 +178,13 @@ func (svc *executionService) ListExecutions(req vo.ListExecutionsRequest) (vo.Li
 		return resp, err
 	}
 	// 查询数据
-	fields := append(ExecutionFields.L2, ExecutionFieldNames.GmtCreated, ExecutionFieldNames.StartTime, ExecutionFieldNames.FinishTime)
+	fields := append(
+		ExecutionFields.L2,
+		ExecutionFieldNames.CreateTime,
+		ExecutionFieldNames.StartTime,
+		ExecutionFieldNames.FinishTime,
+		ExecutionFieldNames.UpdateTime,
+	)
 	err = tx.Limit(limit).Offset(offset).Select(fields).Order("id DESC").Find(&dbExecutions).Error
 	if err != nil {
 		return resp, err
@@ -227,13 +233,16 @@ func (svc *executionService) DescribeExecutionBone(ctx context.Context, req vo.D
 	if err != nil {
 		return
 	}
+	err = exeObj.FullInit()
+	if err != nil {
+		return
+	}
 	bone, err = exeObj.GetBone()
 	if err != nil {
 		return
 	}
 	resp = vo.DescribeExecutionBoneResponse{
 		Bone: bone,
-		Data: *dbExecution,
 	}
 	return resp, nil
 

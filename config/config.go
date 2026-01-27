@@ -20,9 +20,12 @@ type APIConfig struct {
 }
 
 type DispatcherConfig struct {
-	MaxConcurrency int  `yaml:"max_concurrency"`
-	MaxQueueSize   int  `yaml:"max_queue_size"`
-	Debug          bool `yaml:"debug"`
+	// MaxConcurrency is the maximum number of concurrent workers that can be running at the same time.
+	MaxConcurrency int `yaml:"max_concurrency"`
+	// MaxQueueSize not defined yet
+	MaxQueueSize int `yaml:"max_queue_size"`
+	// Debug debug mode
+	Debug bool `yaml:"debug"`
 }
 
 type ExporterConfig struct {

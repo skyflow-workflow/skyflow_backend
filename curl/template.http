@@ -1,6 +1,7 @@
-@hostname = 127.0.0.1
-@port = 8080
-@host = http://{{hostname}}:{{port}}
+# @hostname = 127.0.0.1
+# @port = 8080
+# @host = http://127.0.0.1:8080
+@host = http://t1-skyflow.shizhuang-inc.net 
 @contentType = application/json
 
 
@@ -58,6 +59,19 @@ Content-Type: application/json
   "end_time": "2023-10-02T00:00:00Z"
 }
 
+### CreateOrUpdateActivity
+POST  {{host}}/api/v1/CreateOrUpdateActivity
+Content-Type: application/json
+
+{
+  "namespace": "example-namespace",
+  "activity_id": "activity-2",
+  "name": "Example Activity2",
+  "description": "This is an example activity2",
+  "start_time": "2023-10-01T00:00:00Z",
+  "end_time": "2023-10-02T00:00:00Z"
+}
+
 
 
 ### ListActivities
@@ -70,7 +84,7 @@ Content-Type: application/json
 
 
 ### GetEvents
-POST http://127.0.0.1:8080/api/v1/ListActivities/namespace
+POST {{host}}/api/v1/ListActivities/namespace
 Content-Type: application/json
 
 {
@@ -87,3 +101,23 @@ Content-Type: {{contentType}}
   "namespace": "example-namespace",
   "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
 }
+
+
+### ParseStateMachine
+POST  {{host}}/api/v1/ParseStateMachine
+Content-Type: {{contentType}}
+
+{
+  "definition": "{\"StartAt\":\"Hello\",\"States\":{\"Hello\":{\"Type\":\"Pass\",\"Result\":{\"message\":\"Hello World\"}, \"End\":true}}}"
+}
+
+
+
+### ParseStateMachine
+POST  {{host}}/api/v1/ParseStateMachine
+Content-Type: {{contentType}}
+
+{
+    "definition": "{\"Comment\": \"testactivity \", \"Type\": \"statemachine\", \"Version\": \"1.0\", \"StartAt\": \"S1\", \"States\": {\"S1\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.y\"}, \"Resource\": \"activity:unittest/Testadd\", \"ResultPath\": \"$.z\", \"TimeoutSeconds\": 600, \"HeartbeatSeconds\": 60, \"Next\": \"S2\"}, \"S2\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.z\"}, \"Resource\": \"activity:unittest/Testadd\", \"ResultPath\": \"$.z\", \"Next\": \"S3\"}, \"S3\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.z\"}, \"Resource\": \"activity:unittest/TestaddActivity2\", \"Next\": \"S4\"}, \"S4\": {\"Type\": \"Pass\", \"Resource\": \"activity:unittest/TestaddActivity2\", \"Result\": {}, \"End\": true}}}"
+}
+

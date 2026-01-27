@@ -68,17 +68,22 @@ type EventContent_ExecutionBlocked struct {
 
 // EventContent_ExecutionContinue  Event Content for Execution Suspend
 type EventContent_ExecutionContinue struct {
+	Cause       string         `json:"cause"`
+	RequestInfo vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_ExecutionRetry  Event Content for Execution start
 type EventContent_ExecutionRetry struct {
+	Cause       string         `json:"cause"`
+	RequestInfo vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_ExecutionInfoModified  Event Content for Execution start
 type EventContent_ExecutionInfoModified struct {
-	Field  string      `json:"field"`
-	Before interface{} `json:"before"  `
-	After  interface{} `json:"after" `
+	Field       string         `json:"field"`
+	Before      interface{}    `json:"before"  `
+	After       interface{}    `json:"after" `
+	RequestInfo vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_ExecutionAbort  Event Content for Execution start
@@ -239,7 +244,7 @@ type EventContent_TaskInitialized struct {
 	Resource         string
 }
 
-// EventContent_TaskSendHeartbeatd   activity scheduled
+// EventContent_TaskSendHeartbeat   activity scheduled
 type EventContent_TaskSendHeartbeat struct {
 	Message     string         `json:"message"`
 	RequestInfo vo.RequestInfo `json:"requestinfo"`
@@ -255,11 +260,16 @@ type EventContent_TaskRecovery struct {
 
 // EventContent_StepRetry   activity scheduled
 type EventContent_StepRetry struct {
-	ExecuteCount int
+	ExecuteCount int            `json:"execute_count"`
+	Cause        string         `json:"cause"`
+	RequestInfo  vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_SendStepFailed   step failedevent
 type EventContent_SendStepFailed struct {
+	Error       string         `json:"error"`
+	Cause       string         `json:"cause"`
+	RequestInfo vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_StoreTaskData   store task data event
@@ -280,6 +290,7 @@ type EventContent_UnblockExecution struct {
 // EventContent_RedoStep   step failedevent
 type EventContent_RedoStep struct {
 	ExecuteCount int
+	RequestInfo  vo.RequestInfo
 }
 
 // EventContent_StepSkip   activity scheduled
@@ -323,6 +334,8 @@ type EventContent_SuspendStepExecuted struct {
 
 // EventContent_SuspendStateTimeout EventContent_SuspendStepResumeTimeout
 type EventContent_SuspendStepResume struct {
+	Cause       string         `json:"cause"`
+	RequestInfo vo.RequestInfo `json:"requestinfo"`
 }
 
 // EventContent_SuspendStateTimeout EventContent_SuspendStepResumeTimeout

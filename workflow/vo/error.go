@@ -1,6 +1,11 @@
 package vo
 
-import "fmt"
+import (
+	"fmt"
+
+	pbv1 "github.com/skyflow-workflow/skyflow_backend/api/v1"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/pberror"
+)
 
 // ErrorExecutionUUIDExisted ...
 var (
@@ -24,7 +29,8 @@ var (
 	ErrorExecutionStatus       = fmt.Errorf("execution status is incorrect")
 	ErrorNotAllStepGroupFinish = fmt.Errorf("not all step group succeed")
 	// activity not found error
-	ErrorActivityTaskNotFound = fmt.Errorf("ActivityTaskNotFound")
+	// ErrorActivityTaskNotFound = fmt.Errorf("ActivityTaskNotFound")
+	ErrorActivityTaskNotFound = pberror.NewPBError(pbv1.ErrorCode_ACTIVITY_TASK_NOT_FOUND, "")
 	//unsupported operation for step
 	ErrorUnsupportedOperationForStep = fmt.Errorf("unsupported operation for step")
 

@@ -97,8 +97,8 @@ type SendTaskReferenceRequest struct {
 	URL       string
 }
 
-// SendStepSkipRequest ...
-type SendStepSkipRequest struct {
+// SkipFailedStepRequest ...
+type SkipFailedStepRequest struct {
 	StepID       int
 	NextStepName string
 	Output       string
@@ -111,7 +111,6 @@ type DescribeExecutionRequest struct {
 
 // DescribeExecutionBoneResponse ...
 type DescribeExecutionBoneResponse struct {
-	Data po.Execution
 	Bone interface{}
 }
 
@@ -151,7 +150,7 @@ type ListExecutionEventsRequest struct {
 
 // ListStepEventsRequest ...
 type ListStepEventsRequest struct {
-	StepID      int
+	StepID      int64
 	PageRequest paging.PageRequest
 }
 
@@ -191,3 +190,44 @@ type UnblockTaskRequest struct {
 
 // IdentifyUser ...
 type IdentifyUser struct{}
+
+// SendStepFailedRequest 执行失败的请求
+type SendStepFailedRequest struct {
+	//
+	StepID int
+	// 失败原因类型
+	Error string
+	// 失败原因描述
+	Cause string
+}
+
+type RetryFailedStepRequest struct {
+	// 重试的步骤ID
+	StepID int
+	// 重试原因类型
+	Cause string
+}
+
+// RedoStepRequest 重做步骤请求
+type RedoStepRequest struct {
+	StepID int
+	Cause  string
+}
+
+// ResumeSuspendingStepRequest 恢复暂停的步骤请求
+type ResumeSuspendingStepRequest struct {
+	StepID int
+	Cause  string
+}
+
+type ResumeExecutionRequest struct {
+	ExecutionUUID string
+	ExecutionID   int
+	Cause         string
+}
+
+type RetryExecutionRequest struct {
+	ExecutionUUID string
+	ExecutionID   int
+	Cause         string
+}

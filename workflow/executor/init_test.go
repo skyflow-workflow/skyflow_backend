@@ -5,15 +5,15 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mmtbak/microlibrary/mq"
 	"github.com/mmtbak/microlibrary/rdb"
 	"github.com/skyflow-workflow/skyflow_backend/mock"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
+	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
 )
 
 var (
 	testDBClient       *rdb.DBClient
-	testKafkaMQ        *mq.KafkaMessageQueue
+	testQueue          = queue.MockInnerQueue{}
 	myExecutionService ExecutionService
 	testTestEnvInit    sync.Once
 )
@@ -30,8 +30,8 @@ func TestMain(m *testing.M) {
 func setupTestEnv() {
 	testDBClient = mock.GetMockDBClient()
 	// 删除所有表
-	testDBClient.DropTables(po.GetExecutionTables())
+	// testDBClient.DropTables(po.GetExecutionTables())
 	testDBClient.SyncTables(po.GetExecutionTables())
 	_ = mock.GetMockKafkaMQ()
-	myExecutionService = NewExecutionService(testDBClient, nil, nil)
+	myExecutionService = NewExecutionService(testDBClient, testQueue, nil)
 }

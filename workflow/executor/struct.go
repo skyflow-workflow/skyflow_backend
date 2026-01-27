@@ -37,8 +37,10 @@ type StepWakeupMessage struct {
 }
 
 type StepExecuteMessage struct {
-	// if block step execute
-	Block bool `json:"block"`
+	// if unblock task, if true, will unblock task,
+	// default by task defintion
+	//
+	UnBlockTask bool `json:"unblock_task"`
 }
 
 // FindNextStep  for find next step
@@ -107,5 +109,5 @@ type InsertStateMachineResponse struct {
 }
 
 var DefaultStepExecuteMessage = StepExecuteMessage{
-	Block: false,
+	UnBlockTask: false,
 }

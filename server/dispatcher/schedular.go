@@ -7,7 +7,6 @@ import (
 
 	"log/slog"
 
-	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/executor"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/repository/queue"
@@ -84,21 +83,25 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 		return
 	}
 
+	logEventFields := LogMessageEvent(msgbody, nil)
+	logEventFields = append(logEventFields,
+		"StartTime", starttime.Format(time.RFC3339Nano),
+		"EventID", message.ID(),
+	)
+
 	// var has bool
 	defer func() {
-		slog.Info("ProcessMessage Finish", LogMessageEvent(msgbody, nil)...)
+		slog.Info("ProcessMessage Finish", logEventFields...)
 		// Ack Message
 		err = message.Ack()
 		if err != nil {
-			slog.Error("Ack Message Failed", LogMessageEvent(msgbody, err)...)
+			slog.Error("Ack Message Failed", append(logEventFields, "Error", err)...)
 			// panic(fmt.Errorf(errStr))
 		}
 		if svc.config.Debug {
 			finishtime := time.Now()
 			duration := finishtime.Sub(starttime)
-			args := LogMessageEvent(msgbody, nil)
-			args = append(args, "Duration", duration.String())
-			slog.Debug("ProcessMessage Speed", args...)
+			slog.Debug("ProcessMessage Speed", append(logEventFields, "Duration", duration.String())...)
 		}
 	}()
 	defer func() {
@@ -110,13 +113,13 @@ func (svc *DispatcherService) ProcessMessage(i interface{}) {
 		}
 	}()
 	// debug info
-	slog.Debug("Start ProcessMessage", LogMessageEvent(msgbody, nil)...)
+	slog.Debug("Start ProcessMessage", logEventFields...)
 	// 交给具体执行函数
 	err = svc.processInnerMessage(msgbody)
-	slog.Info("Finish ProcessMessage", LogMessageEvent(msgbody, err)...)
+	slog.Info("Finish ProcessMessage", append(logEventFields, "Error", err)...)
 
 	if err != nil {
-		slog.Error("Process Message Failed Failed: ", LogMessageEvent(msgbody, err)...)
+		slog.Error("Process Message Failed Failed: ", append(logEventFields, "Error", err)...)
 		// 处理不了就失败整个任务
 		err2 := svc.ExecutionService.ExecutionErrorProcess(err, msgbody)
 		if err2 != nil {
@@ -141,12 +144,14 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		return
 	}
 
+	logEventFields := LogMessageEvent(msgBody, nil)
+
 	// 如果 消息类型是正常消息， 而 Execution状态不在 [ created  running ] , 忽略消息。 不能接收Failed/Abort/Success 等其他状态的消息
 	if !slices.Contains(
 		[]string{string(executor.ExecutionStatus.Running), string(executor.ExecutionStatus.Created)},
 		dbExecution.Status) {
 		msg := fmt.Sprintf("Execution Status Is [ %s ] , Ignore This Message: ", dbExecution.Status)
-		slog.Info(msg, LogMessageEvent(msgBody, nil)...)
+		slog.Info(msg, logEventFields...)
 		return
 	}
 	// 根据消息类型做出响应的动作
@@ -159,7 +164,7 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		// 如果是状态异常，忽略消息
 		if err == executor.ErrorExecutionStatus {
 
-			slog.Error("Execution Status is unexpect , Ignore This Message.", LogMessageEvent(msgBody, err)...)
+			slog.Error("Execution Status is unexpect , Ignore This Message.", append(logEventFields, "Error", err)...)
 			return nil
 		}
 		err = exe.ProcessEvent(msgBody)
@@ -168,7 +173,7 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 
 		// 如果StateID == 0 , 忽略消息
 		if msgBody.StepID == 0 {
-			slog.Error("StepID is 0 , Ignore This Message.", LogMessageEvent(msgBody, err)...)
+			slog.Error("StepID is 0 , Ignore This Message.", append(logEventFields, "Error", err)...)
 			return
 		}
 		// 先查询最小数据，判断 step 的状态。是否符合预期。
@@ -179,21 +184,40 @@ func (svc *DispatcherService) processInnerMessage(msgBody queue.InnerMessageBody
 		}
 
 		//判断State 状态 是否符合预期， 增加对重复消息的可用性判断
-		candState, ok := executor.StateEventEventCheckStatus[msgBody.Type]
-		if ok {
-			// 如果State状态 不在预期的event 状态， 忽略该消息
-			if !slices.Contains(candState, dbStep.Status) {
-				msgBodyStr, err2 := toolkit.ToString(msgBody)
-				if err2 != nil {
-					slog.Error("msgBody to json string failed",
-						"error", err2)
-					return err
-				}
-				msg := fmt.Sprintf("Ignore This Message, StateID : %d , Current State: %s ,   Message Content: %s ",
-					dbStep.ID, dbStep.Status, msgBodyStr)
-				slog.Error(msg)
-				return
-			}
+		candState, ok := executor.StateEventCheckStatus[msgBody.Type]
+		if !ok {
+			// 如果当前状态不在预期的候选列表中，说明消息类型异常，直接报错
+			fields := append(logEventFields,
+				"StepID", dbStep.ID,
+				"StepName", dbStep.Name,
+				"StepStatus", dbStep.Status,
+				"StepType", dbStep.Type,
+				"EventType", msgBody.Type,
+			)
+
+			err = fmt.Errorf("step event status is unexpect, event type is '%s', step status is '%s'",
+				msgBody.Type, dbStep.Status)
+
+			slog.Error(err.Error(), fields...)
+			return err
+		}
+
+		// 如果State状态 不在预期的 event 状态， 有可能是重复消息， 忽略消息
+		if !slices.Contains(candState, dbStep.Status) {
+			err = fmt.Errorf(
+				"step event status is not match, ingore this message, event type is '%s', step status is '%s'",
+				msgBody.Type, dbStep.Status,
+			)
+			logEventFields = append(logEventFields,
+				"Error", err,
+				"StepID", dbStep.ID,
+				"StepStatus", dbStep.Status,
+				"StepType", dbStep.Type,
+				"CandState", candState,
+				"EventType", msgBody.Type,
+			)
+			slog.Error(err.Error(), logEventFields...)
+			return
 		}
 		var step executor.Step
 		// 查询全量数据， 初始化 step

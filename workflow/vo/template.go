@@ -5,8 +5,8 @@ import (
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 )
 
-// ParseFlowRequest request
-type ParseFlowRequest struct {
+// ParseStateMachineRequest request
+type ParseStateMachineRequest struct {
 	StateMachineDefinition string
 }
 
@@ -111,8 +111,8 @@ type DeleteStateMachineRequest struct {
 
 // DescribeStepResponse ...
 type DescribeStepResponse struct {
-	ExecutionUUID string
-	Step          po.Step
+	Execution *po.Execution
+	Step      *po.Step
 }
 
 type UpdateStateMachineRequest struct {

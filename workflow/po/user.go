@@ -13,5 +13,5 @@ type UserStepData struct {
 	// user store reference for a step, json format
 	Reference  string    `json:"reference" gorm:"type:JSON"`
 	ModifyTime time.Time `json:"gmt_modified" gorm:"<-:create update;autoUpdateTime;type:TIMESTAMP" `
-	CreateTime time.Time `json:"gmt_created" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
+	CreateTime time.Time `json:"create_time" gorm:"<-:create;autoCreateTime;type:TIMESTAMP"`
 }

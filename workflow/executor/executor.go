@@ -235,7 +235,7 @@ func (executor *Executor) ProcessEventStepInit(msg queue.InnerMessageBody) error
 	executor.SendExecutionEvents(event1, event2)
 
 	var stateExeMsg = StepExecuteMessage{
-		Block: false,
+		UnBlockTask: false,
 	}
 	// message queue send create message
 	message := NewStepMessage(dbStep.ExecutionID, MessageType.StateExecute, dbStep.ID, stateExeMsg)

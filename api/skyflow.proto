@@ -116,6 +116,7 @@ service SkyflowV1Service {
             ]
         };
     }
+
     // ListNamespaces 获得命名空间列表
     rpc ListNamespaces(ListNamespacesRequest) returns (ListNamespacesResponse) {
         option (google.api.http) = {
@@ -301,7 +302,8 @@ service SkyflowV1Service {
         };
     }
 
-    // 任务管理
+    // ---任务管理
+
     // StartExecution 创建一个执行任务
     rpc StartExecution(StartExecutionRequest) returns (StartExecutionResponse) {
         option (google.api.http) = {
@@ -351,6 +353,30 @@ service SkyflowV1Service {
             ]
         };
     }
+    // RetryExecution 重试一个执行
+    rpc RetryExecution(RetryExecutionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/api/v1/RetryExecution"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
+    }
+    // ResumeExecution 恢复一个执行
+    rpc ResumeExecution(ResumeExecutionRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/api/v1/ResumeExecution"
+            body: "*"
+        };
+        option (openapi.v3.operation) = {
+            tags: [
+                "任务管理"
+            ]
+        };
+    }
     // ListExecutions 获得execution列表
     rpc ListExecutions(ListExecutionsRequest) returns (ListExecutionsResponse) {
         option (google.api.http) = {
@@ -376,6 +402,9 @@ service SkyflowV1Service {
         };
     }
 
+    // ---步骤管理
+
+    // DescribeStep 获得一个执行的Step的描述
     rpc DescribeStep(DescribeStepRequest) returns (DescribeStepResponse) {
         option (google.api.http) = {
             post: "/api/v1/DescribeStep"
@@ -383,7 +412,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务管理"
+                "步骤管理"
             ]
         };
     }
@@ -395,7 +424,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务管理"
+                "步骤管理"
             ]
         };
     }
@@ -419,7 +448,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -432,7 +461,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -444,7 +473,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -456,7 +485,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -468,7 +497,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -481,7 +510,7 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -494,58 +523,58 @@ service SkyflowV1Service {
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
 
     // RetryFailedStep 重试失败的步骤
-    rpc RetryFailedStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+    rpc RetryFailedStep(RetryFailedStepRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
-        post : "/api/v1/SendStepRetry"
-        body: "*"
+            post : "/api/v1/RetryFailedStep"
+            body: "*"
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
     // SendStepFailed 强制Running步骤失败
-    rpc SendStepFailed(DescribeStepRequest) returns (google.protobuf.Empty) {
+    rpc SendStepFailed(SendStepFailedRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post : "/api/v1/SendStepFailed"
             body: "*"
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
     // RedoStep 强制重做一个步骤
     // 不判断步骤状态，直接重做
-    rpc RedoStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+    rpc RedoStep(RedoStepRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post : "/api/v1/RedoStep"
             body: "*"
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
     // ResumeSuspendingStep 继续一个处于暂停状态的步骤，
-    // 需要 Step Type:Suspend, Status: Suspending
-    rpc ResumeSuspendingStep(DescribeStepRequest) returns (google.protobuf.Empty) {
+    // 需要 Status: Suspending
+    rpc ResumeSuspendingStep(ResumeSuspendingStepRequest) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post : "/api/v1/ResumeSuspendingStep"
             body: "*"
         };
         option (openapi.v3.operation) = {
             tags: [
-                "任务操作"
+                "步骤管理"
             ]
         };
     }
@@ -560,6 +589,10 @@ message NamespaceListItem {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // CreateNamespaceRequest 创建一个命名空间
@@ -580,6 +613,10 @@ message CreateNamespaceResponse {
     int64 create_time = 11;
     // update_time  update time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ListNamespacesRequest 获得命名空间列表
@@ -613,6 +650,10 @@ message DescribeNamespaceResponse {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 
@@ -644,6 +685,10 @@ message CreateActivityResponse {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // DescribeActivityRequest 获得活动详情
@@ -664,8 +709,13 @@ message DescribeActivityResponse {
     int64 create_time = 11;
     // update_time  update time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
+// DeleteActivityRequest 删除活动请求结构
 message DeleteActivityRequest {
     // activity uri
     string activity_uri = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
@@ -695,6 +745,10 @@ message ActivityListItem {
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ListActivitiesResponse 获得活动列表请求返回
@@ -715,7 +769,7 @@ message CreateStateMachineRequest {
 }
 //CreateStateMachineResponse 创建一个状态机返回结构
 message CreateStateMachineResponse {
-    StateMachineInfo data = 1 ;
+    StateMachineListItem statemachine = 1 ;
 }
 
 // DescribeActivityRequest 获得状态机详情返回结构
@@ -725,7 +779,7 @@ message DescribeStateMachineRequest {
 
 // DescribeStateMachineResponse 获得活动列表请求返回结构
 message DescribeStateMachineResponse {
-    StateMachineInfo data = 1;
+    StateMachineListItem statemachine = 1;
 }
 
 // DeleteStateMachineRequest 删除一个状态机请求结构
@@ -771,14 +825,20 @@ message StateMachineListItem {
     string description = 2;
     // statemachine_uri 状态机uri
     string statemachine_uri = 3;
+    // definition 状态机定义
+    string definition = 4;
     // create_time timestample
     int64 create_time = 11;
     // update_time timestample
     int64 update_time = 12;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 13;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 14;
 }
 
 // ExecutionListItem execution info in ListExecutionsResponse
-message ExecutionListItem {
+message ExecutionItem {
     // execution_uuid
     string execution_uuid = 1;
     // status execution status
@@ -786,63 +846,80 @@ message ExecutionListItem {
     // title execution title
     string title = 3 ;
     string definition = 4 ;
-    // create_time timestample
-    int64 create_time = 11;
-    // start_time timestample
-    int64 start_time = 12;
-    // finish_time timestample
-    int64 finish_time = 13;
-}
-
-// StepInfo 一个Step的状态描述
-message StepInfo {
-    int64 id = 1;
-    string status = 2 ;
-    string definition = 4 ;
     string input = 5 ;
     string output = 6;
-    string create_time = 11;
-    string start_time = 12;
-    string finish_time = 13;
+    string statemachine_uri = 7;
+    string data =8;
+    string namespace = 9;
+    string execute_count = 10;
+    // create_time timestamp
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+    // start_time timestamp
+    int64 start_time = 13;
+    // finish_time timestamp
+    int64 finish_time = 14;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 15;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 16;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 17;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 18;
+}
+// StepItem 一个Step的状态描述
+message StepItem {
+    int64 id = 1;
+    string status = 2 ;
+    string name = 3 ;
+    string type = 4 ;
+    string definition = 5 ;
+    string input = 6 ;
+    string output = 7;
+    string data = 8;
+    // create_time timestamp
+    int64 create_time = 11;
+    // update_time timestample
+    int64 update_time = 12;
+    // start_time timestamp
+    int64 start_time = 13;
+    // finish_time timestamp
+    int64 finish_time = 14;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 15;
+    // update_time_str 更新时间字符串 RFC3339
+    string update_time_str = 16;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 17;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 18;
 }
 
-// ExecutionEventInfo 执行事件
-message ExecutionEventInfo {
+// ExecutionEventListItem 执行事件
+message ExecutionEventItem {
+    string execution_uuid = 1;
     // step id
     int64 step_id = 2 ;
     string step_name = 3;
     string event_type = 4;
     string data = 5;
-    string create_time = 11;
-    string start_time = 12;
-    string finish_time = 13;
-}
-
-
-// ActivityInfo 活动信息
-message ActivityInfo {
-    string name = 1;
-    string description = 2;
-    string activity_uri = 3;
-    // create_time timestample
+    // create_time timestamp
     int64 create_time = 11;
-    // update_time timestample
-    int64 update_time = 12;
+    // start_time timestamp
+    int64 start_time = 12;
+    // finish_time timestamp
+    int64 finish_time = 13;
+    // create_time_str 创建时间字符串 RFC3339
+    string create_time_str = 14;
+    // start_time_str 开始时间字符串 RFC3339
+    string start_time_str = 15;
+    // finish_time_str 结束时间字符串 RFC3339
+    string finish_time_str = 16;
+    
 }
 
-// StateMachineInfo 状态机信息
-message StateMachineInfo {
-    string name = 1;
-    string description = 2;
-    string statemachine_uri = 3;
-    string definition = 4;
-    // type : standard / express
-    string type = 5 ;
-    // create_time timestample
-    int64 create_time = 11;
-    // update_time timestample
-    int64 update_time = 12;
-}
 
 // ParseStateMachineRequest 解析一个状态机请求结构`
 message ParseStateMachineRequest{
@@ -908,7 +985,8 @@ message StartExecutionResponse {
     string execution_uuid = 1;
     // 执行创建的时间
     string create_time = 2;
-
+    // 执行创建的时间字符串 RFC3339
+    string create_time_str = 3;
 }
 
 // 获得一个执行的描述请求结构
@@ -919,7 +997,7 @@ message DescribeExecutionRequest {
 
 // 获得一个执行的描述的返回结构
 message DescribeExecutionResponse {
-    // ExecutionInfo execution = 1 ;
+    ExecutionItem execution = 1 ;
 }
 
 // 获得一个执行的执行的Bone请求结构
@@ -934,7 +1012,7 @@ message DescribeExecutionBoneResponse {
     string bone  = 2 ;
 }
 
-// 终止一个执行
+// 终止一个执行任务
 message StopExecutionRequest {
     // execution uuid， 必选
     string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
@@ -942,6 +1020,22 @@ message StopExecutionRequest {
     string error = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
     // cause， error的文本描述， 可选
     string cause = 3 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+// 重试一个执行任务
+message RetryExecutionRequest {
+    // execution uuid， 必选
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // cause， error的文本描述， 可选
+    string cause = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+}
+
+// 恢复一个执行任务
+message ResumeExecutionRequest {
+    // execution uuid， 必选
+    string execution_uuid = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
+    // cause， error的文本描述， 可选
+    string cause = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
 }
 
 // ListExecutionsRequest 获得execution列表请求结构
@@ -961,7 +1055,7 @@ message ListExecutionsRequest {
 // ListExecutionsResponse 获得execution列表返回值
 message ListExecutionsResponse {
     // 查询到的执行列表
-    repeated ExecutionListItem executions = 1 ;
+    repeated ExecutionItem executions = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }
@@ -975,7 +1069,7 @@ message ListExecutionEventsRequest {
 // ListExecutionEventsResponse 获得一个执行的Event列表返回值
 message ListExecutionEventsResponse {
     // 返回Event列表
-    repeated ExecutionEventInfo data = 1 ;
+    repeated ExecutionEventItem events = 1 ;
     // 分页信息
     PageResponse page_response = 2;
 }
@@ -988,7 +1082,7 @@ message DescribeStepRequest {
 // DescribeStepResponse 获得一个Step的信息返回结构
 message DescribeStepResponse {
     // 返回的Step 状态信息
-    StepInfo data = 1 ;
+    StepItem step = 1 ;
     // execution uuid
     string execution_uuid = 2;
 }
@@ -1026,16 +1120,10 @@ message GetActivityTaskResponse {
     string task_token = 2 ;
     // task 的输入，需要worker自己解码
     string input= 3 ;
-    // Deprecated: 该字段已经废弃，使用timeout_seconds
     // task 的超时时间，单位(s), 0表示不超时
-    int64 timeout_second = 4;
-    // Deprecated: 该字段已经废弃，使用heartbeat_seconds
+    int64 timeout_seconds = 4;
     // task 心跳超时时间，单位(s), 0 表示不超时
-    int64 heartbeat_timeout_second = 5;
-    // task 的超时时间，单位(s), 0表示不超时
-    int64 timeout_seconds = 6;
-    // task 心跳超时时间，单位(s), 0 表示不超时
-    int64 heartbeat_seconds = 7;
+    int64 heartbeat_seconds = 5;
     // task 的额外信息
     ExtraInfo extra_info = 10;
 
@@ -1064,7 +1152,7 @@ message SendTaskHeartbeatRequest {
     // task token
     string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
     // task 可以附带的message
-    string message = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
+    string message = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
 }
 
 //
@@ -1077,25 +1165,19 @@ message SendTaskReferenceRequest {
     string url  = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 1000}];
 }
 
-// StoreTaskDataRequest 存储task 临时数据
-message StoreTaskDataRequest {
-    // task token
-    string task_token = 1 [(validate.rules).string = {min_bytes: 10, max_bytes: 100}];
-    //  task 临时数据
-    string data = 2 [(validate.rules).string = {min_bytes: 1}];
-}
-
-// LoadTaskDataRequest 获得task 临时数据
-message LoadTaskDataRequest {
-    // State id
+message SendStepFailedRequest {
+    // Step id
     int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+     // error 错误类型，用来匹配异常
+    string error  = 2 [(validate.rules).string = {min_bytes: 1, max_bytes: 200}];
+    // cause， error的文本描述
+    string cause = 3  [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];   
 }
 
-
-// LoadTaskDataResponse 获得task 临时数据
-message LoadTaskDataResponse {
-    //  task 临时数据
-    string data = 1 [(validate.rules).string = {min_bytes: 1}];
+// ResumeSuspendingStepRequest 恢复挂起的步骤
+message ResumeSuspendingStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 
 
@@ -1121,6 +1203,18 @@ message SkipBlockedTaskRequest {
     int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
 }
 
+// RedoStepRequest 重做步骤请求
+message RedoStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+
+// RetryFailedStepRequest 重试失败的步骤请求
+message RetryFailedStepRequest {
+    // Step id
+    int64 step_id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+
 // ErrorCode 错误码定义
 //  11XXX  system error
 //  12XXX   template error
@@ -1128,55 +1222,58 @@ message SkipBlockedTaskRequest {
 enum ErrorCode {
     // OK 正常
     OK  = 0;
+    // system error
     // UnknownError 未知错误
-    UnknownError = 11000;
+    UNKNOWN_ERROR = 11000;
     // InternalError 内部错误
-    InternalError = 11001;
+    INTERNAL_ERROR = 11001;
     // ResourceLimitExceeded 资源限制超出
-    ResourceLimitExceeded = 11002;
+    RESOURCE_LIMIT_EXCEEDED = 11002;
     // The provided URI is not valid.
-    InvalidURI = 11003;
+    INVALID_STATEMACHINE_URI = 11003;
 
     //template error
-    ActivityAlreadyExists = 12001;
-    ActivityDoesNotExist = 12002;
-    StateMachineAlreadyExists = 12003;
-    StateMachineDoesNotExist = 12004;
-    NameSpaceAlreadyExists = 12005;
-    NameSpaceDoesNotExist = 12006;
+    ACTIVITY_ALREADY_EXISTS = 12001;
+    ACTIVITY_DOES_NOT_EXIST = 12002;
+    STATEMACHINE_ALREADY_EXISTS = 12003;
+    STATEMACHINE_DOES_NOT_EXIST = 12004;
+    NAMESPACE_ALREADY_EXISTS = 12005;
+    NAMESPACE_DOES_NOT_EXIST = 12006;
+    // NamespaceNotFound 不存在
+    NAMESPACE_NOT_FOUND = 12007;
+    // StateMachineNotFound StateMachine 不存在
+    STATEMACHINE_NOT_FOUND = 12008;
+    // StateMachineDeinitionInvalid StateMachine definition invalid
+    STATEMACHINE_DEINITION_INVALID = 12009;
 
     // execution error
-    ExecutionAlreadyExists = 13001;
-    ExecutionDoesNotExist = 13002;
+    EXECUTION_ALREADY_EXISTS = 13001;
+    EXECUTION_DOES_NOT_EXIST = 13002;
     // StateNotFound State 不存在
-    StateNotFound = 1003;
+    STATE_NOT_FOUND = 13003;
     // StateGroupNotFound Stategroup 不存在
-    StateGroupNotFound = 1004;
+    STATE_GROUP_NOT_FOUND = 13004;
     // TaskTokenNotFound TaskToken 不存在
-    TaskTokenNotFound = 1005;
-    // NamespaceNotFound 不存在
-    NamespaceNotFound = 1006;
+    TASK_TOKEN_NOT_FOUND = 13005;
+
     // ActivityNotFound activity 不存在
-    ActivityNotFound = 1007;
-    // StateMachineNotFound StateMachine 不存在
-    StateMachineNotFound = 1008;
+    ACTIVITY_NOT_FOUND = 13007;
+
     // ExecutionUUIDExisted Execution UUID 已经存在
-    ExecutionUUIDExisted = 1009;
+    EXECUTION_UUID_EXISTED = 13009;
     // ActivityTaskNotFound activity  task 不存在
-    ActivityTaskNotFound = 1010;
+    ACTIVITY_TASK_NOT_FOUND = 13010;
     // StepStatusError Step 状态错误
-    StepStatusError = 1011;
+    STEP_STATUS_ERROR = 13011;
     // ExecutionStatusError execution 状态错误
-    ExecutionStatusError = 1012;
+    EXECUTION_STATUS_ERROR = 13012;
     // ParameterIsValid parameter is valid
-    ParameterIsValid = 1013;
+    PARAMETER_IS_INVALID = 13013;
     // ParameterLimitExceeded parameter limit exceeded
-    ParameterLimitExceeded = 1014;
+    PARAMETER_LIMIT_EXCEEDED = 13014;
     // InputLimitExceeded input limit exceeded
-    InputLimitExceeded = 1015;
+    INPUT_LIMIT_EXCEEDED = 13015;
     // OutputLimitExceeded output limit exceed
-    OutputLimitExceeded = 1016;
-    // StateMachineDeinitionInvalid StateMachine definition invalid
-    StateMachineDeinitionInvalid = 1017;
+    EXECUTION_OUTPUT_LIMIT_EXCEEDED = 13016;
 
 }

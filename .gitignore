@@ -25,3 +25,9 @@ trpc_go.dev.yaml
 .logs
 
 .test
+skyflow.yaml
+trpc_go.yaml
+kratos.yaml
+target
+*rsync.sh
+*ark*.sh

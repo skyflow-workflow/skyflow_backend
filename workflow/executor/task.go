@@ -166,7 +166,7 @@ func (t *Task) Run(message queue.InnerMessageBody) error {
 		}
 	}
 
-	if executeMsg.Block && t.TaskState.Block {
+	if executeMsg.UnBlockTask && t.TaskState.Block {
 		// 如果是阻塞的， 则不执行
 		slog.Info(fmt.Sprintf("task step '%d' is blocked", dbStep.ID))
 
