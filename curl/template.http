@@ -1,7 +1,6 @@
 # @hostname = 127.0.0.1
 # @port = 8080
-# @host = http://127.0.0.1:8080
-@host = http://t1-skyflow.shizhuang-inc.net 
+@host = http://127.0.0.1:8080
 @contentType = application/json
 
 
@@ -84,7 +83,7 @@ Content-Type: application/json
 
 
 ### GetEvents
-POST {{host}}/api/v1/ListActivities/namespace
+POST {{host}}/api/v1/ListActivities
 Content-Type: application/json
 
 {
@@ -121,3 +120,18 @@ Content-Type: {{contentType}}
     "definition": "{\"Comment\": \"testactivity \", \"Type\": \"statemachine\", \"Version\": \"1.0\", \"StartAt\": \"S1\", \"States\": {\"S1\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.y\"}, \"Resource\": \"activity:unittest/Testadd\", \"ResultPath\": \"$.z\", \"TimeoutSeconds\": 600, \"HeartbeatSeconds\": 60, \"Next\": \"S2\"}, \"S2\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.z\"}, \"Resource\": \"activity:unittest/Testadd\", \"ResultPath\": \"$.z\", \"Next\": \"S3\"}, \"S3\": {\"Type\": \"Task\", \"Parameters\": {\"x.$\": \"$.x\", \"y.$\": \"$.z\"}, \"Resource\": \"activity:unittest/TestaddActivity2\", \"Next\": \"S4\"}, \"S4\": {\"Type\": \"Pass\", \"Resource\": \"activity:unittest/TestaddActivity2\", \"Result\": {}, \"End\": true}}}"
 }
 
+### ListStateMachines
+POST  {{host}}/api/v1/ListStateMachines
+Content-Type: application/json
+
+{
+    "namespace": "example-namespace"
+}
+
+### ListActivities
+POST {{host}}/api/v1/ListActivities
+Content-Type: application/json
+
+{
+    "namespace": "example-namespace"
+}

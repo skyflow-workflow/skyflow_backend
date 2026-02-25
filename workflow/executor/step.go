@@ -51,5 +51,15 @@ func NewStepFromData(dbStep *po.Step, executor *Executor) (Step, error) {
 			dbStep.ID, dbStep.Name, dbStep.Type)
 
 	}
+
+	if err != nil {
+		// if the error is a FieldPathError, return it
+		if fieldPathErr, ok := err.(*states.FieldPathError); ok {
+			fieldPathErr.StateName = dbStep.Name
+			fieldPathErr.StateType = dbStep.Type
+			return nil, fieldPathErr
+		}
+		return nil, err
+	}
 	return step, err
 }

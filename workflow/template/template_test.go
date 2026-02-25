@@ -248,3 +248,58 @@ func TestStateMachineOperation(t *testing.T) {
 	}, nil)
 	assert.Equal(t, err.Error(), "record not found")
 }
+
+func TestListActivitiesDetailed(t *testing.T) {
+	var err error
+	ctx := context.Background()
+
+	myTemplateService := NewTemplateService(mock.GetMockDBClient())
+
+	// Sync schema
+	err = myTemplateService.SyncSchema(ctx, nil)
+	assert.Equal(t, err, nil)
+
+	// Clean activity table
+	err = myTemplateService.CleanTestTableData(ctx, nil, &po.Activity{})
+	assert.Equal(t, err, nil)
+
+	// Create a namespace
+	_, err = myTemplateService.CreateOrUpdateNamespace(ctx, vo.CreateNamespaceRequest{
+		Name:        "test_ns",
+		Description: "Test Namespace",
+	}, nil)
+	assert.Equal(t, err, nil)
+
+	// Create some activities
+	act1Resp, err := myTemplateService.CreateActivity(ctx, vo.CreateActivityRequest{
+		Namespace:    "test_ns",
+		ActivityName: "activity1",
+		Description:  "Test Activity 1",
+		Parameters:   "{}",
+	}, nil)
+	assert.Equal(t, err, nil)
+
+	act2Resp, err := myTemplateService.CreateActivity(ctx, vo.CreateActivityRequest{
+		Namespace:    "test_ns",
+		ActivityName: "activity2",
+		Description:  "Test Activity 2",
+		Parameters:   "{}",
+	}, nil)
+	assert.Equal(t, err, nil)
+
+	// Test ListActivities without namespace filter
+	listResp, err := myTemplateService.ListActivities(ctx, vo.ListActivitiesRequest{
+		PageRequest: paging.PageRequest{PageSize: 10, PageNumber: 1},
+		Namespace:   "test_ns",
+	})
+	assert.Equal(t, err, nil)
+	assert.Equal(t, 2, len(listResp.Activities))
+	assert.Equal(t, "activity1", listResp.Activities[0].Name)
+	assert.Equal(t, "activity2", listResp.Activities[1].Name)
+
+	// Clean up activities
+	err = myTemplateService.DeleteActivity(ctx, vo.DeleteActivityRequest{ActivityURI: act1Resp.Data.URI}, nil)
+	assert.Equal(t, err, nil)
+	err = myTemplateService.DeleteActivity(ctx, vo.DeleteActivityRequest{ActivityURI: act2Resp.Data.URI}, nil)
+	assert.Equal(t, err, nil)
+}

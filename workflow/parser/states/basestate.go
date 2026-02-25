@@ -12,18 +12,18 @@ import (
 
 // BaseState is a struct that defines the base state of a state machine, with default values
 type BaseState struct {
-	Name            string `json:"Name,omitempty"`
-	Type            string `json:"Type,omitempty"`
-	Comment         string `json:"Comment,omitempty"`
-	InputPath       string `json:"InputPath,omitempty"`
-	OutputPath      string `json:"OutputPath,omitempty"`
-	ResultPath      string `json:"ResultPath,omitempty"`
-	Parameters      any    `json:"Parameters,omitempty"`
-	MaxExecuteTimes int    `json:"MaxExecuteTimes,omitempty"`
-	End             bool   `json:"End,omitempty"`
-	Next            string `json:"Next,omitempty"`
-	Retry           any    `json:"Retry,omitempty"`
-	Catch           any    `json:"Catch,omitempty"`
+	Name            string `json:"Name,omitempty" mapstructure:"Name"`
+	Type            string `json:"Type,omitempty" mapstructure:"Type"`
+	Comment         string `json:"Comment,omitempty" mapstructure:"Comment"`
+	InputPath       string `json:"InputPath,omitempty" mapstructure:"InputPath"`
+	OutputPath      string `json:"OutputPath,omitempty" mapstructure:"OutputPath"`
+	ResultPath      string `json:"ResultPath,omitempty" mapstructure:"ResultPath"`
+	Parameters      any    `json:"Parameters,omitempty" mapstructure:"Parameters"`
+	MaxExecuteTimes int    `json:"MaxExecuteTimes,omitempty" mapstructure:"MaxExecuteTimes"`
+	End             bool   `json:"End,omitempty" mapstructure:"End"`
+	Next            string `json:"Next,omitempty" mapstructure:"Next"`
+	Retry           any    `json:"Retry,omitempty" mapstructure:"Retry"`
+	Catch           any    `json:"Catch,omitempty" mapstructure:"Catch"`
 }
 
 func NewDefaultBaseState() *BaseState {
@@ -42,7 +42,7 @@ func NewDefaultBaseState() *BaseState {
 }
 
 // NewBaseStateFromMap NewState from MapData
-func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
+func NewBaseStateFromMap(data map[string]any) (*BaseState, error) {
 
 	var err error
 	err = ValidateStateFieldOptional(data)
@@ -65,13 +65,13 @@ func NewBaseStateFromMap(data map[string]interface{}) (*BaseState, error) {
 func NewBaseStateFromString(definition string) (bs *BaseState, err error) {
 	data, err := StringToMap(definition)
 	if err != nil {
-		return
+		return nil, err
 	}
 	bs, err = NewBaseStateFromMap(data)
-	return
+	return bs, err
 }
 
-func InitBaseState(bs *BaseState, data map[string]interface{}) error {
+func InitBaseState(bs *BaseState, data map[string]any) error {
 
 	err := DecodeMapToStruct(data, bs)
 	if err != nil {
@@ -120,7 +120,8 @@ func (s *BaseState) Validate() error {
 	if s.InputPath != "" {
 		_, err = jsonpath.JsonPathCompile(s.InputPath)
 		if err != nil {
-			return NewFieldPathError(fmt.Errorf("%w:%w", ErrorInvalidFiledContent, err), StateFieldNames.InputPath)
+			return NewFieldPathError(
+				fmt.Errorf("%w:%w", ErrorInvalidFiledContent, err), s.Type, s.Name, StateFieldNames.InputPath)
 		}
 	}
 	if s.OutputPath != "" {
@@ -347,21 +348,28 @@ func (s *BaseState) GetNextState(input any, output any) (NextState, error) {
 // ValidateStateFieldOptional validate state field optional
 func ValidateStateFieldOptional(data map[string]any) error {
 
+	var err error
+
+	// if data is nil, return error data is nil
 	if data == nil {
-		return NewFieldPathError(ErrorInvalidData)
+		err = NewFieldPathError(ErrorInvalidData, "", "data is nil")
+		return err
 	}
 	// validate field "Type"
 	sType, ok := data[StateFieldNames.Type]
 	if !ok {
-		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.Type))
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.Type)
+		return err
 	}
 	statetype, ok := sType.(string)
 	if !ok {
-		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorInvalidData, StateFieldNames.Type))
+		err = NewFieldPathError(ErrorInvalidData, StateFieldNames.Type, StateFieldNames.Type)
+		return err
 	}
 	stateRequired, ok := StateFieldRequiredMap[StateType(statetype)]
 	if !ok {
-		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorInvalidStateType, statetype), StateFieldNames.Type)
+		err = NewFieldPathError(ErrorInvalidStateType, StateFieldNames.Type, StateFieldNames.Type)
+		return err
 	}
 
 	// validate required fields
@@ -369,48 +377,37 @@ func ValidateStateFieldOptional(data map[string]any) error {
 	// check required fields
 	// check comment
 	if stateRequired.Comment == FiledRequiredLevel.Required && data[StateFieldNames.Comment] == nil {
-		return NewFieldPathError(fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.Comment),
-			StateFieldNames.Comment)
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.Comment)
+		return err
 	}
 	// check inputpath
 	if stateRequired.InputPath == FiledRequiredLevel.Required && data[StateFieldNames.InputPath] == nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.InputPath),
-			StateFieldNames.InputPath)
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.InputPath)
+		return err
 	} else if stateRequired.InputPath == FiledRequiredLevel.Deny && data[StateFieldNames.InputPath] != nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.InputPath),
-			StateFieldNames.InputPath)
+		err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.InputPath)
+		return err
 	}
 	// check outputpath
 	if stateRequired.OutputPath == FiledRequiredLevel.Required && data[StateFieldNames.OutputPath] == nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.OutputPath),
-			StateFieldNames.OutputPath)
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.OutputPath)
 	} else if stateRequired.OutputPath == FiledRequiredLevel.Deny && data[StateFieldNames.OutputPath] != nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.OutputPath),
-			StateFieldNames.OutputPath)
+		err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.OutputPath)
+		return err
 	}
 	// check parameters
 	if stateRequired.Parameters == FiledRequiredLevel.Required && data[StateFieldNames.Parameters] == nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.Parameters),
-			StateFieldNames.Parameters)
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.Parameters)
 	} else if stateRequired.Parameters == FiledRequiredLevel.Deny && data[StateFieldNames.Parameters] != nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.Parameters),
-			StateFieldNames.Parameters)
+		err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.Parameters)
+		return err
 	}
 	// check resultpath
 	if stateRequired.ResultPath == FiledRequiredLevel.Required && data[StateFieldNames.ResultPath] == nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorLackOfRequiredField, StateFieldNames.ResultPath),
-			StateFieldNames.ResultPath)
+		err = NewFieldPathError(ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.ResultPath)
 	} else if stateRequired.ResultPath == FiledRequiredLevel.Deny && data[StateFieldNames.ResultPath] != nil {
-		return NewFieldPathError(
-			fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.ResultPath),
-			StateFieldNames.ResultPath)
+		err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.ResultPath)
+		return err
 	}
 
 	// check nextend
@@ -419,26 +416,29 @@ func ValidateStateFieldOptional(data map[string]any) error {
 	switch stateRequired.NextEnd {
 	case FiledRequiredLevel.Deny:
 		if data[StateFieldNames.Next] != nil {
-			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.Next),
-				StateFieldNames.Next)
+			err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.Next)
+			return err
 		}
 		if data[StateFieldNames.End] != nil {
-			return NewFieldPathError(fmt.Errorf("%w: %s", ErrorFiledDenied, StateFieldNames.End),
-				StateFieldNames.End)
+			err = NewFieldPathError(ErrorFiledDenied, StateFieldNames.Type, StateFieldNames.End)
+			return err
 		}
 	case FiledRequiredLevel.Required:
 		// one of next or end is not nil and other is nil
 		if data[StateFieldNames.Next] == nil && data[StateFieldNames.End] == nil {
-			return NewFieldPathError(fmt.Errorf("%w: %s or %s", ErrorLackOfRequiredField,
-				StateFieldNames.Next, StateFieldNames.End),
-				StateFieldNames.Next)
-		} else {
-			// both next and end are not nil
-			if data[StateFieldNames.Next] != nil && data[StateFieldNames.End] != nil {
-				return NewFieldPathError(fmt.Errorf("%w: %s and %s should not be both defined", ErrorInvalidField,
-					StateFieldNames.Next, StateFieldNames.End),
-					StateFieldNames.Next)
+			err = NewFieldPathError(
+				ErrorLackOfRequiredField, StateFieldNames.Type, StateFieldNames.Next, StateFieldNames.End)
+			return err
+		} else if data[StateFieldNames.Next] != nil && data[StateFieldNames.End] != nil {
+			// both next and end are not nil is invalid, at least one of next or end is required
+			// special case: next and end are config right
+			if (data[StateFieldNames.Next] == "" && data[StateFieldNames.End] == true) ||
+				(data[StateFieldNames.Next] != "" && data[StateFieldNames.End] == false) {
+				return nil
 			}
+			err = NewFieldPathError(
+				ErrorInvalidField, StateFieldNames.Type, StateFieldNames.Next, StateFieldNames.End)
+			return err
 		}
 	}
 
@@ -446,6 +446,43 @@ func ValidateStateFieldOptional(data map[string]any) error {
 }
 
 func (bs *BaseState) GetDefinition() (string, error) {
-	data, err := ToString(bs)
-	return data, err
+	data, err := bs.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	dataStr, err := ToString(data)
+	return dataStr, err
+}
+
+func (bs *BaseState) GetDefinitionMap() (map[string]any, error) {
+	data, err := DecodeStructToMap(bs)
+	if err != nil {
+		return nil, err
+	}
+
+	required := StateFieldRequiredMap[StateType(bs.Type)]
+
+	if required.InputPath == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.InputPath)
+	}
+	if required.OutputPath == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.OutputPath)
+	}
+	if required.Parameters == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.Parameters)
+	}
+	if required.ResultPath == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.ResultPath)
+	}
+	if required.NextEnd == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.Next)
+		delete(data, StateFieldNames.End)
+	}
+	if required.Retry == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.Retry)
+	}
+	if required.Catch == FiledRequiredLevel.Deny {
+		delete(data, StateFieldNames.Catch)
+	}
+	return data, nil
 }

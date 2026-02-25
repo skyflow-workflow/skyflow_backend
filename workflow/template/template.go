@@ -10,6 +10,7 @@ import (
 	"github.com/skyflow-workflow/skyflow_backend/workflow/pberror"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/po"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/vo"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -80,6 +81,7 @@ func (svc *templateService) DescribeNamespace(ctx context.Context, name string, 
 
 	tx, maker := svc.dbClient.NewTxMaker(tx)
 	defer maker.Close(&err)
+	tx = tx.Model(new(po.Namespace))
 
 	err = tx.Where("name = ?", name).First(&ns).Error
 	if err != nil && rdb.IsErrRecordNotFound(err) {
@@ -246,6 +248,14 @@ func (svc *templateService) ListActivities(ctx context.Context, req vo.ListActiv
 	tx, maker := svc.dbClient.NewTxMaker(nil)
 	defer maker.Close(&err)
 	tx = tx.Model(new(po.Activity))
+	if req.Namespace != "" {
+		ntx := tx.Session(&gorm.Session{})
+		namespace, err := svc.DescribeNamespace(ctx, req.Namespace, ntx)
+		if err != nil {
+			return resp, err
+		}
+		tx = tx.Where(po.Activity{NamespaceID: namespace.ID})
+	}
 	err = tx.Count(&count).Error
 	if err != nil {
 		return resp, err
@@ -432,11 +442,20 @@ func (svc *templateService) ListStateMachines(ctx context.Context, req vo.ListSt
 	defer maker.Close(&err)
 
 	tx = tx.Model(new(po.StateMachine))
+	if req.Namespace != "" {
+		ntx := tx.Session(&gorm.Session{})
+		namespace, err := svc.DescribeNamespace(ctx, req.Namespace, ntx)
+		if err != nil {
+			return resp, err
+		}
+		tx = tx.Where(po.StateMachine{NamespaceID: namespace.ID})
+	}
+	// count total records
 	err = tx.Count(&count).Error
 	if err != nil {
 		return resp, err
 	}
-
+	// limit and offset
 	err = tx.Limit(limit).Offset(offset).Order("name asc").Find(&sms).Error
 	if err != nil {
 		return resp, err

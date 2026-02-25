@@ -34,20 +34,14 @@ func MergeError(ctx context.Context, err error) error {
 
 	path := GetPath(ctx)
 
-	if err, ok := err.(*states.FieldError); ok {
-		newerr := &states.FieldError{
-			RawError: err,
-			Paths:    append(path, err.Paths...),
-		}
-		return newerr
+	if err, ok := err.(*states.FieldPathError); ok {
+		err.Paths = append(path, err.Paths...)
+		return err
 	}
 	return err
 }
 
 // NewFieldPathError ...
-func NewFieldPathError(ctx context.Context, err error) error {
-	return &states.FieldError{
-		RawError: err,
-		Paths:    GetPath(ctx),
-	}
+func NewFieldPathError(ctx context.Context, err error, paths ...string) error {
+	return states.NewFieldPathError(err, "", append(GetPath(ctx), paths...)...)
 }

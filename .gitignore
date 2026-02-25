@@ -25,7 +25,7 @@ trpc_go.dev.yaml
 .logs
 
 .test
-skyflow.yaml
+skyflow*.yaml
 trpc_go.yaml
 kratos.yaml
 target

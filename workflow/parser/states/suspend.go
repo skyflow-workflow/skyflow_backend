@@ -2,7 +2,7 @@ package states
 
 // SuspendState   suspend state
 type SuspendState struct {
-	*BaseState
+	*BaseState `mapstructure:"BaseState"`
 }
 
 func (s *SuspendState) GetBaseState() *BaseState {
@@ -32,4 +32,13 @@ func NewSuspendStateFromMap(data map[string]interface{}) (state *SuspendState, e
 		BaseState: bs,
 	}
 	return
+}
+
+func (s *SuspendState) GetDefinition() (string, error) {
+	baseData, err := s.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }

@@ -4714,7 +4714,7 @@ const file_skyflow_proto_rawDesc = "" +
 	"\x15CreateActivityRequest\x12\x1d\n" +
 	"\x04name\x18\x01 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\x04name\x12,\n" +
 	"\vdescription\x18\x02 \x01(\tB\n" +
-	"\xfaB\ar\x05 \x00(\xe8\aR\vdescription\x12'\n" +
+	"\xfaB\ar\x05 \x00(\x80PR\vdescription\x12'\n" +
 	"\tnamespace\x18\x03 \x01(\tB\t\xfaB\x06r\x04 \x01(dR\tnamespace\x12*\n" +
 	"\n" +
 	"parameters\x18\x04 \x01(\tB\n" +

@@ -20,8 +20,8 @@ type WaitBody struct {
 
 // WaitState ...
 type WaitState struct {
-	*BaseState `json:",inline"`
-	*WaitBody  `json:",inline"`
+	*BaseState `json:",inline" mapstructure:"BaseState"`
+	*WaitBody  `json:",inline" mapstructure:"WaitBody"`
 }
 
 // NewWaitStateFromString Create New Wait State
@@ -69,7 +69,7 @@ func NewWaitBodyFromMap(data map[string]interface{}) (state *WaitBody, err error
 	return
 }
 
-// InitByMap Inititalize Wait Content
+// InitByMap Initialize Wait InitWaitBodyByMap and Validate WaitBody Content
 func InitWaitBodyByMap(body *WaitBody, data map[string]interface{}) (err error) {
 
 	// 初始化自身
@@ -196,6 +196,14 @@ func (w *WaitBody) GetWakeupTime(input any) (time.Time, error) {
 	return dest, nil
 }
 
+func (w *WaitBody) GetDefinitionMap() (map[string]any, error) {
+	data, err := DecodeStructToMap(w)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 // GetNextState Get Next State
 func (w *WaitState) GetNextState(input interface{}) (NextState, error) {
 	ns := NextState{
@@ -206,6 +214,15 @@ func (w *WaitState) GetNextState(input interface{}) (NextState, error) {
 }
 
 func (w *WaitState) GetDefinition() (string, error) {
-	data, err := ToString(w)
-	return data, err
+	baseData, err := w.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	bodyData, err := w.WaitBody.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	MapUpdate(baseData, bodyData)
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }

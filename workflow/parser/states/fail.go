@@ -2,8 +2,8 @@ package states
 
 // FailState  失败节点
 type FailState struct {
-	*BaseState `json:",inline"`
-	*FailBody  `json:",inline"`
+	*BaseState `json:",inline" mapstructure:"BaseState"`
+	*FailBody  `json:",inline" mapstructure:"FailBody"`
 }
 
 type FailBody struct {
@@ -92,7 +92,26 @@ func (s *FailState) GetBaseState() *BaseState {
 	return s.BaseState
 }
 
+func (s *FailBody) GetDefinitionMap() (map[string]any, error) {
+	data, err := DecodeStructToMap(s)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+// GetDefinition returns the state definition for persistence.
+// 使用 DecodeStructToMap 减少一次序列化，再展平为扁平 map、按拒绝名单删 key，保证输出 JSON 为扁平且可被 NewFailStateFromString 解析。
 func (s *FailState) GetDefinition() (string, error) {
-	data, err := ToString(s)
-	return data, err
+	baseData, err := s.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	bodyData, err := s.FailBody.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	MapUpdate(baseData, bodyData)
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }

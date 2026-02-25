@@ -1,9 +1,9 @@
 package states
 
 import (
-	"encoding/json"
 	"fmt"
 
+	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/expression"
 )
 
@@ -29,16 +29,16 @@ type ChoiceBody struct {
 
 // ChoiceState ...
 type ChoiceState struct {
-	*BaseState
-	*ChoiceBody
-	_RawData map[string]any
+	*BaseState  `mapstructure:"BaseState"`
+	*ChoiceBody `mapstructure:"ChoiceBody"`
+	_RawData    map[string]any
 }
 
 // NewChoiceStateFromString NewChoiceStateFromString
 func NewChoiceStateFromString(definition string) (state *ChoiceState, err error) {
 
-	var data = map[string]interface{}{}
-	err = json.Unmarshal([]byte(definition), &data)
+	var data = map[string]any{}
+	data, err = toolkit.DecodeStringToMap(definition)
 	if err != nil {
 		return
 	}
@@ -180,6 +180,9 @@ func (choice *ChoiceState) IsEnd() bool {
 }
 
 func (choice *ChoiceState) GetDefinition() (string, error) {
-	data, err := ToString(choice._RawData)
-	return data, err
+	dataStr, err := ToString(choice._RawData)
+	if err != nil {
+		return "", err
+	}
+	return dataStr, err
 }

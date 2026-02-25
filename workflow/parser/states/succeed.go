@@ -2,7 +2,7 @@ package states
 
 // SucceedState  失败节点
 type SucceedState struct {
-	*BaseState `json:",inline"`
+	*BaseState `json:",inline" mapstructure:"BaseState"`
 }
 
 // NewSucceedStateFromString NewSucceedStateFromString
@@ -40,6 +40,10 @@ func (s *SucceedState) GetBaseState() *BaseState {
 }
 
 func (s *SucceedState) GetDefinition() (string, error) {
-	data, err := ToString(s)
-	return data, err
+	baseData, err := s.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }

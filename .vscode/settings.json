@@ -5,5 +5,6 @@
     "preCI.localCodeCheck.prePush": "none",
     "preCI.pipeline.yamlFilePath": "build.yml",
     "preCI.localCodeCheck.toolType": "binary",
-    "makefile.configureOnOpen": true
+    "makefile.configureOnOpen": true,
+    "python.languageServer": "None"
 }

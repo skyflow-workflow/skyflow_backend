@@ -1477,10 +1477,10 @@ func (m *CreateActivityRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := len(m.GetDescription()); l < 0 || l > 1000 {
+	if l := len(m.GetDescription()); l < 0 || l > 10240 {
 		err := CreateActivityRequestValidationError{
 			field:  "Description",
-			reason: "value length must be between 0 and 1000 bytes, inclusive",
+			reason: "value length must be between 0 and 10240 bytes, inclusive",
 		}
 		if !all {
 			return err

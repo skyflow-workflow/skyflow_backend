@@ -209,6 +209,14 @@ func (body *TaskBody) Init() error {
 	return nil
 }
 
+func (body *TaskBody) GetDefinitionMap() (map[string]any, error) {
+	data, err := DecodeStructToMap(body)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 // TaskState ...
 type TaskState struct {
 	*BaseState `json:",inline"`
@@ -320,8 +328,17 @@ func (t *TaskState) GetNextState(input any, taskdata TaskSendData) (*NextState, 
 }
 
 func (t *TaskState) GetDefinition() (string, error) {
-	data, err := ToString(t)
-	return data, err
+	baseData, err := t.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	bodyData, err := t.TaskBody.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	MapUpdate(baseData, bodyData)
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }
 
 // HasIntersection  return  if x and y have common elements

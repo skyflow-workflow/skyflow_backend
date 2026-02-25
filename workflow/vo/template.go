@@ -61,6 +61,7 @@ type CreateStateMachineResponse struct {
 // ListActivitiesRequest ...
 type ListActivitiesRequest struct {
 	PageRequest paging.PageRequest
+	Namespace   string
 }
 
 // ListActivitiesResponse ...

@@ -645,6 +645,7 @@ func (s *SkyflowServiceHandler) ListActivities(ctx context.Context, req *pbv1.Li
 
 	voReq := vo.ListActivitiesRequest{
 		PageRequest: ToVOPageRequest(req.PageRequest),
+		Namespace:   req.Namespace,
 	}
 
 	voResp, err := s.wfSvc.TemplateService.ListActivities(ctx, voReq)

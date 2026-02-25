@@ -2,6 +2,7 @@ package states
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"gopkg.in/go-playground/assert.v1"
@@ -139,4 +140,36 @@ func TestParseFailState(t *testing.T) {
 			assert.Equal(t, state.FailBody, tt.wantState.FailBody)
 		})
 	}
+}
+
+// TestFailState_GetDefinition_NoDeniedFields ensures GetDefinition does not include OutputPath/InputPath
+// so that the stored step definition can be parsed later (e.g. in DescribeExecutionBone) without "field is denied".
+func TestFailState_GetDefinition_NoDeniedFields(t *testing.T) {
+	state := &FailState{
+		BaseState: &BaseState{
+			Name:       "MyFail",
+			Type:       "Fail",
+			OutputPath: "$",
+			InputPath:  "$",
+			End:        true,
+		},
+		FailBody: &FailBody{
+			Error: "SomeError",
+			Cause: "SomeCause",
+			Abort: false,
+		},
+	}
+	def, err := state.GetDefinition()
+	assert.Equal(t, err, nil)
+	assert.Equal(t, strings.Contains(def, "OutputPath"), false)
+	assert.Equal(t, strings.Contains(def, "InputPath"), false)
+	// Def must be flat and contain Type so round-trip works
+	assert.Equal(t, strings.Contains(def, "Type"), true)
+	data, err := StringToMap(def)
+	assert.Equal(t, err, nil)
+	_, hasType := data["Type"]
+	assert.Equal(t, hasType, true)
+	// Round-trip: parsed definition must not trigger "field is denied"
+	_, err = NewFailStateFromString(def)
+	assert.Equal(t, err, nil)
 }

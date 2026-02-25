@@ -1,7 +1,5 @@
 package states
 
-import "github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
-
 // PassBody ...
 type PassBody struct {
 	Result map[string]any `mapstructure:"Result" validate:"required"`
@@ -9,12 +7,20 @@ type PassBody struct {
 
 // PassState ...
 type PassState struct {
-	*BaseState `json:",inline"`
-	*PassBody  `json:",inline"`
+	*BaseState `json:",inline" mapstructure:"BaseState"`
+	*PassBody  `json:",inline" mapstructure:"PassBody"`
 }
 
 func (p *PassBody) GetOutput(input any) (any, error) {
 	return p.Result, nil
+}
+
+func (p *PassBody) GetDefinitionMap() (map[string]any, error) {
+	data, err := DecodeStructToMap(p)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 // NewPassStateFromString  Create New Pass State From String
@@ -106,7 +112,17 @@ func (p *PassState) GetNextState(input any) (NextState, error) {
 	return ns, err
 }
 
+// GetDefinition 使用 DecodeStructToMap + FlattenMap + 按拒绝名单删 key，与 Fail 策略一致。
 func (p *PassState) GetDefinition() (string, error) {
-	data, err := toolkit.ToString(p)
-	return data, err
+	baseData, err := p.BaseState.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	bodyData, err := p.PassBody.GetDefinitionMap()
+	if err != nil {
+		return "", err
+	}
+	MapUpdate(baseData, bodyData)
+	dataStr, err := ToString(baseData)
+	return dataStr, err
 }

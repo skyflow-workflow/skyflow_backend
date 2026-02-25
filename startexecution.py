@@ -51,12 +51,13 @@ if __name__ == "__main__":
     parser.add_argument("--inputfile", help="input file path")
     parser.add_argument("--input", help="input data")
     parser.add_argument("--title", help="title of the execution", default="test execution")
-    parser.add_argument("--host", help="cloudflow host", default=default_host)
+    parser.add_argument("--host", help="cloudflow host default is http://localhost:8080", default=default_host)
 
     args = parser.parse_args()
 
     host = args.host
 
+    statemachine_definition = ""
     if args.statemachine_file:
         statemachine_definition = read_file(args.statemachine_file)
 

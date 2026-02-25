@@ -2,7 +2,6 @@ package stepfunction
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/skyflow-workflow/skyflow_backend/pkg/toolkit"
 	"github.com/skyflow-workflow/skyflow_backend/workflow/parser/decoder"
@@ -27,10 +26,9 @@ func (sfDecoder *StepFunctionDecoder) DecodeBaseState(ctx context.Context, data 
 	case string(states.StateTypes.Task):
 		state, err = sfDecoder.DecodeTaskState(ctx, &basestate, data)
 	default:
-		curpath := append(decoder.GetPath(ctx), states.StateFieldNames.Type)
+		curpath := append(decoder.GetPath(ctx), basestate.Type)
 		err = states.NewFieldPathError(
-			fmt.Errorf("%w: %s", states.ErrorInvalidStateType, basestate.Type),
-			curpath...)
+			states.ErrorInvalidStateType, basestate.Type, curpath...)
 	}
 	if err != nil {
 		return nil, err

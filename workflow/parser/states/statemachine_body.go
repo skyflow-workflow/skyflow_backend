@@ -95,8 +95,17 @@ func InitStateMachineBodyByMap(smb *StateMachineBody, data map[string]any) (err 
 		var newstate State
 		newstate, err = smb._NewStateFunc(content, smb._Depth)
 		if err != nil {
-			err = fmt.Errorf("state [ %s ] failed: %w", name, err)
-			return
+			// if the error is a FieldPathError, return it
+			if fieldPathErr, ok := err.(*FieldPathError); ok {
+				fieldPathErr.StateName = name
+				fieldPathErr.StateType = StateFieldNames.Type
+				return fieldPathErr
+			}
+			// otherwise, return a new FieldPathError
+			newErr := NewFieldPathError(err, StateFieldNames.Type, name)
+			newErr.StateName = name
+			newErr.StateType = StateFieldNames.Type
+			return newErr
 		}
 		newstate.SetName(name)
 		smb.AddState(newstate)

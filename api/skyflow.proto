@@ -670,7 +670,7 @@ message CreateActivityRequest {
     // name activity name
     string name = 1 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // description activity description
-    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 1000}];
+    string description = 2 [(validate.rules).string = {min_bytes: 0, max_bytes: 10240}];
     // namespace activity namespace
     string namespace = 3 [(validate.rules).string = {min_bytes: 1, max_bytes: 100}];
     // parameters activity parameters

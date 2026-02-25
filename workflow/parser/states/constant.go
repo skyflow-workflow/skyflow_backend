@@ -13,14 +13,14 @@ import (
 )
 
 // doc: https://states-language.net/spec.html#state-type-table-jsonpath
-// 						Pass		Task		Choice		Wait		Succeed		Fail		Parallel    Map
-// Type					Required	Required	Required	Required	Required	Required	Required	Required
-// Comment				Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed
-// InputPath/OutputPath	Allowed		Allowed		Allowed		Allowed		Allowed					Allowed		Allowed
-// Parameters			Allowed		Allowed														Allowed		Allowed
-// ResultPath			Allowed		Allowed														Allowed		Allowed
-// One of: Next/End		Required	Required				Required							Required	Required
-// Retry, Catch						Allowed														Allowed  	Allowed
+// 						Pass		Task		Choice		Wait		Succeed		Fail		Parallel    Map  	    Suspend
+// Type					Required	Required	Required	Required	Required	Required	Required	Required	Required
+// Comment				Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed		Allowed
+// InputPath/OutputPath	Allowed		Allowed		Allowed		Allowed		Allowed					Allowed		Allowed		Allowed
+// Parameters			Allowed		Allowed														Allowed		Allowed		Allowed
+// ResultPath			Allowed		Allowed														Allowed		Allowed		Allowed
+// One of: Next/End		Required	Required				Required							Required	Required	Required
+// Retry, Catch						Allowed														Allowed  	Allowed		Allowed
 
 // StateType state type
 type StateType string
@@ -161,7 +161,7 @@ var StateFieldRequiredMap = map[StateType]StateFieldRequired{
 		Type:       FiledRequiredLevel.Required,
 		InputPath:  FiledRequiredLevel.Deny,
 		OutputPath: FiledRequiredLevel.Deny,
-		NextEnd:    FiledRequiredLevel.Deny,
+		NextEnd:    FiledRequiredLevel.Allowed,
 		ResultPath: FiledRequiredLevel.Deny,
 		Parameters: FiledRequiredLevel.Deny,
 		Retry:      FiledRequiredLevel.Deny,
